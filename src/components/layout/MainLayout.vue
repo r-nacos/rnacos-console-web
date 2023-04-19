@@ -8,7 +8,9 @@
                 <SideMenu/>
             </div>
             <div class="content">
+                <n-message-provider>
                 <router-view></router-view>
+                </n-message-provider>
             </div>
         </div>
         <div class="footer">

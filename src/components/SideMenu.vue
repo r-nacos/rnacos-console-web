@@ -28,6 +28,10 @@ export default {
                     'path':'/manage/boo',
                     'name':'boo',
                 },
+                {
+                    'path':'/manage/table',
+                    'name':'table',
+                },
             ]
         }
     },

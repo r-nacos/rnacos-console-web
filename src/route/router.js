@@ -1,6 +1,7 @@
 import Config from '@/views/config.vue'
 import Foo from '@/components/Foo.vue'
 import Boo from '@/components/Boo.jsx'
+import TableFoo from '@/components/TableFoo.vue'
 import MainLayout from '@/components/layout/MainLayout.vue'
 
 import {createRouter,createWebHistory,createWebHashHistory} from 'vue-router'
@@ -49,6 +50,12 @@ const routes = [
                 name: 'manange boo',
                 meta: {'title':'boo title'},
                 component: Boo,
+            },
+            {
+                path: '/manage/table',
+                name: 'manange table',
+                meta: {'title':'table title'},
+                component: TableFoo,
             },
         ]
     },

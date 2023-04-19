@@ -5,7 +5,7 @@
         </div>
         <div class="content_wrap">
             <div class="side">
-                side
+                <SideMenu/>
             </div>
             <div class="content">
                 <router-view></router-view>
@@ -19,6 +19,8 @@
 </template>
     
 <script setup>
+
+import SideMenu from '../SideMenu.vue';
 
 </script>
     

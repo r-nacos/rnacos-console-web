@@ -19,7 +19,7 @@ li {
 	outline: 0;
 }
 input, button, textarea, select {
-	*font-size: 100%;
+	font-size: 100%;
 }
 button::-moz-focus-inner,
 input[type="reset"]::-moz-focus-inner,

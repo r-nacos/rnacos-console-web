@@ -83,6 +83,7 @@ export default {
 .link {
     display: block;
     width: 100%;
+    text-decoration: none;
 }
 
 </style>

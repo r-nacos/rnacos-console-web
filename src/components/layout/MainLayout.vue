@@ -8,7 +8,7 @@
                 side
             </div>
             <div class="content">
-                content
+                <router-view></router-view>
             </div>
         </div>
         <div class="footer">
@@ -32,7 +32,8 @@
 
 .header {
     flex-grow: 0;
-    height: 100px;
+    height: 80px;
+    background: #cccccc;
 }
 .content_wrap {
     flex-grow: 1;
@@ -45,15 +46,15 @@
     flex-grow: 0;
     height: 100%;
     width: 240px;;
-    background: #00cccc;
+    background: #ccffff;
 }
 .content {
     flex-grow: 1;
-    background: #ff0000;
+    background: #ffffcc;
 }
 .footer {
     flex-grow: 0;
-    height: 100px;
+    height: 50px;
 }
 
 </style>

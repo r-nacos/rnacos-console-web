@@ -3,7 +3,7 @@ import Index from '@/views/index.vue'
 </script>
 
 <template>
-  <Index/>
+  <router-view></router-view>
 </template>
 
 <style scoped>

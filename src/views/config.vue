@@ -25,6 +25,9 @@
 
 <script>
 import configApi from '@/api/config'
+import { useMessage } from 'naive-ui'
+
+const message=useMessage();
 
 export default {
     name:"Config",
@@ -34,6 +37,7 @@ export default {
             group: "foo",
             dataId: "001",
             content: "",
+            message:message,
         }
     },
     methods: {
@@ -46,7 +50,7 @@ export default {
                 }
             })
             .catch(err=> {
-                console.log("response err",err)
+                console.log("response err",err.message)
             })
         },
         getConfig() {
@@ -58,7 +62,8 @@ export default {
                 }
             })
             .catch(err=> {
-                console.log("response err",err)
+                console.log("response err",err.message)
+                this.message.info(err.message +"\n"+ res.request.responseText);
             })
         },
     }

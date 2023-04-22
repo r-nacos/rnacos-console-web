@@ -8,6 +8,8 @@
 
 <script>
 
+import {manageMenu} from '@/route/routes.js'
+
 export default {
     setup() {
         
@@ -15,24 +17,7 @@ export default {
     data() {
         return {
             name: 'side nemu',
-            items: [
-                {
-                    'path':'/manage/config',
-                    'name':'config',
-                },
-                {
-                    'path':'/manage/foo',
-                    'name':'foo',
-                },
-                {
-                    'path':'/manage/boo',
-                    'name':'boo',
-                },
-                {
-                    'path':'/manage/table',
-                    'name':'table',
-                },
-            ]
+            items: [...manageMenu],
         }
     },
     methods :{

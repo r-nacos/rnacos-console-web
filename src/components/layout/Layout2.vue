@@ -1,5 +1,5 @@
 <template>
-<div class="app">
+<div class="app" ref="container">
     <div class="header_wrap">
         <div class="sider-header">
             r-nacos
@@ -9,14 +9,27 @@
         </div>
     </div>
     <div class="content_wrap">
-        <div class="book_sider">
+        <div class="book_sider" ref="sider">
             <div class="sider_content">
                 side
             </div>
             <div class="clearfix"></div>
         </div>
-        <div class="content">
-            content
+        <div class="content-outter">
+            <div class="content" ref="contentView">
+                <div class="content-inner">
+                    content
+                    <div class="test-block"> 
+                        test block
+                    </div>
+                    <div >
+                    content
+                    </div>
+                    <div >
+                    content
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <div class="footer">
@@ -24,6 +37,32 @@
     </div>
 </div>
 </template>
+
+<script>
+import { defineComponent } from 'vue'
+
+export default defineComponent({
+    setup() {
+
+    },
+    methods: {
+        updateContentSize(){
+            let contentWidth = window.innerWidth-200;
+            console.log("updateContentSize",contentWidth)
+            this.$refs.contentView.style.width=contentWidth+"px";
+        }
+    },
+    mounted() {
+        var f=()=>{this.updateContentSize()};
+        f();
+        window.addEventListener("resize",function(a,b){
+            console.log("onsize:",a,b);
+            f();
+        })
+    }
+})
+</script>
+
 
 <style scoped>
 
@@ -62,11 +101,24 @@
     background: #021429;
 }
 
-.conent{
+.conent-outter{
     flex: 1 1 auto;
     overflow: hidden;
     background: #fff;
     border-top: 1px solid #ccc;
+    position: relative;
+    display: block;
+}
+
+.content{
+    height: 100%;
+    width: 100%;
+    overflow:scroll;
+    position: relative;
+    display: block;
+}
+
+.content-inner{
 }
 
 .sider-header {
@@ -91,6 +143,12 @@
     height:30px;
 }
 
+
+.test-block{
+    background:#f00;
+    width: 100%;
+    height: 1500px;
+}
 
 
 </style>

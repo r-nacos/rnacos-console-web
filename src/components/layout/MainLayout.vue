@@ -9,9 +9,7 @@
             </div>
             <div class="content">
                 <div class="content-inner" :style="{'width':size.contentWidth+'px','height':size.contentHeight+'px'}"> 
-                    <n-message-provider>
                     <router-view></router-view>
-                    </n-message-provider>
                 </div>
             </div>
         </div>
@@ -25,6 +23,7 @@
 <script>
 
 import SideMenu from '../SideMenu.vue';
+import { useMessage } from 'naive-ui'
 import { defineComponent,reactive } from 'vue'
 
 export default defineComponent({
@@ -32,6 +31,7 @@ export default defineComponent({
         SideMenu,
     },
     setup() {
+        window.$message = useMessage()
         let width = window.innerWidth;
         let height = window.innerHeight;
         let sizeRef=reactive({

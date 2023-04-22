@@ -41,6 +41,7 @@
 <script>
 
 import {ref,reactive,defineComponent} from 'vue'
+//import { useMessage } from 'naive-ui'
 import namingApi from '@/api/naming'
 
 const columns = [
@@ -64,6 +65,7 @@ const columns = [
 
 export default defineComponent({
     setup(self) {
+        //window.$message = useMessage();
         const dataRef = ref([])
         const loadingRef = ref(false)
         const paginationReactive = reactive({
@@ -105,9 +107,14 @@ export default defineComponent({
                             paginationReactive.itemCount = count;
                             paginationReactive.pageCount = Math.round((count+pageSize-1)/pageSize);
                         }
+                        else{
+                            window.$message.error("request err,status code:"+res.status);
+                            dataRef.value=[];
+                        }
                     })
                     .catch(err=> {
-                        console.log("response err",err.message)
+                        window.$message.error("request err,message"+err.message);
+                        dataRef.value=[];
                         loadingRef.value=false;
                     })
                 }
@@ -125,7 +132,7 @@ export default defineComponent({
                 }
             })
             .catch(err=> {
-                console.log("response err",err.message)
+                window.$message.error("request err",err.message);
             })
 
         },

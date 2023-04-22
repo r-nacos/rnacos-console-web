@@ -28,6 +28,7 @@ class HttpRequest{
     getInsideConfig(){
         const config = {
             baseURL: this.baseURL,
+            timeout: 1000,
             headers :{
                 "Content-Type":"application/x-www-form-urlencoded",
             },

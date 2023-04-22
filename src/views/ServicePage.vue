@@ -21,8 +21,6 @@
   </n-form>
     </div>
     <div class="table-data">
-        <div>
-
         <n-data-table
             remote
             ref="table"
@@ -33,13 +31,6 @@
             :row-key="rowKey"
             @update:page="handlePageChange"
         />
-        </div>
-        <!--
-
-        <div class="test-block"> 
-            test block
-        </div>
-        -->
     </div>
 </div>
 </div>
@@ -187,27 +178,15 @@ export default defineComponent({
 }
 
 .query-params{
-    flex-grow: 0;
+    flex: 0 0 auto;
 }
 
 .table-data {
-    flex-grow: 1;
+    flex-grow: 1 1 auto;
     position: relative;
     overflow: scroll;
     height: 100%;
     width: 100%;
-}
-
-/*
-.table {
-    height:100%;
-}
-*/
-
-.test-block{
-    background:#f00;
-    width: 1500px;
-    height: 1500px;
 }
 
 </style>

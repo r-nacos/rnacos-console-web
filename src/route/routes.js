@@ -1,6 +1,7 @@
 import Config from '@/views/config.vue'
 import ServicePage from '@/views/ServicePage.vue'
 import Foo from '@/components/Foo.vue'
+import Layout2 from '@/components/layout/Layout2.vue'
 import Boo from '@/components/Boo.jsx'
 import TableFoo from '@/components/TableFoo.vue'
 import MainLayout from '@/components/layout/MainLayout.vue'
@@ -16,7 +17,7 @@ export const routes = [
         path: '/foo',
         name: 'foo',
         meta: {'title':'foo title'},
-        component: Foo,
+        component: Layout2,
     },
     {
         path: '/manage',

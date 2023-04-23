@@ -22,7 +22,7 @@
             :columns="columns"
             :data="data"
             :loading="loading"
-            :pagination="false"
+            :pagination="pagination"
             :row-key="rowKey"
         />
     </div>
@@ -58,7 +58,7 @@
                             :disabled="model.namespaceId === null"
                             round
                             type="primary"
-                            @click="create"
+                            @click="submit"
                         >
                             确认
                         </n-button>
@@ -77,7 +77,9 @@ import {ref,defineComponent} from 'vue'
 import {NButton} from 'naive-ui'
 import {Close} from '@vicons/ionicons5';
 import namespaceApi from '@/api/namespace'
+import {createColumns} from '../components/namespace/NamespaceColumns'
 
+/*
 const columns = [
     {
         title:'命名空间名称',
@@ -104,6 +106,7 @@ const columns = [
         }
     },
 ]
+*/
 
 export default defineComponent({
     components:{
@@ -120,6 +123,7 @@ export default defineComponent({
         const modelRef = ref({
             'namespaceId':'',
             'namespaceName':'',
+            'mode':'',
         })
         const rules ={
             namespaceId: [
@@ -148,18 +152,17 @@ export default defineComponent({
                 }
             ],
         }
-        return {
-            useForm:useFormRef,
-            columns,
-            data: dataRef,
-            model: modelRef,
-            pagination: false,
-            loading: loadingRef,
-            rules,
-            rowKey (rowData) {
-                return rowData.namespaceId
-            },
-            doLoadNamespace(){
+        const showUpdate=function(row){
+            console.log("showUpdate")
+            modelRef.value = {
+                'namespaceId':row.namespaceId,
+                'namespaceName':row.namespaceName,
+                'mode':'update'
+            };
+            useFormRef.value=true;
+
+        }
+        const doLoadNamespace=function(){
                 namespaceApi.queryList().then(res=>{
                     if(res.status==200){
                         dataRef.value = res.data.data
@@ -171,19 +174,73 @@ export default defineComponent({
                 .catch(err=>{
                     window.$message.error(err.message)
                 })
+        };
+        const removeItem=function(row){
+            console.log("remove",row.namespaceId)
+            namespaceApi.delete(row).then(res=>{
+                if(res.status==200){
+                    if(res.data.code==200){
+                        doLoadNamespace();
+                    }
+                    else{
+                        window.$message.error(res.data.message);
+                    }
+                }
+                else{
+                    window.$message.error("request err,status code:"+res.status);
+                }
+            })
+            .catch(err=>{
+                window.$message.error(err.message)
+            })
+        }
+        const columns = createColumns(showUpdate,removeItem);
+        return {
+            useForm:useFormRef,
+            columns,
+            data: dataRef,
+            model: modelRef,
+            pagination: {
+                pageSize: 5,
             },
+            loading: loadingRef,
+            rules,
+            rowKey (rowData) {
+                return rowData.namespaceId
+            },
+            doLoadNamespace,
             showCreate(){
-                useFormRef.value=true;
                 modelRef.value = {
                     'namespaceId':'',
                     'namespaceName':'',
+                    'mode':'add'
                 };
+                useFormRef.value=true;
             },
             closeForm(){
                 useFormRef.value=false;
             },
             doCreate(){
                 namespaceApi.add(modelRef.value).then(res=>{
+                    if(res.status==200){
+                        if(res.data.code==200){
+                            this.closeForm();
+                            this.doLoadNamespace();
+                        }
+                        else{
+                            window.$message.error(res.data.message);
+                        }
+                    }
+                    else{
+                        window.$message.error("request err,status code:"+res.status);
+                    }
+                })
+                .catch(err=>{
+                    window.$message.error(err.message)
+                })
+            },
+            doUpdate(){
+                namespaceApi.update(modelRef.value).then(res=>{
                     if(res.status==200){
                         if(res.data.code==200){
                             this.closeForm();
@@ -211,6 +268,14 @@ export default defineComponent({
         create(){
             this.doCreate()
         },
+        submit(){
+            if(this.model.mode==='add'){
+                this.doCreate()
+            }
+            else{
+                this.doUpdate()
+            }
+        }
     },
     created(){
         this.loadNamespace()

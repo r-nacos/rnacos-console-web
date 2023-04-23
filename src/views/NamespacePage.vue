@@ -1,5 +1,7 @@
 <template>
-<div class="container">
+<div class="wrap">
+    <div class="container">
+
     <div class="ops">
         <div class="title">
             <n-h2 prefix="bar">
@@ -9,7 +11,7 @@
             </n-h2>
         </div>
         <div class="buttons">
-            <n-button>创建命名空间</n-button>
+            <n-button @click="showCreate">创建命名空间</n-button>
             <n-button @click="loadNamespace">刷新</n-button>
         </div>
     </div>
@@ -24,6 +26,16 @@
             :row-key="rowKey"
         />
     </div>
+    </div>
+    <div class="form" v-show="useForm">
+        <div>
+            <div class="form-close"> 
+                <n-icon size="20" @click="closeForm">
+                    <Close/>
+                </n-icon>
+            </div>
+        </div>
+    </div>
 </div>
     
 </template>
@@ -31,6 +43,7 @@
 <script>
 import {ref,defineComponent} from 'vue'
 import {NButton} from 'naive-ui'
+import {Close} from '@vicons/ionicons5';
 import namespaceApi from '@/api/namespace'
 
 const columns = [
@@ -61,6 +74,9 @@ const columns = [
 ]
 
 export default defineComponent({
+    components:{
+        Close,
+    },
     setup() {
         const dataRef = ref([{
             'namespaceId':'',
@@ -68,7 +84,9 @@ export default defineComponent({
             'type':'0',
         }]);
         const loadingRef = ref(false)
+        const useFormRef = ref(false)
         return {
+            useForm:useFormRef,
             columns,
             data: dataRef,
             pagination: false,
@@ -88,6 +106,12 @@ export default defineComponent({
                 .catch(err=>{
                     window.$message.error(err.message)
                 })
+            },
+            showCreate(){
+                useFormRef.value=true;
+            },
+            closeForm(){
+                useFormRef.value=false;
             }
         }
     },
@@ -95,12 +119,16 @@ export default defineComponent({
         loadNamespace() {
             console.log("loadNamespace")
             this.doLoadNamespace()
-        }
+        },
     }
 })
 </script>
 
 <style scoped>
+
+.wrap{
+    position: relative;
+}
 
 .container{
     padding: 5px;
@@ -111,6 +139,27 @@ export default defineComponent({
 
 .buttons{
     float: right;
+}
+
+
+.form{
+    z-index: 1;
+    position:absolute;
+    width:400px;
+    height: 100%;
+    right:0px;
+    background: #fff;
+    border-left: #ccc 1px solid;
+}
+
+.form-close{
+    cursor: pointer;
+    font-size:20px;
+    line-height: 30px;
+    height: 30px;
+    width: 30px;
+    padding: 5px;
+    text-align: center;
 }
 
 </style>

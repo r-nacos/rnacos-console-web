@@ -14,6 +14,7 @@
     "vue-router": "^4.1.6"
   },
   "devDependencies": {
+    "@vicons/ionicons5": "^0.12.0",
     "@vitejs/plugin-vue": "^4.1.0",
     "@vitejs/plugin-vue-jsx": "^3.0.1",
     "naive-ui": "^2.34.3",

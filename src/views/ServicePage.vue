@@ -1,5 +1,4 @@
 <template>
-<div class="wrap">
 
 <div class="form-container">
     <div class="query-params">
@@ -32,7 +31,6 @@
             @update:page="handlePageChange"
         />
     </div>
-</div>
 </div>
     
 </template>
@@ -167,14 +165,6 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.wrap {
-    display: block;
-    position: relative;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    background: #f00;
-}
 .form-container{
     display: flex;
     flex-direction: column;

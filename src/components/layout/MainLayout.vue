@@ -1,7 +1,7 @@
 <template>
     <div class="wrap">
         <div class="header" :style="{'height':size.headerHeight+'px'}">
-            header 
+            header
         </div>
         <div class="content_wrap">
             <div class="side" :style="{'width':size.sideWidth+'px'}">
@@ -70,10 +70,12 @@ export default defineComponent({
 }
 
 .header {
-    flex-grow: 0;
+    flex: 0 0 auto;
     height: 64px;
     background: #cccccc;
+    position: relative;
 }
+
 .content_wrap {
     flex-grow: 1;
     display: flex;
@@ -82,7 +84,7 @@ export default defineComponent({
     background: #cccccc;
 }
 .side {
-    flex-grow: 0;
+    flex: 0 0 auto;
     height: 100%;
     width: 240px;;
     background: #ccffff;
@@ -102,7 +104,7 @@ export default defineComponent({
 }
 
 .footer {
-    flex-grow: 0;
+    flex: 0 0 auto;
     height: 30px;
 }
 

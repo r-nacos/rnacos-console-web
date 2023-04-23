@@ -51,24 +51,27 @@ export default {
     position: relative;
     overflow: hidden;
     overflow-y: scroll;
+    background: #1f233d;
 }
 
 .item {
     padding: 5px;
     font-size: 16px;
+    color: #d9dad9;
     line-height: 25px;
     text-align: center;
-    border: 1px solid #ccc;
+    border: 1px solid #324155;
     border-width: 0 0 1px 0;;
 }
 
 .select {
-    background: #00ff00;
+    background: #324155;
 }
 .link {
     display: block;
     width: 100%;
     text-decoration: none;
+    color: #d9dad9;
 }
 
 </style>

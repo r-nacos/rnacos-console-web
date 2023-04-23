@@ -1,7 +1,9 @@
 <template>
     <div class="wrap">
         <div class="header" :style="{'height':size.headerHeight+'px'}">
-            header
+            <div class="sider-header">
+                R-NACOS
+            </div>
         </div>
         <div class="content_wrap">
             <div class="side" :style="{'width':size.sideWidth+'px'}">
@@ -13,9 +15,11 @@
                 </div>
             </div>
         </div>
+        <!-- 
         <div class="footer" :style="{'height':size.footerHeight+'px'}">
             footer
         </div>
+        -->
     </div>
         
 </template>
@@ -37,7 +41,7 @@ export default defineComponent({
         let sizeRef=reactive({
             sideWidth:200,
             headerHeight:64,
-            footerHeight:30,
+            footerHeight:0,
             contentWidth:width-200,
             contentHeight:height-64-30,
         })
@@ -72,8 +76,21 @@ export default defineComponent({
 .header {
     flex: 0 0 auto;
     height: 64px;
-    background: #cccccc;
+    background: #021429;
+    color: #fff;
     position: relative;
+}
+
+.sider-header{
+    flex: 0 0 auto;
+    height: 64px;
+    width: 200px;
+    position: relative;
+    height: 64px;
+    line-height: 64px;
+    text-align: center;
+    background: #021429;
+    color: #fff;
 }
 
 .content_wrap {
@@ -81,7 +98,6 @@ export default defineComponent({
     display: flex;
     flex-direction: row;
     height: 100%;
-    background: #cccccc;
 }
 .side {
     flex: 0 0 auto;
@@ -91,7 +107,7 @@ export default defineComponent({
 }
 .content {
     flex-grow: 1;
-    background: #ffffcc;
+    background: #ffffff;
     position: relative;
     display: block;
     overflow: hidden;

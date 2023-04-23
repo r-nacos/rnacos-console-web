@@ -1,5 +1,6 @@
 import Config from '@/views/config.vue'
 import ServicePage from '@/views/ServicePage.vue'
+import NamespacePage from '@/views/NamespacePage.vue'
 import Foo from '@/components/Foo.vue'
 import Layout2 from '@/components/layout/Layout2.vue'
 import Boo from '@/components/Boo.jsx'
@@ -36,6 +37,12 @@ export const routes = [
                 name: 'manange service',
                 meta: {'title':'service title'},
                 component: ServicePage,
+            },
+            {
+                path: '/manage/namespace',
+                name: 'namespace',
+                meta: {'title':'namespace title'},
+                component: NamespacePage,
             },
             {
                 path: '/manage/foo',

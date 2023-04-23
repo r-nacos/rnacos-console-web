@@ -58,6 +58,9 @@ body{
   background: #CCCCCC;
 }
 
+.clear{
+  clear:both;
+}
 .clearfix:before,
 .clearfix:after {
   display: table;

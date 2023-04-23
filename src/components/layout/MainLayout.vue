@@ -1,8 +1,10 @@
 <template>
     <div class="wrap">
-        <div class="header" :style="{'height':size.headerHeight+'px'}">
+        <div class="header-wrap" :style="{'height':size.headerHeight+'px'}">
             <div class="sider-header">
                 R-NACOS
+            </div>
+            <div class="header">
             </div>
         </div>
         <div class="content_wrap">
@@ -35,7 +37,7 @@ export default defineComponent({
         SideMenu,
     },
     setup() {
-        window.$message = useMessage()
+        window.$message = useMessage();
         let width = window.innerWidth;
         let height = window.innerHeight;
         let sizeRef=reactive({
@@ -73,12 +75,15 @@ export default defineComponent({
     height: 100%;
 }
 
-.header {
+.header-wrap {
     flex: 0 0 auto;
     height: 64px;
     background: #021429;
     color: #fff;
     position: relative;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: row;
 }
 
 .sider-header{
@@ -91,6 +96,13 @@ export default defineComponent({
     text-align: center;
     background: #021429;
     color: #fff;
+}
+
+.header {
+    flex: 1 1 auto;
+    background: #f1f2f7;
+    color:#021429;
+    height: 64px;
 }
 
 .content_wrap {

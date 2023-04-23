@@ -39,7 +39,6 @@
 <script>
 
 import {ref,reactive,defineComponent} from 'vue'
-//import { useMessage } from 'naive-ui'
 import namingApi from '@/api/naming'
 
 const columns = [
@@ -121,19 +120,6 @@ export default defineComponent({
     },
 
     methods: {
-        t01(){
-            this.doQueryList()
-            .then( res => {
-                console.log("response",res.request.responseText)
-                if(res.status==200){
-                    console.log(res)
-                }
-            })
-            .catch(err=> {
-                window.$message.error("request err",err.message);
-            })
-
-        },
         handlePageChange(page){
             this.doHandlePageChange(page);
         },

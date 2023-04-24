@@ -15,6 +15,9 @@
             <n-button @click="loadNamespace">刷新</n-button>
         </div>
     </div>
+    <div class="popselect clear"> 
+        <NamespacePopSelect />
+    </div>
     <div class="data clear">
         <n-data-table
             remote
@@ -78,6 +81,8 @@ import {NButton} from 'naive-ui'
 import {Close} from '@vicons/ionicons5';
 import namespaceApi from '@/api/namespace'
 import {createColumns} from '../components/namespace/NamespaceColumns'
+import NamespacePopSelect from '../components/namespace/NamespacePopSelect.vue';
+import {namespaceStore} from '../data/namespace'
 
 /*
 const columns = [
@@ -111,6 +116,7 @@ const columns = [
 export default defineComponent({
     components:{
         Close,
+        NamespacePopSelect,
     },
     setup() {
         const dataRef = ref([{
@@ -166,6 +172,7 @@ export default defineComponent({
                 namespaceApi.queryList().then(res=>{
                     if(res.status==200){
                         dataRef.value = res.data.data
+                        namespaceStore.setLastList(res.data.data);
                     }
                     else{
                         window.$message.error("request err,status code:"+res.status);
@@ -304,7 +311,7 @@ export default defineComponent({
 .form{
     padding: 0 5px;
     z-index: 1;
-    position:absolute;
+    position:fixed;
     width:400px;
     height: 100%;
     right:0px;

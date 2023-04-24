@@ -1,6 +1,9 @@
 <template>
 
 <div class="form-container">
+    <div > 
+        <NamespacePopSelect/>
+    </div>
     <div class="query-params">
     <n-form
     inline
@@ -40,6 +43,8 @@
 
 import {ref,reactive,defineComponent} from 'vue'
 import namingApi from '@/api/naming'
+import {namespaceStore} from '../data/namespace'
+import NamespacePopSelect from '../components/namespace/NamespacePopSelect.vue';
 
 const columns = [
     {
@@ -61,6 +66,9 @@ const columns = [
 ]
 
 export default defineComponent({
+    components:{
+        NamespacePopSelect,
+    },
     setup(self) {
         //window.$message = useMessage();
         const dataRef = ref([])
@@ -127,8 +135,9 @@ export default defineComponent({
             this.doHandlePageChange(1);
         },
         doQueryList(){
+            console.log("doQueryList",namespaceStore.current,namespaceStore.current.namespaceId);
             return namingApi.queryServicePage({
-                namespaceId:this.namespaceId,
+                namespaceId:namespaceStore.current.value.namespaceId,
                 accessToken:null,
                 serviceNameParam:this.param.serviceParam,
                 groupNameParam:this.param.groupParam,

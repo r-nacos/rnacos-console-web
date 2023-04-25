@@ -39,10 +39,6 @@ export default defineComponent({
             console.log(v)
             for(var item of this.optionList){
                 if(item.value===v){
-                    var obj = {
-                        namespaceId : item.value,
-                        namespaceName : item.label,
-                    };
                     this.value = obj;
                     namespaceStore.setCurrent(obj);
                 }

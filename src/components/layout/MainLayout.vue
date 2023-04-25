@@ -42,10 +42,10 @@ export default defineComponent({
         let height = window.innerHeight;
         let sizeRef=reactive({
             sideWidth:200,
-            headerHeight:64,
+            headerHeight:52,
             footerHeight:0,
             contentWidth:width-200,
-            contentHeight:height-64-30,
+            contentHeight:height-52-30,
         })
 
         return {
@@ -77,8 +77,8 @@ export default defineComponent({
 
 .header-wrap {
     flex: 0 0 auto;
-    height: 64px;
-    background: #021429;
+    height: 52px;
+    background: #2f6cf7;
     color: #fff;
     position: relative;
     flex-grow: 1;
@@ -88,21 +88,20 @@ export default defineComponent({
 
 .sider-header{
     flex: 0 0 auto;
-    height: 64px;
+    height: 52px;
     width: 200px;
     position: relative;
-    height: 64px;
-    line-height: 64px;
+    line-height: 52px;
     text-align: center;
-    background: #021429;
+    background: #2f6cf7;
     color: #fff;
 }
 
 .header {
     flex: 1 1 auto;
-    background: #f1f2f7;
-    color:#021429;
-    height: 64px;
+    background: #2f6cf7;
+    color:#fff;
+    height: 52px;
 }
 
 .content_wrap {
@@ -114,8 +113,13 @@ export default defineComponent({
 .side {
     flex: 0 0 auto;
     height: 100%;
-    width: 240px;;
-    background: #ccffff;
+    width: 200px;;
+    background: #fff;
+    color: #595959;
+    border-right: 1px #ccc solid;
+    /* 
+    border-right: 1px #ccc solid;
+    */
 }
 .content {
     flex-grow: 1;

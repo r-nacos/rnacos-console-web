@@ -101,13 +101,12 @@ export default {
 
 <style scoped>
 .wrap {
-    width:100%;
-    height: 100%;
     position: relative;
     overflow: hidden;
     overflow-y: scroll;
-    background: #d9dee4;
-    color: #616261;
+    background: #ffffff;
+    color: #595959;
+    padding: 15px 8px;
 }
 
 .wrap-item {
@@ -119,38 +118,47 @@ export default {
 }
 
 .group-item{
-    padding: 5px;
-    padding-left: 20px;
-    font-size: 16px;
-    color: #616261;
-    line-height: 25px;
+    padding-left: 30px;
+    font-size: 14px;
+    height: 36px;
+    line-height: 36px;
     text-align: left;
+    /* 
     border-width: 0 0 1px 0;
+    */
     cursor: pointer;
 }
 
 .item {
-    padding: 5px;
-    padding-left: 40px;
-    font-size: 16px;
-    color: #616261;
-    line-height: 25px;
+    padding-left: 30px;
+    font-size: 12px;
+    height: 36px;
+    line-height: 36px;
     text-align: left;
-    border-width: 0 0 1px 0;;
     /* 
+    border-width: 0 0 1px 0;;
     border: 1px solid #324155;
     border-width: 0 0 1px 0;;
     */
 }
 
-.item:hover,.group-item:hover,.select {
-    background: #f1f2f7;
+.item:hover,.group-item:hover{
+    background: #f4f5f8;
+}
+
+.select {
+    color: #2f6cf7;
+    background: #ecf3ff;
+}
+
+.select .link {
+    color: #2f6cf7;
 }
 .link {
     display: block;
     width: 100%;
     text-decoration: none;
-    color: #616261;
+    color: #595959;
 }
 
 </style>

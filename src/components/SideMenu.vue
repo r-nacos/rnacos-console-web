@@ -3,6 +3,17 @@
     <div class="wrap-item" v-for="(item,index) in items" :key="index" >
         <div v-if="item.children" >
             <div class="group-item">
+                <span class="icon"> 
+                    <n-icon size="14" color="#2f6cf7" v-if="item.icon=='ServerOutline'">
+                        <ServerOutline />
+                    </n-icon>
+                    <n-icon size="14" color="#2f6cf7" v-if="item.icon=='CubeOutline'">
+                        <CubeOutline />
+                    </n-icon>
+                    <n-icon size="12" color="#2f6cf7" v-if="item.icon=='AppsSharp'">
+                        <AppsSharp />
+                    </n-icon>
+                </span>
                 <span>{{item.name}}</span>
                 <!--
                 <n-icon size="20">
@@ -28,8 +39,14 @@
 <script>
 
 //import {manageMenu} from '@/route/routes.js'
+import { ServerOutline,CubeOutline,AppsSharp } from '@vicons/ionicons5'
 
 export default {
+    components:{
+        ServerOutline,
+        CubeOutline,
+        AppsSharp,
+    },
     setup() {
         
     },
@@ -37,25 +54,33 @@ export default {
         const manageMenu = [
             {
                 "name":"配置管理",
+                "icon":'CubeOutline',
                 children: [
                     {
-                        "name":"config",
+                        "name":"配置",
                         "path":"/manage/config"
                     },
                 ],
             },
             {
                 "name":"服务管理",
+                "icon":'ServerOutline',
                 children: [
                     {
-                        "name":"service",
+                        "name":"服务列表",
                         "path":"/manage/service"
                     },
                 ],
             },
             {
-                "name":"命名空间",
-                "path":"/manage/namespace"
+                "name":"命名空间管理",
+                "icon":'AppsSharp',
+                children: [
+                    {
+                        "name":"命名空间",
+                        "path":"/manage/namespace"
+                    },
+                ],
             },
         ];
         return {
@@ -118,7 +143,7 @@ export default {
 }
 
 .group-item{
-    padding-left: 30px;
+    padding-left: 10px;
     font-size: 14px;
     height: 36px;
     line-height: 36px;
@@ -127,6 +152,15 @@ export default {
     border-width: 0 0 1px 0;
     */
     cursor: pointer;
+}
+
+.group-item .icon{
+    display: inline-block;
+    text-align: center;
+    width: 20px;
+    font-size: 14px;
+    height: 306x;
+    line-height: 36px;;
 }
 
 .item {

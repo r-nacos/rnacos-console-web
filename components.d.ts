@@ -10,25 +10,11 @@ export {}
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     Foo: typeof import('./src/components/Foo.vue')['default']
-    HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
-    Layout2: typeof import('./src/components/layout/Layout2.vue')['default']
     MainLayout: typeof import('./src/components/layout/MainLayout.vue')['default']
-    NamespacePopSelect: typeof import('./src/components/namespace/NamespacePopSelect.vue')['default']
-    NButton: typeof import('naive-ui')['NButton']
-    NCol: typeof import('naive-ui')['NCol']
-    NDataTable: typeof import('naive-ui')['NDataTable']
-    NForm: typeof import('naive-ui')['NForm']
-    NFormItem: typeof import('naive-ui')['NFormItem']
-    NH2: typeof import('naive-ui')['NH2']
     NIcon: typeof import('naive-ui')['NIcon']
-    NInput: typeof import('naive-ui')['NInput']
     NMessageProvider: typeof import('naive-ui')['NMessageProvider']
-    NRow: typeof import('naive-ui')['NRow']
-    NSelect: typeof import('naive-ui')['NSelect']
-    NText: typeof import('naive-ui')['NText']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SideMenu: typeof import('./src/components/SideMenu.vue')['default']
-    TableFoo: typeof import('./src/components/TableFoo.vue')['default']
   }
 }

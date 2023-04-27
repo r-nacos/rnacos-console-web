@@ -17,6 +17,7 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "preserve",
+    "allowJs": true,
 
     /* Linting */
     "strict": true,
@@ -26,8 +27,8 @@
     "noFallthroughCasesInSwitch": true
     */
   },
-  //"include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
-  "include": ["src/**/*"],
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
+  //"include": ["src/**/*"],
   "exclude": ["node_modules"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

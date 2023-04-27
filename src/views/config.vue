@@ -63,7 +63,6 @@ export default {
             })
             .catch(err=> {
                 console.log("response err",err.message)
-                this.message.info(err.message +"\n"+ res.request.responseText);
             })
         },
     }

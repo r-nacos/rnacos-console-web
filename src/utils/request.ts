@@ -1,12 +1,11 @@
-import axios from 'axios'
+import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
 
 
 class HttpRequest{
-    constructor (baseURL = baseURL) {
-        this.baseUrl = baseURL
+    constructor () {
     }
 
-    interceptors(instance,url) {
+    interceptors(instance:AxiosInstance,url:string | undefined) {
         instance.interceptors.request.use(config=> {
             /*
             if(config.method!=="get" && config.data != undefined){
@@ -27,7 +26,7 @@ class HttpRequest{
 
     getInsideConfig(){
         const config = {
-            baseURL: this.baseURL,
+            //baseURL: this.baseURL,
             timeout: 1000,
             headers :{
                 "Content-Type":"application/x-www-form-urlencoded",
@@ -36,7 +35,7 @@ class HttpRequest{
         return config
     }
 
-    request( options ){
+    request( options:AxiosRequestConfig ){
         const instance = axios.create();
         options = Object.assign(this.getInsideConfig(),options)
         this.interceptors(instance,options.url)
@@ -44,5 +43,5 @@ class HttpRequest{
     }
 }
 
-const request = new HttpRequest({baseURL:""});
+const request = new HttpRequest();
 export default request

@@ -1,6 +1,7 @@
 import Config from '@/views/config.vue'
 import ServicePage from '@/views/ServicePage.vue'
 import NamespacePage from '@/views/NamespacePage.vue'
+import ConfigListPage from '@/views/ConfigListPage.vue'
 import Foo from '@/components/Foo.vue'
 import Layout2 from '@/components/layout/Layout2.vue'
 import Boo from '@/components/Boo.jsx'
@@ -26,6 +27,12 @@ export const routes = [
         meta: {'title':'manage title'},
         component: MainLayout,
         children: [
+            {
+                path: '/manage/configs',
+                name: 'configs',
+                meta: {'title':'配置列表'},
+                component: ConfigListPage,
+            },
             {
                 path: '/manage/config',
                 name: 'manange config',

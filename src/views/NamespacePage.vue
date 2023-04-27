@@ -159,7 +159,6 @@ export default defineComponent({
             ],
         }
         const showUpdate=function(row){
-            console.log("showUpdate")
             modelRef.value = {
                 'namespaceId':row.namespaceId,
                 'namespaceName':row.namespaceName,
@@ -183,7 +182,6 @@ export default defineComponent({
                 })
         };
         const removeItem=function(row){
-            console.log("remove",row.namespaceId)
             namespaceApi.delete(row).then(res=>{
                 if(res.status==200){
                     if(res.data.code==200){
@@ -269,7 +267,6 @@ export default defineComponent({
     },
     methods:{
         loadNamespace() {
-            console.log("loadNamespace")
             this.doLoadNamespace()
         },
         create(){

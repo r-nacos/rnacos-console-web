@@ -26,6 +26,26 @@ class ConfigApi {
             }
         });
     }
+
+    queryConfigPage({
+        tenant,
+        groupParam,
+        dataParam,
+        pageNo,
+        pageSize,
+    }) {
+        return axios.request({
+            method: "get",
+            url: '/nacos/v1/console/configs',
+            params: {
+                tenant,
+                groupParam,
+                dataParam,
+                pageNo,
+                pageSize,
+            }
+        });
+    }
 }
 const configApi = new ConfigApi();
 export default configApi

@@ -57,6 +57,10 @@ export default {
                 "icon":'CubeOutline',
                 children: [
                     {
+                        "name":"配置列表",
+                        "path":"/manage/configs"
+                    },
+                    {
                         "name":"配置",
                         "path":"/manage/config"
                     },

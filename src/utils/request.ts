@@ -1,4 +1,4 @@
-import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
 
 
 class HttpRequest{
@@ -35,7 +35,7 @@ class HttpRequest{
         return config
     }
 
-    request( options:AxiosRequestConfig ){
+    request( options:AxiosRequestConfig ): Promise<AxiosResponse>{
         const instance = axios.create();
         options = Object.assign(this.getInsideConfig(),options)
         this.interceptors(instance,options.url)

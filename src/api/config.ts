@@ -1,3 +1,4 @@
+import { AxiosResponse } from 'axios';
 import request from '../utils/request';
 let axios = request;
 
@@ -23,7 +24,7 @@ export interface IConfigQueryParam{
 }
 
 class ConfigApi {
-    setConfig(config:IConfig) {
+    setConfig(config:IConfig):Promise<AxiosResponse> {
         return axios.request({
             method: "post",
             url: '/nacos/v1/cs/configs',
@@ -33,7 +34,7 @@ class ConfigApi {
         });
     }
 
-    getConfig(configKey:IConfigKey) {
+    getConfig(configKey:IConfigKey):Promise<AxiosResponse> {
         return axios.request({
             method: "get",
             url: '/nacos/v1/cs/configs',
@@ -43,7 +44,7 @@ class ConfigApi {
         });
     }
 
-    queryConfigPage(queryParam:IConfigQueryParam) {
+    queryConfigPage(queryParam:IConfigQueryParam):Promise<AxiosResponse> {
         return axios.request({
             method: "get",
             url: '/nacos/v1/console/configs',

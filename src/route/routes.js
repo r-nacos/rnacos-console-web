@@ -1,5 +1,6 @@
 import Boo from '@/components/Boo.jsx'
 import MainLayout from '@/components/layout/MainLayout.vue'
+import Config from '@/pages/Config'
 
 export const routes = [
     {
@@ -19,6 +20,12 @@ export const routes = [
                 name: 'manange boo',
                 meta: {'title':'boo title'},
                 component: Boo,
+            },
+            {
+                path: '/manage/config',
+                name: 'manange config',
+                meta: {'title':'config title'},
+                component: Config,
             }
         ],
     },

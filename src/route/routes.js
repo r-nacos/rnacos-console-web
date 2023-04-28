@@ -1,6 +1,7 @@
 import Boo from '@/components/Boo.jsx'
 import MainLayout from '@/components/layout/MainLayout.vue'
 import Config from '@/pages/Config'
+import NamespacePage from '@/pages/NamespacePage'
 
 export const routes = [
     {
@@ -26,7 +27,13 @@ export const routes = [
                 name: 'manange config',
                 meta: {'title':'config title'},
                 component: Config,
-            }
+            },
+            {
+                path: '/manage/namespace',
+                name: 'namespace',
+                meta: {'title':'namespace title'},
+                component: NamespacePage,
+            },
         ],
     },
 ]

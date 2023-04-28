@@ -1,37 +1,41 @@
-import {reactive,ref} from 'vue'
+import {Ref, UnwrapRef, reactive,ref} from 'vue'
 import namespaceApi from '../api/namespace'
+import { INamespace, INamespaceStore } from '@/types/namespace';
+import { ILabelItem } from '@/types/base';
 
-function createStore(){
-    const currentRef=ref({
+
+
+function createStore():INamespaceStore {
+    const currentRef:Ref<UnwrapRef<INamespace>>=ref({
         'namespaceId':'',
         'namespaceName':'public',
     });
-    const listListRef=ref([
+    const listListRef:Ref<UnwrapRef<Array<INamespace>>>=ref([
         {
             'namespaceId':'',
             'namespaceName':'public',
         }
     ]);
-    const optionListRef=ref([
+    const optionListRef:Ref<UnwrapRef<Array<ILabelItem>>>=ref([
         {
             label: 'public',
             value: '',
         },
     ]);
     const loadRef=ref(false);
-    const setCurrent=function(current) {
+    const setCurrent=function(current:INamespace) {
         console.log("set current:",current)
         currentRef.value = current;
         console.log(currentRef.value.namespaceId)
     }
-    const setLastList=function(list) {
+    const setLastList=function(list:Array<INamespace>) {
         console.log("setLastList",list);
         var optionList = [];
         for(var item of list){
-            var obj = {
+            var obj= {
                 label: item.namespaceName,
                 value: item.namespaceId,
-            }
+            } as ILabelItem;
             optionList.push(obj);
         }
         listListRef.value= list;
@@ -57,4 +61,4 @@ function createStore(){
     }
 }
 
-export const namespaceStore = createStore();
+export const namespaceStore:INamespaceStore = createStore();

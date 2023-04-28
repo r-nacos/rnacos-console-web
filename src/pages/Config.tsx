@@ -57,19 +57,19 @@ export default defineComponent({
 <div>
         <div>
             <span>tenant:</span>
-            <input type="text" value={this.tenant} onChange={(e)=>{this.tenant=e.target.value;}} />
+            <input type="text" value={this.tenant} onChange={(e)=>{console.log("tenant change");this.tenant=(e.target as HTMLInputElement).value;}} />
         </div>
         <div>
             <span>group:</span>
-            <input type="text" value={this.group} onChange={(e)=>{this.group=e.target.value;}} />
+            <input type="text" value={this.group} onChange={(e)=>{this.group=(e.target as HTMLInputElement).value;}} />
         </div>
         <div>
             <span>dataId:</span>
-            <input type="text" value={this.dataId} onChange={(e)=>{this.dataId=e.target.value;}} />
+            <input type="text" value={this.dataId} onChange={(e)=>{this.dataId=(e.target as HTMLInputElement).value;}} />
         </div>
         <div>
             <span>content:</span>
-            <input type="text" value={this.content} onChange={(e)=>{this.content=e.target.value;}} />
+            <input type="text" value={this.content} onChange={(e)=>{this.content=(e.target as HTMLInputElement).value;}} />
         </div>
         <div>
             <button onClick={()=>this.setConfig()}> 设置</button>

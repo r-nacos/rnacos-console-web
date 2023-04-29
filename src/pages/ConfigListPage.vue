@@ -1,53 +1,56 @@
 <template>
   <div class="wrap">
-  <div class="header">
-    <div class="title">
-      <span> 配置列表 </span>
-    </div>
-    <div class="namespace">
-      <NamespacePopSelect @change="queryList" />
-    </div>
-  </div>
-  <div class="content-wrap">
-    <div class="form-container">
-      <div class="query-params">
-        <n-form inline :label-width="80">
-          <n-form-item label="配置" path="param.dataParam">
-            <n-input v-model:value="param.dataParam" placeholder="输入配置ID" />
-          </n-form-item>
-          <n-form-item label="配置组" path="param.groupParam">
-            <n-input
-              v-model:value="param.groupParam"
-              placeholder=" 输入配置组"
-            />
-          </n-form-item>
-          <n-form-item>
-            <n-button attr-type="button" @click="queryList"> 查询 </n-button>
-          </n-form-item>
-        </n-form>
+    <div class="header">
+      <div class="title">
+        <span> 配置列表 </span>
       </div>
-      <div class="table-data">
-        <n-data-table
-          remote
-          ref="table"
-          :columns="columns"
-          :data="data"
-          :loading="loading"
-          :pagination="pagination"
-          :row-key="rowKey"
-          @update:page="handlePageChange"
-        />
+      <div class="namespace">
+        <NamespacePopSelect @change="queryList" />
       </div>
     </div>
-  </div>
-  <SubContentFullPage
-    v-show="useForm"
-    title="empty"
-    @close="closeForm"
-    @submit="closeForm"
-  >
-  abc
-  </SubContentFullPage>
+    <div class="content-wrap">
+      <div class="form-container">
+        <div class="query-params">
+          <n-form inline :label-width="80">
+            <n-form-item label="配置" path="param.dataParam">
+              <n-input
+                v-model:value="param.dataParam"
+                placeholder="输入配置ID"
+              />
+            </n-form-item>
+            <n-form-item label="配置组" path="param.groupParam">
+              <n-input
+                v-model:value="param.groupParam"
+                placeholder=" 输入配置组"
+              />
+            </n-form-item>
+            <n-form-item>
+              <n-button attr-type="button" @click="queryList"> 查询 </n-button>
+            </n-form-item>
+          </n-form>
+        </div>
+        <div class="table-data">
+          <n-data-table
+            remote
+            ref="table"
+            :columns="columns"
+            :data="data"
+            :loading="loading"
+            :pagination="pagination"
+            :row-key="rowKey"
+            @update:page="handlePageChange"
+          />
+        </div>
+      </div>
+    </div>
+    <SubContentFullPage
+      v-show="useForm"
+      title="empty"
+      @close="closeForm"
+      @submit="submitForm"
+    >
+      <ConfigDetail :model="model" />
+    </SubContentFullPage>
   </div>
 </template>
 
@@ -57,8 +60,9 @@ import { configApi } from "@/api/config";
 import { namespaceStore } from "@/data/namespace";
 import { createColumns } from "@/components/config/ConfigColumns";
 import NamespacePopSelect from "@/components/namespace/NamespacePopSelect.vue";
-import SubContentPage from '@/components/common/SubContentPage'
-import SubContentFullPage from '@/components/common/SubContentFullPage'
+import SubContentPage from "@/components/common/SubContentPage";
+import SubContentFullPage from "@/components/common/SubContentFullPage";
+import ConfigDetail from "./ConfigDetail.vue";
 import { Close } from "@vicons/ionicons5";
 
 export default defineComponent({
@@ -67,12 +71,20 @@ export default defineComponent({
     Close,
     SubContentPage,
     SubContentFullPage,
+    ConfigDetail,
   },
   setup(self) {
     //window.$message = useMessage();
     const dataRef = ref([]);
     const useFormRef = ref(false);
     const loadingRef = ref(false);
+    const modelRef = ref({
+      dataId: "",
+      group: "",
+      md5: "",
+      content: "",
+      mode: "",
+    });
     const paginationReactive = reactive({
       page: 1,
       pageCount: 1,
@@ -83,12 +95,33 @@ export default defineComponent({
       },
     });
     const updateItem = (row) => {
-      useFormRef.value=true;
+      modelRef.value = {
+        mode: "update",
+        ...row,
+      };
+      useFormRef.value = true;
     };
     const detailItem = (row) => {
-      useFormRef.value=true;
+      modelRef.value = {
+        mode: "detail",
+        ...row,
+      };
+      useFormRef.value = true;
+      useFormRef.value = true;
+    };
+    const showCreate = () => {
+      modelRef.value = {
+        dataId: "",
+        group: "",
+        md5: "",
+        content: "",
+        mode: "create",
+      };
+
+      this.useForm = true;
     };
     const removeItem = (row) => {};
+
     const columns = createColumns(detailItem, updateItem, removeItem);
     return {
       columns,
@@ -96,6 +129,8 @@ export default defineComponent({
       useForm: useFormRef,
       pagination: paginationReactive,
       loading: loadingRef,
+      model: modelRef,
+      showCreate,
       param: ref({
         dataParam: "",
         groupParam: "",
@@ -137,6 +172,12 @@ export default defineComponent({
     };
   },
 
+  computed: {
+    getTenant() {
+      return namespaceStore.current.value.namespaceId;
+    },
+  },
+
   methods: {
     handlePageChange(page) {
       this.doHandlePageChange(page);
@@ -153,11 +194,35 @@ export default defineComponent({
         pageSize: this.pagination.pageSize,
       });
     },
-    showCreate() {
-      this.useForm= true;
-    },
     closeForm() {
-      this.useForm= false;
+      this.useForm = false;
+    },
+    submitForm() {
+      if (this.model.mode === "detail") {
+        this.useForm = false;
+        return;
+      }
+      let config = {
+        dataId: this.model.dataId,
+        group: this.model.group,
+        tenant: this.getTenant,
+        content: this.model.content,
+      };
+      configApi
+        .setConfig(config)
+        .then((res) => {
+          console.log("response", res.request.responseText);
+          if (res.status == 200) {
+            window.$message.info("设置成功!")
+            this.useForm = false;
+            this.queryList()
+            return;
+          }
+          window.$message.error("设置失败，response code"+res.status);
+        })
+        .catch((err) => {
+          window.$message.error("设置失败，"+err.message);
+        });
     },
   },
   created() {
@@ -167,7 +232,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.wrap{
+.wrap {
   position: relative;
   width: 100%;
   height: 100%;

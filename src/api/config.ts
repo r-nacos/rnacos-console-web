@@ -7,6 +7,7 @@ export interface  IConfig{
     group :string,
     dataId :string,
     content ?:string,
+    md5?:string,
 }
 
 export interface  IConfigKey{

@@ -14,6 +14,16 @@ export interface ICallback<T>{
     (arg:T):any;
 }
 
+export interface ISize{
+    width:number,
+    height:number,
+}
+
+export interface IPoint{
+    x:number,
+    y:number,
+}
+
 export interface MyWindow extends Window {
     $message: MessageApiInjection
 }

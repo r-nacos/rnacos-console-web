@@ -259,11 +259,9 @@ export default defineComponent({
 
     <div class={styles.ops}>
         <div class={styles.opsTitle}>
-            <NH2 prefix="bar">
-                <NText type="primary">
-                    命名空间
-                </NText>
-            </NH2>
+            <span >
+                命名空间
+            </span>
         </div>
         <div class={styles.opsButton}>
             <NButton onClick={()=>{this.showCreate()}}>创建命名空间</NButton>

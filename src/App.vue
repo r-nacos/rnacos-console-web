@@ -3,10 +3,12 @@
 const themeOverrides = {
     common: {
       primaryColor: '#2f6cf7',
+      //hoverColor:'#2f6cf7',
       //overColor: '#2f6cf7',
       //hover:'#2f6cf7',
     },
     Button: {
+      //hoverColor:'#2f6cf7',
       textColor: '#595959'
     },
     Select: {

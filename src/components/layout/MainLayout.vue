@@ -1,6 +1,6 @@
 <template>
     <div class="wrap">
-        <div class="header-wrap" :style="{'height':size.headerHeight+'px'}">
+        <div class="header-wrap" :style="{'height':layoutSize.headerHeight+'px'}">
             <div class="sider-header">
                 R-NACOS
             </div>
@@ -8,11 +8,11 @@
             </div>
         </div>
         <div class="content_wrap">
-            <div class="side" :style="{'width':size.sideWidth+'px'}">
+            <div class="side" :style="{'width':layoutSize.siderWidth+'px'}">
                 <SideMenu/>
             </div>
             <div class="content">
-                <div class="content-inner" :style="{'width':size.contentWidth+'px','height':size.contentHeight+'px'}"> 
+                <div class="content-inner" :style="{'width':layoutSize.contentWidth+'px','height':layoutSize.contentHeight+'px'}"> 
                     <router-view></router-view>
                 </div>
             </div>
@@ -31,6 +31,7 @@
 import SideMenu from '../SideMenu.vue';
 import { useMessage } from 'naive-ui'
 import { defineComponent,reactive } from 'vue'
+import {useLayoutSize} from '@/data/appdata';
 
 export default defineComponent({
     components:{
@@ -38,21 +39,12 @@ export default defineComponent({
     },
     setup() {
         window.$message = useMessage();
-        let width = window.innerWidth;
-        let height = window.innerHeight;
-        let sizeRef=reactive({
-            sideWidth:200,
-            headerHeight:52,
-            footerHeight:0,
-            contentWidth:width-200,
-            contentHeight:height-52-30,
-        })
-
+        let layoutSize = useLayoutSize();
+        layoutSize.updateLayoutSize(undefined);
         return {
-            size:sizeRef,
+            layoutSize:layoutSize,
             doUpdateLayoutSize(){
-                sizeRef.contentWidth = window.innerWidth - sizeRef.sideWidth;
-                sizeRef.contentHeight = window.innerHeight - sizeRef.headerHeight - sizeRef.footerHeight;
+                layoutSize.updateLayoutSize(undefined);
             }
         }
     },

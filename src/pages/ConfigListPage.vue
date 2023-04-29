@@ -1,4 +1,5 @@
 <template>
+  <div class="wrap">
   <div class="header">
     <div class="title">
       <span> 配置列表 </span>
@@ -7,7 +8,7 @@
       <NamespacePopSelect @change="queryList" />
     </div>
   </div>
-  <div class="wrap">
+  <div class="content-wrap">
     <div class="form-container">
       <div class="query-params">
         <n-form inline :label-width="80">
@@ -39,6 +40,15 @@
       </div>
     </div>
   </div>
+  <SubContentPage
+    v-show="useForm"
+    title="empty"
+    @close="closeForm"
+    @submit="closeForm"
+  >
+  abc
+  </SubContentPage>
+  </div>
 </template>
 
 <script>
@@ -46,13 +56,15 @@ import { ref, reactive, defineComponent } from "vue";
 import { configApi } from "@/api/config";
 import { namespaceStore } from "@/data/namespace";
 import { createColumns } from "@/components/config/ConfigColumns";
-import NamespacePopSelect from "../components/namespace/NamespacePopSelect.vue";
+import NamespacePopSelect from "@/components/namespace/NamespacePopSelect.vue";
+import SubContentPage from '@/components/common/SubContentPage'
 import { Close } from "@vicons/ionicons5";
 
 export default defineComponent({
   components: {
     NamespacePopSelect,
     Close,
+    SubContentPage,
   },
   setup(self) {
     //window.$message = useMessage();
@@ -68,8 +80,12 @@ export default defineComponent({
         return `Total is ${itemCount}.`;
       },
     });
-    const updateItem = (row) => {};
-    const detailItem = (row) => {};
+    const updateItem = (row) => {
+      useFormRef.value=true;
+    };
+    const detailItem = (row) => {
+      useFormRef.value=true;
+    };
     const removeItem = (row) => {};
     const columns = createColumns(detailItem, updateItem, removeItem);
     return {
@@ -135,8 +151,11 @@ export default defineComponent({
         pageSize: this.pagination.pageSize,
       });
     },
+    showCreate() {
+      this.useForm= true;
+    },
     closeForm() {
-      useFormRef.value = false;
+      this.useForm= false;
     },
   },
   created() {
@@ -146,9 +165,15 @@ export default defineComponent({
 </script>
 
 <style scoped>
-
 .wrap{
-  padding: 10px;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: #efefef;
+}
+
+.content-wrap {
+  padding: 10px 10px 10px 10px;
   background: #efefef;
 }
 
@@ -157,7 +182,7 @@ export default defineComponent({
   flex-direction: column;
   position: relative;
   background: #ffffff;
-  border-radius: 1%;
+  border-radius: 8px;
   padding: 3px;
 }
 
@@ -166,6 +191,7 @@ export default defineComponent({
   flex-direction: row;
   height: 34px;
   border-bottom: #ccc 1px solid;
+  background: #fff;
 }
 
 .title {

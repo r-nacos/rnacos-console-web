@@ -94,20 +94,37 @@ export default defineComponent({
         return `Total is ${itemCount}.`;
       },
     });
-    const updateItem = (row) => {
-      modelRef.value = {
-        mode: "update",
-        ...row,
+    const showNewConfigValueDetail = (row, mode) => {
+      let config = {
+        tenant: row.tenant,
+        group: row.group,
+        dataId: row.dataId,
       };
-      useFormRef.value = true;
+      configApi
+        .getConfig(config)
+        .then((res) => {
+          console.log("response", res.request.responseText);
+          if (res.status == 200) {
+            modelRef.value = {
+              mode: mode,
+              content: res.request.responseText,
+              md5: res.headers["content-md5"] || "",
+              ...config,
+            };
+            useFormRef.value = true;
+          } else {
+            window.$message.error("查询配置报错,response code:" + res.status);
+          }
+        })
+        .catch((err) => {
+          window.$message.error("查询配置报错," + err.message);
+        });
+    };
+    const updateItem = (row) => {
+      showNewConfigValueDetail(row, "update");
     };
     const detailItem = (row) => {
-      modelRef.value = {
-        mode: "detail",
-        ...row,
-      };
-      useFormRef.value = true;
-      useFormRef.value = true;
+      showNewConfigValueDetail(row, "detail");
     };
     const showCreate = () => {
       modelRef.value = {
@@ -213,15 +230,15 @@ export default defineComponent({
         .then((res) => {
           console.log("response", res.request.responseText);
           if (res.status == 200) {
-            window.$message.info("设置成功!")
+            window.$message.info("设置成功!");
             this.useForm = false;
-            this.queryList()
+            this.queryList();
             return;
           }
-          window.$message.error("设置失败，response code"+res.status);
+          window.$message.error("设置失败，response code" + res.status);
         })
         .catch((err) => {
-          window.$message.error("设置失败，"+err.message);
+          window.$message.error("设置失败，" + err.message);
         });
     },
   },

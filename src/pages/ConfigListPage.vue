@@ -4,6 +4,9 @@
       <div class="title">
         <span> 配置列表 </span>
       </div>
+      <div class="header-button">
+        <n-button @click="showCreate">新建</n-button>
+      </div>
       <div class="namespace">
         <NamespacePopSelect @change="queryList" />
       </div>
@@ -12,20 +15,20 @@
       <div class="form-container">
         <div class="query-params">
           <n-form inline :label-width="80">
-            <n-form-item label="配置" path="param.dataParam">
-              <n-input
+            <n-form-item size="tiny" label="配置" path="param.dataParam">
+              <n-input size="tiny"
                 v-model:value="param.dataParam"
                 placeholder="输入配置ID"
               />
             </n-form-item>
-            <n-form-item label="配置组" path="param.groupParam">
-              <n-input
+            <n-form-item size="tiny" label="配置组" path="param.groupParam">
+              <n-input size="tiny"
                 v-model:value="param.groupParam"
                 placeholder=" 输入配置组"
               />
             </n-form-item>
-            <n-form-item>
-              <n-button attr-type="button" @click="queryList"> 查询 </n-button>
+            <n-form-item size="tiny" label=" ">
+              <n-button size="tiny" attr-type="button" @click="queryList"> 查询 </n-button>
             </n-form-item>
           </n-form>
         </div>
@@ -74,6 +77,7 @@ export default defineComponent({
     ConfigDetail,
   },
   setup(self) {
+    let resultObj=null;
     //window.$message = useMessage();
     const dataRef = ref([]);
     const useFormRef = ref(false);
@@ -134,13 +138,32 @@ export default defineComponent({
         content: "",
         mode: "create",
       };
-
-      this.useForm = true;
+      useFormRef.value = true;
     };
-    const removeItem = (row) => {};
+    const removeItem = (row) => {
+      let config = {
+        tenant: row.tenant,
+        group: row.group,
+        dataId: row.dataId,
+      };
+      configApi
+        .removeConfig(config)
+        .then((res) => {
+          console.log("response", res.request.responseText);
+          if (res.status == 200) {
+            window.$message.info("删除配置成功");
+            //resultObj.doHandlePageChange(1);
+          } else {
+            window.$message.error("删除配置报错,response code:" + res.status);
+          }
+        })
+        .catch((err) => {
+          window.$message.error("删除配置报错," + err.message);
+        });
+    };
 
     const columns = createColumns(detailItem, updateItem, removeItem);
-    return {
+    resultObj= {
       columns,
       data: dataRef,
       useForm: useFormRef,
@@ -187,6 +210,7 @@ export default defineComponent({
         }
       },
     };
+    return resultObj;
   },
 
   computed: {
@@ -284,12 +308,17 @@ export default defineComponent({
   line-height: 30px;
   padding-left: 15px;
 }
+
+.header-button{
+  flex: 0 0 auto;
+}
 .namespace {
   flex: 0 0 auto;
 }
 
 .query-params {
   flex: 0 0 auto;
+  height: 60px;
 }
 
 .table-data {

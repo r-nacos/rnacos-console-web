@@ -45,6 +45,16 @@ class ConfigApi {
         });
     }
 
+    removeConfig(configKey:IConfigKey):Promise<AxiosResponse> {
+        return axios.request({
+            method: "delete",
+            url: '/nacos/v1/cs/configs',
+            data: {
+                ...configKey
+            }
+        });
+    }
+
     queryConfigPage(queryParam:IConfigQueryParam):Promise<AxiosResponse> {
         return axios.request({
             method: "get",

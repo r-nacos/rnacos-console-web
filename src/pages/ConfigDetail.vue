@@ -13,6 +13,7 @@
       <n-form-item path="content" label="配置内容">
         <n-input :disabled="isReadonly" 
           type="textarea" 
+          :autosize="{minRows:5}"
           v-model:value="model.content" 
           @keydown.enter.prevent />
       </n-form-item>

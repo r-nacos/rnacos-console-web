@@ -3,6 +3,7 @@ import {defineComponent} from 'vue'
 import styles from './SubContentPage.module.css'
 import {NIcon,NH2,NRow,NButton} from 'naive-ui'
 import {Close} from '@vicons/ionicons5';
+import {useLayoutSize} from '@/data/appdata';
 
 export default defineComponent({
     props:[
@@ -13,19 +14,26 @@ export default defineComponent({
         "submit",
     ],
     setup(props,content){
+        let layoutSize = useLayoutSize();
         return {
+            layoutSize:layoutSize,
         }
     },
     data() {
+        let layoutSize = useLayoutSize();
         return {
+            layoutSize:layoutSize,
         }
     },
     methods: {
-
+        
     },
     render () {
         return (
-<div className={styles.wrap}>
+<div className={styles.fullWrap} style={{
+    width:this.layoutSize.contentWidth+"px",
+    height:this.layoutSize.contentHeight+"px",
+}}>
 
 <div className={styles.subContentTop}>
     <div className={styles.header}>

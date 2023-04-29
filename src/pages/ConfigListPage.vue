@@ -40,14 +40,14 @@
       </div>
     </div>
   </div>
-  <SubContentPage
+  <SubContentFullPage
     v-show="useForm"
     title="empty"
     @close="closeForm"
     @submit="closeForm"
   >
   abc
-  </SubContentPage>
+  </SubContentFullPage>
   </div>
 </template>
 
@@ -58,6 +58,7 @@ import { namespaceStore } from "@/data/namespace";
 import { createColumns } from "@/components/config/ConfigColumns";
 import NamespacePopSelect from "@/components/namespace/NamespacePopSelect.vue";
 import SubContentPage from '@/components/common/SubContentPage'
+import SubContentFullPage from '@/components/common/SubContentFullPage'
 import { Close } from "@vicons/ionicons5";
 
 export default defineComponent({
@@ -65,6 +66,7 @@ export default defineComponent({
     NamespacePopSelect,
     Close,
     SubContentPage,
+    SubContentFullPage,
   },
   setup(self) {
     //window.$message = useMessage();

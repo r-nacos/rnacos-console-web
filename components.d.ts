@@ -11,16 +11,18 @@ declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     Foo: typeof import('./src/components/Foo.vue')['default']
     MainLayout: typeof import('./src/components/layout/MainLayout.vue')['default']
+    NamespacePopSelect: typeof import('./src/components/namespace/NamespacePopSelect.vue')['default']
+    NButton: typeof import('naive-ui')['NButton']
+    NConfigProvider: typeof import('naive-ui')['NConfigProvider']
+    NDataTable: typeof import('naive-ui')['NDataTable']
+    NForm: typeof import('naive-ui')['NForm']
+    NFormItem: typeof import('naive-ui')['NFormItem']
     NIcon: typeof import('naive-ui')['NIcon']
+    NInput: typeof import('naive-ui')['NInput']
     NMessageProvider: typeof import('naive-ui')['NMessageProvider']
+    NSelect: typeof import('naive-ui')['NSelect']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SideMenu: typeof import('./src/components/SideMenu.vue')['default']
-  }
-}
-
-declare module 'vue' {
-  interface HTMLAttributes {
-    className?: unknown
   }
 }

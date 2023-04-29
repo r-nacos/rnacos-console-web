@@ -2,6 +2,7 @@ import Boo from '@/components/Boo.jsx'
 import MainLayout from '@/components/layout/MainLayout.vue'
 import Config from '@/pages/Config'
 import NamespacePage from '@/pages/NamespacePage'
+import ConfigListPage from '@/pages/ConfigListPage.vue'
 
 export const routes = [
     {
@@ -23,6 +24,12 @@ export const routes = [
                 component: Boo,
             },
             {
+                path: '/manage/configs',
+                name: 'manange configs',
+                meta: {'title':'配置列表'},
+                component: ConfigListPage,
+            },
+            {
                 path: '/manage/config',
                 name: 'manange config',
                 meta: {'title':'config title'},
@@ -31,7 +38,7 @@ export const routes = [
             {
                 path: '/manage/namespace',
                 name: 'namespace',
-                meta: {'title':'namespace title'},
+                meta: {'title':'命名空间管理'},
                 component: NamespacePage,
             },
         ],

@@ -77,11 +77,17 @@ export default defineComponent({
     ConfigDetail,
   },
   setup(self) {
-    let resultObj=null;
     //window.$message = useMessage();
     const dataRef = ref([]);
     const useFormRef = ref(false);
     const loadingRef = ref(false);
+    const paramRef = ref({
+        dataParam: "",
+        groupParam: "",
+        tenant: "",
+        pageNo: 1,
+        pageSize: 20,
+      });
     const modelRef = ref({
       dataId: "",
       group: "",
@@ -98,6 +104,42 @@ export default defineComponent({
         return `Total is ${itemCount}.`;
       },
     });
+    const doQueryList=()=>{
+      return configApi.queryConfigPage({
+        tenant: namespaceStore.current.value.namespaceId,
+        dataParam: paramRef.dataParam,
+        groupParam: paramRef.groupParam,
+        pageNo: paginationReactive.page,
+        pageSize: paginationReactive.pageSize,
+      });
+    };
+    const doHandlePageChange=(currentPage)=>{
+        paginationReactive.page = currentPage;
+        if (!loadingRef.value) {
+          loadingRef.value = true;
+          doQueryList()
+            .then((res) => {
+              loadingRef.value = false;
+              if (res.status == 200) {
+                let count = res.data.count;
+                let pageSize = paginationReactive.pageSize;
+                dataRef.value = res.data.list;
+                paginationReactive.itemCount = count;
+                paginationReactive.pageCount = Math.round(
+                  (count + pageSize - 1) / pageSize
+                );
+              } else {
+                window.$message.error("request err,status code:" + res.status);
+                dataRef.value = [];
+              }
+            })
+            .catch((err) => {
+              window.$message.error("request err,message" + err.message);
+              dataRef.value = [];
+              loadingRef.value = false;
+            });
+        }
+      };
     const showNewConfigValueDetail = (row, mode) => {
       let config = {
         tenant: row.tenant,
@@ -152,7 +194,7 @@ export default defineComponent({
           console.log("response", res.request.responseText);
           if (res.status == 200) {
             window.$message.info("删除配置成功");
-            //resultObj.doHandlePageChange(1);
+            doHandlePageChange(1);
           } else {
             window.$message.error("删除配置报错,response code:" + res.status);
           }
@@ -163,7 +205,7 @@ export default defineComponent({
     };
 
     const columns = createColumns(detailItem, updateItem, removeItem);
-    resultObj= {
+    return {
       columns,
       data: dataRef,
       useForm: useFormRef,
@@ -171,46 +213,14 @@ export default defineComponent({
       loading: loadingRef,
       model: modelRef,
       showCreate,
-      param: ref({
-        dataParam: "",
-        groupParam: "",
-        tenant: "",
-        pageNo: 1,
-        pageSize: 20,
-      }),
+      param: paramRef,
       namespaceId: "",
       rowKey(rowData) {
         return rowData.group + "@@" + rowData.dataId;
       },
-      doHandlePageChange(currentPage) {
-        paginationReactive.page = currentPage;
-        if (!loadingRef.value) {
-          loadingRef.value = true;
-          this.doQueryList()
-            .then((res) => {
-              loadingRef.value = false;
-              if (res.status == 200) {
-                let count = res.data.count;
-                let pageSize = paginationReactive.pageSize;
-                dataRef.value = res.data.list;
-                paginationReactive.itemCount = count;
-                paginationReactive.pageCount = Math.round(
-                  (count + pageSize - 1) / pageSize
-                );
-              } else {
-                window.$message.error("request err,status code:" + res.status);
-                dataRef.value = [];
-              }
-            })
-            .catch((err) => {
-              window.$message.error("request err,message" + err.message);
-              dataRef.value = [];
-              loadingRef.value = false;
-            });
-        }
-      },
+      doQueryList,
+      doHandlePageChange,
     };
-    return resultObj;
   },
 
   computed: {
@@ -225,15 +235,6 @@ export default defineComponent({
     },
     queryList() {
       this.doHandlePageChange(1);
-    },
-    doQueryList() {
-      return configApi.queryConfigPage({
-        tenant: namespaceStore.current.value.namespaceId,
-        dataParam: this.param.dataParam,
-        groupParam: this.param.groupParam,
-        pageNo: this.pagination.page,
-        pageSize: this.pagination.pageSize,
-      });
     },
     closeForm() {
       this.useForm = false;

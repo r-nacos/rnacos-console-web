@@ -10,6 +10,10 @@ export interface IColumn{
     render?:(arg:any)=>any,
 }
 
+export interface ICallback<T>{
+    (arg:T):any;
+}
+
 export interface MyWindow extends Window {
     $message: MessageApiInjection
 }

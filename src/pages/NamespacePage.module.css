@@ -1,0 +1,13 @@
+
+.ops{
+    display: flex;
+    flex-direction: row;
+}
+
+.opsTitle{
+    flex: 1 1 auto;
+}
+
+.opsButton{
+    flex: 0 0 auto;
+}

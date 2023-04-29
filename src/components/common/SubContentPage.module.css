@@ -1,0 +1,59 @@
+
+.wrap{
+    position: relative;
+    position: fixed;
+    top:0px;
+    right: 0px;
+    height: 100%;
+    width: 600px;
+    background: #fff;
+    z-index: 2;
+}
+
+.subContentTop{
+    position: relative;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border-left: #ccc 1px solid;
+}
+
+.header{
+    flex: 0 0 auto;
+    height: 52px;
+    position: relative;
+    border-bottom: #ccc 1px solid;
+    display: flex;
+    flex-direction: row;
+}
+
+.title{
+    flex: 1 1 auto;
+    line-height: 52px;
+    font-size: 14/1.2;
+    padding-left: 8px;
+}
+
+.headerClose{
+    flex: 0 0 auto;
+    width: 26px;
+    height: 26px;
+    padding: 13px;
+    cursor: pointer;
+}
+
+.content{
+    flex: 1 1 auto;
+    overflow: scroll;
+    position: relative;
+    padding: 10px;
+}
+
+.footer{
+    flex: 0 0 auto;
+    padding: 5px;
+    position: relative;
+    border-top: #ccc 1px solid;
+}
+

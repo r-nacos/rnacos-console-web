@@ -7,6 +7,8 @@ import namespaceApi from '@/api/namespace'
 //import NamespacePopSelect from '../components/namespace/NamespacePopSelect.vue';
 import {namespaceStore} from '../data/namespace'
 import { IHandeNamespace, INamespace } from '@/types/namespace';
+import SubContentPage from '@/components/common/SubContentPage'
+import styles from './NamespacePage.module.css'
 
 import {
     FormInst,
@@ -14,7 +16,6 @@ import {
     FormItemRule,
     FormRules
   } from 'naive-ui'
-import { MessageApiInjection } from 'naive-ui/es/message/src/MessageProvider';
 import { IColumn, MyWindow } from '@/types/base';
 
 declare var window :MyWindow;
@@ -256,21 +257,18 @@ export default defineComponent({
 <div class="wrap">
     <div class="container">
 
-    <div class="ops">
-        <div class="title">
+    <div class={styles.ops}>
+        <div class={styles.opsTitle}>
             <NH2 prefix="bar">
                 <NText type="primary">
                     命名空间
                 </NText>
             </NH2>
         </div>
-        <div class="buttons">
+        <div class={styles.opsButton}>
             <NButton onClick={()=>{this.showCreate()}}>创建命名空间</NButton>
             <NButton onClick={()=>{this.loadNamespace()}}>刷新</NButton>
         </div>
-    </div>
-    <div class="popselect clear"> 
-        <span>namespace select</span>
     </div>
     <div class="data clear">
         <NDataTable
@@ -284,47 +282,21 @@ export default defineComponent({
         />
     </div>
     </div>
-    <div class="form" v-show="useForm">
-        <div class="clear form-top">
-            <div class="form-close"> 
-                <span onClick={()=>this.closeForm()}>
-                <NIcon size="20" >
-                    <Close/>
-                </NIcon>
-                </span>
-            </div>
-        </div>
-        <div> 
-            <NForm 
-            model={this.model}
-            rules={this.rules}
-            >
-                <NRow
-                 gutter={[0, 24]}
-                 >
-                    <NCol span="24">
-                        <div style="display: flex; justify-content: flex-end">
-                        <NButton
-                            
-                            round
-                            onClick={()=>this.closeForm()}
-                        >
-                            返回
-                        </NButton>
-                        <NButton
-                            
-                            round
-                            type="primary"
-                            onClick={()=>this.submit()}
-                        >
-                            确认
-                        </NButton>
-                        </div>
-                    </NCol>
-                </NRow>
-            </NForm>
-        </div>
-    </div>
+    <SubContentPage 
+        v-show={this.useForm}
+        title={this.model.mode=="add"?"新增命名空间":"修改命名空间"}
+        onClose={()=>this.closeForm()}
+        onSubmit={()=>this.submit()}
+    > 
+        <NForm model={this.model} rules={this.rules}>
+                <NFormItem path="namespaceName" label="命名空间名称">
+                    <NInput value={this.model.namespaceName} onUpdateValue={(v)=>this.model.namespaceName=v } />
+                </NFormItem>
+                <NFormItem path="namespaceId" label="命名空间Id">
+                    <NInput value={this.model.namespaceId} onUpdateValue={(v)=>this.model.namespaceId=v } />
+                </NFormItem>
+        </NForm>
+    </SubContentPage>
 </div>
 
         )

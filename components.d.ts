@@ -18,3 +18,9 @@ declare module '@vue/runtime-core' {
     SideMenu: typeof import('./src/components/SideMenu.vue')['default']
   }
 }
+
+declare module 'vue' {
+  interface HTMLAttributes {
+    className?: unknown
+  }
+}

@@ -125,6 +125,7 @@ export default defineComponent({
     position: relative;
     display: block;
     overflow: scroll;
+    background: #efefef;
 }
 
 .footer {

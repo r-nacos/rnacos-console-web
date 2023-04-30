@@ -69,4 +69,10 @@ export default defineComponent({
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+.detailWrap{
+  background: #fff;
+  padding: 3px;
+  border-radius: 5px;
+}
+</style>

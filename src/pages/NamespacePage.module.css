@@ -2,16 +2,35 @@
 .ops{
     display: flex;
     flex-direction: row;
-    height: 34px;
+    height: 40px;
+    align-items: center;
+    background: #fff;
+    border-bottom: 1px #ccc solid;
 }
 
 .opsTitle{
     flex: 1 1 auto;
     font: 14/1.25;
-    line-height: 30px;
+    line-height: 40px;
     padding-left: 15px;
 }
 
 .opsButton{
     flex: 0 0 auto;
+}
+
+.container{
+    padding: 10px;
+}
+
+.innerContainer{
+    padding: 3px;
+    background: #fff;
+    border-radius: 5px;
+}
+
+.subContent{
+    padding: 3px;
+    background: #fff;
+    border-radius: 5px;
 }

@@ -255,8 +255,6 @@ export default defineComponent({
     render() {
         return (
 <div class="wrap">
-    <div class="container">
-
     <div class={styles.ops}>
         <div class={styles.opsTitle}>
             <span >
@@ -268,6 +266,8 @@ export default defineComponent({
             <NButton onClick={()=>{this.loadNamespace()}}>刷新</NButton>
         </div>
     </div>
+    <div class={styles.container}>
+    <div class={styles.innerContainer}>
     <div class="data clear">
         <NDataTable
             remote
@@ -280,12 +280,14 @@ export default defineComponent({
         />
     </div>
     </div>
+    </div>
     <SubContentPage 
         v-show={this.useForm}
         title={this.model.mode=="add"?"新增命名空间":"修改命名空间"}
         onClose={()=>this.closeForm()}
         onSubmit={()=>this.submit()}
     > 
+        <div class={styles.subContent}>
         <NForm model={this.model} rules={this.rules}>
                 <NFormItem path="namespaceName" label="命名空间名称">
                     <NInput value={this.model.namespaceName} onUpdateValue={(v)=>this.model.namespaceName=v } />
@@ -294,6 +296,7 @@ export default defineComponent({
                     <NInput value={this.model.namespaceId} onUpdateValue={(v)=>this.model.namespaceId=v } />
                 </NFormItem>
         </NForm>
+        </div>
     </SubContentPage>
 </div>
 

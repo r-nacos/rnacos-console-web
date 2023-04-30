@@ -18,23 +18,19 @@ export const routes = [
         component: MainLayout,
         children: [
             {
-                path: '/manage/boo',
-                name: 'manange boo',
-                meta: {'title':'boo title'},
-                component: Boo,
-            },
-            {
                 path: '/manage/configs',
                 name: 'manange configs',
                 meta: {'title':'配置列表'},
                 component: ConfigListPage,
             },
+            /*
             {
                 path: '/manage/config',
                 name: 'manange config',
                 meta: {'title':'config title'},
                 component: Config,
             },
+            */
             {
                 path: '/manage/namespace',
                 name: 'namespace',

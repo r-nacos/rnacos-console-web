@@ -36,7 +36,7 @@ export default defineComponent({
 }}>
 
 <div className={styles.subContentTop}>
-    <div className={styles.header}>
+    <div className={styles.fullHeader}>
         <div className={styles.title}>
             <span>
                 {this.$props['title'] || "标题"}

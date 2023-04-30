@@ -24,12 +24,9 @@ function createStore():INamespaceStore {
     ]);
     const loadRef=ref(false);
     const setCurrent=function(current:INamespace) {
-        console.log("set current:",current)
         currentRef.value = current;
-        console.log(currentRef.value.namespaceId)
     }
     const setLastList=function(list:Array<INamespace>) {
-        console.log("setLastList",list);
         var optionList = [];
         for(var item of list){
             var obj= {

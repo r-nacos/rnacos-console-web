@@ -5,7 +5,6 @@
         <span> 配置列表 </span>
       </div>
       <div class="header-button">
-        <n-button @click="showCreate">新建</n-button>
       </div>
       <div class="namespace">
         <NamespacePopSelect @change="queryList" />
@@ -14,6 +13,7 @@
     <div class="content-wrap">
       <div class="form-container">
         <div class="query-params">
+          <div class="paramWrap">
           <n-form inline :label-width="80">
             <n-form-item size="tiny" label="配置" path="param.dataParam">
               <n-input size="tiny"
@@ -27,10 +27,16 @@
                 placeholder=" 输入配置组"
               />
             </n-form-item>
-            <n-form-item size="tiny" label=" ">
-              <n-button size="tiny" attr-type="button" @click="queryList"> 查询 </n-button>
-            </n-form-item>
           </n-form>
+          </div>
+          <div class="queryButton">
+              <span class="query-button-item">
+                <n-button @click="queryList">查询</n-button>
+              </span>
+              <span class="query-button-item">
+                <n-button type="primary" @click="showCreate">新建</n-button>
+              </span>
+          </div>
         </div>
         <div class="table-data">
           <n-data-table
@@ -48,7 +54,7 @@
     </div>
     <SubContentFullPage
       v-show="useForm"
-      title="empty"
+      :title="getDetailTitle"
       @close="closeForm"
       @submit="submitForm"
     >
@@ -225,6 +231,15 @@ export default defineComponent({
     getTenant() {
       return namespaceStore.current.value.namespaceId;
     },
+    getDetailTitle(){
+      if(this.model.mode=="update"){
+        return "编辑配置";
+      }
+      else if(this.model.mode=="create"){
+        return "新增配置";
+      }
+      return "编辑详情";
+    }
   },
 
   methods: {
@@ -295,7 +310,8 @@ export default defineComponent({
 .header {
   display: flex;
   flex-direction: row;
-  height: 34px;
+  align-items: center;
+  height: 40px;
   border-bottom: #ccc 1px solid;
   background: #fff;
 }
@@ -317,6 +333,20 @@ export default defineComponent({
 .query-params {
   flex: 0 0 auto;
   height: 60px;
+  display: flex;
+  flex-direction: row;
+}
+.paramWrap{
+  flex: 0 0 auto;
+}
+
+.queryButton{
+  display: flex;
+  align-items: center;
+}
+
+.query-button-item{
+  margin-left: 10px;
 }
 
 .table-data {

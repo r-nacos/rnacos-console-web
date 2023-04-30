@@ -35,7 +35,7 @@ export default defineComponent({
     height:this.layoutSize.contentHeight+"px",
 }}>
 
-<div className={styles.subContentTop}>
+<div className={styles.subContentTop} style={{"border-left-width":"0px"}}>
     <div className={styles.fullHeader}>
         <div className={styles.title}>
             <span>

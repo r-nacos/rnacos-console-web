@@ -1,6 +1,13 @@
-import { NButton } from "naive-ui"
+import { NButton,NPopconfirm } from "naive-ui"
 
 export const createColumns = function (detail,showUpdate, remove) {
+
+    const removeConfirmSlots = {
+        trigger: ()=> {
+            return <NButton size="tiny">删除</NButton>
+        }
+    }
+
     const columns = [
         {
             title: '配置ID',
@@ -18,7 +25,9 @@ export const createColumns = function (detail,showUpdate, remove) {
                     <div>
                         <NButton size="tiny" onClick={()=>detail(row)}>详情</NButton>
                         <NButton size="tiny" onClick={()=>showUpdate(row)}>编辑</NButton>
-                        <NButton size="tiny" onClick={()=>remove(row)}>删除</NButton>
+                        <NPopconfirm onPositiveClick={()=>remove(row)} v-slots={removeConfirmSlots} >
+                            <span>确认要删配置组为:{row.group},ID为{row.dataId}的配置吗？</span>
+                        </NPopconfirm>
                     </div>
                 )
             }

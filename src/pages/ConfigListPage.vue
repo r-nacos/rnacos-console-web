@@ -149,7 +149,6 @@ export default defineComponent({
       configApi
         .getConfig(config)
         .then((res) => {
-          console.log("response", res.request.responseText);
           if (res.status == 200) {
             modelRef.value = {
               mode: mode,
@@ -191,7 +190,6 @@ export default defineComponent({
       configApi
         .removeConfig(config)
         .then((res) => {
-          console.log("response", res.request.responseText);
           if (res.status == 200) {
             window.$message.info("删除配置成功");
             doHandlePageChange(1);
@@ -253,7 +251,6 @@ export default defineComponent({
       configApi
         .setConfig(config)
         .then((res) => {
-          console.log("response", res.request.responseText);
           if (res.status == 200) {
             window.$message.info("设置成功!");
             this.useForm = false;

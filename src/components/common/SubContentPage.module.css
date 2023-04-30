@@ -74,7 +74,9 @@
     overflow: scroll;
     position: relative;
     padding: 10px;
+    /*
     background: #efefef;
+    */
 }
 
 .footer{

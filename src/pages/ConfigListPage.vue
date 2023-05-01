@@ -24,7 +24,7 @@
             <n-form-item size="tiny" label="配置组" path="param.groupParam">
               <n-input size="tiny"
                 v-model:value="param.groupParam"
-                placeholder=" 输入配置组"
+                placeholder="输入配置组"
               />
             </n-form-item>
           </n-form>
@@ -73,6 +73,7 @@ import SubContentPage from "@/components/common/SubContentPage";
 import SubContentFullPage from "@/components/common/SubContentFullPage";
 import ConfigDetail from "./ConfigDetail.vue";
 import { Close } from "@vicons/ionicons5";
+import * as constant from '@/types/constant'
 
 export default defineComponent({
   components: {
@@ -146,7 +147,7 @@ export default defineComponent({
             });
         }
       };
-    const showNewConfigValueDetail = (row, mode) => {
+    const doShowConfigDetail = (row, mode) => {
       let config = {
         tenant: row.tenant,
         group: row.group,
@@ -172,10 +173,10 @@ export default defineComponent({
         });
     };
     const updateItem = (row) => {
-      showNewConfigValueDetail(row, "update");
+      doShowConfigDetail(row, constant.FORM_MODE_DETAIL);
     };
     const detailItem = (row) => {
-      showNewConfigValueDetail(row, "detail");
+      doShowConfigDetail(row, constant.FORM_MODE_DETAIL);
     };
     const showCreate = () => {
       modelRef.value = {
@@ -183,7 +184,7 @@ export default defineComponent({
         group: "",
         md5: "",
         content: "",
-        mode: "create",
+        mode: constant.FORM_MODE_DETAIL,
       };
       useFormRef.value = true;
     };
@@ -232,10 +233,10 @@ export default defineComponent({
       return namespaceStore.current.value.namespaceId;
     },
     getDetailTitle(){
-      if(this.model.mode=="update"){
+      if(this.model.mode===constant.FORM_MODE_UPDATE){
         return "编辑配置";
       }
-      else if(this.model.mode=="create"){
+      else if(this.model.mode===constant.FORM_MODE_CREATE){
         return "新增配置";
       }
       return "编辑详情";
@@ -253,7 +254,7 @@ export default defineComponent({
       this.useForm = false;
     },
     submitForm() {
-      if (this.model.mode === "detail") {
+      if (this.model.mode === constant.FORM_MODE_DETAIL) {
         this.useForm = false;
         return;
       }

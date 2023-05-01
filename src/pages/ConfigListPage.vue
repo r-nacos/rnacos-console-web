@@ -108,7 +108,7 @@ export default defineComponent({
       pageSize: 10,
       itemCount: 0,
       prefix({ itemCount }) {
-        return `Total is ${itemCount}.`;
+        return `总行数: ${itemCount}`;
       },
     });
     const doQueryList=()=>{

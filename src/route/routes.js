@@ -4,6 +4,7 @@ import Config from '@/pages/Config'
 import NamespacePage from '@/pages/NamespacePage'
 import ConfigListPage from '@/pages/ConfigListPage.vue'
 import ServiceListPage from '@/pages/ServiceListPage.vue'
+import ServiceInstanceListPage from '@/pages/ServiceInstanceListPage.vue'
 
 export const routes = [
     {
@@ -37,6 +38,12 @@ export const routes = [
                 name: 'manange service',
                 meta: {'title':'服务列表'},
                 component: ServiceListPage,
+            },
+            {
+                path: '/manage/service/instance',
+                name: 'manange instance',
+                meta: {'title':'服务实例列表'},
+                component: ServiceInstanceListPage,
             },
             {
                 path: '/manage/namespace',

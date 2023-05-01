@@ -2,11 +2,10 @@
   <div class="wrap">
     <div class="header">
       <div class="title">
-        <span> 配置列表 </span>
+        <span>服务实例列表</span>
       </div>
       <div class="header-button"></div>
       <div class="namespace">
-        <NamespacePopSelect @change="queryList" />
       </div>
     </div>
     <div class="content-wrap">
@@ -14,28 +13,27 @@
         <div class="query-params">
           <div class="paramWrap">
             <n-form inline :label-width="80">
-              <n-form-item size="tiny" label="服务名" path="param.serviceParam">
+              <n-form-item size="tiny" label="服务名称" path="param.serviceParam">
                 <n-input
                   size="tiny"
-                  v-model:value="param.serviceParam"
-                  placeholder="输入服务名"
+                  :disabled="true"
+                  v-model:value="param.serviceName"
+                  placeholder="输入服务名称"
                 />
               </n-form-item>
               <n-form-item size="tiny" label="服务组" path="param.groupParam">
                 <n-input
                   size="tiny"
-                  v-model:value="param.groupParam"
-                  placeholder="输入服务组"
+                  :disabled="true"
+                  v-model:value="param.groupName"
+                  placeholder=""
                 />
               </n-form-item>
             </n-form>
           </div>
           <div class="queryButton">
             <span class="query-button-item">
-              <n-button @click="queryList">查询</n-button>
-            </span>
-            <span class="query-button-item">
-              <n-button type="primary" @click="showCreate">新建</n-button>
+              <n-button @click="reloadData">刷新</n-button>
             </span>
           </div>
         </div>
@@ -59,36 +57,32 @@
       @close="closeForm"
       @submit="submitForm"
     >
-      <ServiceDetail :model="model" />
+      subpage
     </SubContentPage>
   </div>
 </template>
 
 <script>
-import { ref, reactive, defineComponent } from "vue";
+import { defineComponent } from "vue";
 import { namingApi } from "@/api/naming";
-import { namespaceStore } from "@/data/namespace";
-import { createColumns } from "@/components/naming/ServiceListColumns.jsx";
-import NamespacePopSelect from "@/components/namespace/NamespacePopSelect.vue";
-import SubContentPage from "@/components/common/SubContentPage";
-import ServiceDetail from "./ServiceDetail.vue";
+//import { namespaceStore } from "@/data/namespace";
+import {createColumns} from "@/components/naming/InstanceListColumns"
+import SubContentPage from '@/components/common/SubContentPage'
 import * as constant from '@/types/constant'
 
 export default defineComponent({
   components: {
-    NamespacePopSelect,
     SubContentPage,
-    ServiceDetail,
   },
   setup() {
     const dataRef = ref([]);
+    const sourceDataRef = ref([]);
+    const loadedRef=ref(false);
     const loadingRef = ref(false);
     const paramRef = ref({
-      serviceParam: "",
-      groupParam: "",
+      serviceName: "",
+      groupName: "",
       namespaceId: "",
-      pageNo: 1,
-      pageSize: 20,
     });
     const paginationReactive = reactive({
       page: 1,
@@ -100,6 +94,7 @@ export default defineComponent({
       },
     });
     const useFormRef = ref(false);
+
     const modelRef = ref({
       groupName:"",
       serviceName:"",
@@ -108,6 +103,9 @@ export default defineComponent({
       selector:"",
       mode:"",
     });
+    const updateParam=(param)=> {
+      paramRef.value = param
+    }
     const showUpdate = (row) => {
       let protectThreshold = "0";
       if(row.protectThreshold){
@@ -123,49 +121,41 @@ export default defineComponent({
       };
       useFormRef.value = true;
     };
-    const showDetail = (row) => {
-      let protectThreshold = "0";
-      if(row.protectThreshold){
-        protectThreshold = row.protectThreshold.toString();
-      }
-      modelRef.value = {
-        groupName:row.groupName,
-        serviceName:row.name,
-        protectThreshold:protectThreshold,
-        metadata:row.metadata,
-        selector:"",
-        mode:constant.FORM_MODE_DETAIL,
-      };
-      useFormRef.value = true;
+    const onLine= (row) => {
     };
-    const removeItem = (row) => {
-      useFormRef.value = true;
-    };
-    const showCreate = () => {
-      modelRef.value = {
-        groupName:"",
-        serviceName:"",
-        protectThreshold:"0",
-        metadata:"",
-        selector:"",
-        mode:constant.FORM_MODE_CREATE,
-      };
-      useFormRef.value = true;
+    const offLine= (row) => {
     };
 
     const doQueryList = () => {
-      return namingApi.queryServicePage({
-        namespaceId: namespaceStore.current.value.namespaceId,
-        accessToken: null,
-        serviceNameParam: paramRef.serviceParam,
-        groupNameParam: paramRef.groupParam,
-        pageNo: paginationReactive.page,
-        pageSize: paginationReactive.pageSize,
+      return namingApi.queryServiceInstances({
+        serviceName: paramRef.value.serviceName,
+        groupName: paramRef.value.groupName,
+        namespaceId: paramRef.value.namespaceId,
       });
     };
 
+    const setCurrentPageData=(currentPage) => {
+      let pageSize = paginationReactive.pageSize;
+        let offset = (currentPage-1)*pageSize;
+        let endIndex = Math.min(offset+pageSize, sourceDataRef.value.length)
+        let data=[];
+        for(var i=offset;i<endIndex;i++){
+          data.push(sourceDataRef.value[i]);
+        }
+        dataRef.value = data;
+
+    }
+
+    const reloadData=()=>{
+      loadedRef.value=false;
+      doHandlePageChange(paginationReactive.page || 1);
+    }
     const doHandlePageChange = (currentPage) => {
       paginationReactive.page = currentPage;
+      if(loadedRef.value){
+        setCurrentPageData(currentPage);
+        return
+      }
       if (!loadingRef.value) {
         loadingRef.value = true;
         doQueryList()
@@ -174,11 +164,13 @@ export default defineComponent({
             if (res.status == 200) {
               let count = res.data.count;
               let pageSize = paginationReactive.pageSize;
-              dataRef.value = res.data.serviceList;
               paginationReactive.itemCount = count;
               paginationReactive.pageCount = Math.round(
                 (count + pageSize - 1) / pageSize
               );
+              loadedRef.value=true;
+              sourceDataRef.value = res.data.list || [];
+              setCurrentPageData(currentPage);
             } else {
               window.$message.error("request err,status code:" + res.status);
               dataRef.value = [];
@@ -192,36 +184,43 @@ export default defineComponent({
       }
     };
 
-    let columns = createColumns(showDetail, showUpdate, removeItem);
+    let columns = createColumns(showUpdate, onLine,offLine);
     return {
       columns,
       data: dataRef,
+      sourceData:sourceDataRef,
       pagination: paginationReactive,
       loading: loadingRef,
+      loaded: loadedRef,
       param: paramRef,
       useForm: useFormRef,
       model: modelRef,
+      updateParam,
       rowKey(rowData) {
-        return rowData.groupName + "@@" + rowData.name;
+        return rowData.ip+ "_" + rowData.port;
       },
       doHandlePageChange,
-      showCreate,
+      reloadData,
     };
   },
-
-  computed: {
-    namespaceId(){
-      return namespaceStore.current.value.namespaceId;
-    },
+  computed:{
     getDetailTitle(){
-      if(this.model.mode===constant.FORM_MODE_UPDATE){
-        return "编辑服务";
-      }
-      else if(this.model.mode===constant.FORM_MODE_CREATE){
-        return "新增服务";
-      }
-      return "服务详情";
+      return "编辑实例";
     }
+  },
+  data() {
+    return {
+    };
+  },
+  mounted() {
+    let query = this.$route.query;
+    let param = {
+      serviceName:query.serviceName,
+      groupName:query.groupName ||"",
+      namespaceId:query.namespaceId ||"",
+    }
+    this.updateParam(param);
+    this.queryList();
   },
   methods: {
     handlePageChange(page) {
@@ -234,52 +233,8 @@ export default defineComponent({
       this.useForm = false;
     },
     submitForm() {
-      if (this.model.mode === constant.FORM_MODE_DETAIL) {
-        this.useForm = false;
-        return;
-      }
-      let serviceInfo = {
-        namespaceId:this.namespaceId,
-        groupName:this.model.groupName,
-        serviceName:this.model.serviceName,
-        protectThreshold:this.model.protectThreshold,
-        metadata:this.model.metadata,
-        tenant: this.getTenant,
-      };
-      if(this.model.mode=== constant.FORM_MODE_CREATE){
-        namingApi.createService(serviceInfo)
-          .then((res) => {
-            if (res.status == 200) {
-              window.$message.info("设置成功!");
-              this.useForm = false;
-              this.queryList();
-              return;
-            }
-            window.$message.error("设置失败，response code" + res.status);
-          })
-          .catch((err) => {
-            window.$message.error("设置失败，" + err.message);
-          });
-      }
-      else{
-        namingApi.updateService(serviceInfo)
-          .then((res) => {
-            if (res.status == 200) {
-              window.$message.info("设置成功!");
-              this.useForm = false;
-              this.queryList();
-              return;
-            }
-            window.$message.error("设置失败，response code" + res.status);
-          })
-          .catch((err) => {
-            window.$message.error("设置失败，" + err.message);
-          });
-      }
+      this.useForm = false;
     },
-  },
-  mounted() {
-    this.queryList();
   },
 });
 </script>
@@ -318,7 +273,7 @@ export default defineComponent({
 .title {
   flex: 1 1 auto;
   font: 14/1.25;
-  line-height: 30px;
+  line-height: 40px;
   padding-left: 15px;
 }
 

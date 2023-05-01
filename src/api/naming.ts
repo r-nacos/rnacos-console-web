@@ -65,16 +65,14 @@ class NamingApi {
       },
     });
   }
-  /*
   queryServiceInstances(key:IServiceKey):Promise<AxiosResponse> {
     return axios.request({
-      method: "delete",
-      url: "/nacos/v1/ns/service",
-      data: {
+      method: "get",
+      url: "/nacos/v1/console/instances",
+      params: {
         ...key
       },
     });
   }
-  */
 }
 export const namingApi = new NamingApi();

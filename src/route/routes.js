@@ -3,6 +3,7 @@ import MainLayout from '@/components/layout/MainLayout.vue'
 import Config from '@/pages/Config'
 import NamespacePage from '@/pages/NamespacePage'
 import ConfigListPage from '@/pages/ConfigListPage.vue'
+import ServiceListPage from '@/pages/ServiceListPage.vue'
 
 export const routes = [
     {
@@ -31,6 +32,12 @@ export const routes = [
                 component: Config,
             },
             */
+            {
+                path: '/manage/service',
+                name: 'manange service',
+                meta: {'title':'服务列表'},
+                component: ServiceListPage,
+            },
             {
                 path: '/manage/namespace',
                 name: 'namespace',

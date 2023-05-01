@@ -3,7 +3,7 @@ import namespaceApi from '../api/namespace'
 import { INamespace, INamespaceStore } from '@/types/namespace';
 import { ILabelItem } from '@/types/base';
 
-
+// 前期没有使用 pinia,后继调整时考虑迁移到pinia
 
 function createStore():INamespaceStore {
     const currentRef:Ref<UnwrapRef<INamespace>>=ref({

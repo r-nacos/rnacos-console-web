@@ -4,7 +4,9 @@
       <div class="title">
         <span>服务实例列表</span>
       </div>
-      <div class="header-button"></div>
+      <div class="header-button">
+        <span><n-button @click="routerBack">返回</n-button></span>
+      </div>
       <div class="namespace">
       </div>
     </div>
@@ -234,6 +236,9 @@ export default defineComponent({
     },
     submitForm() {
       this.useForm = false;
+    },
+    routerBack(){
+      this.$router.go(-1);
     },
   },
 });

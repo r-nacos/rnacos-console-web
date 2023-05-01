@@ -14,7 +14,7 @@
         <div class="query-params">
           <div class="paramWrap">
             <n-form inline :label-width="80">
-              <n-form-item size="tiny" label="服务名" path="param.serviceParam">
+              <n-form-item size="tiny" label="服务名称" path="param.serviceParam">
                 <n-input
                   size="tiny"
                   v-model:value="param.serviceParam"
@@ -73,6 +73,7 @@ import NamespacePopSelect from "@/components/namespace/NamespacePopSelect.vue";
 import SubContentPage from "@/components/common/SubContentPage";
 import ServiceDetail from "./ServiceDetail.vue";
 import * as constant from '@/types/constant'
+import {useRouter} from 'vue-router'
 
 export default defineComponent({
   components: {
@@ -81,6 +82,7 @@ export default defineComponent({
     ServiceDetail,
   },
   setup() {
+    let router = useRouter();
     const dataRef = ref([]);
     const loadingRef = ref(false);
     const paramRef = ref({
@@ -122,6 +124,16 @@ export default defineComponent({
         mode:constant.FORM_MODE_UPDATE,
       };
       useFormRef.value = true;
+    };
+    const showInstances = (row) => {
+      router.push({ 
+        path: '/manage/service/instance', 
+        query: {
+          groupName:row.groupName,
+          serviceName:row.name,
+          namespaceId: namespaceStore.current.value.namespaceId,
+        } 
+      })
     };
     const showDetail = (row) => {
       let protectThreshold = "0";
@@ -192,7 +204,7 @@ export default defineComponent({
       }
     };
 
-    let columns = createColumns(showDetail, showUpdate, removeItem);
+    let columns = createColumns(showInstances,showDetail, showUpdate, removeItem);
     return {
       columns,
       data: dataRef,

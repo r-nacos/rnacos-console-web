@@ -26,7 +26,7 @@ export const createColumns = function (detail,showUpdate, remove) {
                         <NButton size="tiny" onClick={()=>detail(row)}>详情</NButton>
                         <NButton size="tiny" onClick={()=>showUpdate(row)}>编辑</NButton>
                         <NPopconfirm onPositiveClick={()=>remove(row)} v-slots={removeConfirmSlots} >
-                            <span>确认要删配置组为:{row.group},ID为{row.dataId}的配置吗？</span>
+                            <span>确认要删配置组为:{row.group},ID为:{row.dataId}的配置吗？</span>
                         </NPopconfirm>
                     </div>
                 )

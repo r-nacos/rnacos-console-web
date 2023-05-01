@@ -1,6 +1,6 @@
 import { NButton, NPopconfirm } from "naive-ui"
 
-export const createColumns = function (detail, showUpdate, remove) {
+export const createColumns = function (showInstances,detail, showUpdate, remove) {
 
   const removeConfirmSlots = {
     trigger: () => {
@@ -10,7 +10,7 @@ export const createColumns = function (detail, showUpdate, remove) {
 
   const columns = [
     {
-      title: '服务',
+      title: '服务名称',
       key: 'name'
     },
     {
@@ -31,10 +31,11 @@ export const createColumns = function (detail, showUpdate, remove) {
       render(row) {
         return (
           <div>
+            <NButton size="tiny" onClick={() => showInstances(row)}>服务实例</NButton>
             <NButton size="tiny" onClick={() => detail(row)}>详情</NButton>
             <NButton size="tiny" onClick={() => showUpdate(row)}>编辑</NButton>
             <NPopconfirm onPositiveClick={() => remove(row)} v-slots={removeConfirmSlots} >
-              <span>确认要删配置组为:{row.group},ID为{row.dataId}的配置吗？</span>
+              <span>确认要删服务名称为:{row.name},服务组为:{row.groupName},的配置吗？</span>
             </NPopconfirm>
           </div>
         )

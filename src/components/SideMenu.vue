@@ -154,10 +154,12 @@
         height: 36px;
         line-height: 36px;
         text-align: left;
+        display: flex;
+        align-items: center;
         /* 
         border-width: 0 0 1px 0;
-        */
         cursor: pointer;
+        */
     }
     
     .group-item .icon{
@@ -165,8 +167,8 @@
         text-align: center;
         width: 20px;
         font-size: 14px;
-        height: 306x;
-        line-height: 36px;;
+        height: 14px;
+        line-height: 14px;;
     }
     
     .item {

@@ -7,15 +7,18 @@
       <div class="header-button">
         <span><n-button @click="routerBack">返回</n-button></span>
       </div>
-      <div class="namespace">
-      </div>
+      <div class="namespace"></div>
     </div>
     <div class="content-wrap">
       <div class="form-container">
         <div class="query-params">
           <div class="paramWrap">
             <n-form inline :label-width="80">
-              <n-form-item size="tiny" label="服务名称" path="param.serviceParam">
+              <n-form-item
+                size="tiny"
+                label="服务名称"
+                path="param.serviceParam"
+              >
                 <n-input
                   size="tiny"
                   :disabled="true"
@@ -59,7 +62,7 @@
       @close="closeForm"
       @submit="submitForm"
     >
-      subpage
+      <ServiceInstanceDetail :model="model" />
     </SubContentPage>
   </div>
 </template>
@@ -68,24 +71,30 @@
 import { defineComponent } from "vue";
 import { namingApi } from "@/api/naming";
 //import { namespaceStore } from "@/data/namespace";
-import {createColumns} from "@/components/naming/InstanceListColumns"
-import SubContentPage from '@/components/common/SubContentPage'
-import * as constant from '@/types/constant'
+import { createColumns } from "@/components/naming/InstanceListColumns";
+import SubContentPage from "@/components/common/SubContentPage";
+import ServiceInstanceDetail from "./ServiceInstanceDetail.vue";
+import * as constant from "@/types/constant";
+import { useRoute } from "vue-router";
 
 export default defineComponent({
   components: {
     SubContentPage,
+    ServiceInstanceDetail,
   },
   setup() {
+    let route = useRoute();
+    let query = route.query;
+    let param = {
+      serviceName: query.serviceName,
+      groupName: query.groupName || "",
+      namespaceId: query.namespaceId || "",
+    };
     const dataRef = ref([]);
     const sourceDataRef = ref([]);
-    const loadedRef=ref(false);
+    const loadedRef = ref(false);
     const loadingRef = ref(false);
-    const paramRef = ref({
-      serviceName: "",
-      groupName: "",
-      namespaceId: "",
-    });
+    const paramRef = ref(param);
     const paginationReactive = reactive({
       page: 1,
       pageCount: 1,
@@ -98,35 +107,62 @@ export default defineComponent({
     const useFormRef = ref(false);
 
     const modelRef = ref({
-      groupName:"",
-      serviceName:"",
-      protectThreshold:"0",
-      metadata:"",
-      selector:"",
-      mode:"",
+      ip: "",
+      port: "0",
+      enabled: true,
+      weight: "1",
+      metadata: "{}",
+      mode: constant.FORM_MODE_DETAIL,
     });
-    const updateParam=(param)=> {
-      paramRef.value = param
-    }
+    const updateParam = (param) => {
+      paramRef.value = param;
+    };
     const showUpdate = (row) => {
-      let protectThreshold = "0";
-      if(row.protectThreshold){
-        protectThreshold = row.protectThreshold.toString();
-      }
       modelRef.value = {
-        groupName:row.groupName,
-        serviceName:row.name,
-        protectThreshold:protectThreshold,
-        metadata:row.metadata,
-        selector:"",
-        mode:constant.FORM_MODE_UPDATE,
+        ip: row.ip,
+        port: row.port.toString(),
+        enabled: row.enabled,
+        weight: (row.weight || 1).toString(),
+        metadata: JSON.stringify(row.metadata || {}),
+        mode: constant.FORM_MODE_UPDATE,
       };
       useFormRef.value = true;
     };
-    const onLine= (row) => {
+    const setRowEnabled = (row, enabled) => {
+      let instance = {
+        namespaceId: param.namespaceId,
+        groupName: param.groupName,
+        serviceName: param.serviceName,
+
+        ip: row.ip,
+        port: row.port,
+        //weight: row.weight,
+        enabled: enabled,
+        //metadata: row.metadata,
+      };
+      namingApi
+        .updateInstance(instance)
+        .then((res) => {
+          if (res.status == 200) {
+            if(enabled){
+              window.$message.info("上线成功!");
+            }
+            else{
+              window.$message.info("下线成功!");
+            }
+            row.enabled = enabled;
+            setCurrentPageData(paginationReactive.page || 1);
+            //reloadData()
+            return;
+          }
+          window.$message.error("设置失败，response code" + res.status);
+        })
+        .catch((err) => {
+          window.$message.error("设置失败，" + err.message);
+        });
     };
-    const offLine= (row) => {
-    };
+    const onLine = (row) => {setRowEnabled(row,true)};
+    const offLine = (row) => {setRowEnabled(row,false)};
 
     const doQueryList = () => {
       return namingApi.queryServiceInstances({
@@ -136,27 +172,26 @@ export default defineComponent({
       });
     };
 
-    const setCurrentPageData=(currentPage) => {
+    const setCurrentPageData = (currentPage) => {
       let pageSize = paginationReactive.pageSize;
-        let offset = (currentPage-1)*pageSize;
-        let endIndex = Math.min(offset+pageSize, sourceDataRef.value.length)
-        let data=[];
-        for(var i=offset;i<endIndex;i++){
-          data.push(sourceDataRef.value[i]);
-        }
-        dataRef.value = data;
+      let offset = (currentPage - 1) * pageSize;
+      let endIndex = Math.min(offset + pageSize, sourceDataRef.value.length);
+      let data = [];
+      for (var i = offset; i < endIndex; i++) {
+        data.push(sourceDataRef.value[i]);
+      }
+      dataRef.value = data;
+    };
 
-    }
-
-    const reloadData=()=>{
-      loadedRef.value=false;
+    const reloadData = () => {
+      loadedRef.value = false;
       doHandlePageChange(paginationReactive.page || 1);
-    }
+    };
     const doHandlePageChange = (currentPage) => {
       paginationReactive.page = currentPage;
-      if(loadedRef.value){
+      if (loadedRef.value) {
         setCurrentPageData(currentPage);
-        return
+        return;
       }
       if (!loadingRef.value) {
         loadingRef.value = true;
@@ -170,7 +205,7 @@ export default defineComponent({
               paginationReactive.pageCount = Math.round(
                 (count + pageSize - 1) / pageSize
               );
-              loadedRef.value=true;
+              loadedRef.value = true;
               sourceDataRef.value = res.data.list || [];
               setCurrentPageData(currentPage);
             } else {
@@ -186,11 +221,11 @@ export default defineComponent({
       }
     };
 
-    let columns = createColumns(showUpdate, onLine,offLine);
+    let columns = createColumns(showUpdate, onLine, offLine);
     return {
       columns,
       data: dataRef,
-      sourceData:sourceDataRef,
+      sourceData: sourceDataRef,
       pagination: paginationReactive,
       loading: loadingRef,
       loaded: loadedRef,
@@ -199,29 +234,30 @@ export default defineComponent({
       model: modelRef,
       updateParam,
       rowKey(rowData) {
-        return rowData.ip+ "_" + rowData.port;
+        return rowData.ip + "_" + rowData.port;
       },
       doHandlePageChange,
       reloadData,
     };
   },
-  computed:{
-    getDetailTitle(){
+  computed: {
+    getDetailTitle() {
       return "编辑实例";
-    }
+    },
   },
   data() {
-    return {
-    };
+    return {};
   },
   mounted() {
+    /*
     let query = this.$route.query;
     let param = {
-      serviceName:query.serviceName,
-      groupName:query.groupName ||"",
-      namespaceId:query.namespaceId ||"",
-    }
+      serviceName: query.serviceName,
+      groupName: query.groupName || "",
+      namespaceId: query.namespaceId || "",
+    };
     this.updateParam(param);
+    */
     this.queryList();
   },
   methods: {
@@ -235,9 +271,41 @@ export default defineComponent({
       this.useForm = false;
     },
     submitForm() {
-      this.useForm = false;
+      if (this.model.mode === constant.FORM_MODE_DETAIL) {
+        this.useForm = false;
+        return;
+      }
+      let instance = {
+        namespaceId: this.param.namespaceId,
+        groupName: this.param.groupName,
+        serviceName: this.param.serviceName,
+
+        ip: this.model.ip,
+        port: this.model.port,
+        weight: this.model.weight,
+        enabled: this.model.enabled,
+        metadata: this.model.metadata,
+      };
+      if (this.model.mode === constant.FORM_MODE_UPDATE) {
+        namingApi
+          .updateInstance(instance)
+          .then((res) => {
+            if (res.status == 200) {
+              window.$message.info("设置成功!");
+              this.useForm = false;
+              this.reloadData();
+              return;
+            }
+            window.$message.error("设置失败，response code" + res.status);
+          })
+          .catch((err) => {
+            window.$message.error("设置失败，" + err.message);
+          });
+      } else {
+        this.useForm = false;
+      }
     },
-    routerBack(){
+    routerBack() {
       this.$router.go(-1);
     },
   },

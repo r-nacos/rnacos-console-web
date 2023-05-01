@@ -1,6 +1,6 @@
 import { AxiosResponse } from "axios";
 import request from "../utils/request";
-import { IServiceInfo, IServiceKey } from "@/types/service";
+import { IServiceInfo, IServiceInstance, IServiceKey } from "@/types/service";
 let axios = request;
 
 export interface IServiceQueryPageParam {
@@ -33,45 +33,43 @@ class NamingApi {
     return axios.request({
       method: "get",
       url: "/nacos/v1/ns/catalog/services",
-      params: {
-        ...param
-      },
+      params: param,
     });
   }
   createService(info:IServiceInfo):Promise<AxiosResponse>{
     return axios.request({
       method: "post",
       url: "/nacos/v1/ns/service",
-      data: {
-        ...info
-      },
+      data: info,
     });
   }
   updateService(info:IServiceInfo):Promise<AxiosResponse>{
     return axios.request({
       method: "put",
       url: "/nacos/v1/ns/service",
-      data: {
-        ...info
-      },
+      data: info,
     });
   }
   removeService(key:IServiceKey):Promise<AxiosResponse>{
     return axios.request({
       method: "delete",
       url: "/nacos/v1/ns/service",
-      data: {
-        ...key
-      },
+      data: key,
     });
   }
   queryServiceInstances(key:IServiceKey):Promise<AxiosResponse> {
     return axios.request({
       method: "get",
       url: "/nacos/v1/console/instances",
-      params: {
-        ...key
-      },
+      params: key,
+    });
+  }
+
+  updateInstance(instance:IServiceInstance):Promise<AxiosResponse> {
+    return axios.request({
+      method: "put",
+      url: "/nacos/v1/ns/instance",
+      data: instance,
     });
   }
 }

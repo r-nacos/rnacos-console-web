@@ -1,4 +1,15 @@
-import { NButton } from "naive-ui"
+import { NButton,NSwitch } from "naive-ui"
+
+/*
+let slots ={
+  "checked":()=> {
+    return <span>上线</span>
+  },
+  "unchecked":()=> {
+    return <span>下线</span>
+  },
+};
+*/
 
 export const createColumns = function (showUpdate,onLine,offLine ) {
 
@@ -36,6 +47,7 @@ export const createColumns = function (showUpdate,onLine,offLine ) {
     {
       title: '元数据',
       key: 'metadata',
+      width: 200,
       render(row){
         return (
           <span>{JSON.stringify(row.metadata)}</span>
@@ -47,17 +59,31 @@ export const createColumns = function (showUpdate,onLine,offLine ) {
       key: '_type',
       render(row) {
         const onOffLine= ()=> {
-          if(row.enabled){
-            return <NButton size="tiny" onClick={() => offLine(row)}>下线</NButton>
-          }
-          else{
-            <NButton size="tiny" onClick={() => onLine(row)}>上线</NButton>
-          }
+          
+          // v-slots={slots} 
+          return <NSwitch 
+            size="small"
+            default-value={row.enabled} 
+            onUpdateValue={(enabled)=>{
+              if(enabled==row.enabled){
+                //操作中
+                return;
+              }
+              if(enabled){
+                onLine(row)
+              }
+              else{
+                offLine(row)
+              }
+            }} 
+          />
         }
         return (
           <div>
-            <NButton size="tiny" onClick={() => showUpdate(row)}>编辑</NButton>
+            <span style={{"padding-right":"5px"}}>
             {onOffLine()}
+            </span>
+            <NButton size="tiny" onClick={() => showUpdate(row)}>编辑</NButton>
           </div>
         )
       }

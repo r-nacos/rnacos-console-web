@@ -1,27 +1,30 @@
 <template>
   <div class="detailWrap">
     <n-form ref="formRef" :model="model" :rules="rules">
-      <n-form-item path="serviceName" label="服务名称">
+      <n-form-item path="ip" label="IP">
         <n-input
-          :disabled="isKeyReadonly"
-          placeholder="输入服务名称"
-          v-model:value="model.serviceName"
+          :disabled="true"
+          placeholder=""
+          v-model:value="model.ip"
           @keydown.enter.prevent
         />
       </n-form-item>
-      <n-form-item path="groupName" label="服务组">
+      <n-form-item path="port" label="端口">
         <n-input
-          :disabled="isKeyReadonly"
-          placeholder="输入服务组"
-          v-model:value="model.groupName"
+          :disabled="true"
+          placeholder=""
+          v-model:value="model.port"
           @keydown.enter.prevent
         />
       </n-form-item>
-      <n-form-item path="protectThreshold" label="保护阀值">
+      <n-form-item path="enabled" label="是否上线">
+        <n-switch v-model:value="model.enabled" />
+      </n-form-item>
+      <n-form-item path="weight" label="权重">
         <n-input
           :disabled="isReadonly"
-          placeholder="输入保护阀值"
-          v-model:value="model.protectThreshold"
+          placeholder=""
+          v-model:value="model.weight"
           @keydown.enter.prevent
         />
       </n-form-item>
@@ -32,14 +35,6 @@
           placeholder="输入元数据"
           :autosize="{ minRows: 3 }"
           v-model:value="model.metadata"
-          @keydown.enter.prevent
-        />
-      </n-form-item>
-      <n-form-item path="selector" label="服务路由类型">
-        <n-input
-          :disabled="true"
-          placeholder="暂不支持"
-          v-model:value="model.selector"
           @keydown.enter.prevent
         />
       </n-form-item>
@@ -62,34 +57,9 @@ export default defineComponent({
   },
   data() {
     const rules = {
-      serviceName: [
+      weight: [
         {
           required: true,
-          validator(rule, value) {
-            if (!value) {
-              return new Error("需要服务名称");
-            }
-            return true;
-          },
-          trigger: ["input", "blur"],
-        },
-      ],
-
-      groupName: [
-        {
-          required: true,
-          validator(rule, value) {
-            if (!value) {
-              return new Error("需要输入服务组");
-            }
-            return true;
-          },
-          trigger: ["input", "blur"],
-        },
-      ],
-      protectThreshold: [
-        {
-          required: false,
           validator(rule, value) {
             if (!value) {
               return true;
@@ -97,14 +67,14 @@ export default defineComponent({
             try{
               let v = parseFloat(value);
               if(isNaN(v)){
-                return new Error("保护阀值需为数字");
+                return new Error("权重需为数字");
               }
-              if(v<0 || v> 1){
-                return new Error("保护阀值不能小于0或大于1");
+              if(v<0){
+                return new Error("权重不能小于0");
               }
             }
             catch {
-              return new Error("保护阀值需为数字");
+              return new Error("权重需为数字");
             }
             return true;
           },

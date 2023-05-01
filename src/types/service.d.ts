@@ -13,3 +13,16 @@ export interface IServiceKey {
   groupName:string,
   serviceName:string,
 }
+
+export interface IServiceInstance{
+  serviceName:string,
+  groupName?:string,
+  ip:string,
+  port:string,
+  clusterName?:string,
+  namespaceId?:string,
+  weight?:Number,
+  metadata?:string,
+  enabled?:Boolean,
+  ephemeral?:Boolean,
+}

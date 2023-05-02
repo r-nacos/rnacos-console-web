@@ -16,7 +16,12 @@ const router = createRouter({
 })
 
 router.afterEach((to,from) => {
-    setRouteTitle(to)
+    if(to.name===undefined){
+        router.replace("/404")
+    }
+    else{
+        setRouteTitle(to)
+    }
 })
 
 export default router

@@ -40,20 +40,22 @@ export default defineComponent({
     setup() {
         window.$message = useMessage();
         let layoutSize = useLayoutSize();
-        layoutSize.updateLayoutSize(undefined);
+        //layoutSize.updateLayoutSize(undefined);
         return {
             layoutSize:layoutSize,
+            /*
             doUpdateLayoutSize(){
                 layoutSize.updateLayoutSize(undefined);
             }
+            */
         }
     },
     methods: {
     },
     mounted() {
-        var updateLayoutSize=()=>{this.doUpdateLayoutSize()};
-        updateLayoutSize();
-        window.addEventListener("resize",updateLayoutSize) 
+        //var updateLayoutSize=()=>{this.doUpdateLayoutSize()};
+        //updateLayoutSize();
+        //window.addEventListener("resize",updateLayoutSize) 
     }
 })
 

@@ -5,13 +5,23 @@ import NamespacePage from '@/pages/NamespacePage'
 import ConfigListPage from '@/pages/ConfigListPage.vue'
 import ServiceListPage from '@/pages/ServiceListPage.vue'
 import ServiceInstanceListPage from '@/pages/ServiceInstanceListPage.vue'
+import NotFound from '@/pages/NotFound.vue'
 
 export const routes = [
     {
         path: '/',
+        redirect: '/manage/configs' 
+        /*
         name: 'index',
         meta: {'title':'index title'},
         component: Boo,
+        */
+    },
+    {
+        path: '/404',
+        name: 'not found',
+        meta: {'title':'404'},
+        component: NotFound,
     },
     {
         path: '/manage',

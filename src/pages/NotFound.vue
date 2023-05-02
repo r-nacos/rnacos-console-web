@@ -2,7 +2,8 @@
   <div class="top" :style="{width:+layoutSize.windowSize.width+'px',height:layoutSize.windowSize.height+'px'}">
     <div class="wrap">
       <div class="notFound">
-        <p>404</p>
+        <p class="title">404</p>
+        <p>{{path}}</p>
       </div>
     </div>
   </div>
@@ -15,11 +16,15 @@ import { useLayoutSize } from "@/data/appdata";
 export default defineComponent({
   setup() {
     let layoutSize = useLayoutSize();
-
     return {
       layoutSize,
     };
   },
+  computed: {
+    path(){
+      return this.$route.query.path || "";
+    }
+  }
 });
 </script>
 
@@ -43,6 +48,11 @@ export default defineComponent({
 }
 .notFound {
   flex: 1 1 auto;
+  font-size: 30px;
+  line-height: 60px;
+  text-align: center;
+}
+.title{
   font-size: 60px;
 }
 

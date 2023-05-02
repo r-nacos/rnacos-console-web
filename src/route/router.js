@@ -16,8 +16,8 @@ const router = createRouter({
 })
 
 router.afterEach((to,from) => {
-    if(to.name===undefined){
-        router.replace("/404")
+    if(to.name===undefined && to.fullPath!=="/404"){
+        router.replace("/404?path="+encodeURIComponent(to.fullPath))
     }
     else{
         setRouteTitle(to)

@@ -1,8 +1,6 @@
-name: NodeJS with Gulp
+name: build
 
 on:
-  push:
-    branches: [ "master" ]
   pull_request:
     branches: [ "master" ]
 
@@ -26,9 +24,4 @@ jobs:
       run: |
         npm install
         npm run build
-    - name: Archive binary
-      run: |
-        cd dist
-        zip ../dist.zip -r ./
-        cd -
     

@@ -1,5 +1,7 @@
 <script lang="ts" setup>
 
+import { zhCN} from 'naive-ui'
+
 const themeOverrides = {
     common: {
       primaryColor: '#2f6cf7',
@@ -24,7 +26,7 @@ const themeOverrides = {
 </script>
 
 <template>
-  <n-config-provider :theme-overrides="themeOverrides">
+  <n-config-provider :theme-overrides="themeOverrides" :locale="zhCN">
     <n-message-provider>
     <router-view></router-view>
     </n-message-provider>

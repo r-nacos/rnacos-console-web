@@ -14,7 +14,11 @@
         <div class="query-params">
           <div class="paramWrap">
             <n-form inline :label-width="80">
-              <n-form-item size="tiny" label="服务名称" path="param.serviceParam">
+              <n-form-item
+                size="tiny"
+                label="服务名称"
+                path="param.serviceParam"
+              >
                 <n-input
                   size="tiny"
                   v-model:value="param.serviceParam"
@@ -72,8 +76,8 @@ import { createColumns } from "@/components/naming/ServiceListColumns.jsx";
 import NamespacePopSelect from "@/components/namespace/NamespacePopSelect.vue";
 import SubContentPage from "@/components/common/SubContentPage";
 import ServiceDetail from "./ServiceDetail.vue";
-import * as constant from '@/types/constant'
-import {useRouter} from 'vue-router'
+import * as constant from "@/types/constant";
+import { useRouter } from "vue-router";
 
 export default defineComponent({
   components: {
@@ -103,64 +107,82 @@ export default defineComponent({
     });
     const useFormRef = ref(false);
     const modelRef = ref({
-      groupName:"",
-      serviceName:"",
-      protectThreshold:"0",
-      metadata:"",
-      selector:"",
-      mode:"",
+      groupName: "",
+      serviceName: "",
+      protectThreshold: "0",
+      metadata: "",
+      selector: "",
+      mode: "",
     });
     const showUpdate = (row) => {
       let protectThreshold = "0";
-      if(row.protectThreshold){
+      if (row.protectThreshold) {
         protectThreshold = row.protectThreshold.toString();
       }
       modelRef.value = {
-        groupName:row.groupName,
-        serviceName:row.name,
-        protectThreshold:protectThreshold,
-        metadata:row.metadata,
-        selector:"",
-        mode:constant.FORM_MODE_UPDATE,
+        groupName: row.groupName,
+        serviceName: row.name,
+        protectThreshold: protectThreshold,
+        metadata: row.metadata,
+        selector: "",
+        mode: constant.FORM_MODE_UPDATE,
       };
       useFormRef.value = true;
     };
     const showInstances = (row) => {
-      router.push({ 
-        path: '/manage/service/instance', 
+      router.push({
+        path: "/manage/service/instance",
         query: {
-          groupName:row.groupName,
-          serviceName:row.name,
+          groupName: row.groupName,
+          serviceName: row.name,
           namespaceId: namespaceStore.current.value.namespaceId,
-        } 
-      })
+        },
+      });
     };
     const showDetail = (row) => {
       let protectThreshold = "0";
-      if(row.protectThreshold){
+      if (row.protectThreshold) {
         protectThreshold = row.protectThreshold.toString();
       }
       modelRef.value = {
-        groupName:row.groupName,
-        serviceName:row.name,
-        protectThreshold:protectThreshold,
-        metadata:row.metadata,
-        selector:"",
-        mode:constant.FORM_MODE_DETAIL,
+        groupName: row.groupName,
+        serviceName: row.name,
+        protectThreshold: protectThreshold,
+        metadata: row.metadata,
+        selector: "",
+        mode: constant.FORM_MODE_DETAIL,
       };
       useFormRef.value = true;
     };
     const removeItem = (row) => {
-      useFormRef.value = true;
+      let serviceKey = {
+        namespaceId: namespaceStore.current.value.namespaceId,
+        groupName: row.groupName,
+        serviceName: row.name,
+      };
+      namingApi
+        .removeService(serviceKey)
+        .then((res) => {
+          if (res.status == 200) {
+            window.$message.info("删除服务成功!");
+            doHandlePageChange(paginationReactive.page || 1);
+            return;
+          }
+          window.$message.error("删除服务报错," + res.data);
+        })
+        .catch((err) => {
+          //window.$message.error("删除服务报错," + err.message);
+          window.$message.error("删除服务报错," + err.response.data);
+        });
     };
     const showCreate = () => {
       modelRef.value = {
-        groupName:"",
-        serviceName:"",
-        protectThreshold:"0",
-        metadata:"",
-        selector:"",
-        mode:constant.FORM_MODE_CREATE,
+        groupName: "",
+        serviceName: "",
+        protectThreshold: "0",
+        metadata: "",
+        selector: "",
+        mode: constant.FORM_MODE_CREATE,
       };
       useFormRef.value = true;
     };
@@ -204,7 +226,12 @@ export default defineComponent({
       }
     };
 
-    let columns = createColumns(showInstances,showDetail, showUpdate, removeItem);
+    let columns = createColumns(
+      showInstances,
+      showDetail,
+      showUpdate,
+      removeItem
+    );
     return {
       columns,
       data: dataRef,
@@ -222,18 +249,17 @@ export default defineComponent({
   },
 
   computed: {
-    namespaceId(){
+    namespaceId() {
       return namespaceStore.current.value.namespaceId;
     },
-    getDetailTitle(){
-      if(this.model.mode===constant.FORM_MODE_UPDATE){
+    getDetailTitle() {
+      if (this.model.mode === constant.FORM_MODE_UPDATE) {
         return "编辑服务";
-      }
-      else if(this.model.mode===constant.FORM_MODE_CREATE){
+      } else if (this.model.mode === constant.FORM_MODE_CREATE) {
         return "新增服务";
       }
       return "服务详情";
-    }
+    },
   },
   methods: {
     handlePageChange(page) {
@@ -251,15 +277,16 @@ export default defineComponent({
         return;
       }
       let serviceInfo = {
-        namespaceId:this.namespaceId,
-        groupName:this.model.groupName,
-        serviceName:this.model.serviceName,
-        protectThreshold:this.model.protectThreshold,
-        metadata:this.model.metadata,
+        namespaceId: this.namespaceId,
+        groupName: this.model.groupName,
+        serviceName: this.model.serviceName,
+        protectThreshold: this.model.protectThreshold,
+        metadata: this.model.metadata,
         tenant: this.getTenant,
       };
-      if(this.model.mode=== constant.FORM_MODE_CREATE){
-        namingApi.createService(serviceInfo)
+      if (this.model.mode === constant.FORM_MODE_CREATE) {
+        namingApi
+          .createService(serviceInfo)
           .then((res) => {
             if (res.status == 200) {
               window.$message.info("设置成功!");
@@ -272,9 +299,9 @@ export default defineComponent({
           .catch((err) => {
             window.$message.error("设置失败，" + err.message);
           });
-      }
-      else{
-        namingApi.updateService(serviceInfo)
+      } else {
+        namingApi
+          .updateService(serviceInfo)
           .then((res) => {
             if (res.status == 200) {
               window.$message.info("设置成功!");

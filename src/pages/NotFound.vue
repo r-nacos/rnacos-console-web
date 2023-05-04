@@ -4,6 +4,7 @@
       <div class="notFound">
         <p class="title">404</p>
         <p>{{path}}</p>
+        <router-link class="link" :to="{'path':'/'}">首页</router-link>
       </div>
     </div>
   </div>

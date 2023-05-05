@@ -173,7 +173,7 @@ export default defineComponent({
         });
     };
     const updateItem = (row) => {
-      doShowConfigDetail(row, constant.FORM_MODE_DETAIL);
+      doShowConfigDetail(row, constant.FORM_MODE_UPDATE);
     };
     const detailItem = (row) => {
       doShowConfigDetail(row, constant.FORM_MODE_DETAIL);
@@ -184,7 +184,7 @@ export default defineComponent({
         group: "",
         md5: "",
         content: "",
-        mode: constant.FORM_MODE_DETAIL,
+        mode: constant.FORM_MODE_CREATE,
       };
       useFormRef.value = true;
     };

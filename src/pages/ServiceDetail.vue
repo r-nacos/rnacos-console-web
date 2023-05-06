@@ -32,7 +32,6 @@
           placeholder="输入元数据"
           :autosize="{ minRows: 3 }"
           v-model:value="model.metadata"
-          @keydown.enter.prevent
         />
       </n-form-item>
       <n-form-item path="selector" label="服务路由类型">

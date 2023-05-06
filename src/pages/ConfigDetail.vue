@@ -15,8 +15,7 @@
           type="textarea" 
           placeholder="输入配置内容"
           :autosize="{minRows:5}"
-          v-model:value="model.content" 
-          @keydown.enter.prevent />
+          v-model:value="model.content"/>
       </n-form-item>
     </n-form>
   </div>

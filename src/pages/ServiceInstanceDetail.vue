@@ -35,7 +35,6 @@
           placeholder="输入元数据"
           :autosize="{ minRows: 3 }"
           v-model:value="model.metadata"
-          @keydown.enter.prevent
         />
       </n-form-item>
     </n-form>

@@ -29,26 +29,26 @@ jobs:
       run: |
         npm install
         npm run build
-    - name: Archive binary
+    - name: cargo login
+      run: cargo login ${{ secrets.CRATES_IO_TOKEN }}
+    - name: cargo publish
       run: |
         cd dist
         zip ../dist.zip -r ./
         cd -
         mkdir -p dist-wrap/src/dist
         cp -rf dist.zip dist-wrap/src/dist/
+        ls -al dist-wrap/src/dist/
+        cd dist-wrap
+        cargo publish
+        cd -
     - name: Upload binary artifacts
       uses: actions/upload-artifact@v3
       with:
         name: binaries
         path: |
           *.zip
-    - name: cargo login
-      run: cargo login ${{ secrets.CRATES_IO_TOKEN }}
-    - name: cargo publish
-      run: |
-        cd dist-wrap
-        cargo publish
-        cd -
+    
 
   release-github:
     permissions:
@@ -64,11 +64,11 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: binaries
-      - name: Sigstore Sign
-        uses: sigstore/gh-action-sigstore-python@v1.2.3
-        with:
-          inputs: ./*.zip 
-          upload-signing-artifacts: true
+      #- name: Sigstore Sign
+      #  uses: sigstore/gh-action-sigstore-python@v1.2.3
+      #  with:
+      #    inputs: ./*.zip 
+      #    upload-signing-artifacts: true
       - name: Release
         uses: softprops/action-gh-release@v1
         with:

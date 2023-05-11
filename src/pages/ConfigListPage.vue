@@ -36,6 +36,17 @@
               <span class="query-button-item">
                 <n-button type="primary" @click="showCreate">新建</n-button>
               </span>
+              <span class="query-button-item">
+              <n-upload
+                action="/nacos/v1/console/config/import"
+                :headers="uploadHeader"
+                :show-file-list="false"
+                @before-upload="doBeforeUpload"
+                @finish="handlerUploadFinish"
+              >
+                <n-button type="primary">上传文件</n-button>
+              </n-upload>
+              </span>
           </div>
         </div>
         <div class="table-data">
@@ -95,6 +106,9 @@ export default defineComponent({
         pageNo: 1,
         pageSize: 20,
       });
+    const uploadHeaderRef = ref({
+      tenant:namespaceStore.current.value.namespaceId,
+    })
     const modelRef = ref({
       dataId: "",
       group: "",
@@ -111,6 +125,11 @@ export default defineComponent({
         return `总行数: ${itemCount}`;
       },
     });
+    const doBeforeUpload=()=>{
+      uploadHeaderRef.value = {
+        tenant:namespaceStore.current.value.namespaceId,
+      }
+    }
     const doQueryList=()=>{
       return configApi.queryConfigPage({
         tenant: namespaceStore.current.value.namespaceId,
@@ -217,6 +236,8 @@ export default defineComponent({
       pagination: paginationReactive,
       loading: loadingRef,
       model: modelRef,
+      uploadHeader:uploadHeaderRef,
+      doBeforeUpload,
       showCreate,
       param: paramRef,
       namespaceId: "",
@@ -225,9 +246,17 @@ export default defineComponent({
       },
       doQueryList,
       doHandlePageChange,
+      handlerUploadFinish({event}){
+        if ( event.target.status==200 ) {
+          window.$message.info("上传成功");
+          doHandlePageChange(1);
+        }
+        else{
+          window.$message.error("上传处理失败");
+        }
+      }
     };
   },
-
   computed: {
     getTenant() {
       return namespaceStore.current.value.namespaceId;
@@ -240,7 +269,7 @@ export default defineComponent({
         return "新增配置";
       }
       return "编辑详情";
-    }
+    },
   },
 
   methods: {

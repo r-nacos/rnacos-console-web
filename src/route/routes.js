@@ -6,6 +6,7 @@ import ConfigListPage from '@/pages/ConfigListPage.vue'
 import ServiceListPage from '@/pages/ServiceListPage.vue'
 import ServiceInstanceListPage from '@/pages/ServiceInstanceListPage.vue'
 import NotFound from '@/pages/NotFound.vue'
+import Tmp from '@/pages/Tmp.vue'
 
 export const routes = [
     {
@@ -41,6 +42,12 @@ export const routes = [
                 name: 'manange config',
                 meta: {'title':'config title'},
                 component: Config,
+            },
+            {
+                path: '/manage/tmp',
+                name: 'manange tmp',
+                meta: {'title':'tmp'},
+                component: Tmp,
             },
             */
             {

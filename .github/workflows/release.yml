@@ -33,12 +33,11 @@ jobs:
       run: cargo login ${{ secrets.CRATES_IO_TOKEN }}
     - name: cargo publish
       run: |
+        cp -rf dist dist-wrap/src
         cd dist
         zip ../dist.zip -r ./
         cd -
         rm -rf .git
-        mkdir -p dist-wrap/src/dist
-        cp -rf dist.zip dist-wrap/src/dist/
         ls -al dist-wrap/src/dist/
         cd dist-wrap
         cargo publish

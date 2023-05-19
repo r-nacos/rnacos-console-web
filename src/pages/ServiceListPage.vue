@@ -39,7 +39,7 @@
               <n-button @click="queryList">查询</n-button>
             </span>
             <span class="query-button-item">
-              <n-button type="primary" @click="showCreate">新建</n-button>
+              <n-button type="info" @click="showCreate">新建</n-button>
             </span>
           </div>
         </div>

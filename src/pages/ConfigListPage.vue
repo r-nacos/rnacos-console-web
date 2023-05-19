@@ -34,7 +34,10 @@
                 <n-button @click="queryList">查询</n-button>
               </span>
               <span class="query-button-item">
-                <n-button type="primary" @click="showCreate">新建</n-button>
+                <n-button type="info" @click="showCreate">新建</n-button>
+              </span>
+              <span class="query-button-item">
+                <a ref="download" @click="download"><n-button type="info">下载</n-button></a>
               </span>
               <span class="query-button-item">
               <n-upload
@@ -44,7 +47,7 @@
                 @before-upload="doBeforeUpload"
                 @finish="handlerUploadFinish"
               >
-                <n-button type="primary">上传文件</n-button>
+                <n-button type="info">上传文件</n-button>
               </n-upload>
               </span>
           </div>
@@ -85,6 +88,7 @@ import SubContentFullPage from "@/components/common/SubContentFullPage";
 import ConfigDetail from "./ConfigDetail.vue";
 import { Close } from "@vicons/ionicons5";
 import * as constant from '@/types/constant'
+import qs from 'qs'
 
 export default defineComponent({
   components: {
@@ -133,8 +137,8 @@ export default defineComponent({
     const doQueryList=()=>{
       return configApi.queryConfigPage({
         tenant: namespaceStore.current.value.namespaceId,
-        dataParam: paramRef.dataParam,
-        groupParam: paramRef.groupParam,
+        dataParam: paramRef.value.dataParam,
+        groupParam: paramRef.value.groupParam,
         pageNo: paginationReactive.page,
         pageSize: paginationReactive.pageSize,
       });
@@ -308,6 +312,12 @@ export default defineComponent({
           window.$message.error("设置失败，" + err.message);
         });
     },
+    download() {
+      var params = qs.stringify(this.param);
+      var url = "/nacos/v1/console/config/download?"+params;
+      this.$refs.download.setAttribute("href",url);
+      return true
+    }
   },
   created() {
     this.queryList();

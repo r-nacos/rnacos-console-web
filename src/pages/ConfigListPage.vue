@@ -86,6 +86,7 @@ import NamespacePopSelect from "@/components/namespace/NamespacePopSelect.vue";
 import SubContentPage from "@/components/common/SubContentPage";
 import SubContentFullPage from "@/components/common/SubContentFullPage";
 import ConfigDetail from "./ConfigDetail.vue";
+import { useRouter } from "vue-router";
 import { Close } from "@vicons/ionicons5";
 import * as constant from '@/types/constant'
 import qs from 'qs'
@@ -100,6 +101,7 @@ export default defineComponent({
   },
   setup(self) {
     //window.$message = useMessage();
+    let router = useRouter();
     const dataRef = ref([]);
     const useFormRef = ref(false);
     const loadingRef = ref(false);
@@ -117,6 +119,7 @@ export default defineComponent({
       dataId: "",
       group: "",
       md5: "",
+      showMd5:true,
       content: "",
       mode: "",
     });
@@ -182,6 +185,7 @@ export default defineComponent({
           if (res.status == 200) {
             modelRef.value = {
               mode: mode,
+              showMd5:true,
               content: res.request.responseText,
               md5: res.headers["content-md5"] || "",
               ...config,
@@ -206,6 +210,7 @@ export default defineComponent({
         dataId: "",
         group: "",
         md5: "",
+        showMd5:true,
         content: "",
         mode: constant.FORM_MODE_CREATE,
       };
@@ -231,8 +236,18 @@ export default defineComponent({
           window.$message.error("删除配置报错," + err.message);
         });
     };
+    const showHistory= (row) => {
+      router.push({
+        path: "/manage/config/history",
+        query: {
+          tenant: row.tenant,
+          group: row.group,
+          dataId: row.dataId,
+        },
+      });
+    };
 
-    const columns = createColumns(detailItem, updateItem, removeItem);
+    const columns = createColumns(detailItem, showHistory, updateItem, removeItem);
     return {
       columns,
       data: dataRef,

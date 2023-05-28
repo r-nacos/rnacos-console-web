@@ -8,6 +8,7 @@ export interface  IConfig{
     dataId :string,
     content ?:string,
     md5?:string,
+    modifiedTime?:number,
 }
 
 export interface  IConfigKey{
@@ -20,6 +21,14 @@ export interface IConfigQueryParam{
     tenant :string,
     groupParam :string,
     dataParam :string,
+    pageNo:Number,
+    pageSize:Number,
+}
+
+export interface IConfigQueryHistoryParam{
+    tenant :string,
+    group:string,
+    dataId:string,
     pageNo:Number,
     pageSize:Number,
 }
@@ -59,6 +68,16 @@ class ConfigApi {
         return axios.request({
             method: "get",
             url: '/nacos/v1/console/configs',
+            params: {
+                ...queryParam
+            }
+        });
+    }
+
+    queryConfigHistoryPage(queryParam:IConfigQueryHistoryParam):Promise<AxiosResponse> {
+        return axios.request({
+            method: "get",
+            url: '/nacos/v1/console/config/history',
             params: {
                 ...queryParam
             }

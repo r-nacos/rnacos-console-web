@@ -1,12 +1,16 @@
 import {defineComponent} from 'vue'
 
 import styles from './SubContentPage.module.css'
-import {NIcon,NH2,NRow,NButton} from 'naive-ui'
+import {NIcon,NH2,NRow,NButton,NPopconfirm} from 'naive-ui'
 import {Close} from '@vicons/ionicons5';
 
 export default defineComponent({
     props:[
         "title",
+        "closeName",
+        "submitName",
+        "usePopSubmit",
+        "submitPopTitle",
     ],
     emits:[
         "close",
@@ -24,6 +28,31 @@ export default defineComponent({
 
     },
     render () {
+        const submitView = ()=>{
+            if (this.$props['usePopSubmit']) {
+                const submitSlot = {
+                    trigger: ()=> {
+                        return <NButton type="primary" round>{this.$props['submitName'] || "确认"}</NButton>
+                    }
+                }
+                return (
+                    <NPopconfirm onPositiveClick={()=>this.$emit("submit")} v-slots={submitSlot} >
+                        <span>{this.$props['submitPopTitle'] ||'是否确认操作?'}</span>
+                    </NPopconfirm>
+                )
+            }
+            else{
+                return (
+                    <NButton
+                        type="primary"
+                        round
+                        onClick={()=>this.$emit("submit")}
+                    >
+                        {this.$props['submitName'] || "确认"}
+                    </NButton>
+                )
+            }
+        };
         return (
 <div className={styles.wrap}>
 
@@ -49,15 +78,9 @@ export default defineComponent({
                 round
                 onClick={()=>this.$emit("close")}
             >
-                返回
+                {this.$props['closeName'] || "返回"}
             </NButton>
-            <NButton
-                type="primary"
-                round
-                onClick={()=>this.$emit("submit")}
-            >
-                确认
-            </NButton>
+            {submitView()}
         </div>
     </div>
 </div>

@@ -1,0 +1,316 @@
+<template>
+  <div class="wrap">
+    <div class="header">
+      <div class="title">
+        <span>配置历史记录列表</span>
+      </div>
+      <div class="header-button">
+        <span><n-button @click="routerBack">返回</n-button></span>
+      </div>
+      <div class="namespace"></div>
+    </div>
+    <div class="content-wrap">
+      <div class="form-container">
+        <div class="query-params">
+          <div class="paramWrap">
+            <n-form inline :label-width="80">
+              <n-form-item
+                size="tiny"
+                label="配置ID"
+                path="param.dataId"
+              >
+                <n-input
+                  size="tiny"
+                  :disabled="true"
+                  v-model:value="param.dataId"
+                  placeholder=""
+                />
+              </n-form-item>
+              <n-form-item size="tiny" label="配置组" path="param.group">
+                <n-input
+                  size="tiny"
+                  :disabled="true"
+                  v-model:value="param.group"
+                  placeholder=""
+                />
+              </n-form-item>
+            </n-form>
+          </div>
+          <div class="queryButton">
+            <span class="query-button-item">
+              <n-button @click="queryList">刷新</n-button>
+            </span>
+          </div>
+        </div>
+        <div class="table-data">
+          <n-data-table
+            remote
+            ref="table"
+            :columns="columns"
+            :data="data"
+            :loading="loading"
+            :pagination="pagination"
+            :row-key="rowKey"
+            @update:page="handlePageChange"
+          />
+        </div>
+      </div>
+    </div>
+    <SubContentPage
+      v-show="useForm"
+      :title="getDetailTitle"
+      :submitName="getSubmitName"
+      :usePopSubmit="true"
+      submitPopTitle="是否确认恢复历史记录内容?"
+      @close="closeForm"
+      @submit="submitForm"
+    >
+      <ConfigDetail :model="model" />
+    </SubContentPage>
+  </div>
+</template>
+
+<script>
+import { defineComponent } from "vue";
+import { configApi } from "@/api/config";
+import { createHistoryColumns } from "@/components/config/ConfigColumns";
+import SubContentPage from "@/components/common/SubContentPage";
+import ConfigDetail from "./ConfigDetail.vue";
+import * as constant from "@/types/constant";
+import { useRoute } from "vue-router";
+
+export default defineComponent({
+  components: {
+    SubContentPage,
+    ConfigDetail,
+  },
+  setup() {
+    let route = useRoute();
+    let query = route.query;
+    let param = {
+      group: query.group || "",
+      dataId: query.dataId || "",
+      tenant: query.tenant || "",
+    };
+    const dataRef = ref([]);
+    const loadingRef = ref(false);
+    const paramRef = ref(param);
+    const paginationReactive = reactive({
+      page: 1,
+      pageCount: 1,
+      pageSize: 10,
+      itemCount: 0,
+      prefix({ itemCount }) {
+        return `总行数: ${itemCount}`;
+      },
+    });
+    const useFormRef = ref(false);
+
+    const modelRef = ref({
+      dataId: param.dataId,
+      group: param.group,
+      md5: "",
+      showMd5:false,
+      content: "",
+      mode: constant.FORM_MODE_DETAIL,
+    });
+    const updateParam = (param) => {
+      paramRef.value = param;
+    };
+    const doQueryList = () => {
+      return configApi.queryConfigHistoryPage({
+        tenant: paramRef.value.tenant,
+        dataId: paramRef.value.dataId,
+        group: paramRef.value.group,
+        pageNo: paginationReactive.page,
+        pageSize: paginationReactive.pageSize,
+      });
+    };
+
+    const doHandlePageChange=(currentPage)=>{
+        paginationReactive.page = currentPage;
+        if (!loadingRef.value) {
+          loadingRef.value = true;
+          doQueryList()
+            .then((res) => {
+              loadingRef.value = false;
+              if (res.status == 200) {
+                let count = res.data.count;
+                let pageSize = paginationReactive.pageSize;
+                dataRef.value = res.data.list;
+                paginationReactive.itemCount = count;
+                paginationReactive.pageCount = Math.round(
+                  (count + pageSize - 1) / pageSize
+                );
+              } else {
+                window.$message.error("request err,status code:" + res.status);
+                dataRef.value = [];
+              }
+            })
+            .catch((err) => {
+              window.$message.error("request err,message" + err.message);
+              dataRef.value = [];
+              loadingRef.value = false;
+            });
+        }
+      };
+
+    const showDetail=(row)=> {
+      useFormRef.value = true;
+      modelRef.value.content=row.content;
+      /*
+      modelRef.value={
+        dataId: param.dataId,
+        group: param.group,
+        md5: "",
+        showMd5:false,
+        content: row.content,
+        mode: constant.FORM_MODE_DETAIL,
+      };
+      */
+    };
+    const doRollback = (content)=> {
+      let config = {
+        dataId: param.dataId,
+        group: param.group,
+        tenant: param.tenant,
+        content: content,
+      };
+      configApi
+        .setConfig(config)
+        .then((res) => {
+          if (res.status == 200) {
+            window.$message.info("恢复成功!");
+            useFormRef.value = false;
+            doHandlePageChange(1);
+            return;
+          }
+          window.$message.error("恢复失败，response code" + res.status);
+        })
+        .catch((err) => {
+          window.$message.error("恢复失败，" + err.message);
+      });
+    };
+    const rollback=(row)=> {
+      doRollback(row.content)
+    };
+    let columns = createHistoryColumns(showDetail, rollback);
+    return {
+      columns,
+      data: dataRef,
+      pagination: paginationReactive,
+      loading: loadingRef,
+      param: paramRef,
+      useForm: useFormRef,
+      model: modelRef,
+      updateParam,
+      rowKey(rowData) {
+        return rowData.id;
+      },
+      doHandlePageChange,
+      doRollback,
+    };
+  },
+  computed: {
+    getDetailTitle() {
+      return "历史记录内容";
+    },
+    getSubmitName() {
+      return "恢复历史记录";
+    },
+  },
+  data() {
+    return {};
+  },
+  mounted() {
+    this.queryList();
+  },
+  methods: {
+    handlePageChange(page) {
+      this.doHandlePageChange(page);
+    },
+    queryList() {
+      this.doHandlePageChange(1);
+    },
+    closeForm() {
+      this.useForm = false;
+    },
+    submitForm() {
+      this.doRollback(this.model.content);
+    },
+    routerBack() {
+      this.$router.go(-1);
+    },
+  },
+});
+</script>
+
+<style scoped>
+.wrap {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: #efefef;
+}
+
+.content-wrap {
+  padding: 10px 10px 10px 10px;
+  background: #efefef;
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 3px;
+}
+
+.header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 40px;
+  border-bottom: #ccc 1px solid;
+  background: #fff;
+}
+
+.title {
+  flex: 1 1 auto;
+  font: 14/1.25;
+  line-height: 40px;
+  padding-left: 15px;
+}
+
+.header-button {
+  flex: 0 0 auto;
+}
+.namespace {
+  flex: 0 0 auto;
+}
+
+.query-params {
+  flex: 0 0 auto;
+  height: 60px;
+  display: flex;
+  flex-direction: row;
+}
+
+.queryButton {
+  display: flex;
+  align-items: center;
+}
+
+.query-button-item {
+  margin-left: 10px;
+}
+
+.table-data {
+  flex-grow: 1 1 auto;
+  position: relative;
+  overflow: scroll;
+  height: 100%;
+  width: 100%;
+}
+</style>

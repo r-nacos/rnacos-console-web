@@ -3,6 +3,7 @@ import MainLayout from '@/components/layout/MainLayout.vue'
 import Config from '@/pages/Config'
 import NamespacePage from '@/pages/NamespacePage'
 import ConfigListPage from '@/pages/ConfigListPage.vue'
+import ConfigHistoryListPage from '@/pages/ConfigHistoryListPage.vue'
 import ServiceListPage from '@/pages/ServiceListPage.vue'
 import ServiceInstanceListPage from '@/pages/ServiceInstanceListPage.vue'
 import NotFound from '@/pages/NotFound.vue'
@@ -35,6 +36,12 @@ export const routes = [
                 name: 'manange configs',
                 meta: {'title':'配置列表'},
                 component: ConfigListPage,
+            },
+            {
+                path: '/manage/config/history',
+                name: 'manange configs history',
+                meta: {'title':'配置历史记录'},
+                component: ConfigHistoryListPage,
             },
             /*
             {

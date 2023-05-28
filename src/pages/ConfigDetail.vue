@@ -7,7 +7,7 @@
       <n-form-item path="group" label="配置组">
         <n-input :disabled="isReadonly" placeholder="输入配置组" v-model:value="model.group" @keydown.enter.prevent />
       </n-form-item>
-      <n-form-item path="md5" label="MD5">
+      <n-form-item v-show="model.showMd5" path="md5" label="MD5">
         <n-input :disabled="true" placeholder="" v-model:value="model.md5" @keydown.enter.prevent />
       </n-form-item>
       <n-form-item path="content" label="配置内容">

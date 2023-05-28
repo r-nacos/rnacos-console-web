@@ -1,13 +1,17 @@
 import {defineComponent} from 'vue'
 
 import styles from './SubContentPage.module.css'
-import {NIcon,NH2,NRow,NButton} from 'naive-ui'
+import {NIcon,NButton,NPopconfirm} from 'naive-ui'
 import {Close} from '@vicons/ionicons5';
 import {useLayoutSize} from '@/data/appdata';
 
 export default defineComponent({
     props:[
         "title",
+        "closeName",
+        "submitName",
+        "usePopSubmit",
+        "submitPopTitle",
     ],
     emits:[
         "close",
@@ -29,6 +33,31 @@ export default defineComponent({
         
     },
     render () {
+        const submitView = ()=>{
+            if (this.$props['usePopSubmit']) {
+                const submitSlot = {
+                    trigger: ()=> {
+                        return <NButton type="primary" round>{this.$props['submitName'] || "确认"}</NButton>
+                    }
+                }
+                return (
+                    <NPopconfirm onPositiveClick={()=>this.$emit("submit")} v-slots={submitSlot} >
+                        <span>{this.$props['submitPopTitle'] ||'是否确认操作?'}</span>
+                    </NPopconfirm>
+                )
+            }
+            else{
+                return (
+                    <NButton
+                        type="primary"
+                        round
+                        onClick={()=>this.$emit("submit")}
+                    >
+                        {this.$props['submitName'] || "确认"}
+                    </NButton>
+                )
+            }
+        };
         return (
 <div className={styles.fullWrap} style={{
     width:this.layoutSize.contentWidth+"px",
@@ -57,15 +86,9 @@ export default defineComponent({
                 round
                 onClick={()=>this.$emit("close")}
             >
-                返回
+                {this.$props['closeName'] || "返回"}
             </NButton>
-            <NButton
-                type="primary"
-                round
-                onClick={()=>this.$emit("submit")}
-            >
-                确认
-            </NButton>
+            {submitView()}
         </div>
     </div>
 </div>

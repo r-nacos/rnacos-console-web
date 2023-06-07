@@ -1,7 +1,7 @@
 import {defineComponent} from 'vue'
 
 import styles from './SubContentPage.module.css'
-import {NIcon,NH2,NRow,NButton,NPopconfirm} from 'naive-ui'
+import {NIcon,NButton,NPopconfirm} from 'naive-ui'
 import {Close} from '@vicons/ionicons5';
 
 export default defineComponent({

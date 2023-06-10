@@ -9,6 +9,8 @@ export {}
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
+    Diff: typeof import('./src/components/config/Diff.vue')['default']
+    DiffComponent: typeof import('./src/components/config/DiffComponent.vue')['default']
     Foo: typeof import('./src/components/Foo.vue')['default']
     MainLayout: typeof import('./src/components/layout/MainLayout.vue')['default']
     NamespacePopSelect: typeof import('./src/components/namespace/NamespacePopSelect.vue')['default']

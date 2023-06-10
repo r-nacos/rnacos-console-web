@@ -74,6 +74,14 @@
     >
       <ConfigDetail :model="model" />
     </SubContentFullPage>
+    <SubContentFullPage
+      v-if="useDiffForm"
+      title="配置内容比较"
+      @close="closeDiffForm"
+      @submit="submitDiffForm"
+    >
+      <DiffComponent :src="model.sourceContent" :dst="model.content" />
+    </SubContentFullPage>
   </div>
 </template>
 
@@ -85,6 +93,7 @@ import { createColumns } from "@/components/config/ConfigColumns";
 import NamespacePopSelect from "@/components/namespace/NamespacePopSelect.vue";
 import SubContentPage from "@/components/common/SubContentPage";
 import SubContentFullPage from "@/components/common/SubContentFullPage";
+import DiffComponent from "@/components/config/DiffComponent.vue";
 import ConfigDetail from "./ConfigDetail.vue";
 import { useRouter } from "vue-router";
 import { Close } from "@vicons/ionicons5";
@@ -98,12 +107,14 @@ export default defineComponent({
     SubContentPage,
     SubContentFullPage,
     ConfigDetail,
+    DiffComponent,
   },
   setup(self) {
     //window.$message = useMessage();
     let router = useRouter();
     const dataRef = ref([]);
     const useFormRef = ref(false);
+    const useDiffFormRef = ref(false);
     const loadingRef = ref(false);
     const paramRef = ref({
         dataParam: "",
@@ -120,6 +131,7 @@ export default defineComponent({
       group: "",
       md5: "",
       showMd5:true,
+      sourceContent:'',
       content: "",
       mode: "",
     });
@@ -187,6 +199,7 @@ export default defineComponent({
               mode: mode,
               showMd5:true,
               content: res.request.responseText,
+              sourceContent:res.request.responseText,
               md5: res.headers["content-md5"] || "",
               ...config,
             };
@@ -212,6 +225,7 @@ export default defineComponent({
         md5: "",
         showMd5:true,
         content: "",
+        sourceContent:"",
         mode: constant.FORM_MODE_CREATE,
       };
       useFormRef.value = true;
@@ -252,6 +266,7 @@ export default defineComponent({
       columns,
       data: dataRef,
       useForm: useFormRef,
+      useDiffForm: useDiffFormRef,
       pagination: paginationReactive,
       loading: loadingRef,
       model: modelRef,
@@ -301,11 +316,11 @@ export default defineComponent({
     closeForm() {
       this.useForm = false;
     },
-    submitForm() {
-      if (this.model.mode === constant.FORM_MODE_DETAIL) {
-        this.useForm = false;
-        return;
-      }
+    closeDiffForm() {
+      //this.useForm = false;
+      this.useDiffForm = false;
+    },
+    submitDiffForm(){
       let config = {
         dataId: this.model.dataId,
         group: this.model.group,
@@ -318,6 +333,7 @@ export default defineComponent({
           if (res.status == 200) {
             window.$message.info("设置成功!");
             this.useForm = false;
+            this.useDiffForm = false;
             this.queryList();
             return;
           }
@@ -326,6 +342,16 @@ export default defineComponent({
         .catch((err) => {
           window.$message.error("设置失败，" + err.message);
         });
+    },
+    submitForm() {
+      if (this.model.mode === constant.FORM_MODE_DETAIL) {
+        this.useForm = false;
+        return;
+      }
+      else{
+        //this.useForm = false;
+        this.useDiffForm = true;
+      }
     },
     download() {
       var params = qs.stringify(this.param);

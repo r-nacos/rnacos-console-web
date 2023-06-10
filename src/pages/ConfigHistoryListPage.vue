@@ -60,13 +60,22 @@
       v-show="useForm"
       :title="getDetailTitle"
       :submitName="getSubmitName"
-      :usePopSubmit="true"
+      :usePopSubmit="false"
       submitPopTitle="是否确认恢复历史记录内容?"
       @close="closeForm"
       @submit="submitForm"
     >
       <ConfigDetail :model="model" />
     </SubContentPage>
+    <SubContentFullPage
+      v-if="useDiffForm"
+      title="配置内容比较"
+      submitName="确认变更"
+      @close="closeDiffForm"
+      @submit="submitDiffForm"
+    >
+      <DiffComponent :src="model.sourceContent" :dst="model.content" />
+    </SubContentFullPage>
   </div>
 </template>
 
@@ -75,6 +84,8 @@ import { defineComponent } from "vue";
 import { configApi } from "@/api/config";
 import { createHistoryColumns } from "@/components/config/ConfigColumns";
 import SubContentPage from "@/components/common/SubContentPage";
+import SubContentFullPage from "@/components/common/SubContentFullPage";
+import DiffComponent from "@/components/config/DiffComponent.vue";
 import ConfigDetail from "./ConfigDetail.vue";
 import * as constant from "@/types/constant";
 import { useRoute } from "vue-router";
@@ -82,7 +93,9 @@ import { useRoute } from "vue-router";
 export default defineComponent({
   components: {
     SubContentPage,
+    SubContentFullPage,
     ConfigDetail,
+    DiffComponent,
   },
   setup() {
     let route = useRoute();
@@ -105,12 +118,14 @@ export default defineComponent({
       },
     });
     const useFormRef = ref(false);
+    const useDiffFormRef = ref(false);
 
     const modelRef = ref({
       dataId: param.dataId,
       group: param.group,
       md5: "",
       showMd5:false,
+      sourceContent: "",
       content: "",
       mode: constant.FORM_MODE_DETAIL,
     });
@@ -138,6 +153,9 @@ export default defineComponent({
                 let count = res.data.count;
                 let pageSize = paginationReactive.pageSize;
                 dataRef.value = res.data.list;
+                if(currentPage===1 && res.data.list.length>0){
+                  modelRef.value.sourceContent=res.data.list[0].content;
+                }
                 paginationReactive.itemCount = count;
                 paginationReactive.pageCount = Math.round(
                   (count + pageSize - 1) / pageSize
@@ -182,6 +200,7 @@ export default defineComponent({
           if (res.status == 200) {
             window.$message.info("恢复成功!");
             useFormRef.value = false;
+            useDiffFormRef.value = false;
             doHandlePageChange(1);
             return;
           }
@@ -192,7 +211,9 @@ export default defineComponent({
       });
     };
     const rollback=(row)=> {
-      doRollback(row.content)
+      modelRef.value.content=row.content;
+      useDiffFormRef.value=true;
+      //doRollback(row.content)
     };
     let columns = createHistoryColumns(showDetail, rollback);
     return {
@@ -202,6 +223,7 @@ export default defineComponent({
       loading: loadingRef,
       param: paramRef,
       useForm: useFormRef,
+      useDiffForm: useDiffFormRef,
       model: modelRef,
       updateParam,
       rowKey(rowData) {
@@ -236,6 +258,13 @@ export default defineComponent({
       this.useForm = false;
     },
     submitForm() {
+      this.useForm = false;
+      this.useDiffForm = true;
+    },
+    closeDiffForm() {
+      this.useDiffForm = false;
+    },
+    submitDiffForm() {
       this.doRollback(this.model.content);
     },
     routerBack() {

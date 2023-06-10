@@ -76,13 +76,16 @@ export const createHistoryColumns = function (detail,rollback) {
         {
             title: '操作',
             key: 'type',
+            /*
+                        <NPopconfirm onPositiveClick={()=>rollback(row)} v-slots={rollbackConfirmSlots} >
+                            <span>确认要恢复ID为 <b>{row.id}</b> 的历史配置内容吗？</span>
+                        </NPopconfirm>
+            */
             render(row) {
                 return (
                     <div>
                         <NButton size="tiny" onClick={()=>detail(row)}>详情</NButton>
-                        <NPopconfirm onPositiveClick={()=>rollback(row)} v-slots={rollbackConfirmSlots} >
-                            <span>确认要恢复ID为 <b>{row.id}</b> 的历史配置内容吗？</span>
-                        </NPopconfirm>
+                        <NButton size="tiny" onClick={()=>rollback(row)}>恢复</NButton>
                     </div>
                 )
             }

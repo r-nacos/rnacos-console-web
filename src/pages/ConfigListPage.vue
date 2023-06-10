@@ -77,6 +77,7 @@
     <SubContentFullPage
       v-if="useDiffForm"
       title="配置内容比较"
+      submitName="确认变更"
       @close="closeDiffForm"
       @submit="submitDiffForm"
     >

@@ -5,8 +5,8 @@
     -->
     <div class="result-wrap">
       <div class="inner-wrap">
-        <div class="result-title">当前配置(旧):</div>
-        <div class="result-title">更新后配置(新):</div>
+        <div class="result-title">当前配置:</div>
+        <div class="result-title">待提交的新配置:</div>
       </div>
       <div class="inner-wrap">
         <div class="diff-result">

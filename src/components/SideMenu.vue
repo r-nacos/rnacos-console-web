@@ -79,12 +79,16 @@
                     ],
                 },
                 {
-                    "name":"命名空间管理",
+                    "name":"系统管理",
                     "icon":'AppsSharp',
                     children: [
                         {
                             "name":"命名空间",
                             "path":"/manage/namespace"
+                        },
+                        {
+                            "name":"集群信息",
+                            "path":"/manage/cluster"
                         },
                     ],
                 },

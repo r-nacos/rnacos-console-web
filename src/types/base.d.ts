@@ -30,3 +30,8 @@ export interface MyWindow extends Window {
 
 declare var window :MyWindow;
 
+export interface IConsoleResult<T> {
+    code: number,
+    message: ?string,
+    data: ?T,
+}

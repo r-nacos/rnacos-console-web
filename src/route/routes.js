@@ -7,6 +7,7 @@ import ConfigHistoryListPage from '@/pages/ConfigHistoryListPage.vue'
 import ServiceListPage from '@/pages/ServiceListPage.vue'
 import ServiceInstanceListPage from '@/pages/ServiceInstanceListPage.vue'
 import NotFound from '@/pages/NotFound.vue'
+import ClusterPageVue from '@/pages/ClusterPage.vue'
 import Tmp from '@/pages/Tmp.vue'
 import DiffDemo from '@/pages/DiffDemo.vue'
 
@@ -75,6 +76,12 @@ export const routes = [
                 name: 'namespace',
                 meta: {'title':'命名空间管理'},
                 component: NamespacePage,
+            },
+            {
+                path: '/manage/cluster',
+                name: 'cluster',
+                meta: {'title':'集群信息'},
+                component: ClusterPageVue,
             },
         ],
     },

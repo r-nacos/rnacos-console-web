@@ -355,6 +355,7 @@ export default defineComponent({
       }
     },
     download() {
+      this.param.tenant = namespaceStore.current.value.namespaceId;
       var params = qs.stringify(this.param);
       var url = "/nacos/v1/console/config/download?"+params;
       this.$refs.download.setAttribute("href",url);

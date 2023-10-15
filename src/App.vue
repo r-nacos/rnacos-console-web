@@ -49,7 +49,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <n-config-provider :theme-overrides="themeOverrides" :locale="zhCN">
+  <n-config-provider :theme-overrides="themeOverrides" :locale="zhCN" abstract>
     <n-message-provider>
       <router-view></router-view>
     </n-message-provider>

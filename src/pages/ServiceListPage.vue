@@ -4,7 +4,6 @@
       <div class="title">
         <span> 配置列表 </span>
       </div>
-      <div class="header-button"></div>
       <div class="namespace">
         <NamespacePopSelect @change="queryList" />
       </div>
@@ -12,100 +11,96 @@
     <div class="content-wrap">
       <div class="form-container">
         <div class="query-params">
-          <div class="paramWrap">
-            <n-form inline :label-width="80">
+          <n-form label-placement="left" label-width="auto">
+            <div class="paramWrap">
               <n-form-item
-                size="tiny"
                 label="服务名称"
-                path="param.serviceParam"
-              >
+                path="param.serviceParam">
                 <n-input
-                  size="tiny"
                   v-model:value="param.serviceParam"
                   placeholder="输入服务名"
-                />
+                  clearable />
               </n-form-item>
-              <n-form-item size="tiny" label="服务组" path="param.groupParam">
+              <n-form-item label="服务组" path="param.groupParam">
                 <n-input
-                  size="tiny"
                   v-model:value="param.groupParam"
                   placeholder="输入服务组"
-                />
+                  clearable />
               </n-form-item>
-            </n-form>
-          </div>
+            </div>
+          </n-form>
           <div class="queryButton">
             <span class="query-button-item">
-              <n-button @click="queryList">查询</n-button>
+              <n-button tertiary @click="queryList">查询</n-button>
             </span>
             <span class="query-button-item">
               <n-button type="info" @click="showCreate">新建</n-button>
             </span>
           </div>
         </div>
-        <div class="table-data">
-          <n-data-table
-            remote
-            ref="table"
-            :columns="columns"
-            :data="data"
-            :loading="loading"
-            :pagination="pagination"
-            :row-key="rowKey"
-            @update:page="handlePageChange"
-          />
-        </div>
+        <n-data-table
+          remote
+          ref="table"
+          :scroll-x="600"
+          :bordered="false"
+          :columns="columns"
+          :data="data"
+          :loading="loading"
+          :pagination="pagination"
+          :row-key="rowKey"
+          @update:page="handlePageChange" />
       </div>
     </div>
-    <SubContentPage
-      v-show="useForm"
-      :title="getDetailTitle"
-      @close="closeForm"
-      @submit="submitForm"
-    >
-      <ServiceDetail :model="model" />
-    </SubContentPage>
+    <n-drawer v-model:show="useForm" default-width="600" resizable>
+      <n-drawer-content :title="getDetailTitle" closable>
+        <ServiceDetail :model="model" />
+        <template #footer>
+          <n-space align="baseline">
+            <n-button text @click="closeForm">返回</n-button>
+            <n-button type="primary" @click="submitForm">确认</n-button>
+          </n-space>
+        </template>
+      </n-drawer-content>
+    </n-drawer>
   </div>
 </template>
 
 <script>
-import { ref, reactive, defineComponent } from "vue";
-import { namingApi } from "@/api/naming";
-import { namespaceStore } from "@/data/namespace";
-import { createColumns } from "@/components/naming/ServiceListColumns.jsx";
-import NamespacePopSelect from "@/components/namespace/NamespacePopSelect.vue";
-import SubContentPage from "@/components/common/SubContentPage";
-import ServiceDetail from "./ServiceDetail.vue";
-import * as constant from "@/types/constant";
-import { useRouter } from "vue-router";
+import { ref, reactive, defineComponent } from "vue"
+import { namingApi } from "@/api/naming"
+import { namespaceStore } from "@/data/namespace"
+import { createColumns } from "@/components/naming/ServiceListColumns.jsx"
+import NamespacePopSelect from "@/components/namespace/NamespacePopSelect.vue"
+import ServiceDetail from "./ServiceDetail.vue"
+import * as constant from "@/types/constant"
+import { useRouter } from "vue-router"
 
 export default defineComponent({
   components: {
     NamespacePopSelect,
-    SubContentPage,
     ServiceDetail,
   },
   setup() {
-    let router = useRouter();
-    const dataRef = ref([]);
-    const loadingRef = ref(false);
+    let router = useRouter()
+    const dataRef = ref([])
+    const loadingRef = ref(false)
     const paramRef = ref({
       serviceParam: "",
       groupParam: "",
       namespaceId: "",
       pageNo: 1,
       pageSize: 20,
-    });
+    })
     const paginationReactive = reactive({
       page: 1,
       pageCount: 1,
       pageSize: 10,
       itemCount: 0,
       prefix({ itemCount }) {
-        return `总行数: ${itemCount}`;
+        return `总行数: ${itemCount}`
       },
-    });
-    const useFormRef = ref(false);
+    })
+    const useFormRef = ref(false)
     const modelRef = ref({
       groupName: "",
       serviceName: "",
@@ -113,11 +108,11 @@ export default defineComponent({
       metadata: "",
       selector: "",
       mode: "",
-    });
+    })
     const showUpdate = (row) => {
-      let protectThreshold = "0";
+      let protectThreshold = "0"
       if (row.protectThreshold) {
-        protectThreshold = row.protectThreshold.toString();
+        protectThreshold = row.protectThreshold.toString()
       }
       modelRef.value = {
         groupName: row.groupName,
@@ -126,9 +121,9 @@ export default defineComponent({
         metadata: row.metadata,
         selector: "",
         mode: constant.FORM_MODE_UPDATE,
-      };
-      useFormRef.value = true;
-    };
+      }
+      useFormRef.value = true
+    }
     const showInstances = (row) => {
       router.push({
         path: "/manage/service/instance",
@@ -137,12 +132,12 @@ export default defineComponent({
           serviceName: row.name,
           namespaceId: namespaceStore.current.value.namespaceId,
         },
-      });
-    };
+      })
+    }
     const showDetail = (row) => {
-      let protectThreshold = "0";
+      let protectThreshold = "0"
       if (row.protectThreshold) {
-        protectThreshold = row.protectThreshold.toString();
+        protectThreshold = row.protectThreshold.toString()
       }
       modelRef.value = {
         groupName: row.groupName,
@@ -151,30 +146,30 @@ export default defineComponent({
         metadata: row.metadata,
         selector: "",
         mode: constant.FORM_MODE_DETAIL,
-      };
-      useFormRef.value = true;
-    };
+      }
+      useFormRef.value = true
+    }
     const removeItem = (row) => {
       let serviceKey = {
         namespaceId: namespaceStore.current.value.namespaceId,
         groupName: row.groupName,
         serviceName: row.name,
-      };
+      }
       namingApi
         .removeService(serviceKey)
         .then((res) => {
           if (res.status == 200) {
-            window.$message.info("删除服务成功!");
-            doHandlePageChange(paginationReactive.page || 1);
-            return;
+            window.$message.info("删除服务成功!")
+            doHandlePageChange(paginationReactive.page || 1)
+            return
           }
-          window.$message.error("删除服务报错," + res.data);
+          window.$message.error("删除服务报错," + res.data)
         })
         .catch((err) => {
           //window.$message.error("删除服务报错," + err.message);
-          window.$message.error("删除服务报错," + err.response.data);
-        });
-    };
+          window.$message.error("删除服务报错," + err.response.data)
+        })
+    }
     const showCreate = () => {
       modelRef.value = {
         groupName: "",
@@ -183,9 +178,9 @@ export default defineComponent({
         metadata: "",
         selector: "",
         mode: constant.FORM_MODE_CREATE,
-      };
-      useFormRef.value = true;
-    };
+      }
+      useFormRef.value = true
+    }
 
     const doQueryList = () => {
       return namingApi.queryServicePage({
@@ -195,43 +190,43 @@ export default defineComponent({
         groupNameParam: paramRef.groupParam,
         pageNo: paginationReactive.page,
         pageSize: paginationReactive.pageSize,
-      });
-    };
+      })
+    }
 
     const doHandlePageChange = (currentPage) => {
-      paginationReactive.page = currentPage;
+      paginationReactive.page = currentPage
       if (!loadingRef.value) {
-        loadingRef.value = true;
+        loadingRef.value = true
         doQueryList()
           .then((res) => {
-            loadingRef.value = false;
+            loadingRef.value = false
             if (res.status == 200) {
-              let count = res.data.count;
-              let pageSize = paginationReactive.pageSize;
-              dataRef.value = res.data.serviceList;
-              paginationReactive.itemCount = count;
+              let count = res.data.count
+              let pageSize = paginationReactive.pageSize
+              dataRef.value = res.data.serviceList
+              paginationReactive.itemCount = count
               paginationReactive.pageCount = Math.round(
                 (count + pageSize - 1) / pageSize
-              );
+              )
             } else {
-              window.$message.error("request err,status code:" + res.status);
-              dataRef.value = [];
+              window.$message.error("request err,status code:" + res.status)
+              dataRef.value = []
             }
           })
           .catch((err) => {
-            window.$message.error("request err,message" + err.message);
-            dataRef.value = [];
-            loadingRef.value = false;
-          });
+            window.$message.error("request err,message" + err.message)
+            dataRef.value = []
+            loadingRef.value = false
+          })
       }
-    };
+    }
 
     let columns = createColumns(
       showInstances,
       showDetail,
       showUpdate,
       removeItem
-    );
+    )
     return {
       columns,
       data: dataRef,
@@ -241,40 +236,40 @@ export default defineComponent({
       useForm: useFormRef,
       model: modelRef,
       rowKey(rowData) {
-        return rowData.groupName + "@@" + rowData.name;
+        return rowData.groupName + "@@" + rowData.name
       },
       doHandlePageChange,
       showCreate,
-    };
+    }
   },
 
   computed: {
     namespaceId() {
-      return namespaceStore.current.value.namespaceId;
+      return namespaceStore.current.value.namespaceId
     },
     getDetailTitle() {
       if (this.model.mode === constant.FORM_MODE_UPDATE) {
-        return "编辑服务";
+        return "编辑服务"
       } else if (this.model.mode === constant.FORM_MODE_CREATE) {
-        return "新增服务";
+        return "新增服务"
       }
-      return "服务详情";
+      return "服务详情"
     },
   },
   methods: {
     handlePageChange(page) {
-      this.doHandlePageChange(page);
+      this.doHandlePageChange(page)
     },
     queryList() {
-      this.doHandlePageChange(1);
+      this.doHandlePageChange(1)
     },
     closeForm() {
-      this.useForm = false;
+      this.useForm = false
     },
     submitForm() {
       if (this.model.mode === constant.FORM_MODE_DETAIL) {
-        this.useForm = false;
-        return;
+        this.useForm = false
+        return
       }
       let serviceInfo = {
         namespaceId: this.namespaceId,
@@ -283,44 +278,44 @@ export default defineComponent({
         protectThreshold: this.model.protectThreshold,
         metadata: this.model.metadata,
         tenant: this.getTenant,
-      };
+      }
       if (this.model.mode === constant.FORM_MODE_CREATE) {
         namingApi
           .createService(serviceInfo)
           .then((res) => {
             if (res.status == 200) {
-              window.$message.info("设置成功!");
-              this.useForm = false;
-              this.queryList();
-              return;
+              window.$message.info("设置成功!")
+              this.useForm = false
+              this.queryList()
+              return
             }
-            window.$message.error("设置失败，response code" + res.status);
+            window.$message.error("设置失败，response code" + res.status)
           })
           .catch((err) => {
-            window.$message.error("设置失败，" + err.message);
-          });
+            window.$message.error("设置失败，" + err.message)
+          })
       } else {
         namingApi
           .updateService(serviceInfo)
           .then((res) => {
             if (res.status == 200) {
-              window.$message.info("设置成功!");
-              this.useForm = false;
-              this.queryList();
-              return;
+              window.$message.info("设置成功!")
+              this.useForm = false
+              this.queryList()
+              return
             }
-            window.$message.error("设置失败，response code" + res.status);
+            window.$message.error("设置失败，response code" + res.status)
           })
           .catch((err) => {
-            window.$message.error("设置失败，" + err.message);
-          });
+            window.$message.error("设置失败，" + err.message)
+          })
       }
     },
   },
   mounted() {
-    this.queryList();
+    this.queryList()
   },
-});
+})
 </script>
 
 <style scoped>
@@ -342,7 +337,7 @@ export default defineComponent({
   position: relative;
   background: #ffffff;
   border-radius: 8px;
-  padding: 3px;
+  padding: 16px 8px;
 }
 
 .header {
@@ -352,6 +347,7 @@ export default defineComponent({
   height: 40px;
   border-bottom: #ccc 1px solid;
   background: #fff;
+  padding-right: 3px;
 }
 
 .title {
@@ -364,15 +360,24 @@ export default defineComponent({
 .header-button {
   flex: 0 0 auto;
 }
+
 .namespace {
   flex: 0 0 auto;
 }
 
 .query-params {
   flex: 0 0 auto;
-  height: 60px;
   display: flex;
+  align-items: baseline;
+  justify-content: space-between;
   flex-direction: row;
+}
+
+.paramWrap {
+  display: flex;
+  gap: 8px;
+  flex-direction: row;
+  flex-wrap: wrap;
 }
 
 .queryButton {
@@ -382,13 +387,5 @@ export default defineComponent({
 
 .query-button-item {
   margin-left: 10px;
-}
-
-.table-data {
-  flex-grow: 1 1 auto;
-  position: relative;
-  overflow: scroll;
-  height: 100%;
-  width: 100%;
 }
 </style>

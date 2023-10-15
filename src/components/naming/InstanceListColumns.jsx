@@ -1,4 +1,4 @@
-import { NButton,NSwitch } from "naive-ui"
+import { NButton, NSwitch } from "naive-ui"
 
 /*
 let slots ={
@@ -11,7 +11,7 @@ let slots ={
 };
 */
 
-export const createColumns = function (showUpdate,onLine,offLine ) {
+export const createColumns = function (showUpdate, onLine, offLine) {
 
   const columns = [
     {
@@ -25,7 +25,7 @@ export const createColumns = function (showUpdate,onLine,offLine ) {
     {
       title: '是否临时实例',
       key: 'ephemeral',
-      render(row){
+      render(row) {
         return (
           <span>{row.ephemeral.toString()}</span>
         )
@@ -38,7 +38,7 @@ export const createColumns = function (showUpdate,onLine,offLine ) {
     {
       title: '建康状态',
       key: 'healthy',
-      render(row){
+      render(row) {
         return (
           <span>{row.healthy.toString()}</span>
         )
@@ -48,7 +48,7 @@ export const createColumns = function (showUpdate,onLine,offLine ) {
       title: '元数据',
       key: 'metadata',
       width: 200,
-      render(row){
+      render(row) {
         return (
           <span>{JSON.stringify(row.metadata)}</span>
         )
@@ -57,33 +57,34 @@ export const createColumns = function (showUpdate,onLine,offLine ) {
     {
       title: '操作',
       key: '_type',
+      fixed: 'right',
       render(row) {
-        const onOffLine= ()=> {
-          
-          // v-slots={slots} 
-          return <NSwitch 
+        const onOffLine = () => {
+
+          // v-slots={slots}
+          return <NSwitch
             size="small"
-            default-value={row.enabled} 
-            onUpdateValue={(enabled)=>{
-              if(enabled==row.enabled){
+            default-value={row.enabled}
+            onUpdateValue={(enabled) => {
+              if (enabled == row.enabled) {
                 //操作中
-                return;
+                return
               }
-              if(enabled){
+              if (enabled) {
                 onLine(row)
               }
-              else{
+              else {
                 offLine(row)
               }
-            }} 
+            }}
           />
         }
         return (
           <div>
-            <span style={{"padding-right":"5px"}}>
-            {onOffLine()}
+            <span style={{ "padding-right": "5px" }}>
+              {onOffLine()}
             </span>
-            <NButton size="tiny" onClick={() => showUpdate(row)}>编辑</NButton>
+            <NButton size="tiny" quaternary onClick={() => showUpdate(row)}>编辑</NButton>
           </div>
         )
       }

@@ -1,138 +1,144 @@
 <template>
-    <div class="wrap">
-        <div class="header-wrap" :style="{'height':layoutSize.headerHeight+'px'}">
-            <div class="sider-header">
-                R-NACOS
-            </div>
-            <div class="header">
-            </div>
+  <section class="wrap">
+    <header class="header-wrap" :style="{ 'height': layoutSize.headerHeight + 'px' }">
+      <div class="sider-header">
+        R-NACOS
+      </div>
+      <div class="header">
+      </div>
+    </header>
+    <section class="content_wrap">
+      <nav class="side" :style="{ 'width': layoutSize.siderWidth + 'px' }">
+        <SideMenu />
+      </nav>
+      <main class="content">
+        <div class="content-inner" :style="{ 'width': layoutSize.contentWidth + 'px', 'height': layoutSize.contentHeight + 'px' }">
+          <router-view></router-view>
         </div>
-        <div class="content_wrap">
-            <div class="side" :style="{'width':layoutSize.siderWidth+'px'}">
-                <SideMenu/>
-            </div>
-            <div class="content">
-                <div class="content-inner" :style="{'width':layoutSize.contentWidth+'px','height':layoutSize.contentHeight+'px'}"> 
-                    <router-view></router-view>
-                </div>
-            </div>
-        </div>
-        <!-- 
+      </main>
+    </section>
+    <!--
         <div class="footer" :style="{'height':size.footerHeight+'px'}">
             footer
         </div>
         -->
-    </div>
-        
+  </section>
 </template>
-    
-<script>
 
-import SideMenu from '../SideMenu.vue';
+<script>
+import SideMenu from '../SideMenu.vue'
 import { useMessage } from 'naive-ui'
-import { defineComponent,reactive } from 'vue'
-import {useLayoutSize} from '@/data/appdata';
+import { defineComponent } from 'vue'
+import { useLayoutSize } from '@/data/appdata'
 
 export default defineComponent({
-    components:{
-        SideMenu,
-    },
-    setup() {
-        window.$message = useMessage();
-        let layoutSize = useLayoutSize();
-        //layoutSize.updateLayoutSize(undefined);
-        return {
-            layoutSize:layoutSize,
-            /*
-            doUpdateLayoutSize(){
-                layoutSize.updateLayoutSize(undefined);
-            }
-            */
-        }
-    },
-    methods: {
-    },
-    mounted() {
-        //var updateLayoutSize=()=>{this.doUpdateLayoutSize()};
-        //updateLayoutSize();
-        //window.addEventListener("resize",updateLayoutSize) 
+  components: {
+    SideMenu,
+  },
+  setup() {
+    window.$message = useMessage()
+    let layoutSize = useLayoutSize()
+    //layoutSize.updateLayoutSize(undefined);
+    return {
+      layoutSize: layoutSize,
+      /*
+      doUpdateLayoutSize(){
+          layoutSize.updateLayoutSize(undefined);
+      }
+      */
     }
+  },
+  methods: {
+  },
+  mounted() {
+    //var updateLayoutSize=()=>{this.doUpdateLayoutSize()};
+    //updateLayoutSize();
+    //window.addEventListener("resize",updateLayoutSize)
+  }
 })
 
 </script>
-    
+
 <style scoped>
 .wrap {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .header-wrap {
-    flex: 0 0 auto;
-    height: 52px;
-    background: #2f6cf7;
-    color: #fff;
-    position: relative;
-    flex-grow: 1;
-    display: flex;
-    flex-direction: row;
+  flex: 0 0 auto;
+  height: 52px;
+  background: #2f6cf7;
+  color: #fff;
+  position: relative;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: row;
 }
 
-.sider-header{
-    flex: 0 0 auto;
-    height: 52px;
-    width: 200px;
-    position: relative;
-    line-height: 52px;
-    text-align: center;
-    background: #2f6cf7;
-    color: #fff;
+.sider-header {
+  flex: 0 0 auto;
+  height: 52px;
+  width: 200px;
+  position: relative;
+  line-height: 52px;
+  text-align: center;
+  background: #2f6cf7;
+  color: #fff;
 }
 
 .header {
-    flex: 1 1 auto;
-    background: #2f6cf7;
-    color:#fff;
-    height: 52px;
+  flex: 1 1 auto;
+  background: #2f6cf7;
+  color: #fff;
+  height: 52px;
 }
 
 .content_wrap {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: row;
-    height: 100%;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: row;
 }
+
 .side {
-    flex: 0 0 auto;
-    height: 100%;
-    width: 200px;;
-    background: #fff;
-    color: #595959;
-    border-right: 1px #ccc solid;
-    /* 
-    border-right: 1px #ccc solid;
-    */
+  height: calc(100vh - 52px);
+  width: 200px;
+  ;
+  background: #fff;
+  color: #595959;
+  border-right: 1px #ccc solid;
+  overflow-y: auto;
+  scrollbar-color: var(--rnacos-scrollbar-color) transparent;
+  scrollbar-width: thin;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--rnacos-scrollbar-color);
+  }
 }
+
 .content {
-    flex-grow: 1;
-    background: #ffffff;
-    position: relative;
-    display: block;
-    overflow: hidden;
+  flex-grow: 1;
+  background: #ffffff;
+  position: relative;
+  display: block;
+  overflow: hidden;
 }
 
 .content-inner {
-    position: relative;
-    display: block;
-    overflow: scroll;
-    background: #efefef;
+  position: relative;
+  display: block;
+  overflow: auto;
+  background: #efefef;
 }
 
 .footer {
-    flex: 0 0 auto;
-    height: 30px;
+  flex: 0 0 auto;
+  height: 30px;
 }
 
 </style>

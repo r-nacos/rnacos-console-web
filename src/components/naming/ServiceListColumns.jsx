@@ -4,7 +4,7 @@ export const createColumns = function (showInstances,detail, showUpdate, remove)
 
   const removeConfirmSlots = {
     trigger: () => {
-      return <NButton size="tiny">删除</NButton>
+      return <NButton size="tiny" quaternary type='error'>删除</NButton>
     }
   }
 
@@ -31,9 +31,9 @@ export const createColumns = function (showInstances,detail, showUpdate, remove)
       render(row) {
         return (
           <div>
-            <NButton size="tiny" onClick={() => showInstances(row)}>服务实例</NButton>
-            <NButton size="tiny" onClick={() => detail(row)}>详情</NButton>
-            <NButton size="tiny" onClick={() => showUpdate(row)}>编辑</NButton>
+            <NButton size="tiny" quaternary onClick={() => showInstances(row)}>服务实例</NButton>
+            <NButton size="tiny" quaternary onClick={() => detail(row)}>详情</NButton>
+            <NButton size="tiny" quaternary onClick={() => showUpdate(row)}>编辑</NButton>
             <NPopconfirm onPositiveClick={() => remove(row)} v-slots={removeConfirmSlots} >
               <span>确认要删服务名称为:{row.name},服务组为:{row.groupName},的配置吗？</span>
             </NPopconfirm>

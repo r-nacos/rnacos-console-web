@@ -31,6 +31,15 @@ input[type="file"] > input[type="button"]::-moz-focus-inner {
 }
 
 /* ---- */
+
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  --rnacos-scrollbar-color: rgba(0, 0, 0, .1);
+}
+
 html,
 body{
   margin: 0;
@@ -41,21 +50,6 @@ body{
   height: 100%;
   background: #FFFFFF;
   font: 14px/1.5 Arial, Helvetica, sans-serif;
-}
-
-#main-warp{
-  position: relative;
-  overflow-x: auto;
-  width: 100%;
-  height: 100%;
-}
-
-#app {
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  height: 100%;
-  background: #CCCCCC;
 }
 
 .clear{

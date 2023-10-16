@@ -1,36 +1,36 @@
-
-.ops{
-    display: flex;
-    flex-direction: row;
-    height: 40px;
-    align-items: center;
-    background: #fff;
-    border-bottom: 1px #ccc solid;
+.ops {
+  display: flex;
+  flex-direction: row;
+  height: 40px;
+  align-items: center;
+  background: #fff;
+  border-bottom: 1px #ccc solid;
 }
 
-.opsTitle{
-    flex: 1 1 auto;
-    font: 14/1.25;
-    line-height: 40px;
-    padding-left: 15px;
+.opsTitle {
+  flex: 1 1 auto;
+  font: 14/1.25;
+  line-height: 40px;
+  padding-left: 15px;
 }
 
-.opsButton{
-    flex: 0 0 auto;
+.opsButton {
+  flex: 0 0 auto;
+  padding-right: 3px;
 }
 
-.container{
-    padding: 10px;
+.container {
+  padding: 10px;
 }
 
-.innerContainer{
-    padding: 3px;
-    background: #fff;
-    border-radius: 5px;
+.innerContainer {
+  padding: 8px;
+  background: #fff;
+  border-radius: 5px;
 }
 
-.subContent{
-    padding: 3px;
-    background: #fff;
-    border-radius: 5px;
+.subContent {
+  padding: 3px;
+  background: #fff;
+  border-radius: 5px;
 }

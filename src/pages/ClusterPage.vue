@@ -7,16 +7,15 @@
     </div>
     <div class="content-wrap">
       <div class="form-container">
-        <div class="table-data">
           <n-data-table
             remote
             ref="table"
+            :bordered="false"
             :columns="columns"
             :data="data"
             :row-key="rowKey"
           />
         </div>
-      </div>
     </div>
   </div>
 </template>
@@ -31,7 +30,7 @@ export default defineComponent({
     let columns = createColumns();
     const dataRef = ref([]);
     const doLoadData = function () {
-      clusterApi 
+      clusterApi
         .queryNodeList()
         .then((res) => {
           if (res.status == 200) {
@@ -78,7 +77,7 @@ export default defineComponent({
   position: relative;
   background: #ffffff;
   border-radius: 8px;
-  padding: 3px;
+  padding: 8px;
 }
 
 .header {
@@ -95,36 +94,5 @@ export default defineComponent({
   font: 14/1.25;
   line-height: 30px;
   padding-left: 15px;
-}
-
-.header-button {
-  flex: 0 0 auto;
-}
-.namespace {
-  flex: 0 0 auto;
-}
-
-.query-params {
-  flex: 0 0 auto;
-  height: 60px;
-  display: flex;
-  flex-direction: row;
-}
-
-.queryButton {
-  display: flex;
-  align-items: center;
-}
-
-.query-button-item {
-  margin-left: 10px;
-}
-
-.table-data {
-  flex-grow: 1 1 auto;
-  position: relative;
-  overflow: scroll;
-  height: 100%;
-  width: 100%;
 }
 </style>

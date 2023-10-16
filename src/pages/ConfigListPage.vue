@@ -62,21 +62,25 @@
           @update:page="handlePageChange" />
       </div>
     </div>
-    <SubContentFullPage
-      v-show="useForm"
-      :title="getDetailTitle"
-      @close="closeForm"
-      @submit="submitForm">
-      <ConfigDetail :model="model" />
-    </SubContentFullPage>
-    <SubContentFullPage
-      v-if="useDiffForm"
-      title="配置内容比较"
-      submitName="确认变更"
-      @close="closeDiffForm"
-      @submit="submitDiffForm">
-      <DiffComponent :src="model.sourceContent" :dst="model.content" />
-    </SubContentFullPage>
+    <Transition name="slide-fade">
+      <SubContentFullPage
+        v-show="useForm"
+        :title="getDetailTitle"
+        @close="closeForm"
+        @submit="submitForm">
+        <ConfigDetail :model="model" />
+      </SubContentFullPage>
+    </Transition>
+    <Transition name="slide-fade">
+      <SubContentFullPage
+        v-if="useDiffForm"
+        title="配置内容比较"
+        submitName="确认变更"
+        @close="closeDiffForm"
+        @submit="submitDiffForm">
+        <DiffComponent :src="model.sourceContent" :dst="model.content" />
+      </SubContentFullPage>
+    </Transition>
   </div>
 </template>
 
@@ -430,4 +434,6 @@ export default defineComponent({
 .query-button-item {
   margin-left: 10px;
 }
+
+
 </style>

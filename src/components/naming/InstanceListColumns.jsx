@@ -84,7 +84,7 @@ export const createColumns = function (showUpdate, onLine, offLine) {
             <span style={{ "padding-right": "5px" }}>
               {onOffLine()}
             </span>
-            <NButton size="tiny" quaternary onClick={() => showUpdate(row)}>编辑</NButton>
+            <NButton size="tiny" type="info" quaternary onClick={() => showUpdate(row)}>编辑</NButton>
           </div>
         )
       }

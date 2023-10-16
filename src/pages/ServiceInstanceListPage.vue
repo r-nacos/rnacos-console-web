@@ -49,7 +49,13 @@
           @update:page="handlePageChange" />
       </div>
     </div>
-    <n-drawer v-model:show="useForm" default-width="600" resizable>
+    <n-drawer
+      to="#main_content"
+      :block-scroll="false"
+      :trap-focus="false"
+      v-model:show="useForm"
+      default-width="600"
+      resizable>
       <n-drawer-content :title="getDetailTitle" closable>
         <ServiceInstanceDetail :model="model" />
         <template #footer>

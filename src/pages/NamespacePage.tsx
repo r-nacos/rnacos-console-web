@@ -33,7 +33,7 @@ export const createColumns = function (showUpdate: IHandeNamespace, remove: IHan
         }
         return (
           <div>
-            <NButton size="tiny" quaternary onClick={() => showUpdate(row)}>编辑</NButton>
+            <NButton size="tiny" quaternary type="info" onClick={() => showUpdate(row)}>编辑</NButton>
             <NButton size="tiny" quaternary type='error' onClick={() => remove(row)}>删除</NButton>
           </div>
         )
@@ -249,7 +249,7 @@ export default defineComponent({
   ,
   render() {
     return (
-      <div class="wrap">
+      <div id="wrap" class="wrap">
         <div class={styles.ops}>
           <div class={styles.opsTitle}>
             <span >
@@ -279,6 +279,9 @@ export default defineComponent({
           </div>
         </div>
         <NDrawer
+          to="#main_content"
+          trapFocus={false}
+          blockScroll={false}
           v-model:show={this.useForm}
           defaultWidth={600}
           resizable

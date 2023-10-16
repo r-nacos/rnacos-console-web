@@ -49,7 +49,13 @@
           @update:page="handlePageChange" />
       </div>
     </div>
-    <n-drawer v-model:show="useForm" default-width="600" resizable>
+    <n-drawer
+      to="#main_content"
+      :block-scroll="false"
+      :trap-focus="false"
+      v-model:show="useForm"
+      default-width="600"
+      resizable>
       <n-drawer-content :title="getDetailTitle" closable>
         <ConfigDetail :model="model" />
         <template #footer>
@@ -60,14 +66,16 @@
         </template>
       </n-drawer-content>
     </n-drawer>
-    <SubContentFullPage
-      v-if="useDiffForm"
-      title="配置内容比较"
-      submitName="确认变更"
-      @close="closeDiffForm"
-      @submit="submitDiffForm">
-      <DiffComponent :src="model.sourceContent" :dst="model.content" />
-    </SubContentFullPage>
+    <Transition name="slide-fade">
+      <SubContentFullPage
+        v-if="useDiffForm"
+        title="配置内容比较"
+        submitName="确认变更"
+        @close="closeDiffForm"
+        @submit="submitDiffForm">
+        <DiffComponent :src="model.sourceContent" :dst="model.content" />
+      </SubContentFullPage>
+    </Transition>
   </div>
 </template>
 

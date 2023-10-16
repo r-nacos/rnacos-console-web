@@ -25,9 +25,9 @@ export const createColumns = function (detail, showHistory, showUpdate, remove) 
       render(row) {
         return (
           <div>
-            <NButton size="tiny" quaternary type='info' onClick={() => detail(row)}>详情</NButton>
-            <NButton size="tiny" quaternary onClick={() => showHistory(row)}>历史记录</NButton>
-            <NButton size="tiny" quaternary onClick={() => showUpdate(row)}>编辑</NButton>
+            <NButton size="tiny" quaternary type="info" onClick={() => detail(row)}>详情</NButton>
+            <NButton size="tiny" quaternary type="info" onClick={() => showHistory(row)}>历史记录</NButton>
+            <NButton size="tiny" quaternary type="info" onClick={() => showUpdate(row)}>编辑</NButton>
             <NPopconfirm onPositiveClick={() => remove(row)} v-slots={removeConfirmSlots} >
               <span>确认要删配置组为:{row.group},ID为:{row.dataId}的配置吗？</span>
             </NPopconfirm>

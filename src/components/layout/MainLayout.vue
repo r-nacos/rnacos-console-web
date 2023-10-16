@@ -11,7 +11,7 @@
       <nav class="side" :style="{ 'width': layoutSize.siderWidth + 'px' }">
         <SideMenu />
       </nav>
-      <main class="content">
+      <main id="main_content" class="content">
         <div class="content-inner" :style="{ 'width': layoutSize.contentWidth + 'px', 'height': layoutSize.contentHeight + 'px' }">
           <router-view></router-view>
         </div>

@@ -31,27 +31,22 @@
 </template>
 
 <script>
-import {defineComponent,ref} from 'vue'
-import {handleDiff,buildDiffResult,} from '@/utils/utils';
+import { defineComponent, ref } from "vue";
+import { handleDiff, buildDiffResult } from "@/utils/utils";
 
 export default defineComponent({
-  props:[
-    'src',
-    'dst',
-  ],
+  props: ["src", "dst"],
   setup(props) {
-    var list = handleDiff(props['src'] || '',props['dst'] || '');
+    var list = handleDiff(props["src"] || "", props["dst"] || "");
     var res = buildDiffResult(list);
     return {
-      ...res ,
-    }
+      ...res
+    };
   }
-})
-
+});
 </script>
 
 <style scoped>
-
 .result-wrap {
   height: 100%;
   overflow-y: scroll;
@@ -63,7 +58,7 @@ export default defineComponent({
   display: flex;
 }
 
-.result-title{
+.result-title {
   flex: 1 1 auto;
   width: 50%;
   background: #fff;
@@ -72,14 +67,14 @@ export default defineComponent({
 .diff-result {
   flex: 1 1 auto;
   width: 50%;
-  overflow-x:scroll;
+  overflow-x: scroll;
   background: #1f1f1f;
   color: #c9c9c9;
   display: flex;
 }
 
 .no-code {
-  flex:0 0 none;
+  flex: 0 0 none;
   width: 50px;
   /*
   background: #c9c9c9;

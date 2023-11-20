@@ -14,19 +14,19 @@
         <div class="query-params">
           <n-form label-placement="left" label-width="auto">
             <div class="paramWrap">
-              <n-form-item
-                label="配置ID"
-                path="param.dataId">
+              <n-form-item label="配置ID" path="param.dataId">
                 <n-input
                   :disabled="true"
                   v-model:value="param.dataId"
-                  placeholder="" />
+                  placeholder=""
+                />
               </n-form-item>
               <n-form-item label="配置组" path="param.group">
                 <n-input
                   :disabled="true"
                   v-model:value="param.group"
-                  placeholder="" />
+                  placeholder=""
+                />
               </n-form-item>
             </div>
           </n-form>
@@ -46,7 +46,8 @@
           :loading="loading"
           :pagination="pagination"
           :row-key="rowKey"
-          @update:page="handlePageChange" />
+          @update:page="handlePageChange"
+        />
       </div>
     </div>
     <n-drawer
@@ -55,13 +56,16 @@
       :trap-focus="false"
       v-model:show="useForm"
       default-width="600"
-      resizable>
+      resizable
+    >
       <n-drawer-content :title="getDetailTitle" closable>
         <ConfigDetail :model="model" />
         <template #footer>
           <n-space align="baseline">
             <n-button text @click="closeForm">返回</n-button>
-            <n-button type="primary" @click="submitForm">{{ getSubmitName }}</n-button>
+            <n-button type="primary" @click="submitForm">{{
+              getSubmitName
+            }}</n-button>
           </n-space>
         </template>
       </n-drawer-content>
@@ -72,7 +76,8 @@
         title="配置内容比较"
         submitName="确认变更"
         @close="closeDiffForm"
-        @submit="submitDiffForm">
+        @submit="submitDiffForm"
+      >
         <DiffComponent :src="model.sourceContent" :dst="model.content" />
       </SubContentFullPage>
     </Transition>
@@ -80,43 +85,43 @@
 </template>
 
 <script>
-import { defineComponent } from "vue"
-import { configApi } from "@/api/config"
-import { createHistoryColumns } from "@/components/config/ConfigColumns"
-import SubContentFullPage from "@/components/common/SubContentFullPage"
-import DiffComponent from "@/components/config/DiffComponent.vue"
-import ConfigDetail from "./ConfigDetail.vue"
-import * as constant from "@/types/constant"
-import { useRoute } from "vue-router"
+import { defineComponent } from "vue";
+import { configApi } from "@/api/config";
+import { createHistoryColumns } from "@/components/config/ConfigColumns";
+import SubContentFullPage from "@/components/common/SubContentFullPage";
+import DiffComponent from "@/components/config/DiffComponent.vue";
+import ConfigDetail from "./ConfigDetail.vue";
+import * as constant from "@/types/constant";
+import { useRoute } from "vue-router";
 
 export default defineComponent({
   components: {
     SubContentFullPage,
     ConfigDetail,
-    DiffComponent,
+    DiffComponent
   },
   setup() {
-    let route = useRoute()
-    let query = route.query
+    let route = useRoute();
+    let query = route.query;
     let param = {
       group: query.group || "",
       dataId: query.dataId || "",
-      tenant: query.tenant || "",
-    }
-    const dataRef = ref([])
-    const loadingRef = ref(false)
-    const paramRef = ref(param)
+      tenant: query.tenant || ""
+    };
+    const dataRef = ref([]);
+    const loadingRef = ref(false);
+    const paramRef = ref(param);
     const paginationReactive = reactive({
       page: 1,
       pageCount: 1,
       pageSize: 10,
       itemCount: 0,
       prefix({ itemCount }) {
-        return `总行数: ${itemCount}`
-      },
-    })
-    const useFormRef = ref(false)
-    const useDiffFormRef = ref(false)
+        return `总行数: ${itemCount}`;
+      }
+    });
+    const useFormRef = ref(false);
+    const useDiffFormRef = ref(false);
 
     const modelRef = ref({
       dataId: param.dataId,
@@ -125,55 +130,55 @@ export default defineComponent({
       showMd5: false,
       sourceContent: "",
       content: "",
-      mode: constant.FORM_MODE_DETAIL,
-    })
+      mode: constant.FORM_MODE_DETAIL
+    });
     const updateParam = (param) => {
-      paramRef.value = param
-    }
+      paramRef.value = param;
+    };
     const doQueryList = () => {
       return configApi.queryConfigHistoryPage({
         tenant: paramRef.value.tenant,
         dataId: paramRef.value.dataId,
         group: paramRef.value.group,
         pageNo: paginationReactive.page,
-        pageSize: paginationReactive.pageSize,
-      })
-    }
+        pageSize: paginationReactive.pageSize
+      });
+    };
 
     const doHandlePageChange = (currentPage) => {
-      paginationReactive.page = currentPage
+      paginationReactive.page = currentPage;
       if (!loadingRef.value) {
-        loadingRef.value = true
+        loadingRef.value = true;
         doQueryList()
           .then((res) => {
-            loadingRef.value = false
+            loadingRef.value = false;
             if (res.status == 200) {
-              let count = res.data.count
-              let pageSize = paginationReactive.pageSize
-              dataRef.value = res.data.list
+              let count = res.data.count;
+              let pageSize = paginationReactive.pageSize;
+              dataRef.value = res.data.list;
               if (currentPage === 1 && res.data.list.length > 0) {
-                modelRef.value.sourceContent = res.data.list[0].content
+                modelRef.value.sourceContent = res.data.list[0].content;
               }
-              paginationReactive.itemCount = count
+              paginationReactive.itemCount = count;
               paginationReactive.pageCount = Math.round(
                 (count + pageSize - 1) / pageSize
-              )
+              );
             } else {
-              window.$message.error("request err,status code:" + res.status)
-              dataRef.value = []
+              window.$message.error("request err,status code:" + res.status);
+              dataRef.value = [];
             }
           })
           .catch((err) => {
-            window.$message.error("request err,message" + err.message)
-            dataRef.value = []
-            loadingRef.value = false
-          })
+            window.$message.error("request err,message" + err.message);
+            dataRef.value = [];
+            loadingRef.value = false;
+          });
       }
-    }
+    };
 
     const showDetail = (row) => {
-      useFormRef.value = true
-      modelRef.value.content = row.content
+      useFormRef.value = true;
+      modelRef.value.content = row.content;
       /*
       modelRef.value={
         dataId: param.dataId,
@@ -184,36 +189,36 @@ export default defineComponent({
         mode: constant.FORM_MODE_DETAIL,
       };
       */
-    }
+    };
     const doRollback = (content) => {
       let config = {
         dataId: param.dataId,
         group: param.group,
         tenant: param.tenant,
-        content: content,
-      }
+        content: content
+      };
       configApi
         .setConfig(config)
         .then((res) => {
           if (res.status == 200) {
-            window.$message.info("恢复成功!")
-            useFormRef.value = false
-            useDiffFormRef.value = false
-            doHandlePageChange(1)
-            return
+            window.$message.info("恢复成功!");
+            useFormRef.value = false;
+            useDiffFormRef.value = false;
+            doHandlePageChange(1);
+            return;
           }
-          window.$message.error("恢复失败，response code" + res.status)
+          window.$message.error("恢复失败，response code" + res.status);
         })
         .catch((err) => {
-          window.$message.error("恢复失败，" + err.message)
-        })
-    }
+          window.$message.error("恢复失败，" + err.message);
+        });
+    };
     const rollback = (row) => {
-      modelRef.value.content = row.content
-      useDiffFormRef.value = true
+      modelRef.value.content = row.content;
+      useDiffFormRef.value = true;
       //doRollback(row.content)
-    }
-    let columns = createHistoryColumns(showDetail, rollback)
+    };
+    let columns = createHistoryColumns(showDetail, rollback);
     return {
       columns,
       data: dataRef,
@@ -225,51 +230,51 @@ export default defineComponent({
       model: modelRef,
       updateParam,
       rowKey(rowData) {
-        return rowData.id
+        return rowData.id;
       },
       doHandlePageChange,
-      doRollback,
-    }
+      doRollback
+    };
   },
   computed: {
     getDetailTitle() {
-      return "历史记录内容"
+      return "历史记录内容";
     },
     getSubmitName() {
-      return "恢复历史记录"
-    },
+      return "恢复历史记录";
+    }
   },
   data() {
-    return {}
+    return {};
   },
   mounted() {
-    this.queryList()
+    this.queryList();
   },
   methods: {
     handlePageChange(page) {
-      this.doHandlePageChange(page)
+      this.doHandlePageChange(page);
     },
     queryList() {
-      this.doHandlePageChange(1)
+      this.doHandlePageChange(1);
     },
     closeForm() {
-      this.useForm = false
+      this.useForm = false;
     },
     submitForm() {
-      this.useForm = false
-      this.useDiffForm = true
+      this.useForm = false;
+      this.useDiffForm = true;
     },
     closeDiffForm() {
-      this.useDiffForm = false
+      this.useDiffForm = false;
     },
     submitDiffForm() {
-      this.doRollback(this.model.content)
+      this.doRollback(this.model.content);
     },
     routerBack() {
-      this.$router.go(-1)
-    },
-  },
-})
+      this.$router.go(-1);
+    }
+  }
+});
 </script>
 
 <style scoped>

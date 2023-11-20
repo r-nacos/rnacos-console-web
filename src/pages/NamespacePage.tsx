@@ -1,47 +1,78 @@
-import { ref, defineComponent } from 'vue'
-import { NButton, NDataTable, NForm, NFormItem, NInput, NSpace, NDrawer, NDrawerContent, NTag } from 'naive-ui'
-import { Close } from '@vicons/ionicons5'
-import namespaceApi from '@/api/namespace'
+import { ref, defineComponent } from "vue";
+import {
+  NButton,
+  NDataTable,
+  NForm,
+  NFormItem,
+  NInput,
+  NSpace,
+  NDrawer,
+  NDrawerContent,
+  NTag
+} from "naive-ui";
+import { Close } from "@vicons/ionicons5";
+import namespaceApi from "@/api/namespace";
 //import {createColumns} from '../components/namespace/NamespaceColumns'
 //import NamespacePopSelect from '../components/namespace/NamespacePopSelect.vue';
-import { namespaceStore } from '../data/namespace'
-import { IHandeNamespace, INamespace } from '@/types/namespace'
-import styles from './NamespacePage.module.css'
+import { namespaceStore } from "../data/namespace";
+import { IHandeNamespace, INamespace } from "@/types/namespace";
+import styles from "./NamespacePage.module.css";
 
-import type { FormItemRule } from 'naive-ui'
-import type { IColumn, MyWindow } from '@/types/base'
+import type { FormItemRule } from "naive-ui";
+import type { IColumn, MyWindow } from "@/types/base";
 
-declare var window: MyWindow
+declare var window: MyWindow;
 
-export const createColumns = function (showUpdate: IHandeNamespace, remove: IHandeNamespace): IColumn[] {
+export const createColumns = function (
+  showUpdate: IHandeNamespace,
+  remove: IHandeNamespace
+): IColumn[] {
   const columns = [
     {
-      title: '命名空间名称',
-      key: 'namespaceName'
+      title: "命名空间名称",
+      key: "namespaceName"
     },
     {
-      title: '命名空间ID',
-      key: 'namespaceId'
+      title: "命名空间ID",
+      key: "namespaceId"
     },
     {
-      title: '操作',
-      key: 'type',
-      fixed: 'right',
+      title: "操作",
+      key: "type",
+      fixed: "right",
       render(row: INamespace) {
-        if (row.namespaceId === '') {
-          return <NTag size='small' type='info'>保留空间</NTag>
+        if (row.namespaceId === "") {
+          return (
+            <NTag size="small" type="info">
+              保留空间
+            </NTag>
+          );
         }
         return (
           <div>
-            <NButton size="tiny" quaternary type="info" onClick={() => showUpdate(row)}>编辑</NButton>
-            <NButton size="tiny" quaternary type='error' onClick={() => remove(row)}>删除</NButton>
+            <NButton
+              size="tiny"
+              quaternary
+              type="info"
+              onClick={() => showUpdate(row)}
+            >
+              编辑
+            </NButton>
+            <NButton
+              size="tiny"
+              quaternary
+              type="error"
+              onClick={() => remove(row)}
+            >
+              删除
+            </NButton>
           </div>
-        )
+        );
       }
-    },
-  ]
-  return columns
-}
+    }
+  ];
+  return columns;
+};
 
 /*
 const columns = [
@@ -73,35 +104,37 @@ const columns = [
 */
 
 export default defineComponent({
-  name: 'NamespacePage',
+  name: "NamespacePage",
   components: {
-    Close,
+    Close
     //NamespacePopSelect,
   },
   setup() {
-    const dataRef = ref([{
-      'namespaceId': '',
-      'namespaceName': 'public',
-      'type': '0',
-    }])
-    const loadingRef = ref(false)
-    const useFormRef = ref(false)
+    const dataRef = ref([
+      {
+        namespaceId: "",
+        namespaceName: "public",
+        type: "0"
+      }
+    ]);
+    const loadingRef = ref(false);
+    const useFormRef = ref(false);
     const modelRef = ref({
-      'namespaceId': '',
-      'namespaceName': '',
-      'mode': '',
-    })
+      namespaceId: "",
+      namespaceName: "",
+      mode: ""
+    });
     const rules = {
       namespaceId: [
         {
           required: true,
           validator(rule: FormItemRule, value: string) {
             if (!value) {
-              return new Error('需要输入ID')
+              return new Error("需要输入ID");
             }
-            return true
+            return true;
           },
-          trigger: ['input', 'blur']
+          trigger: ["input", "blur"]
         }
       ],
 
@@ -110,155 +143,161 @@ export default defineComponent({
           required: true,
           validator(rule: FormItemRule, value: string) {
             if (!value) {
-              return new Error('需要输入名称')
+              return new Error("需要输入名称");
             }
-            return true
+            return true;
           },
-          trigger: ['input', 'blur']
+          trigger: ["input", "blur"]
         }
-      ],
-    }
+      ]
+    };
     const showUpdate = function (row: INamespace) {
       modelRef.value = {
-        'namespaceId': row.namespaceId,
-        'namespaceName': row.namespaceName,
-        'mode': 'update'
-      }
-      useFormRef.value = true
-
-    }
+        namespaceId: row.namespaceId,
+        namespaceName: row.namespaceName,
+        mode: "update"
+      };
+      useFormRef.value = true;
+    };
     const doLoadNamespace = function () {
-      namespaceApi.queryList().then(res => {
-        if (res.status == 200) {
-          dataRef.value = res.data.data
-          namespaceStore.setLastList(res.data.data)
-        }
-        else {
-          window.$message.error("request err,status code:" + res.status)
-        }
-      })
-        .catch(err => {
-          window.$message.error(err.message)
+      namespaceApi
+        .queryList()
+        .then((res) => {
+          if (res.status == 200) {
+            dataRef.value = res.data.data;
+            namespaceStore.setLastList(res.data.data);
+          } else {
+            window.$message.error("request err,status code:" + res.status);
+          }
         })
-    }
+        .catch((err) => {
+          window.$message.error(err.message);
+        });
+    };
     const removeItem = function (row: INamespace) {
-      namespaceApi.delete(row).then(res => {
-        if (res.status == 200) {
-          if (res.data.code == 200) {
-            doLoadNamespace()
+      namespaceApi
+        .delete(row)
+        .then((res) => {
+          if (res.status == 200) {
+            if (res.data.code == 200) {
+              doLoadNamespace();
+            } else {
+              window.$message.error(res.data.message);
+            }
+          } else {
+            window.$message.error("request err,status code:" + res.status);
           }
-          else {
-            window.$message.error(res.data.message)
-          }
-        }
-        else {
-          window.$message.error("request err,status code:" + res.status)
-        }
-      })
-        .catch(err => {
-          window.$message.error(err.message)
         })
-    }
-    const columns: IColumn[] = createColumns(showUpdate, removeItem)
+        .catch((err) => {
+          window.$message.error(err.message);
+        });
+    };
+    const columns: IColumn[] = createColumns(showUpdate, removeItem);
     return {
       useForm: useFormRef,
       columns,
       data: dataRef,
       model: modelRef,
       pagination: {
-        pageSize: 5,
+        pageSize: 5
       },
       loading: loadingRef,
       rules,
       rowKey(rowData: INamespace) {
-        return rowData.namespaceId
+        return rowData.namespaceId;
       },
       doLoadNamespace,
       showCreate() {
         modelRef.value = {
-          'namespaceId': '',
-          'namespaceName': '',
-          'mode': 'add'
-        }
-        useFormRef.value = true
+          namespaceId: "",
+          namespaceName: "",
+          mode: "add"
+        };
+        useFormRef.value = true;
       },
       closeForm() {
-        useFormRef.value = false
-      },
-
-
-    }
+        useFormRef.value = false;
+      }
+    };
   },
   methods: {
     loadNamespace() {
-      this.doLoadNamespace()
+      this.doLoadNamespace();
     },
     create() {
-      this.doCreate()
+      this.doCreate();
     },
     submit() {
-      if (this.model.mode === 'add') {
-        this.doCreate()
-      }
-      else {
-        this.doUpdate()
+      if (this.model.mode === "add") {
+        this.doCreate();
+      } else {
+        this.doUpdate();
       }
     },
     doCreate() {
-      namespaceApi.add(this.model).then(res => {
-        if (res.status == 200) {
-          if (res.data.code == 200) {
-            this.closeForm()
-            this.doLoadNamespace()
+      namespaceApi
+        .add(this.model)
+        .then((res) => {
+          if (res.status == 200) {
+            if (res.data.code == 200) {
+              this.closeForm();
+              this.doLoadNamespace();
+            } else {
+              window.$message.error(res.data.message);
+            }
+          } else {
+            window.$message.error("request err,status code:" + res.status);
           }
-          else {
-            window.$message.error(res.data.message)
-          }
-        }
-        else {
-          window.$message.error("request err,status code:" + res.status)
-        }
-      })
-        .catch(err => {
-          window.$message.error(err.message)
         })
+        .catch((err) => {
+          window.$message.error(err.message);
+        });
     },
     doUpdate() {
-      namespaceApi.update(this.model).then(res => {
-        if (res.status == 200) {
-          if (res.data.code == 200) {
-            this.closeForm()
-            this.doLoadNamespace()
+      namespaceApi
+        .update(this.model)
+        .then((res) => {
+          if (res.status == 200) {
+            if (res.data.code == 200) {
+              this.closeForm();
+              this.doLoadNamespace();
+            } else {
+              window.$message.error(res.data.message);
+            }
+          } else {
+            window.$message.error("request err,status code:" + res.status);
           }
-          else {
-            window.$message.error(res.data.message)
-          }
-        }
-        else {
-          window.$message.error("request err,status code:" + res.status)
-        }
-      })
-        .catch(err => {
-          window.$message.error(err.message)
         })
-    },
+        .catch((err) => {
+          window.$message.error(err.message);
+        });
+    }
   },
   created() {
-    this.loadNamespace()
-  }
-  ,
+    this.loadNamespace();
+  },
   render() {
     return (
       <div id="wrap" class="wrap">
         <div class={styles.ops}>
           <div class={styles.opsTitle}>
-            <span >
-              命名空间
-            </span>
+            <span>命名空间</span>
           </div>
           <NSpace class={styles.opsButton} size={3}>
-            <NButton onClick={() => { this.showCreate() }}>创建命名空间</NButton>
-            <NButton onClick={() => { this.loadNamespace() }}>刷新</NButton>
+            <NButton
+              onClick={() => {
+                this.showCreate();
+              }}
+            >
+              创建命名空间
+            </NButton>
+            <NButton
+              onClick={() => {
+                this.loadNamespace();
+              }}
+            >
+              刷新
+            </NButton>
           </NSpace>
         </div>
         <div class={styles.container}>
@@ -289,31 +328,40 @@ export default defineComponent({
           <NDrawerContent
             title={this.model.mode == "add" ? "新增命名空间" : "修改命名空间"}
             closable
-            >
-          {{
-            default: () => (
-              <div class={styles.subContent}>
-              <NForm model={this.model} rules={this.rules}>
-                <NFormItem path="namespaceName" label="命名空间名称">
-                  <NInput value={this.model.namespaceName} onUpdateValue={(v) => this.model.namespaceName = v} />
-                </NFormItem>
-                <NFormItem path="namespaceId" label="命名空间Id">
-                  <NInput value={this.model.namespaceId} onUpdateValue={(v) => this.model.namespaceId = v} />
-                </NFormItem>
-              </NForm>
-            </div>
-            ),
-            footer: () => (
-              <NSpace align="baseline">
-                <NButton text onClick={() => this.closeForm()}>返回</NButton>
-                <NButton type="primary" onClick={() => this.submit()}>确认</NButton>
-              </NSpace>
-            )
-          }}
+          >
+            {{
+              default: () => (
+                <div class={styles.subContent}>
+                  <NForm model={this.model} rules={this.rules}>
+                    <NFormItem path="namespaceName" label="命名空间名称">
+                      <NInput
+                        value={this.model.namespaceName}
+                        onUpdateValue={(v) => (this.model.namespaceName = v)}
+                      />
+                    </NFormItem>
+                    <NFormItem path="namespaceId" label="命名空间Id">
+                      <NInput
+                        value={this.model.namespaceId}
+                        onUpdateValue={(v) => (this.model.namespaceId = v)}
+                      />
+                    </NFormItem>
+                  </NForm>
+                </div>
+              ),
+              footer: () => (
+                <NSpace align="baseline">
+                  <NButton text onClick={() => this.closeForm()}>
+                    返回
+                  </NButton>
+                  <NButton type="primary" onClick={() => this.submit()}>
+                    确认
+                  </NButton>
+                </NSpace>
+              )
+            }}
           </NDrawerContent>
         </NDrawer>
       </div>
-
-    )
+    );
   }
-})
+});

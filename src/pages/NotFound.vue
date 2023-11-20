@@ -1,10 +1,16 @@
 <template>
-  <div class="top" :style="{width:+layoutSize.windowSize.width+'px',height:layoutSize.windowSize.height+'px'}">
+  <div
+    class="top"
+    :style="{
+      width: +layoutSize.windowSize.width + 'px',
+      height: layoutSize.windowSize.height + 'px'
+    }"
+  >
     <div class="wrap">
       <div class="notFound">
         <p class="title">404</p>
-        <p>{{path}}</p>
-        <router-link class="link" :to="{'path':'/'}">首页</router-link>
+        <p>{{ path }}</p>
+        <router-link class="link" :to="{ path: '/' }">首页</router-link>
       </div>
     </div>
   </div>
@@ -18,11 +24,11 @@ export default defineComponent({
   setup() {
     let layoutSize = useLayoutSize();
     return {
-      layoutSize,
+      layoutSize
     };
   },
   computed: {
-    path(){
+    path() {
       return this.$route.query.path || "";
     }
   }
@@ -30,7 +36,6 @@ export default defineComponent({
 </script>
 
 <style scoped>
-
 .top {
   display: flex;
   position: relative;
@@ -53,8 +58,7 @@ export default defineComponent({
   line-height: 60px;
   text-align: center;
 }
-.title{
+.title {
   font-size: 60px;
 }
-
 </style>

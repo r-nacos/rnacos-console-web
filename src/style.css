@@ -1,33 +1,59 @@
-body, div, dl, dt, dd, ul, ol, li,
-h1, h2, h3, h4, h5, h6, pre, code,
-form, fieldset, legend, input, button,
-textarea, p, blockquote, th, td {
-	margin: 0;
-	padding: 0;
+body,
+div,
+dl,
+dt,
+dd,
+ul,
+ol,
+li,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+pre,
+code,
+form,
+fieldset,
+legend,
+input,
+button,
+textarea,
+p,
+blockquote,
+th,
+td {
+  margin: 0;
+  padding: 0;
 }
 table {
-	border-collapse: collapse;
-	border-spacing: 0;
+  border-collapse: collapse;
+  border-spacing: 0;
 }
-fieldset, img {
-	border: 0;
+fieldset,
+img {
+  border: 0;
 }
 li {
-	list-style: none;
+  list-style: none;
 }
 :focus {
-	outline: 0;
+  outline: 0;
 }
-input, button, textarea, select {
-	font-size: 100%;
+input,
+button,
+textarea,
+select {
+  font-size: 100%;
 }
 button::-moz-focus-inner,
 input[type="reset"]::-moz-focus-inner,
 input[type="button"]::-moz-focus-inner,
 input[type="submit"]::-moz-focus-inner,
 input[type="file"] > input[type="button"]::-moz-focus-inner {
-	border: none;
-	padding: 0;
+  border: none;
+  padding: 0;
 }
 
 /* ---- */
@@ -37,23 +63,26 @@ input[type="file"] > input[type="button"]::-moz-focus-inner {
 }
 
 :root {
-  --rnacos-scrollbar-color: rgba(0, 0, 0, .1);
+  --rnacos-scrollbar-color: rgba(0, 0, 0, 0.1);
 }
 
 html,
-body{
+body {
   margin: 0;
   padding: 0;
   position: relative;
   overflow: hidden;
   width: 100%;
   height: 100%;
-  background: #FFFFFF;
-  font: 14px/1.5 Arial, Helvetica, sans-serif;
+  background: #ffffff;
+  font:
+    14px/1.5 Arial,
+    Helvetica,
+    sans-serif;
 }
 
-.clear{
-  clear:both;
+.clear {
+  clear: both;
 }
 .clearfix:before,
 .clearfix:after {

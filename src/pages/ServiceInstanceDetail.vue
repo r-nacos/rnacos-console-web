@@ -52,7 +52,7 @@ export default defineComponent({
     },
     isKeyReadonly() {
       return this.model.mode !== constant.FORM_MODE_CREATE;
-    },
+    }
   },
   data() {
     const rules = {
@@ -63,28 +63,27 @@ export default defineComponent({
             if (!value) {
               return true;
             }
-            try{
+            try {
               let v = parseFloat(value);
-              if(isNaN(v)){
+              if (isNaN(v)) {
                 return new Error("权重需为数字");
               }
-              if(v<0){
+              if (v < 0) {
                 return new Error("权重不能小于0");
               }
-            }
-            catch {
+            } catch {
               return new Error("权重需为数字");
             }
             return true;
           },
-          trigger: ["input", "blur"],
-        },
-      ],
+          trigger: ["input", "blur"]
+        }
+      ]
     };
     return {
-      rules,
+      rules
     };
-  },
+  }
 });
 </script>
 

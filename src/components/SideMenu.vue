@@ -3,7 +3,7 @@
     <template v-for="(item, index) in items" :key="index">
       <template v-if="item.children">
         <li class="group-item">
-          <span class=icon>
+          <span class="icon">
             <n-icon size="16" color="#2f6cf7" :component="item.icon" />
           </span>
           <span>{{ item.name }}</span>
@@ -16,16 +16,21 @@
         <li
           class="item"
           :class="{ select: this.path === subitem.path }"
-          v-for="(subitem, subindex) in (item.children || [])"
-          :key="index + subindex">
-          <router-link class="link" :to="{ 'path': subitem.path }">
+          v-for="(subitem, subindex) in item.children || []"
+          :key="index + subindex"
+        >
+          <router-link class="link" :to="{ path: subitem.path }">
             {{ subitem.name }}
           </router-link>
         </li>
       </template>
 
-      <li v-else class="group-item" :class="{ select: this.path === item.path }">
-        <router-link class="link" :to="{ 'path': item.path }">
+      <li
+        v-else
+        class="group-item"
+        :class="{ select: this.path === item.path }"
+      >
+        <router-link class="link" :to="{ path: item.path }">
           {{ item.name }}
         </router-link>
       </li>
@@ -34,19 +39,16 @@
 </template>
 
 <script>
-
 //import {manageMenu} from '@/route/routes.js'
-import { ServerOutline, CubeOutline, AppsSharp } from '@vicons/ionicons5'
+import { ServerOutline, CubeOutline, AppsSharp } from "@vicons/ionicons5";
 
 export default {
   components: {
     ServerOutline,
     CubeOutline,
-    AppsSharp,
+    AppsSharp
   },
-  setup() {
-
-  },
+  setup() {},
   data() {
     const manageMenu = [
       {
@@ -56,14 +58,14 @@ export default {
           {
             name: "配置列表",
             path: "/manage/configs"
-          },
+          }
           /*
           {
               name:"配置",
               path:"/manage/config"
           },
           */
-        ],
+        ]
       },
       {
         name: "服务管理",
@@ -72,8 +74,8 @@ export default {
           {
             name: "服务列表",
             path: "/manage/service"
-          },
-        ],
+          }
+        ]
       },
       {
         name: "系统管理",
@@ -86,19 +88,19 @@ export default {
           {
             name: "集群信息",
             path: "/manage/cluster"
-          },
-        ],
-      },
-    ]
+          }
+        ]
+      }
+    ];
     return {
-      path: '/',
-      name: 'side nemu',
-      items: [...manageMenu],
-    }
+      path: "/",
+      name: "side nemu",
+      items: [...manageMenu]
+    };
   },
   methods: {
     changeRoute(route) {
-      this.path = route.path
+      this.path = route.path;
       /*
       for(const i in this.items) {
           var item = this.items[i];
@@ -121,14 +123,14 @@ export default {
     }
   },
   watch: {
-    "$route"(newRoute, old) {
-      this.changeRoute(newRoute)
+    $route(newRoute, old) {
+      this.changeRoute(newRoute);
     }
   },
   created() {
-    this.changeRoute(this.$route)
-  },
-}
+    this.changeRoute(this.$route);
+  }
+};
 </script>
 
 <style scoped>
@@ -140,7 +142,7 @@ export default {
 .group-item {
   padding-left: 10px;
   font-size: 14px;
-  color: rgba(0, 0, 0, .9);
+  color: rgba(0, 0, 0, 0.9);
   height: 36px;
   line-height: 36px;
   text-align: left;
@@ -163,7 +165,7 @@ export default {
 .item {
   padding-left: 32px;
   font-size: 14px;
-  color: rgba(0, 0, 0, .6);
+  color: rgba(0, 0, 0, 0.6);
   height: 36px;
   line-height: 36px;
   text-align: left;

@@ -1,18 +1,24 @@
 <template>
   <section class="wrap">
-    <header class="header-wrap" :style="{ 'height': layoutSize.headerHeight + 'px' }">
-      <div class="sider-header">
-        R-NACOS
-      </div>
-      <div class="header">
-      </div>
+    <header
+      class="header-wrap"
+      :style="{ height: layoutSize.headerHeight + 'px' }"
+    >
+      <div class="sider-header">R-NACOS</div>
+      <div class="header"></div>
     </header>
     <section class="content_wrap">
-      <nav class="side" :style="{ 'width': layoutSize.siderWidth + 'px' }">
+      <nav class="side" :style="{ width: layoutSize.siderWidth + 'px' }">
         <SideMenu />
       </nav>
       <main id="main_content" class="content">
-        <div class="content-inner" :style="{ 'width': layoutSize.contentWidth + 'px', 'height': layoutSize.contentHeight + 'px' }">
+        <div
+          class="content-inner"
+          :style="{
+            width: layoutSize.contentWidth + 'px',
+            height: layoutSize.contentHeight + 'px'
+          }"
+        >
           <router-view></router-view>
         </div>
       </main>
@@ -26,37 +32,35 @@
 </template>
 
 <script>
-import SideMenu from '../SideMenu.vue'
-import { useMessage } from 'naive-ui'
-import { defineComponent } from 'vue'
-import { useLayoutSize } from '@/data/appdata'
+import SideMenu from "../SideMenu.vue";
+import { useMessage } from "naive-ui";
+import { defineComponent } from "vue";
+import { useLayoutSize } from "@/data/appdata";
 
 export default defineComponent({
   components: {
-    SideMenu,
+    SideMenu
   },
   setup() {
-    window.$message = useMessage()
-    let layoutSize = useLayoutSize()
+    window.$message = useMessage();
+    let layoutSize = useLayoutSize();
     //layoutSize.updateLayoutSize(undefined);
     return {
-      layoutSize: layoutSize,
+      layoutSize: layoutSize
       /*
       doUpdateLayoutSize(){
           layoutSize.updateLayoutSize(undefined);
       }
       */
-    }
+    };
   },
-  methods: {
-  },
+  methods: {},
   mounted() {
     //var updateLayoutSize=()=>{this.doUpdateLayoutSize()};
     //updateLayoutSize();
     //window.addEventListener("resize",updateLayoutSize)
   }
-})
-
+});
 </script>
 
 <style scoped>
@@ -104,7 +108,6 @@ export default defineComponent({
 .side {
   height: calc(100vh - 52px);
   width: 200px;
-  ;
   background: #fff;
   color: #595959;
   border-right: 1px #ccc solid;
@@ -140,5 +143,4 @@ export default defineComponent({
   flex: 0 0 auto;
   height: 30px;
 }
-
 </style>

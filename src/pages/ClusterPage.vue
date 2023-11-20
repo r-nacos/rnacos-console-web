@@ -7,15 +7,15 @@
     </div>
     <div class="content-wrap">
       <div class="form-container">
-          <n-data-table
-            remote
-            ref="table"
-            :bordered="false"
-            :columns="columns"
-            :data="data"
-            :row-key="rowKey"
-          />
-        </div>
+        <n-data-table
+          remote
+          ref="table"
+          :bordered="false"
+          :columns="columns"
+          :data="data"
+          :row-key="rowKey"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -49,12 +49,12 @@ export default defineComponent({
       doLoadData,
       rowKey(rowData) {
         return rowData.nodeId;
-      },
+      }
     };
   },
   mounted() {
     this.doLoadData();
-  },
+  }
 });
 </script>
 

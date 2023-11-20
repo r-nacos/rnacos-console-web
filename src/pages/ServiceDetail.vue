@@ -57,7 +57,7 @@ export default defineComponent({
     },
     isKeyReadonly() {
       return this.model.mode !== constant.FORM_MODE_CREATE;
-    },
+    }
   },
   data() {
     const rules = {
@@ -70,8 +70,8 @@ export default defineComponent({
             }
             return true;
           },
-          trigger: ["input", "blur"],
-        },
+          trigger: ["input", "blur"]
+        }
       ],
 
       groupName: [
@@ -83,8 +83,8 @@ export default defineComponent({
             }
             return true;
           },
-          trigger: ["input", "blur"],
-        },
+          trigger: ["input", "blur"]
+        }
       ],
       protectThreshold: [
         {
@@ -93,28 +93,27 @@ export default defineComponent({
             if (!value) {
               return true;
             }
-            try{
+            try {
               let v = parseFloat(value);
-              if(isNaN(v)){
+              if (isNaN(v)) {
                 return new Error("保护阀值需为数字");
               }
-              if(v<0 || v> 1){
+              if (v < 0 || v > 1) {
                 return new Error("保护阀值不能小于0或大于1");
               }
-            }
-            catch {
+            } catch {
               return new Error("保护阀值需为数字");
             }
             return true;
           },
-          trigger: ["input", "blur"],
-        },
-      ],
+          trigger: ["input", "blur"]
+        }
+      ]
     };
     return {
-      rules,
+      rules
     };
-  },
+  }
 });
 </script>
 

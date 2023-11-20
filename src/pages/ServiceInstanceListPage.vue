@@ -14,19 +14,19 @@
         <div class="query-params">
           <n-form label-placement="left" label-width="auto">
             <div class="paramWrap">
-              <n-form-item
-                label="服务名称"
-                path="param.serviceParam">
+              <n-form-item label="服务名称" path="param.serviceParam">
                 <n-input
                   :disabled="true"
                   v-model:value="param.serviceName"
-                  placeholder="输入服务名称" />
+                  placeholder="输入服务名称"
+                />
               </n-form-item>
               <n-form-item label="服务组" path="param.groupParam">
                 <n-input
                   :disabled="true"
                   v-model:value="param.groupName"
-                  placeholder="" />
+                  placeholder=""
+                />
               </n-form-item>
             </div>
           </n-form>
@@ -46,7 +46,8 @@
           :loading="loading"
           :pagination="pagination"
           :row-key="rowKey"
-          @update:page="handlePageChange" />
+          @update:page="handlePageChange"
+        />
       </div>
     </div>
     <n-drawer
@@ -55,7 +56,8 @@
       :trap-focus="false"
       v-model:show="useForm"
       default-width="600"
-      resizable>
+      resizable
+    >
       <n-drawer-content :title="getDetailTitle" closable>
         <ServiceInstanceDetail :model="model" />
         <template #footer>
@@ -70,41 +72,41 @@
 </template>
 
 <script>
-import { defineComponent } from "vue"
-import { namingApi } from "@/api/naming"
+import { defineComponent } from "vue";
+import { namingApi } from "@/api/naming";
 //import { namespaceStore } from "@/data/namespace";
-import { createColumns } from "@/components/naming/InstanceListColumns"
-import ServiceInstanceDetail from "./ServiceInstanceDetail.vue"
-import * as constant from "@/types/constant"
-import { useRoute } from "vue-router"
+import { createColumns } from "@/components/naming/InstanceListColumns";
+import ServiceInstanceDetail from "./ServiceInstanceDetail.vue";
+import * as constant from "@/types/constant";
+import { useRoute } from "vue-router";
 
 export default defineComponent({
   components: {
-    ServiceInstanceDetail,
+    ServiceInstanceDetail
   },
   setup() {
-    let route = useRoute()
-    let query = route.query
+    let route = useRoute();
+    let query = route.query;
     let param = {
       serviceName: query.serviceName,
       groupName: query.groupName || "",
-      namespaceId: query.namespaceId || "",
-    }
-    const dataRef = ref([])
-    const sourceDataRef = ref([])
-    const loadedRef = ref(false)
-    const loadingRef = ref(false)
-    const paramRef = ref(param)
+      namespaceId: query.namespaceId || ""
+    };
+    const dataRef = ref([]);
+    const sourceDataRef = ref([]);
+    const loadedRef = ref(false);
+    const loadingRef = ref(false);
+    const paramRef = ref(param);
     const paginationReactive = reactive({
       page: 1,
       pageCount: 1,
       pageSize: 10,
       itemCount: 0,
       prefix({ itemCount }) {
-        return `总行数: ${itemCount}`
-      },
-    })
-    const useFormRef = ref(false)
+        return `总行数: ${itemCount}`;
+      }
+    });
+    const useFormRef = ref(false);
 
     const modelRef = ref({
       ip: "",
@@ -112,11 +114,11 @@ export default defineComponent({
       enabled: true,
       weight: "1",
       metadata: "{}",
-      mode: constant.FORM_MODE_DETAIL,
-    })
+      mode: constant.FORM_MODE_DETAIL
+    });
     const updateParam = (param) => {
-      paramRef.value = param
-    }
+      paramRef.value = param;
+    };
     const showUpdate = (row) => {
       modelRef.value = {
         ip: row.ip,
@@ -124,10 +126,10 @@ export default defineComponent({
         enabled: row.enabled,
         weight: (row.weight || 1).toString(),
         metadata: JSON.stringify(row.metadata || {}),
-        mode: constant.FORM_MODE_UPDATE,
-      }
-      useFormRef.value = true
-    }
+        mode: constant.FORM_MODE_UPDATE
+      };
+      useFormRef.value = true;
+    };
     const setRowEnabled = (row, enabled) => {
       let instance = {
         namespaceId: param.namespaceId,
@@ -137,91 +139,94 @@ export default defineComponent({
         ip: row.ip,
         port: row.port,
         //weight: row.weight,
-        enabled: enabled,
+        enabled: enabled
         //metadata: row.metadata,
-      }
+      };
       namingApi
         .updateInstance(instance)
         .then((res) => {
           if (res.status == 200) {
             if (enabled) {
-              window.$message.info("上线成功!")
+              window.$message.info("上线成功!");
+            } else {
+              window.$message.info("下线成功!");
             }
-            else {
-              window.$message.info("下线成功!")
-            }
-            row.enabled = enabled
-            setCurrentPageData(paginationReactive.page || 1)
+            row.enabled = enabled;
+            setCurrentPageData(paginationReactive.page || 1);
             //reloadData()
-            return
+            return;
           }
-          window.$message.error("设置失败，response code" + res.status)
+          window.$message.error("设置失败，response code" + res.status);
         })
         .catch((err) => {
-          window.$message.error("设置失败，" + err.message)
-        })
-    }
-    const onLine = (row) => { setRowEnabled(row, true) }
-    const offLine = (row) => { setRowEnabled(row, false) }
+          window.$message.error("设置失败，" + err.message);
+        });
+    };
+    const onLine = (row) => {
+      setRowEnabled(row, true);
+    };
+    const offLine = (row) => {
+      setRowEnabled(row, false);
+    };
 
     const doQueryList = () => {
       return namingApi.queryServiceInstances({
         serviceName: paramRef.value.serviceName,
         groupName: paramRef.value.groupName,
-        namespaceId: paramRef.value.namespaceId,
-      })
-    }
+        namespaceId: paramRef.value.namespaceId
+      });
+    };
 
     const setCurrentPageData = (currentPage) => {
-      let pageSize = paginationReactive.pageSize
-      let offset = (currentPage - 1) * pageSize
-      let endIndex = Math.min(offset + pageSize, sourceDataRef.value.length)
-      let data = []
+      let pageSize = paginationReactive.pageSize;
+      let offset = (currentPage - 1) * pageSize;
+      let endIndex = Math.min(offset + pageSize, sourceDataRef.value.length);
+      let data = [];
       for (var i = offset; i < endIndex; i++) {
-        data.push(sourceDataRef.value[i])
+        data.push(sourceDataRef.value[i]);
       }
-      dataRef.value = data
-    }
+      dataRef.value = data;
+    };
 
     const reloadData = () => {
-      loadedRef.value = false
-      doHandlePageChange(paginationReactive.page || 1)
-    }
+      loadedRef.value = false;
+      doHandlePageChange(paginationReactive.page || 1);
+    };
     const doHandlePageChange = (currentPage) => {
-      paginationReactive.page = currentPage
+      paginationReactive.page = currentPage;
       if (loadedRef.value) {
-        setCurrentPageData(currentPage)
-        return
+        setCurrentPageData(currentPage);
+        return;
       }
       if (!loadingRef.value) {
-        loadingRef.value = true
+        loadingRef.value = true;
         doQueryList()
           .then((res) => {
-            loadingRef.value = false
+            loadingRef.value = false;
             if (res.status == 200) {
-              let count = res.data.count
-              let pageSize = paginationReactive.pageSize
-              paginationReactive.itemCount = count
+              let count = res.data.count;
+              let pageSize = paginationReactive.pageSize;
+              paginationReactive.itemCount = count;
               paginationReactive.pageCount = Math.round(
                 (count + pageSize - 1) / pageSize
-              )
-              loadedRef.value = true
-              sourceDataRef.value = res.data.list || []
-              setCurrentPageData(currentPage)
+              );
+              loadedRef.value = true;
+              sourceDataRef.value = res.data.list || [];
+              setCurrentPageData(currentPage);
             } else {
-              window.$message.error("request err,status code:" + res.status)
-              dataRef.value = []
+              window.$message.error("request err,status code:" + res.status);
+              dataRef.value = [];
             }
           })
           .catch((err) => {
-            window.$message.error("request err,message" + err.message)
-            dataRef.value = []
-            loadingRef.value = false
-          })
+            window.$message.error("request err,message" + err.message);
+            dataRef.value = [];
+            loadingRef.value = false;
+          });
       }
-    }
+    };
 
-    let columns = createColumns(showUpdate, onLine, offLine)
+    let columns = createColumns(showUpdate, onLine, offLine);
     return {
       columns,
       data: dataRef,
@@ -234,19 +239,19 @@ export default defineComponent({
       model: modelRef,
       updateParam,
       rowKey(rowData) {
-        return rowData.ip + "_" + rowData.port
+        return rowData.ip + "_" + rowData.port;
       },
       doHandlePageChange,
-      reloadData,
-    }
+      reloadData
+    };
   },
   computed: {
     getDetailTitle() {
-      return "编辑实例"
-    },
+      return "编辑实例";
+    }
   },
   data() {
-    return {}
+    return {};
   },
   mounted() {
     /*
@@ -258,22 +263,22 @@ export default defineComponent({
     };
     this.updateParam(param);
     */
-    this.queryList()
+    this.queryList();
   },
   methods: {
     handlePageChange(page) {
-      this.doHandlePageChange(page)
+      this.doHandlePageChange(page);
     },
     queryList() {
-      this.doHandlePageChange(1)
+      this.doHandlePageChange(1);
     },
     closeForm() {
-      this.useForm = false
+      this.useForm = false;
     },
     submitForm() {
       if (this.model.mode === constant.FORM_MODE_DETAIL) {
-        this.useForm = false
-        return
+        this.useForm = false;
+        return;
       }
       let instance = {
         namespaceId: this.param.namespaceId,
@@ -284,32 +289,32 @@ export default defineComponent({
         port: this.model.port,
         weight: this.model.weight,
         enabled: this.model.enabled,
-        metadata: this.model.metadata,
-      }
+        metadata: this.model.metadata
+      };
       if (this.model.mode === constant.FORM_MODE_UPDATE) {
         namingApi
           .updateInstance(instance)
           .then((res) => {
             if (res.status == 200) {
-              window.$message.info("设置成功!")
-              this.useForm = false
-              this.reloadData()
-              return
+              window.$message.info("设置成功!");
+              this.useForm = false;
+              this.reloadData();
+              return;
             }
-            window.$message.error("设置失败，response code" + res.status)
+            window.$message.error("设置失败，response code" + res.status);
           })
           .catch((err) => {
-            window.$message.error("设置失败，" + err.message)
-          })
+            window.$message.error("设置失败，" + err.message);
+          });
       } else {
-        this.useForm = false
+        this.useForm = false;
       }
     },
     routerBack() {
-      this.$router.go(-1)
-    },
-  },
-})
+      this.$router.go(-1);
+    }
+  }
+});
 </script>
 
 <style scoped>

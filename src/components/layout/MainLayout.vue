@@ -32,10 +32,10 @@
 </template>
 
 <script>
-import SideMenu from "../SideMenu.vue";
-import { useMessage } from "naive-ui";
-import { defineComponent } from "vue";
-import { useLayoutSize } from "@/data/appdata";
+import SideMenu from '../SideMenu.vue';
+import { useMessage } from 'naive-ui';
+import { defineComponent } from 'vue';
+import { useLayoutSize } from '@/data/appdata';
 
 export default defineComponent({
   components: {

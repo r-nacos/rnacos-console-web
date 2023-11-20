@@ -31,13 +31,13 @@
 </template>
 
 <script>
-import { defineComponent, ref } from "vue";
-import { handleDiff, buildDiffResult } from "@/utils/utils";
+import { defineComponent, ref } from 'vue';
+import { handleDiff, buildDiffResult } from '@/utils/utils';
 
 export default defineComponent({
-  props: ["src", "dst"],
+  props: ['src', 'dst'],
   setup(props) {
-    var list = handleDiff(props["src"] || "", props["dst"] || "");
+    var list = handleDiff(props['src'] || '', props['dst'] || '');
     var res = buildDiffResult(list);
     return {
       ...res

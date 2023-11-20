@@ -1,6 +1,6 @@
-import { AxiosResponse } from "axios";
-import request from "../utils/request";
-import { IServiceInfo, IServiceInstance, IServiceKey } from "@/types/service";
+import { AxiosResponse } from 'axios';
+import request from '../utils/request';
+import { IServiceInfo, IServiceInstance, IServiceKey } from '@/types/service';
 let axios = request;
 
 export interface IServiceQueryPageParam {
@@ -33,44 +33,44 @@ class NamingApi {
     param: IServiceQueryPageParam
   ): Promise<AxiosResponse<IServiceQueryPageResult<IServiceQueryItem>>> {
     return axios.request({
-      method: "get",
-      url: "/nacos/v1/ns/catalog/services",
+      method: 'get',
+      url: '/nacos/v1/ns/catalog/services',
       params: param
     });
   }
   createService(info: IServiceInfo): Promise<AxiosResponse> {
     return axios.request({
-      method: "post",
-      url: "/nacos/v1/ns/service",
+      method: 'post',
+      url: '/nacos/v1/ns/service',
       data: info
     });
   }
   updateService(info: IServiceInfo): Promise<AxiosResponse> {
     return axios.request({
-      method: "put",
-      url: "/nacos/v1/ns/service",
+      method: 'put',
+      url: '/nacos/v1/ns/service',
       data: info
     });
   }
   removeService(key: IServiceKey): Promise<AxiosResponse> {
     return axios.request({
-      method: "delete",
-      url: "/nacos/v1/ns/service",
+      method: 'delete',
+      url: '/nacos/v1/ns/service',
       data: key
     });
   }
   queryServiceInstances(key: IServiceKey): Promise<AxiosResponse> {
     return axios.request({
-      method: "get",
-      url: "/nacos/v1/console/instances",
+      method: 'get',
+      url: '/nacos/v1/console/instances',
       params: key
     });
   }
 
   updateInstance(instance: IServiceInstance): Promise<AxiosResponse> {
     return axios.request({
-      method: "put",
-      url: "/nacos/v1/ns/instance",
+      method: 'put',
+      url: '/nacos/v1/ns/instance',
       data: instance
     });
   }

@@ -1,27 +1,27 @@
-import { defineComponent } from "vue";
+import { defineComponent } from 'vue';
 
 import {
   configApi,
   IConfig,
   IConfigKey,
   IConfigQueryParam
-} from "@/api/config";
-import { AxiosError } from "axios";
+} from '@/api/config';
+import { AxiosError } from 'axios';
 
 export default defineComponent({
-  name: "Config",
+  name: 'Config',
   data() {
     return {
-      tenant: "",
-      group: "foo",
-      dataId: "001",
-      content: "",
-      message: ""
+      tenant: '',
+      group: 'foo',
+      dataId: '001',
+      content: '',
+      message: ''
     };
   },
   methods: {
     setConfig() {
-      console.log("setConfig", this.group, this.dataId);
+      console.log('setConfig', this.group, this.dataId);
       let config: IConfig = {
         tenant: this.tenant,
         group: this.group,
@@ -31,17 +31,17 @@ export default defineComponent({
       configApi
         .setConfig(config)
         .then((res) => {
-          console.log("response", res.request.responseText);
+          console.log('response', res.request.responseText);
           if (res.status == 200) {
-            this.content = "";
+            this.content = '';
           }
         })
         .catch((err: AxiosError) => {
-          console.log("response err", err.message);
+          console.log('response err', err.message);
         });
     },
     getConfig() {
-      console.log("getConfig", this.group, this.dataId);
+      console.log('getConfig', this.group, this.dataId);
       let configKey: IConfigKey = {
         tenant: this.tenant,
         group: this.group,
@@ -50,13 +50,13 @@ export default defineComponent({
       configApi
         .getConfig(configKey)
         .then((res) => {
-          console.log("response", res.request.responseText);
+          console.log('response', res.request.responseText);
           if (res.status == 200) {
             this.content = res.request.responseText;
           }
         })
         .catch((err: AxiosError) => {
-          console.log("response err", err.message);
+          console.log('response err', err.message);
         });
     }
   },
@@ -70,7 +70,7 @@ export default defineComponent({
               type="text"
               value={this.tenant}
               onChange={(e) => {
-                console.log("tenant change");
+                console.log('tenant change');
                 this.tenant = (e.target as HTMLInputElement).value;
               }}
             />

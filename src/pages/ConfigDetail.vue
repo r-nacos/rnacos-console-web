@@ -39,12 +39,12 @@
 </template>
 
 <script>
-import { defineComponent } from "vue";
+import { defineComponent } from 'vue';
 export default defineComponent({
-  props: ["model"],
+  props: ['model'],
   computed: {
     isReadonly() {
-      return this.model.mode === "detail";
+      return this.model.mode === 'detail';
     }
   },
   data() {
@@ -54,11 +54,11 @@ export default defineComponent({
           required: true,
           validator(rule, value) {
             if (!value) {
-              return new Error("需要输入配置组");
+              return new Error('需要输入配置组');
             }
             return true;
           },
-          trigger: ["input", "blur"]
+          trigger: ['input', 'blur']
         }
       ],
 
@@ -67,11 +67,11 @@ export default defineComponent({
           required: true,
           validator(rule, value) {
             if (!value) {
-              return new Error("需要输入配置ID");
+              return new Error('需要输入配置ID');
             }
             return true;
           },
-          trigger: ["input", "blur"]
+          trigger: ['input', 'blur']
         }
       ]
     };

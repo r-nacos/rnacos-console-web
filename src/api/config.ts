@@ -1,5 +1,5 @@
-import { AxiosResponse } from "axios";
-import request from "../utils/request";
+import { AxiosResponse } from 'axios';
+import request from '../utils/request';
 let axios = request;
 
 export interface IConfig {
@@ -36,8 +36,8 @@ export interface IConfigQueryHistoryParam {
 class ConfigApi {
   setConfig(config: IConfig): Promise<AxiosResponse> {
     return axios.request({
-      method: "post",
-      url: "/nacos/v1/cs/configs",
+      method: 'post',
+      url: '/nacos/v1/cs/configs',
       data: {
         ...config
       }
@@ -46,8 +46,8 @@ class ConfigApi {
 
   getConfig(configKey: IConfigKey): Promise<AxiosResponse> {
     return axios.request({
-      method: "get",
-      url: "/nacos/v1/cs/configs",
+      method: 'get',
+      url: '/nacos/v1/cs/configs',
       params: {
         ...configKey
       }
@@ -56,8 +56,8 @@ class ConfigApi {
 
   removeConfig(configKey: IConfigKey): Promise<AxiosResponse> {
     return axios.request({
-      method: "delete",
-      url: "/nacos/v1/cs/configs",
+      method: 'delete',
+      url: '/nacos/v1/cs/configs',
       data: {
         ...configKey
       }
@@ -66,8 +66,8 @@ class ConfigApi {
 
   queryConfigPage(queryParam: IConfigQueryParam): Promise<AxiosResponse> {
     return axios.request({
-      method: "get",
-      url: "/nacos/v1/console/configs",
+      method: 'get',
+      url: '/nacos/v1/console/configs',
       params: {
         ...queryParam
       }
@@ -78,8 +78,8 @@ class ConfigApi {
     queryParam: IConfigQueryHistoryParam
   ): Promise<AxiosResponse> {
     return axios.request({
-      method: "get",
-      url: "/nacos/v1/console/config/history",
+      method: 'get',
+      url: '/nacos/v1/console/config/history',
       params: {
         ...queryParam
       }

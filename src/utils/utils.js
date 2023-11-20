@@ -1,12 +1,12 @@
-import { diffLines } from "diff";
+import { diffLines } from 'diff';
 
 export const escapeHtml = function (html) {
-  return html.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  return html.replace(/</g, '&lt;').replace(/>/g, '&gt;');
 };
 
 export const splitLines = (value) => {
-  var subItems = value.split("\n");
-  if (subItems[subItems.length - 1] === "") {
+  var subItems = value.split('\n');
+  if (subItems[subItems.length - 1] === '') {
     subItems.pop();
   }
   return subItems;
@@ -25,10 +25,10 @@ export const handleDiff = function (src, dst) {
         srcLine += 1;
         var obj = {
           src: subItems[j],
-          dst: "",
+          dst: '',
           srcLine: srcLine,
           dstLine: 0,
-          t: "R"
+          t: 'R'
         };
         list.push(obj);
       }
@@ -37,11 +37,11 @@ export const handleDiff = function (src, dst) {
       for (var j in subItems) {
         dstLine += 1;
         var obj = {
-          src: "",
+          src: '',
           dst: subItems[j],
           srcLine: 0,
           dstLine: dstLine,
-          t: "A"
+          t: 'A'
         };
         list.push(obj);
       }
@@ -55,7 +55,7 @@ export const handleDiff = function (src, dst) {
           dst: subItems[j],
           srcLine: dstLine,
           dstLine: dstLine,
-          t: "="
+          t: '='
         };
         list.push(obj);
       }
@@ -65,30 +65,30 @@ export const handleDiff = function (src, dst) {
 };
 
 export const buildDiffResult = function (list) {
-  var srcNo = "";
-  var srcCode = "";
-  var dstNo = "";
-  var dstCode = "";
+  var srcNo = '';
+  var srcCode = '';
+  var dstNo = '';
+  var dstCode = '';
 
   for (var i in list) {
     const item = list[i];
-    if (item.t == "=") {
-      srcCode += escapeHtml(item["src"]) + "\n";
-      dstCode += escapeHtml(item["dst"]) + "\n";
-      srcNo += item["srcLine"] + "   \n";
-      dstNo += item["dstLine"] + "   \n";
-    } else if (item.t == "R") {
+    if (item.t == '=') {
+      srcCode += escapeHtml(item['src']) + '\n';
+      dstCode += escapeHtml(item['dst']) + '\n';
+      srcNo += item['srcLine'] + '   \n';
+      dstNo += item['dstLine'] + '   \n';
+    } else if (item.t == 'R') {
       srcCode +=
-        "<span style='color:#f00'>" + escapeHtml(item["src"]) + "</span>\n";
-      dstCode += "\n";
-      srcNo += "<span style='color:#f00'>" + item["srcLine"] + " - </span>\n";
-      dstNo += "\n";
+        "<span style='color:#f00'>" + escapeHtml(item['src']) + '</span>\n';
+      dstCode += '\n';
+      srcNo += "<span style='color:#f00'>" + item['srcLine'] + ' - </span>\n';
+      dstNo += '\n';
     } else {
-      srcCode += "\n";
+      srcCode += '\n';
       dstCode +=
-        "<span style='color:#0ff'>" + escapeHtml(item["dst"]) + "</span>\n";
-      srcNo += "\n";
-      dstNo += "<span style='color:#0ff'>" + item["dstLine"] + " + </span>\n";
+        "<span style='color:#0ff'>" + escapeHtml(item['dst']) + '</span>\n';
+      srcNo += '\n';
+      dstNo += "<span style='color:#0ff'>" + item['dstLine'] + ' + </span>\n';
     }
   }
   return {

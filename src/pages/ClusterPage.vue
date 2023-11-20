@@ -21,9 +21,9 @@
 </template>
 
 <script>
-import { defineComponent } from "vue";
-import { clusterApi } from "@/api/cluster";
-import { createColumns } from "@/components/cluster/ClusterInfoColumns";
+import { defineComponent } from 'vue';
+import { clusterApi } from '@/api/cluster';
+import { createColumns } from '@/components/cluster/ClusterInfoColumns';
 
 export default defineComponent({
   setup() {
@@ -36,7 +36,7 @@ export default defineComponent({
           if (res.status == 200) {
             dataRef.value = res.data.data;
           } else {
-            window.$message.error("request err,status code:" + res.status);
+            window.$message.error('request err,status code:' + res.status);
           }
         })
         .catch((err) => {

@@ -93,18 +93,18 @@
 </template>
 
 <script>
-import { ref, reactive, defineComponent } from "vue";
-import { configApi } from "@/api/config";
-import { namespaceStore } from "@/data/namespace";
-import { createColumns } from "@/components/config/ConfigColumns";
-import NamespacePopSelect from "@/components/namespace/NamespacePopSelect.vue";
-import SubContentFullPage from "@/components/common/SubContentFullPage";
-import DiffComponent from "@/components/config/DiffComponent.vue";
-import ConfigDetail from "./ConfigDetail.vue";
-import { useRouter } from "vue-router";
-import { Close } from "@vicons/ionicons5";
-import * as constant from "@/types/constant";
-import qs from "qs";
+import { ref, reactive, defineComponent } from 'vue';
+import { configApi } from '@/api/config';
+import { namespaceStore } from '@/data/namespace';
+import { createColumns } from '@/components/config/ConfigColumns';
+import NamespacePopSelect from '@/components/namespace/NamespacePopSelect.vue';
+import SubContentFullPage from '@/components/common/SubContentFullPage';
+import DiffComponent from '@/components/config/DiffComponent.vue';
+import ConfigDetail from './ConfigDetail.vue';
+import { useRouter } from 'vue-router';
+import { Close } from '@vicons/ionicons5';
+import * as constant from '@/types/constant';
+import qs from 'qs';
 
 export default defineComponent({
   components: {
@@ -122,9 +122,9 @@ export default defineComponent({
     const useDiffFormRef = ref(false);
     const loadingRef = ref(false);
     const paramRef = ref({
-      dataParam: "",
-      groupParam: "",
-      tenant: "",
+      dataParam: '',
+      groupParam: '',
+      tenant: '',
       pageNo: 1,
       pageSize: 20
     });
@@ -132,13 +132,13 @@ export default defineComponent({
       tenant: namespaceStore.current.value.namespaceId
     });
     const modelRef = ref({
-      dataId: "",
-      group: "",
-      md5: "",
+      dataId: '',
+      group: '',
+      md5: '',
       showMd5: true,
-      sourceContent: "",
-      content: "",
-      mode: ""
+      sourceContent: '',
+      content: '',
+      mode: ''
     });
     const paginationReactive = reactive({
       page: 1,
@@ -179,12 +179,12 @@ export default defineComponent({
                 (count + pageSize - 1) / pageSize
               );
             } else {
-              window.$message.error("request err,status code:" + res.status);
+              window.$message.error('request err,status code:' + res.status);
               dataRef.value = [];
             }
           })
           .catch((err) => {
-            window.$message.error("request err,message" + err.message);
+            window.$message.error('request err,message' + err.message);
             dataRef.value = [];
             loadingRef.value = false;
           });
@@ -205,16 +205,16 @@ export default defineComponent({
               showMd5: true,
               content: res.request.responseText,
               sourceContent: res.request.responseText,
-              md5: res.headers["content-md5"] || "",
+              md5: res.headers['content-md5'] || '',
               ...config
             };
             useFormRef.value = true;
           } else {
-            window.$message.error("查询配置报错,response code:" + res.status);
+            window.$message.error('查询配置报错,response code:' + res.status);
           }
         })
         .catch((err) => {
-          window.$message.error("查询配置报错," + err.message);
+          window.$message.error('查询配置报错,' + err.message);
         });
     };
     const updateItem = (row) => {
@@ -225,12 +225,12 @@ export default defineComponent({
     };
     const showCreate = () => {
       modelRef.value = {
-        dataId: "",
-        group: "DEFAULT_GROUP",
-        md5: "",
+        dataId: '',
+        group: 'DEFAULT_GROUP',
+        md5: '',
         showMd5: true,
-        content: "",
-        sourceContent: "",
+        content: '',
+        sourceContent: '',
         mode: constant.FORM_MODE_CREATE
       };
       useFormRef.value = true;
@@ -245,19 +245,19 @@ export default defineComponent({
         .removeConfig(config)
         .then((res) => {
           if (res.status == 200) {
-            window.$message.info("删除配置成功");
+            window.$message.info('删除配置成功');
             doHandlePageChange(1);
           } else {
-            window.$message.error("删除配置报错,response code:" + res.status);
+            window.$message.error('删除配置报错,response code:' + res.status);
           }
         })
         .catch((err) => {
-          window.$message.error("删除配置报错," + err.message);
+          window.$message.error('删除配置报错,' + err.message);
         });
     };
     const showHistory = (row) => {
       router.push({
-        path: "/manage/config/history",
+        path: '/manage/config/history',
         query: {
           tenant: row.tenant,
           group: row.group,
@@ -284,18 +284,18 @@ export default defineComponent({
       doBeforeUpload,
       showCreate,
       param: paramRef,
-      namespaceId: "",
+      namespaceId: '',
       rowKey(rowData) {
-        return rowData.group + "@@" + rowData.dataId;
+        return rowData.group + '@@' + rowData.dataId;
       },
       doQueryList,
       doHandlePageChange,
       handlerUploadFinish({ event }) {
         if (event.target.status == 200) {
-          window.$message.info("上传成功");
+          window.$message.info('上传成功');
           doHandlePageChange(1);
         } else {
-          window.$message.error("上传处理失败");
+          window.$message.error('上传处理失败');
         }
       }
     };
@@ -306,11 +306,11 @@ export default defineComponent({
     },
     getDetailTitle() {
       if (this.model.mode === constant.FORM_MODE_UPDATE) {
-        return "编辑配置";
+        return '编辑配置';
       } else if (this.model.mode === constant.FORM_MODE_CREATE) {
-        return "新增配置";
+        return '新增配置';
       }
-      return "编辑详情";
+      return '编辑详情';
     }
   },
 
@@ -339,16 +339,16 @@ export default defineComponent({
         .setConfig(config)
         .then((res) => {
           if (res.status == 200) {
-            window.$message.info("设置成功!");
+            window.$message.info('设置成功!');
             this.useForm = false;
             this.useDiffForm = false;
             this.queryList();
             return;
           }
-          window.$message.error("设置失败，response code" + res.status);
+          window.$message.error('设置失败，response code' + res.status);
         })
         .catch((err) => {
-          window.$message.error("设置失败，" + err.message);
+          window.$message.error('设置失败，' + err.message);
         });
     },
     submitForm() {
@@ -363,8 +363,8 @@ export default defineComponent({
     download() {
       this.param.tenant = namespaceStore.current.value.namespaceId;
       var params = qs.stringify(this.param);
-      var url = "/nacos/v1/console/config/download?" + params;
-      this.$refs.download.setAttribute("href", url);
+      var url = '/nacos/v1/console/config/download?' + params;
+      this.$refs.download.setAttribute('href', url);
       return true;
     }
   },

@@ -1,4 +1,4 @@
-import { NButton, NPopconfirm } from "naive-ui";
+import { NButton, NPopconfirm } from 'naive-ui';
 
 export const createColumns = function (
   showInstances,
@@ -18,24 +18,24 @@ export const createColumns = function (
 
   const columns = [
     {
-      title: "服务名称",
-      key: "name"
+      title: '服务名称',
+      key: 'name'
     },
     {
-      title: "服务组",
-      key: "groupName"
+      title: '服务组',
+      key: 'groupName'
     },
     {
-      title: "实例数",
-      key: "ipCount"
+      title: '实例数',
+      key: 'ipCount'
     },
     {
-      title: "健康实例数",
-      key: "healthyInstanceCount"
+      title: '健康实例数',
+      key: 'healthyInstanceCount'
     },
     {
-      title: "操作",
-      key: "type",
+      title: '操作',
+      key: 'type',
       render(row) {
         return (
           <div>

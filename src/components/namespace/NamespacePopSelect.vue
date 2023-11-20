@@ -8,18 +8,18 @@
     scrollable
   >
     <n-button style="margin-right: 8px">
-      {{ value.namespaceName || "public" }}
+      {{ value.namespaceName || 'public' }}
     </n-button>
   </n-select>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent } from 'vue';
 
-import { namespaceStore } from "../../data/namespace";
+import { namespaceStore } from '../../data/namespace';
 
 export default defineComponent({
-  emits: ["change"],
+  emits: ['change'],
   setup() {},
   data() {
     /*
@@ -43,7 +43,7 @@ export default defineComponent({
           };
           this.value = obj;
           namespaceStore.setCurrent(obj);
-          this.$emit("change");
+          this.$emit('change');
         }
       }
     }

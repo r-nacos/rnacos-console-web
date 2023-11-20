@@ -1,14 +1,14 @@
-import { defineComponent } from "vue";
+import { defineComponent } from 'vue';
 
-import styles from "./SubContentPage.module.css";
-import { NIcon, NButton, NPopconfirm } from "naive-ui";
-import { Close } from "@vicons/ionicons5";
-import { useLayoutSize } from "@/data/appdata";
+import styles from './SubContentPage.module.css';
+import { NIcon, NButton, NPopconfirm } from 'naive-ui';
+import { Close } from '@vicons/ionicons5';
+import { useLayoutSize } from '@/data/appdata';
 
 export default defineComponent({
-  name: "SubContentFullPage",
-  props: ["title", "closeName", "submitName", "usePopSubmit", "submitPopTitle"],
-  emits: ["close", "submit"],
+  name: 'SubContentFullPage',
+  props: ['title', 'closeName', 'submitName', 'usePopSubmit', 'submitPopTitle'],
+  emits: ['close', 'submit'],
   setup(props, content) {
     let layoutSize = useLayoutSize();
     return {
@@ -24,28 +24,28 @@ export default defineComponent({
   methods: {},
   render() {
     const submitView = () => {
-      if (this.$props["usePopSubmit"]) {
+      if (this.$props['usePopSubmit']) {
         const submitSlot = {
           trigger: () => {
             return (
               <NButton type="primary">
-                {this.$props["submitName"] || "确认"}
+                {this.$props['submitName'] || '确认'}
               </NButton>
             );
           }
         };
         return (
           <NPopconfirm
-            onPositiveClick={() => this.$emit("submit")}
+            onPositiveClick={() => this.$emit('submit')}
             v-slots={submitSlot}
           >
-            <span>{this.$props["submitPopTitle"] || "是否确认操作?"}</span>
+            <span>{this.$props['submitPopTitle'] || '是否确认操作?'}</span>
           </NPopconfirm>
         );
       } else {
         return (
-          <NButton type="primary" onClick={() => this.$emit("submit")}>
-            {this.$props["submitName"] || "确认"}
+          <NButton type="primary" onClick={() => this.$emit('submit')}>
+            {this.$props['submitName'] || '确认'}
           </NButton>
         );
       }
@@ -54,29 +54,29 @@ export default defineComponent({
       <div
         className={styles.fullWrap}
         style={{
-          width: this.layoutSize.contentWidth + "px",
-          height: this.layoutSize.contentHeight + "px"
+          width: this.layoutSize.contentWidth + 'px',
+          height: this.layoutSize.contentHeight + 'px'
         }}
       >
         <div
           className={styles.subContentTop}
-          style={{ "border-left-width": "0px" }}
+          style={{ 'border-left-width': '0px' }}
         >
           <div className={styles.fullHeader}>
             <div className={styles.title}>
-              <span>{this.$props["title"] || "标题"}</span>
+              <span>{this.$props['title'] || '标题'}</span>
             </div>
-            <NButton quaternary circle onClick={() => this.$emit("close")}>
+            <NButton quaternary circle onClick={() => this.$emit('close')}>
               <NIcon size="22">
                 <Close />
               </NIcon>
             </NButton>
           </div>
-          <div className={styles.content}>{this.$slots["default"]?.()}</div>
+          <div className={styles.content}>{this.$slots['default']?.()}</div>
           <div className={styles.footer}>
             <div style="display: flex; gap: 16px; justify-content: flex-end">
-              <NButton text onClick={() => this.$emit("close")}>
-                {this.$props["closeName"] || "返回"}
+              <NButton text onClick={() => this.$emit('close')}>
+                {this.$props['closeName'] || '返回'}
               </NButton>
               {submitView()}
             </div>

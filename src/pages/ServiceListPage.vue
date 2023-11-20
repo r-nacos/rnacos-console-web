@@ -74,14 +74,14 @@
 </template>
 
 <script>
-import { ref, reactive, defineComponent } from "vue";
-import { namingApi } from "@/api/naming";
-import { namespaceStore } from "@/data/namespace";
-import { createColumns } from "@/components/naming/ServiceListColumns.jsx";
-import NamespacePopSelect from "@/components/namespace/NamespacePopSelect.vue";
-import ServiceDetail from "./ServiceDetail.vue";
-import * as constant from "@/types/constant";
-import { useRouter } from "vue-router";
+import { ref, reactive, defineComponent } from 'vue';
+import { namingApi } from '@/api/naming';
+import { namespaceStore } from '@/data/namespace';
+import { createColumns } from '@/components/naming/ServiceListColumns.jsx';
+import NamespacePopSelect from '@/components/namespace/NamespacePopSelect.vue';
+import ServiceDetail from './ServiceDetail.vue';
+import * as constant from '@/types/constant';
+import { useRouter } from 'vue-router';
 
 export default defineComponent({
   components: {
@@ -93,9 +93,9 @@ export default defineComponent({
     const dataRef = ref([]);
     const loadingRef = ref(false);
     const paramRef = ref({
-      serviceParam: "",
-      groupParam: "",
-      namespaceId: "",
+      serviceParam: '',
+      groupParam: '',
+      namespaceId: '',
       pageNo: 1,
       pageSize: 20
     });
@@ -110,15 +110,15 @@ export default defineComponent({
     });
     const useFormRef = ref(false);
     const modelRef = ref({
-      groupName: "",
-      serviceName: "",
-      protectThreshold: "0",
-      metadata: "",
-      selector: "",
-      mode: ""
+      groupName: '',
+      serviceName: '',
+      protectThreshold: '0',
+      metadata: '',
+      selector: '',
+      mode: ''
     });
     const showUpdate = (row) => {
-      let protectThreshold = "0";
+      let protectThreshold = '0';
       if (row.protectThreshold) {
         protectThreshold = row.protectThreshold.toString();
       }
@@ -127,14 +127,14 @@ export default defineComponent({
         serviceName: row.name,
         protectThreshold: protectThreshold,
         metadata: row.metadata,
-        selector: "",
+        selector: '',
         mode: constant.FORM_MODE_UPDATE
       };
       useFormRef.value = true;
     };
     const showInstances = (row) => {
       router.push({
-        path: "/manage/service/instance",
+        path: '/manage/service/instance',
         query: {
           groupName: row.groupName,
           serviceName: row.name,
@@ -143,7 +143,7 @@ export default defineComponent({
       });
     };
     const showDetail = (row) => {
-      let protectThreshold = "0";
+      let protectThreshold = '0';
       if (row.protectThreshold) {
         protectThreshold = row.protectThreshold.toString();
       }
@@ -152,7 +152,7 @@ export default defineComponent({
         serviceName: row.name,
         protectThreshold: protectThreshold,
         metadata: row.metadata,
-        selector: "",
+        selector: '',
         mode: constant.FORM_MODE_DETAIL
       };
       useFormRef.value = true;
@@ -167,24 +167,24 @@ export default defineComponent({
         .removeService(serviceKey)
         .then((res) => {
           if (res.status == 200) {
-            window.$message.info("删除服务成功!");
+            window.$message.info('删除服务成功!');
             doHandlePageChange(paginationReactive.page || 1);
             return;
           }
-          window.$message.error("删除服务报错," + res.data);
+          window.$message.error('删除服务报错,' + res.data);
         })
         .catch((err) => {
           //window.$message.error("删除服务报错," + err.message);
-          window.$message.error("删除服务报错," + err.response.data);
+          window.$message.error('删除服务报错,' + err.response.data);
         });
     };
     const showCreate = () => {
       modelRef.value = {
-        groupName: "",
-        serviceName: "",
-        protectThreshold: "0",
-        metadata: "",
-        selector: "",
+        groupName: '',
+        serviceName: '',
+        protectThreshold: '0',
+        metadata: '',
+        selector: '',
         mode: constant.FORM_MODE_CREATE
       };
       useFormRef.value = true;
@@ -217,12 +217,12 @@ export default defineComponent({
                 (count + pageSize - 1) / pageSize
               );
             } else {
-              window.$message.error("request err,status code:" + res.status);
+              window.$message.error('request err,status code:' + res.status);
               dataRef.value = [];
             }
           })
           .catch((err) => {
-            window.$message.error("request err,message" + err.message);
+            window.$message.error('request err,message' + err.message);
             dataRef.value = [];
             loadingRef.value = false;
           });
@@ -244,7 +244,7 @@ export default defineComponent({
       useForm: useFormRef,
       model: modelRef,
       rowKey(rowData) {
-        return rowData.groupName + "@@" + rowData.name;
+        return rowData.groupName + '@@' + rowData.name;
       },
       doHandlePageChange,
       showCreate
@@ -257,11 +257,11 @@ export default defineComponent({
     },
     getDetailTitle() {
       if (this.model.mode === constant.FORM_MODE_UPDATE) {
-        return "编辑服务";
+        return '编辑服务';
       } else if (this.model.mode === constant.FORM_MODE_CREATE) {
-        return "新增服务";
+        return '新增服务';
       }
-      return "服务详情";
+      return '服务详情';
     }
   },
   methods: {
@@ -292,30 +292,30 @@ export default defineComponent({
           .createService(serviceInfo)
           .then((res) => {
             if (res.status == 200) {
-              window.$message.info("设置成功!");
+              window.$message.info('设置成功!');
               this.useForm = false;
               this.queryList();
               return;
             }
-            window.$message.error("设置失败，response code" + res.status);
+            window.$message.error('设置失败，response code' + res.status);
           })
           .catch((err) => {
-            window.$message.error("设置失败，" + err.message);
+            window.$message.error('设置失败，' + err.message);
           });
       } else {
         namingApi
           .updateService(serviceInfo)
           .then((res) => {
             if (res.status == 200) {
-              window.$message.info("设置成功!");
+              window.$message.info('设置成功!');
               this.useForm = false;
               this.queryList();
               return;
             }
-            window.$message.error("设置失败，response code" + res.status);
+            window.$message.error('设置失败，response code' + res.status);
           })
           .catch((err) => {
-            window.$message.error("设置失败，" + err.message);
+            window.$message.error('设置失败，' + err.message);
           });
       }
     }

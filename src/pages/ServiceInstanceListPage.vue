@@ -72,13 +72,13 @@
 </template>
 
 <script>
-import { defineComponent } from "vue";
-import { namingApi } from "@/api/naming";
+import { defineComponent } from 'vue';
+import { namingApi } from '@/api/naming';
 //import { namespaceStore } from "@/data/namespace";
-import { createColumns } from "@/components/naming/InstanceListColumns";
-import ServiceInstanceDetail from "./ServiceInstanceDetail.vue";
-import * as constant from "@/types/constant";
-import { useRoute } from "vue-router";
+import { createColumns } from '@/components/naming/InstanceListColumns';
+import ServiceInstanceDetail from './ServiceInstanceDetail.vue';
+import * as constant from '@/types/constant';
+import { useRoute } from 'vue-router';
 
 export default defineComponent({
   components: {
@@ -89,8 +89,8 @@ export default defineComponent({
     let query = route.query;
     let param = {
       serviceName: query.serviceName,
-      groupName: query.groupName || "",
-      namespaceId: query.namespaceId || ""
+      groupName: query.groupName || '',
+      namespaceId: query.namespaceId || ''
     };
     const dataRef = ref([]);
     const sourceDataRef = ref([]);
@@ -109,11 +109,11 @@ export default defineComponent({
     const useFormRef = ref(false);
 
     const modelRef = ref({
-      ip: "",
-      port: "0",
+      ip: '',
+      port: '0',
       enabled: true,
-      weight: "1",
-      metadata: "{}",
+      weight: '1',
+      metadata: '{}',
       mode: constant.FORM_MODE_DETAIL
     });
     const updateParam = (param) => {
@@ -147,19 +147,19 @@ export default defineComponent({
         .then((res) => {
           if (res.status == 200) {
             if (enabled) {
-              window.$message.info("上线成功!");
+              window.$message.info('上线成功!');
             } else {
-              window.$message.info("下线成功!");
+              window.$message.info('下线成功!');
             }
             row.enabled = enabled;
             setCurrentPageData(paginationReactive.page || 1);
             //reloadData()
             return;
           }
-          window.$message.error("设置失败，response code" + res.status);
+          window.$message.error('设置失败，response code' + res.status);
         })
         .catch((err) => {
-          window.$message.error("设置失败，" + err.message);
+          window.$message.error('设置失败，' + err.message);
         });
     };
     const onLine = (row) => {
@@ -214,12 +214,12 @@ export default defineComponent({
               sourceDataRef.value = res.data.list || [];
               setCurrentPageData(currentPage);
             } else {
-              window.$message.error("request err,status code:" + res.status);
+              window.$message.error('request err,status code:' + res.status);
               dataRef.value = [];
             }
           })
           .catch((err) => {
-            window.$message.error("request err,message" + err.message);
+            window.$message.error('request err,message' + err.message);
             dataRef.value = [];
             loadingRef.value = false;
           });
@@ -239,7 +239,7 @@ export default defineComponent({
       model: modelRef,
       updateParam,
       rowKey(rowData) {
-        return rowData.ip + "_" + rowData.port;
+        return rowData.ip + '_' + rowData.port;
       },
       doHandlePageChange,
       reloadData
@@ -247,7 +247,7 @@ export default defineComponent({
   },
   computed: {
     getDetailTitle() {
-      return "编辑实例";
+      return '编辑实例';
     }
   },
   data() {
@@ -296,15 +296,15 @@ export default defineComponent({
           .updateInstance(instance)
           .then((res) => {
             if (res.status == 200) {
-              window.$message.info("设置成功!");
+              window.$message.info('设置成功!');
               this.useForm = false;
               this.reloadData();
               return;
             }
-            window.$message.error("设置失败，response code" + res.status);
+            window.$message.error('设置失败，response code' + res.status);
           })
           .catch((err) => {
-            window.$message.error("设置失败，" + err.message);
+            window.$message.error('设置失败，' + err.message);
           });
       } else {
         this.useForm = false;

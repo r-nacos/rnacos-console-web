@@ -42,10 +42,10 @@
 </template>
 
 <script>
-import { defineComponent } from "vue";
-import * as constant from "@/types/constant";
+import { defineComponent } from 'vue';
+import * as constant from '@/types/constant';
 export default defineComponent({
-  props: ["model"],
+  props: ['model'],
   computed: {
     isReadonly() {
       return this.model.mode === constant.FORM_MODE_DETAIL;
@@ -66,17 +66,17 @@ export default defineComponent({
             try {
               let v = parseFloat(value);
               if (isNaN(v)) {
-                return new Error("权重需为数字");
+                return new Error('权重需为数字');
               }
               if (v < 0) {
-                return new Error("权重不能小于0");
+                return new Error('权重不能小于0');
               }
             } catch {
-              return new Error("权重需为数字");
+              return new Error('权重需为数字');
             }
             return true;
           },
-          trigger: ["input", "blur"]
+          trigger: ['input', 'blur']
         }
       ]
     };

@@ -1,7 +1,7 @@
-import { ISize } from "@/types/base";
-import { defineStore } from "pinia";
+import { ISize } from '@/types/base';
+import { defineStore } from 'pinia';
 
-export const useLayoutSize = defineStore("layoutSize", {
+export const useLayoutSize = defineStore('layoutSize', {
   state: () => ({
     headerHeight: 52,
     footerHeight: 0,

@@ -48,10 +48,10 @@ select {
   font-size: 100%;
 }
 button::-moz-focus-inner,
-input[type="reset"]::-moz-focus-inner,
-input[type="button"]::-moz-focus-inner,
-input[type="submit"]::-moz-focus-inner,
-input[type="file"] > input[type="button"]::-moz-focus-inner {
+input[type='reset']::-moz-focus-inner,
+input[type='button']::-moz-focus-inner,
+input[type='submit']::-moz-focus-inner,
+input[type='file'] > input[type='button']::-moz-focus-inner {
   border: none;
   padding: 0;
 }
@@ -87,7 +87,7 @@ body {
 .clearfix:before,
 .clearfix:after {
   display: table;
-  content: "";
+  content: '';
   line-height: 0;
 }
 .clearfix:after {

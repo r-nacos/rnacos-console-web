@@ -1,4 +1,4 @@
-import { NButton, NSwitch } from "naive-ui";
+import { NButton, NSwitch } from 'naive-ui';
 
 /*
 let slots ={
@@ -14,43 +14,43 @@ let slots ={
 export const createColumns = function (showUpdate, onLine, offLine) {
   const columns = [
     {
-      title: "IP",
-      key: "ip"
+      title: 'IP',
+      key: 'ip'
     },
     {
-      title: "端口",
-      key: "port"
+      title: '端口',
+      key: 'port'
     },
     {
-      title: "是否临时实例",
-      key: "ephemeral",
+      title: '是否临时实例',
+      key: 'ephemeral',
       render(row) {
         return <span>{row.ephemeral.toString()}</span>;
       }
     },
     {
-      title: "权重",
-      key: "weight"
+      title: '权重',
+      key: 'weight'
     },
     {
-      title: "建康状态",
-      key: "healthy",
+      title: '建康状态',
+      key: 'healthy',
       render(row) {
         return <span>{row.healthy.toString()}</span>;
       }
     },
     {
-      title: "元数据",
-      key: "metadata",
+      title: '元数据',
+      key: 'metadata',
       width: 200,
       render(row) {
         return <span>{JSON.stringify(row.metadata)}</span>;
       }
     },
     {
-      title: "操作",
-      key: "_type",
-      fixed: "right",
+      title: '操作',
+      key: '_type',
+      fixed: 'right',
       render(row) {
         const onOffLine = () => {
           // v-slots={slots}
@@ -74,7 +74,7 @@ export const createColumns = function (showUpdate, onLine, offLine) {
         };
         return (
           <div>
-            <span style={{ "padding-right": "5px" }}>{onOffLine()}</span>
+            <span style={{ 'padding-right': '5px' }}>{onOffLine()}</span>
             <NButton
               size="tiny"
               type="info"

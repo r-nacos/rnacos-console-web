@@ -17,8 +17,8 @@
 </template>
 
 <script>
-import { defineComponent } from "vue";
-import { useLayoutSize } from "@/data/appdata";
+import { defineComponent } from 'vue';
+import { useLayoutSize } from '@/data/appdata';
 
 export default defineComponent({
   setup() {
@@ -29,7 +29,7 @@ export default defineComponent({
   },
   computed: {
     path() {
-      return this.$route.query.path || "";
+      return this.$route.query.path || '';
     }
   }
 });

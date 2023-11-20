@@ -85,14 +85,14 @@
 </template>
 
 <script>
-import { defineComponent } from "vue";
-import { configApi } from "@/api/config";
-import { createHistoryColumns } from "@/components/config/ConfigColumns";
-import SubContentFullPage from "@/components/common/SubContentFullPage";
-import DiffComponent from "@/components/config/DiffComponent.vue";
-import ConfigDetail from "./ConfigDetail.vue";
-import * as constant from "@/types/constant";
-import { useRoute } from "vue-router";
+import { defineComponent } from 'vue';
+import { configApi } from '@/api/config';
+import { createHistoryColumns } from '@/components/config/ConfigColumns';
+import SubContentFullPage from '@/components/common/SubContentFullPage';
+import DiffComponent from '@/components/config/DiffComponent.vue';
+import ConfigDetail from './ConfigDetail.vue';
+import * as constant from '@/types/constant';
+import { useRoute } from 'vue-router';
 
 export default defineComponent({
   components: {
@@ -104,9 +104,9 @@ export default defineComponent({
     let route = useRoute();
     let query = route.query;
     let param = {
-      group: query.group || "",
-      dataId: query.dataId || "",
-      tenant: query.tenant || ""
+      group: query.group || '',
+      dataId: query.dataId || '',
+      tenant: query.tenant || ''
     };
     const dataRef = ref([]);
     const loadingRef = ref(false);
@@ -126,10 +126,10 @@ export default defineComponent({
     const modelRef = ref({
       dataId: param.dataId,
       group: param.group,
-      md5: "",
+      md5: '',
       showMd5: false,
-      sourceContent: "",
-      content: "",
+      sourceContent: '',
+      content: '',
       mode: constant.FORM_MODE_DETAIL
     });
     const updateParam = (param) => {
@@ -164,12 +164,12 @@ export default defineComponent({
                 (count + pageSize - 1) / pageSize
               );
             } else {
-              window.$message.error("request err,status code:" + res.status);
+              window.$message.error('request err,status code:' + res.status);
               dataRef.value = [];
             }
           })
           .catch((err) => {
-            window.$message.error("request err,message" + err.message);
+            window.$message.error('request err,message' + err.message);
             dataRef.value = [];
             loadingRef.value = false;
           });
@@ -201,16 +201,16 @@ export default defineComponent({
         .setConfig(config)
         .then((res) => {
           if (res.status == 200) {
-            window.$message.info("恢复成功!");
+            window.$message.info('恢复成功!');
             useFormRef.value = false;
             useDiffFormRef.value = false;
             doHandlePageChange(1);
             return;
           }
-          window.$message.error("恢复失败，response code" + res.status);
+          window.$message.error('恢复失败，response code' + res.status);
         })
         .catch((err) => {
-          window.$message.error("恢复失败，" + err.message);
+          window.$message.error('恢复失败，' + err.message);
         });
     };
     const rollback = (row) => {
@@ -238,10 +238,10 @@ export default defineComponent({
   },
   computed: {
     getDetailTitle() {
-      return "历史记录内容";
+      return '历史记录内容';
     },
     getSubmitName() {
-      return "恢复历史记录";
+      return '恢复历史记录';
     }
   },
   data() {

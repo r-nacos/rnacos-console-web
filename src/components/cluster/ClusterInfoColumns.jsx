@@ -1,10 +1,10 @@
-import { NButton } from "naive-ui";
+import { NButton } from 'naive-ui';
 
 export const createColumns = function () {
   const columns = [
     {
-      title: "节点Id",
-      key: "nodeId",
+      title: '节点Id',
+      key: 'nodeId',
       render(row) {
         if (row.currentNode) {
           return (
@@ -20,12 +20,12 @@ export const createColumns = function () {
       }
     },
     {
-      title: "节点地址(grpc)",
-      key: "addr"
+      title: '节点地址(grpc)',
+      key: 'addr'
     },
     {
-      title: "raft主角点",
-      key: "raftLeader",
+      title: 'raft主角点',
+      key: 'raftLeader',
       render(row) {
         if (row.raftLeader) {
           return (
@@ -43,8 +43,8 @@ export const createColumns = function () {
       }
     },
     {
-      title: "节点状态",
-      key: "distroValid",
+      title: '节点状态',
+      key: 'distroValid',
       render(row) {
         if (row.distroValid) {
           return (

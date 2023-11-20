@@ -1,19 +1,19 @@
-import { AxiosResponse } from "axios";
-import request from "../utils/request";
-import { INamespace } from "@/types/namespace";
+import { AxiosResponse } from 'axios';
+import request from '../utils/request';
+import { INamespace } from '@/types/namespace';
 let axios = request;
 
 class NamespaceApi {
   queryList(): Promise<AxiosResponse> {
     return axios.request({
-      method: "get",
-      url: "/nacos/v1/console/namespaces"
+      method: 'get',
+      url: '/nacos/v1/console/namespaces'
     });
   }
   add(namespace: INamespace): Promise<AxiosResponse> {
     return axios.request({
-      method: "post",
-      url: "/nacos/v1/console/namespaces",
+      method: 'post',
+      url: '/nacos/v1/console/namespaces',
       data: {
         ...namespace
       }
@@ -21,8 +21,8 @@ class NamespaceApi {
   }
   update(namespace: INamespace): Promise<AxiosResponse> {
     return axios.request({
-      method: "put",
-      url: "/nacos/v1/console/namespaces",
+      method: 'put',
+      url: '/nacos/v1/console/namespaces',
       data: {
         ...namespace
       }
@@ -30,8 +30,8 @@ class NamespaceApi {
   }
   delete(namespace: INamespace): Promise<AxiosResponse> {
     return axios.request({
-      method: "delete",
-      url: "/nacos/v1/console/namespaces",
+      method: 'delete',
+      url: '/nacos/v1/console/namespaces',
       data: {
         namespaceId: namespace.namespaceId
       }

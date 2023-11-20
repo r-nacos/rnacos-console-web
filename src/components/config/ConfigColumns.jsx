@@ -1,5 +1,5 @@
-import { NButton, NPopconfirm } from "naive-ui";
-import { toDatetime } from "@/utils/date";
+import { NButton, NPopconfirm } from 'naive-ui';
+import { toDatetime } from '@/utils/date';
 
 export const createColumns = function (
   detail,
@@ -19,17 +19,17 @@ export const createColumns = function (
 
   const columns = [
     {
-      title: "配置ID",
-      key: "dataId"
+      title: '配置ID',
+      key: 'dataId'
     },
     {
-      title: "配置组",
-      key: "group"
+      title: '配置组',
+      key: 'group'
     },
     {
-      title: "操作",
-      key: "type",
-      fixed: "right",
+      title: '操作',
+      key: 'type',
+      fixed: 'right',
       render(row) {
         return (
           <div>
@@ -82,22 +82,22 @@ export const createHistoryColumns = function (detail, rollback) {
 
   const columns = [
     {
-      title: "ID",
-      key: "id"
+      title: 'ID',
+      key: 'id'
     },
     {
-      title: "配置ID",
-      key: "dataId"
+      title: '配置ID',
+      key: 'dataId'
     },
     {
-      title: "配置组",
-      key: "group"
+      title: '配置组',
+      key: 'group'
     },
     {
-      title: "更新时间",
-      key: "modifiedTime",
+      title: '更新时间',
+      key: 'modifiedTime',
       render(row) {
-        var value = "";
+        var value = '';
         if (row.modifiedTime) {
           var date = new Date(row.modifiedTime);
           value = toDatetime(date);
@@ -106,9 +106,9 @@ export const createHistoryColumns = function (detail, rollback) {
       }
     },
     {
-      title: "操作",
-      key: "type",
-      fixed: "right",
+      title: '操作',
+      key: 'type',
+      fixed: 'right',
       /*
                   <NPopconfirm onPositiveClick={()=>rollback(row)} v-slots={rollbackConfirmSlots} >
                       <span>确认要恢复ID为 <b>{row.id}</b> 的历史配置内容吗？</span>

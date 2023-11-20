@@ -1,25 +1,25 @@
-import { Ref, UnwrapRef, reactive, ref } from "vue";
-import namespaceApi from "../api/namespace";
-import { INamespace, INamespaceStore } from "@/types/namespace";
-import { ILabelItem } from "@/types/base";
+import { Ref, UnwrapRef, reactive, ref } from 'vue';
+import namespaceApi from '../api/namespace';
+import { INamespace, INamespaceStore } from '@/types/namespace';
+import { ILabelItem } from '@/types/base';
 
 // 前期没有使用 pinia,后继调整时考虑迁移到pinia
 
 function createStore(): INamespaceStore {
   const currentRef: Ref<UnwrapRef<INamespace>> = ref({
-    namespaceId: "",
-    namespaceName: "public"
+    namespaceId: '',
+    namespaceName: 'public'
   });
   const listListRef: Ref<UnwrapRef<Array<INamespace>>> = ref([
     {
-      namespaceId: "",
-      namespaceName: "public"
+      namespaceId: '',
+      namespaceName: 'public'
     }
   ]);
   const optionListRef: Ref<UnwrapRef<Array<ILabelItem>>> = ref([
     {
-      label: "public",
-      value: ""
+      label: 'public',
+      value: ''
     }
   ]);
   const loadRef = ref(false);

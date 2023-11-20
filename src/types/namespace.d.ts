@@ -1,4 +1,4 @@
-import { ILabelItem } from "./base";
+import { ILabelItem } from './base';
 
 export interface INamespace {
   namespaceId: string;

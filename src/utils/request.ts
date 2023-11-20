@@ -1,4 +1,4 @@
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 
 class HttpRequest {
   constructor() {}
@@ -27,7 +27,7 @@ class HttpRequest {
       //baseURL: this.baseURL,
       timeout: 1000,
       headers: {
-        "Content-Type": "application/x-www-form-urlencoded"
+        'Content-Type': 'application/x-www-form-urlencoded'
       }
     };
     return config;

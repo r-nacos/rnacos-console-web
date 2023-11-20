@@ -47,10 +47,10 @@
 </template>
 
 <script>
-import { defineComponent } from "vue";
-import * as constant from "@/types/constant";
+import { defineComponent } from 'vue';
+import * as constant from '@/types/constant';
 export default defineComponent({
-  props: ["model"],
+  props: ['model'],
   computed: {
     isReadonly() {
       return this.model.mode === constant.FORM_MODE_DETAIL;
@@ -66,11 +66,11 @@ export default defineComponent({
           required: true,
           validator(rule, value) {
             if (!value) {
-              return new Error("需要服务名称");
+              return new Error('需要服务名称');
             }
             return true;
           },
-          trigger: ["input", "blur"]
+          trigger: ['input', 'blur']
         }
       ],
 
@@ -79,11 +79,11 @@ export default defineComponent({
           required: true,
           validator(rule, value) {
             if (!value) {
-              return new Error("需要输入服务组");
+              return new Error('需要输入服务组');
             }
             return true;
           },
-          trigger: ["input", "blur"]
+          trigger: ['input', 'blur']
         }
       ],
       protectThreshold: [
@@ -96,17 +96,17 @@ export default defineComponent({
             try {
               let v = parseFloat(value);
               if (isNaN(v)) {
-                return new Error("保护阀值需为数字");
+                return new Error('保护阀值需为数字');
               }
               if (v < 0 || v > 1) {
-                return new Error("保护阀值不能小于0或大于1");
+                return new Error('保护阀值不能小于0或大于1');
               }
             } catch {
-              return new Error("保护阀值需为数字");
+              return new Error('保护阀值需为数字');
             }
             return true;
           },
-          trigger: ["input", "blur"]
+          trigger: ['input', 'blur']
         }
       ]
     };

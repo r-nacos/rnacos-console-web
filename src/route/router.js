@@ -1,13 +1,13 @@
-import { routes } from "./routes";
+import { routes } from './routes';
 
 import {
   createRouter,
   createWebHistory,
   createWebHashHistory
-} from "vue-router";
+} from 'vue-router';
 
 const getRouteTitle = function (route) {
-  return (route && route.meta && route.meta.title) || "";
+  return (route && route.meta && route.meta.title) || '';
 };
 
 const setRouteTitle = function (route) {
@@ -20,8 +20,8 @@ const router = createRouter({
 });
 
 router.afterEach((to, from) => {
-  if (to.name === undefined && to.fullPath !== "/404") {
-    router.replace("/404?path=" + encodeURIComponent(to.fullPath));
+  if (to.name === undefined && to.fullPath !== '/404') {
+    router.replace('/404?path=' + encodeURIComponent(to.fullPath));
   } else {
     setRouteTitle(to);
   }

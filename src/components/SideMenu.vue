@@ -40,7 +40,7 @@
 
 <script>
 //import {manageMenu} from '@/route/routes.js'
-import { ServerOutline, CubeOutline, AppsSharp } from "@vicons/ionicons5";
+import { ServerOutline, CubeOutline, AppsSharp } from '@vicons/ionicons5';
 
 export default {
   components: {
@@ -52,12 +52,12 @@ export default {
   data() {
     const manageMenu = [
       {
-        name: "配置管理",
+        name: '配置管理',
         icon: markRaw(CubeOutline),
         children: [
           {
-            name: "配置列表",
-            path: "/manage/configs"
+            name: '配置列表',
+            path: '/manage/configs'
           }
           /*
           {
@@ -68,33 +68,33 @@ export default {
         ]
       },
       {
-        name: "服务管理",
+        name: '服务管理',
         icon: markRaw(ServerOutline),
         children: [
           {
-            name: "服务列表",
-            path: "/manage/service"
+            name: '服务列表',
+            path: '/manage/service'
           }
         ]
       },
       {
-        name: "系统管理",
+        name: '系统管理',
         icon: markRaw(AppsSharp),
         children: [
           {
-            name: "命名空间",
-            path: "/manage/namespace"
+            name: '命名空间',
+            path: '/manage/namespace'
           },
           {
-            name: "集群信息",
-            path: "/manage/cluster"
+            name: '集群信息',
+            path: '/manage/cluster'
           }
         ]
       }
     ];
     return {
-      path: "/",
-      name: "side nemu",
+      path: '/',
+      name: 'side nemu',
       items: [...manageMenu]
     };
   },

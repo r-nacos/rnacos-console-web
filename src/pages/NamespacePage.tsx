@@ -1,4 +1,4 @@
-import { ref, defineComponent } from "vue";
+import { ref, defineComponent } from 'vue';
 import {
   NButton,
   NDataTable,
@@ -9,17 +9,17 @@ import {
   NDrawer,
   NDrawerContent,
   NTag
-} from "naive-ui";
-import { Close } from "@vicons/ionicons5";
-import namespaceApi from "@/api/namespace";
+} from 'naive-ui';
+import { Close } from '@vicons/ionicons5';
+import namespaceApi from '@/api/namespace';
 //import {createColumns} from '../components/namespace/NamespaceColumns'
 //import NamespacePopSelect from '../components/namespace/NamespacePopSelect.vue';
-import { namespaceStore } from "../data/namespace";
-import { IHandeNamespace, INamespace } from "@/types/namespace";
-import styles from "./NamespacePage.module.css";
+import { namespaceStore } from '../data/namespace';
+import { IHandeNamespace, INamespace } from '@/types/namespace';
+import styles from './NamespacePage.module.css';
 
-import type { FormItemRule } from "naive-ui";
-import type { IColumn, MyWindow } from "@/types/base";
+import type { FormItemRule } from 'naive-ui';
+import type { IColumn, MyWindow } from '@/types/base';
 
 declare var window: MyWindow;
 
@@ -29,19 +29,19 @@ export const createColumns = function (
 ): IColumn[] {
   const columns = [
     {
-      title: "命名空间名称",
-      key: "namespaceName"
+      title: '命名空间名称',
+      key: 'namespaceName'
     },
     {
-      title: "命名空间ID",
-      key: "namespaceId"
+      title: '命名空间ID',
+      key: 'namespaceId'
     },
     {
-      title: "操作",
-      key: "type",
-      fixed: "right",
+      title: '操作',
+      key: 'type',
+      fixed: 'right',
       render(row: INamespace) {
-        if (row.namespaceId === "") {
+        if (row.namespaceId === '') {
           return (
             <NTag size="small" type="info">
               保留空间
@@ -104,7 +104,7 @@ const columns = [
 */
 
 export default defineComponent({
-  name: "NamespacePage",
+  name: 'NamespacePage',
   components: {
     Close
     //NamespacePopSelect,
@@ -112,17 +112,17 @@ export default defineComponent({
   setup() {
     const dataRef = ref([
       {
-        namespaceId: "",
-        namespaceName: "public",
-        type: "0"
+        namespaceId: '',
+        namespaceName: 'public',
+        type: '0'
       }
     ]);
     const loadingRef = ref(false);
     const useFormRef = ref(false);
     const modelRef = ref({
-      namespaceId: "",
-      namespaceName: "",
-      mode: ""
+      namespaceId: '',
+      namespaceName: '',
+      mode: ''
     });
     const rules = {
       namespaceId: [
@@ -130,11 +130,11 @@ export default defineComponent({
           required: true,
           validator(rule: FormItemRule, value: string) {
             if (!value) {
-              return new Error("需要输入ID");
+              return new Error('需要输入ID');
             }
             return true;
           },
-          trigger: ["input", "blur"]
+          trigger: ['input', 'blur']
         }
       ],
 
@@ -143,11 +143,11 @@ export default defineComponent({
           required: true,
           validator(rule: FormItemRule, value: string) {
             if (!value) {
-              return new Error("需要输入名称");
+              return new Error('需要输入名称');
             }
             return true;
           },
-          trigger: ["input", "blur"]
+          trigger: ['input', 'blur']
         }
       ]
     };
@@ -155,7 +155,7 @@ export default defineComponent({
       modelRef.value = {
         namespaceId: row.namespaceId,
         namespaceName: row.namespaceName,
-        mode: "update"
+        mode: 'update'
       };
       useFormRef.value = true;
     };
@@ -167,7 +167,7 @@ export default defineComponent({
             dataRef.value = res.data.data;
             namespaceStore.setLastList(res.data.data);
           } else {
-            window.$message.error("request err,status code:" + res.status);
+            window.$message.error('request err,status code:' + res.status);
           }
         })
         .catch((err) => {
@@ -185,7 +185,7 @@ export default defineComponent({
               window.$message.error(res.data.message);
             }
           } else {
-            window.$message.error("request err,status code:" + res.status);
+            window.$message.error('request err,status code:' + res.status);
           }
         })
         .catch((err) => {
@@ -209,9 +209,9 @@ export default defineComponent({
       doLoadNamespace,
       showCreate() {
         modelRef.value = {
-          namespaceId: "",
-          namespaceName: "",
-          mode: "add"
+          namespaceId: '',
+          namespaceName: '',
+          mode: 'add'
         };
         useFormRef.value = true;
       },
@@ -228,7 +228,7 @@ export default defineComponent({
       this.doCreate();
     },
     submit() {
-      if (this.model.mode === "add") {
+      if (this.model.mode === 'add') {
         this.doCreate();
       } else {
         this.doUpdate();
@@ -246,7 +246,7 @@ export default defineComponent({
               window.$message.error(res.data.message);
             }
           } else {
-            window.$message.error("request err,status code:" + res.status);
+            window.$message.error('request err,status code:' + res.status);
           }
         })
         .catch((err) => {
@@ -265,7 +265,7 @@ export default defineComponent({
               window.$message.error(res.data.message);
             }
           } else {
-            window.$message.error("request err,status code:" + res.status);
+            window.$message.error('request err,status code:' + res.status);
           }
         })
         .catch((err) => {
@@ -326,7 +326,7 @@ export default defineComponent({
           resizable
         >
           <NDrawerContent
-            title={this.model.mode == "add" ? "新增命名空间" : "修改命名空间"}
+            title={this.model.mode == 'add' ? '新增命名空间' : '修改命名空间'}
             closable
           >
             {{

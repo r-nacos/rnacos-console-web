@@ -24,18 +24,18 @@
 </template>
 
 <script>
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref } from 'vue';
 
-import DiffComponent from "@/components/config/DiffComponent.vue";
+import DiffComponent from '@/components/config/DiffComponent.vue';
 
 export default defineComponent({
   components: [DiffComponent],
   setup() {
-    var srcRef = ref("abc");
-    var dstRef = ref("123");
+    var srcRef = ref('abc');
+    var dstRef = ref('123');
     var modelRef = ref({
-      src: "abc",
-      dst: "123"
+      src: 'abc',
+      dst: '123'
     });
     var doDiff = () => {};
     return {

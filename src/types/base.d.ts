@@ -34,3 +34,10 @@ export interface IConsoleResult<T> {
   message: ?string;
   data: ?T;
 }
+
+export interface IApiResult<T> {
+  code: ?string;
+  message: ?string;
+  data: ?T;
+  success: boolean;
+}

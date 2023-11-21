@@ -10,6 +10,7 @@ import NotFound from '@/pages/NotFound.vue';
 import ClusterPageVue from '@/pages/ClusterPage.vue';
 import Tmp from '@/pages/Tmp.vue';
 import DiffDemo from '@/pages/DiffDemo.vue';
+import Login from '@/pages/Login.vue';
 
 export const routes = [
   {
@@ -26,6 +27,12 @@ export const routes = [
     name: 'not found',
     meta: { title: '404' },
     component: NotFound
+  },
+  {
+    path: '/p/login',
+    name: 'login',
+    meta: { title: 'login' },
+    component: Login
   },
   {
     path: '/manage',

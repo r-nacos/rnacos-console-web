@@ -1,4 +1,5 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import router from '@/route/router.js';
 
 class HttpRequest {
   constructor() {}
@@ -18,6 +19,15 @@ class HttpRequest {
       return config;
     });
     instance.interceptors.response.use((config) => {
+      if (
+        config.headers['No-Logig'] === '1' ||
+        config.headers['no-login'] === '1'
+      ) {
+        router.push(
+          '/p/login?redirect_url=' +
+            encodeURIComponent(location.pathname + location.search)
+        );
+      }
       return config;
     });
   }

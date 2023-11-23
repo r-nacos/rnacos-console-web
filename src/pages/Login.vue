@@ -31,10 +31,14 @@
 import { defineComponent, ref, reactive } from 'vue';
 import { useMessage } from 'naive-ui';
 import { userApi } from '@/api/user';
+import { useRoute } from 'vue-router';
 
 export default defineComponent({
   setup() {
     window.$message = useMessage();
+    let route = useRoute();
+    let query = route.query;
+    let redirect_url = query.redirect_url || '/';
     var modelRef = reactive({
       username: null,
       password: null
@@ -76,7 +80,8 @@ export default defineComponent({
         .then((res) => {
           if (res.status == 200) {
             if (res.data.success) {
-              window.$message.info('登录成功!');
+              //window.$message.info('登录成功!');
+              location.href = redirect_url;
               return;
             } else {
               window.$message.error('登录失败，' + res.data.message);

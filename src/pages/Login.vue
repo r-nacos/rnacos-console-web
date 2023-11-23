@@ -1,6 +1,6 @@
 <template>
-  <div class="detailWrap">
-    <n-form ref="formRef" :model="model" :rules="rules">
+  <div class="container">
+    <n-form class="login_form" ref="formRef" :model="model" :rules="rules">
       <n-form-item path="username" label="用户名">
         <n-input
           placeholder="用户名"
@@ -16,13 +16,9 @@
           @keydown.enter.prevent
         />
       </n-form-item>
-      <n-row :gutter="[0, 24]">
-        <n-col :span="12">
-          <div style="display: flex; justify-content: flex-end">
-            <n-button type="primary" @click="submit"> 登陆 </n-button>
-          </div>
-        </n-col>
-      </n-row>
+      <div style="display: flex">
+        <n-button type="primary" block="true" @click="submit"> 登陆 </n-button>
+      </div>
     </n-form>
   </div>
 </template>
@@ -104,4 +100,21 @@ export default defineComponent({
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+.container {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  background: #efefef;
+}
+
+.login_form {
+  height: 250;
+  width: 300;
+  margin: 100px auto;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 20px;
+  background: #fff;
+}
+</style>

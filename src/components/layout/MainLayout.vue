@@ -5,7 +5,9 @@
       :style="{ height: layoutSize.headerHeight + 'px' }"
     >
       <div class="sider-header">R-NACOS</div>
-      <div class="header"></div>
+      <div class="header">
+        <MoreSetting class="more" />
+      </div>
     </header>
     <section class="content_wrap">
       <nav class="side" :style="{ width: layoutSize.siderWidth + 'px' }">
@@ -33,13 +35,15 @@
 
 <script>
 import SideMenu from '../SideMenu.vue';
+import MoreSetting from '../MoreSetting.vue';
 import { useMessage } from 'naive-ui';
 import { defineComponent } from 'vue';
 import { useLayoutSize } from '@/data/appdata';
 
 export default defineComponent({
   components: {
-    SideMenu
+    SideMenu,
+    MoreSetting
   },
   setup() {
     window.$message = useMessage();
@@ -97,6 +101,15 @@ export default defineComponent({
   background: #2f6cf7;
   color: #fff;
   height: 52px;
+  position: relative;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.more {
+  width: 52px;
+  height: inherit;
+  flex: 0;
 }
 
 .content_wrap {

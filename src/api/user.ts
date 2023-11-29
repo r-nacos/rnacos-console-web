@@ -16,6 +16,12 @@ class UserApi {
       data: info
     });
   }
+  logout(): Promise<AxiosResponse<IApiResult<boolean>>> {
+    return axios.request({
+      method: 'post',
+      url: '/nacos/v1/console/login/logout'
+    });
+  }
 }
 
 export const userApi = new UserApi();

@@ -1,9 +1,11 @@
 <template>
   <div class="wrap">
     <n-dropdown :options="options" @select="handleSelect" size="medium">
-      <n-icon size="32" class="dropdown">
-        <ellipsis-horizontal />
-      </n-icon>
+      <span class="icon">
+        <n-icon size="16" class="dropdown">
+          <ellipsis-horizontal />
+        </n-icon>
+      </span>
     </n-dropdown>
   </div>
 </template>
@@ -74,4 +76,12 @@ export default defineComponent({
   border-radius: 8px;
 }
 */
+.icon {
+  display: block;
+  width: 32px;
+  height: 32px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 5px;
+  padding: 8px;
+}
 </style>

@@ -6,6 +6,7 @@ let axios = request;
 export interface ILoginParam {
   username: string;
   password: string;
+  captcha: string;
 }
 
 export interface IResetPasswordParam {
@@ -19,6 +20,12 @@ class UserApi {
       method: 'post',
       url: '/nacos/v1/console/login/login',
       data: info
+    });
+  }
+  genCaptcha(): Promise<AxiosResponse<IApiResult<string>>> {
+    return axios.request({
+      method: 'get',
+      url: '/nacos/v1/console/login/captcha'
     });
   }
   logout(): Promise<AxiosResponse<IApiResult<boolean>>> {

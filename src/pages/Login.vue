@@ -80,7 +80,12 @@ export default defineComponent({
               location.href = redirect_url;
               return;
             } else {
-              window.$message.error('登录失败，' + res.data.message);
+              //console.log(res.data);
+              if (res.data.code === 'SYSTEM_ERROR') {
+                window.$message.error('登录失败，用户名或密码错误!');
+              } else {
+                window.$message.error('登录失败，' + res.data.message);
+              }
             }
           } else {
             window.$message.error('请求失败，response code' + res.status);

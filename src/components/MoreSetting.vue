@@ -7,6 +7,28 @@
         </n-icon>
       </span>
     </n-dropdown>
+    <n-drawer
+      :block-scroll="false"
+      :trap-focus="false"
+      v-model:show="useForm"
+      default-width="600"
+      resizable
+    >
+      <n-drawer-content header-style="height: 52px;" closable>
+        <template #header>
+          <div>
+            <h3>修改密码</h3>
+          </div>
+        </template>
+        <ResetPassword :model="resetModel" />
+        <template #footer>
+          <n-space align="baseline">
+            <n-button text @click="closeForm">返回</n-button>
+            <n-button type="primary" @click="submitForm">确定</n-button>
+          </n-space>
+        </template>
+      </n-drawer-content>
+    </n-drawer>
   </div>
 </template>
 <script>
@@ -18,6 +40,7 @@ import {
 } from '@vicons/ionicons5';
 import { NIcon, useMessage } from 'naive-ui';
 import { userApi } from '@/api/user';
+import ResetPassword from './user/ResetPassword.vue';
 
 const renderIcon = (icon) => {
   return () => {
@@ -33,15 +56,24 @@ export default defineComponent({
   },
   setup(self) {
     window.$message = useMessage();
+    const useFormRef = ref(false);
+    const resetModel = reactive({
+      oldPassword: null,
+      newPassword: null,
+      newPasswordRepeated: null
+    });
+    const clearResetModel = function () {
+      resetModel.oldPassword = null;
+      resetModel.newPassword = null;
+      resetModel.newPasswordRepeated = null;
+    };
     return {
       options: [
-        /*
         {
           label: '修改密码',
           key: 'reset_password',
           icon: renderIcon(EditIcon)
         },
-        */
         {
           label: '退出登录',
           key: 'logout',
@@ -59,7 +91,44 @@ export default defineComponent({
               }, 500);
             }
           });
+        } else if (key === 'reset_password') {
+          clearResetModel();
+          useFormRef.value = true;
         }
+      },
+      useForm: useFormRef,
+      resetModel,
+      closeForm() {
+        useFormRef.value = false;
+        clearResetModel();
+      },
+      submitForm() {
+        if (!resetModel.oldPassword || !resetModel.newPassword) {
+          window.$message.error('输入内容不能为空');
+          return;
+        }
+        if (resetModel.newPassword !== resetModel.newPasswordRepeated) {
+          window.$message.error('确认内容与新密码不一致');
+          return;
+        }
+        useFormRef.value = false;
+        userApi
+          .resetPassword({
+            oldPassword: resetModel.oldPassword,
+            newPassword: resetModel.newPassword
+          })
+          .then((res) => {
+            if (res.status == 200 && res.data != null && res.data.success) {
+              window.$message.info('修改密码成功!');
+              useFormRef.value = false;
+              clearResetModel();
+              return;
+            }
+            window.$message.error('请求失败，response code' + res.status);
+          })
+          .catch((err) => {
+            window.$message.error('请求失败，' + err.message);
+          });
       }
     };
   }

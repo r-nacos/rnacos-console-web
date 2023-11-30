@@ -9,7 +9,7 @@ declare module 'vue' {
   export interface GlobalComponents {
     DiffComponent: typeof import('./src/components/config/DiffComponent.vue')['default']
     Foo: typeof import('./src/components/Foo.vue')['default']
-    LoginFrom: typeof import('./src/components/login/LoginFrom.vue')['default']
+    LoginFrom: typeof import('./src/components/user/LoginFrom.vue')['default']
     MainLayout: typeof import('./src/components/layout/MainLayout.vue')['default']
     MoreSetting: typeof import('./src/components/MoreSetting.vue')['default']
     MoveSetting: typeof import('./src/components/MoreSetting.vue')['default']
@@ -29,6 +29,7 @@ declare module 'vue' {
     NSpace: typeof import('naive-ui')['NSpace']
     NSwitch: typeof import('naive-ui')['NSwitch']
     NUpload: typeof import('naive-ui')['NUpload']
+    ResetPassword: typeof import('./src/components/user/ResetPassword.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SideMenu: typeof import('./src/components/SideMenu.vue')['default']

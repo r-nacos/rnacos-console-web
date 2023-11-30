@@ -8,6 +8,11 @@ export interface ILoginParam {
   password: string;
 }
 
+export interface IResetPasswordParam {
+  oldPassword: string;
+  newPassword: string;
+}
+
 class UserApi {
   login(info: ILoginParam): Promise<AxiosResponse<IApiResult<boolean>>> {
     return axios.request({
@@ -20,6 +25,15 @@ class UserApi {
     return axios.request({
       method: 'post',
       url: '/nacos/v1/console/login/logout'
+    });
+  }
+  resetPassword(
+    info: IResetPasswordParam
+  ): Promise<AxiosResponse<IApiResult<boolean>>> {
+    return axios.request({
+      method: 'post',
+      url: '/nacos/v1/console/user/reset_password',
+      data: info
     });
   }
 }

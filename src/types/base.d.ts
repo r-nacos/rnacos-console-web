@@ -41,3 +41,8 @@ export interface IApiResult<T> {
   data: ?T;
   success: boolean;
 }
+
+export interface IPageResult<T> {
+  size: number;
+  list: Array<T>;
+}

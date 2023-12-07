@@ -11,6 +11,7 @@ import ClusterPageVue from '@/pages/ClusterPage.vue';
 import Tmp from '@/pages/Tmp.vue';
 import DiffDemo from '@/pages/DiffDemo.vue';
 import Login from '@/pages/Login.vue';
+import UserListPage from '@/pages/UserListPage.vue';
 
 export const routes = [
   {
@@ -83,6 +84,12 @@ export const routes = [
         name: 'namespace',
         meta: { title: '命名空间管理' },
         component: NamespacePage
+      },
+      {
+        path: '/manage/user',
+        name: 'user',
+        meta: { title: '用户管理' },
+        component: UserListPage
       },
       {
         path: '/manage/cluster',

@@ -1,6 +1,6 @@
 import { AxiosResponse } from 'axios';
 import request from '../utils/request';
-import { IApiResult } from '@/types/base';
+import { IApiResult, IPageResult } from '@/types/base';
 let axios = request;
 
 export interface ILoginParam {
@@ -12,6 +12,24 @@ export interface ILoginParam {
 export interface IResetPasswordParam {
   oldPassword: string;
   newPassword: string;
+}
+
+export interface IUserPageParam {
+  like_username?: string;
+  pageNo: Number;
+  pageSize: Number;
+  isRev: boolean;
+}
+
+export interface IUserInfo {
+  username: string;
+  nickname: string;
+  password?: string;
+  gmtCreate: number;
+  gmtModified: number;
+  enable: boolean;
+  roles: Array<String>;
+  extendInfo?: Map<String, String>;
 }
 
 class UserApi {
@@ -41,6 +59,17 @@ class UserApi {
       method: 'post',
       url: '/nacos/v1/console/user/reset_password',
       data: info
+    });
+  }
+  getUserList(
+    param: IUserPageParam
+  ): Promise<AxiosResponse<IApiResult<IPageResult<IUserInfo>>>> {
+    return axios.request({
+      method: 'get',
+      url: '/nacos/v1/console/user/list',
+      params: {
+        ...param
+      }
     });
   }
 }

@@ -82,6 +82,10 @@ export default {
         icon: markRaw(AppsSharp),
         children: [
           {
+            name: '用户管理',
+            path: '/manage/user'
+          },
+          {
             name: '命名空间',
             path: '/manage/namespace'
           },

@@ -32,6 +32,14 @@ export interface IUserInfo {
   extendInfo?: Map<String, String>;
 }
 
+export interface IUpdateUserParam {
+  username: string;
+  nickname?: string;
+  password?: string;
+  enable?: boolean;
+  roles?: string;
+}
+
 class UserApi {
   login(info: ILoginParam): Promise<AxiosResponse<IApiResult<boolean>>> {
     return axios.request({
@@ -70,6 +78,31 @@ class UserApi {
       params: {
         ...param
       }
+    });
+  }
+  addUser(info: IUpdateUserParam): Promise<AxiosResponse<IApiResult<boolean>>> {
+    return axios.request({
+      method: 'post',
+      url: '/nacos/v1/console/user/add',
+      data: info
+    });
+  }
+  updateUser(
+    info: IUpdateUserParam
+  ): Promise<AxiosResponse<IApiResult<boolean>>> {
+    return axios.request({
+      method: 'post',
+      url: '/nacos/v1/console/user/update',
+      data: info
+    });
+  }
+  removeUser(
+    info: IUpdateUserParam
+  ): Promise<AxiosResponse<IApiResult<boolean>>> {
+    return axios.request({
+      method: 'post',
+      url: '/nacos/v1/console/user/remove',
+      data: info
     });
   }
 }

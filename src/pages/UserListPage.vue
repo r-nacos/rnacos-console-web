@@ -51,7 +51,7 @@
       resizable
     >
       <n-drawer-content :title="getDetailTitle" closable>
-        <div>todo...</div>
+        <UserDetail :model="model" />
         <template #footer>
           <n-space align="baseline">
             <n-button text @click="closeForm">返回</n-button>
@@ -64,97 +64,18 @@
 </template>
 
 <script>
-import { h, ref, reactive, defineComponent } from 'vue';
+import { ref, reactive, defineComponent } from 'vue';
 import { userApi } from '@/api/user';
 import * as constant from '@/types/constant';
 import { NButton } from 'naive-ui';
-import { toDatetime } from '@/utils/date';
-
-const createColumns = function (showDetail, showUpdate, removeItem) {
-  return [
-    {
-      title: '用户',
-      key: 'username'
-    },
-    {
-      title: '用户昵称',
-      key: 'nickname'
-    },
-    {
-      title: '创建时间',
-      key: 'gmtCreate',
-      render(row) {
-        var value = '';
-        if (row.gmtCreate) {
-          var date = new Date(row.gmtCreate);
-          value = toDatetime(date);
-        }
-        return h('span', {}, { default: () => value });
-      }
-    },
-    {
-      title: '更新时间',
-      key: 'gmtModified',
-      render(row) {
-        var value = '';
-        if (row.gmtModified) {
-          var date = new Date(row.gmtModified);
-          value = toDatetime(date);
-        }
-        return h('span', {}, { default: () => value });
-      }
-    },
-    {
-      title: '是否启用',
-      key: 'enable'
-    },
-    {
-      title: '角色',
-      key: 'roles'
-    },
-    {
-      title: '操作',
-      key: 'actions',
-      render(row) {
-        return [
-          h(
-            NButton,
-            {
-              size: 'tiny',
-              quaternary: 1,
-              type: 'info',
-              onClick: () => showDetail(row)
-            },
-            { default: () => '详情' }
-          ),
-          h(
-            NButton,
-            {
-              size: 'tiny',
-              quaternary: 1,
-              type: 'info',
-              onClick: () => showUpdate(row)
-            },
-            { default: () => '编辑' }
-          ),
-          h(
-            NButton,
-            {
-              size: 'tiny',
-              quaternary: 1,
-              type: 'info',
-              onClick: () => removeItem(row)
-            },
-            { default: () => '删除' }
-          )
-        ];
-      }
-    }
-  ];
-};
+import { createColumns } from '@/components/user/UserListColumns';
+import UserDetail from '@/pages/UserDetail.vue';
+import { getRoleNameByCode, roleOptions } from '@/data/role';
 
 export default defineComponent({
-  components: {},
+  components: {
+    UserDetail
+  },
   setup() {
     const dataRef = ref([]);
     const loadingRef = ref(false);
@@ -181,17 +102,49 @@ export default defineComponent({
       gmtCreate: null,
       gmtModified: null,
       enable: true,
-      roles: []
+      roles: [],
+      roleOptions
     });
     const showUpdate = (row) => {
-      //modelRef.value = { };
+      console.log('showUpdate', row);
+      modelRef.value = {
+        mode: constant.FORM_MODE_UPDATE,
+        username: row.username,
+        nickname: row.nickname,
+        password: null,
+        enable: row.enable,
+        roles: row.roles,
+        roleOptions
+      };
       useFormRef.value = true;
     };
     const showDetail = (row) => {
+      modelRef.value = {
+        mode: constant.FORM_MODE_DETAIL,
+        username: row.username,
+        nickname: row.nickname,
+        password: null,
+        enable: row.enable,
+        roles: row.roles,
+        roleOptions
+      };
       useFormRef.value = true;
     };
     const removeItem = (row) => {
-      console.log('todo remove user');
+      userApi
+        .removeUser({ username: row.username })
+        .then((res) => {
+          if (res.status == 200) {
+            window.$message.info('删除成功!');
+            useFormRef.value = false;
+            doHandlePageChange(1);
+            return;
+          }
+          window.$message.error('操作失败，response code' + res.status);
+        })
+        .catch((err) => {
+          window.$message.error('操作失败' + err.message);
+        });
     };
     const showCreate = () => {
       modelRef.value = {
@@ -202,14 +155,15 @@ export default defineComponent({
         gmtCreate: null,
         gmtModified: null,
         enable: true,
-        roles: []
+        roles: [],
+        roleOptions
       };
       useFormRef.value = true;
     };
 
     const doQueryList = () => {
       return userApi.getUserList({
-        username: paramRef.value.username,
+        like_username: paramRef.value.username,
         pageNo: paginationReactive.page,
         pageSize: paginationReactive.pageSize
       });
@@ -244,7 +198,7 @@ export default defineComponent({
     };
 
     let columns = createColumns(showDetail, showUpdate, removeItem);
-    doHandlePageChange(1);
+    //doHandlePageChange(1);
     return {
       columns,
       data: dataRef,
@@ -264,6 +218,51 @@ export default defineComponent({
       },
       closeForm() {
         useFormRef.value = false;
+      },
+      submitForm() {
+        let mode = modelRef.value.mode;
+        if (mode === constant.FORM_MODE_DETAIL) {
+          useFormRef.value = false;
+          return;
+        }
+        let userinfo = {
+          username: modelRef.value.username,
+          nickname: modelRef.value.nickname,
+          password: modelRef.value.password,
+          enable: modelRef.value.enable,
+          roles: modelRef.value.roles.join(',')
+        };
+        if (mode === constant.FORM_MODE_CREATE) {
+          userApi
+            .addUser(userinfo)
+            .then((res) => {
+              if (res.status == 200) {
+                window.$message.info('操作成功!');
+                useFormRef.value = false;
+                doHandlePageChange(1);
+                return;
+              }
+              window.$message.error('操作失败，response code' + res.status);
+            })
+            .catch((err) => {
+              window.$message.error('操作失败' + err.message);
+            });
+        } else {
+          userApi
+            .updateUser(userinfo)
+            .then((res) => {
+              if (res.status == 200) {
+                window.$message.info('操作成功!');
+                useFormRef.value = false;
+                doHandlePageChange(1);
+                return;
+              }
+              window.$message.error('操作失败，response code' + res.status);
+            })
+            .catch((err) => {
+              window.$message.error('操作失败' + err.message);
+            });
+        }
       }
     };
   },
@@ -278,10 +277,8 @@ export default defineComponent({
       return '用户详情';
     }
   },
-  methods: {
-    submitForm() {
-      console.log('todo submitForm');
-    }
+  mounted() {
+    this.queryList();
   }
 });
 </script>

@@ -5,7 +5,8 @@ export const createColumns = function (
   detail,
   showHistory,
   showUpdate,
-  remove
+  remove,
+  webResources
 ) {
   const removeConfirmSlots = {
     trigger: () => {
@@ -31,6 +32,33 @@ export const createColumns = function (
       key: 'type',
       fixed: 'right',
       render(row) {
+        let editButton;
+        let removePopconfirm;
+        if (webResources.canUpdateConfig) {
+          editButton = (
+            <NButton
+              size="tiny"
+              quaternary
+              type="info"
+              onClick={() => showUpdate(row)}
+            >
+              编辑
+            </NButton>
+          );
+          removePopconfirm = (
+            <NPopconfirm
+              onPositiveClick={() => remove(row)}
+              v-slots={removeConfirmSlots}
+            >
+              <span>
+                确认要删配置组为:{row.group},ID为:{row.dataId}的配置吗？
+              </span>
+            </NPopconfirm>
+          );
+        } else {
+          editButton = <span></span>;
+          removePopconfirm = editButton;
+        }
         return (
           <div>
             <NButton
@@ -49,22 +77,8 @@ export const createColumns = function (
             >
               历史记录
             </NButton>
-            <NButton
-              size="tiny"
-              quaternary
-              type="info"
-              onClick={() => showUpdate(row)}
-            >
-              编辑
-            </NButton>
-            <NPopconfirm
-              onPositiveClick={() => remove(row)}
-              v-slots={removeConfirmSlots}
-            >
-              <span>
-                确认要删配置组为:{row.group},ID为:{row.dataId}的配置吗？
-              </span>
-            </NPopconfirm>
+            {editButton}
+            {removePopconfirm}
           </div>
         );
       }
@@ -73,7 +87,7 @@ export const createColumns = function (
   return columns;
 };
 
-export const createHistoryColumns = function (detail, rollback) {
+export const createHistoryColumns = function (detail, rollback, webResources) {
   const rollbackConfirmSlots = {
     trigger: () => {
       return <NButton size="tiny">恢复</NButton>;
@@ -115,6 +129,21 @@ export const createHistoryColumns = function (detail, rollback) {
                   </NPopconfirm>
       */
       render(row) {
+        let rollback;
+        if (webResources.canUpdateConfig) {
+          rollback = (
+            <NButton
+              size="tiny"
+              quaternary
+              type="primary"
+              onClick={() => rollback(row)}
+            >
+              恢复
+            </NButton>
+          );
+        } else {
+          rollback = <span></span>;
+        }
         return (
           <div>
             <NButton
@@ -125,14 +154,7 @@ export const createHistoryColumns = function (detail, rollback) {
             >
               详情
             </NButton>
-            <NButton
-              size="tiny"
-              quaternary
-              type="primary"
-              onClick={() => rollback(row)}
-            >
-              恢复
-            </NButton>
+            {rollback}
           </div>
         );
       }

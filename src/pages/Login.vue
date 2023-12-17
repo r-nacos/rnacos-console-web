@@ -45,12 +45,14 @@
 
 <script>
 import { defineComponent, ref, reactive } from 'vue';
+import { useWebResources } from '@/data/resources';
 import { useMessage } from 'naive-ui';
 import { userApi } from '@/api/user';
 import { useRoute } from 'vue-router';
 
 export default defineComponent({
   setup() {
+    const webResources = useWebResources();
     window.$message = useMessage();
     let route = useRoute();
     let query = route.query;
@@ -121,7 +123,14 @@ export default defineComponent({
           if (res.status == 200) {
             if (res.data.success) {
               //window.$message.info('登录成功!');
-              location.href = redirect_url;
+              userApi.getUserWebResources().then((res) => {
+                if (res.status == 200) {
+                  if (res.data.success) {
+                    webResources.update(res.data.data);
+                    location.href = redirect_url;
+                  }
+                }
+              });
               return;
             } else {
               //console.log(res.data);

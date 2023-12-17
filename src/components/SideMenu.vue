@@ -40,7 +40,9 @@
 
 <script>
 //import {manageMenu} from '@/route/routes.js'
+import { useWebResources } from '@/data/resources';
 import { ServerOutline, CubeOutline, AppsSharp } from '@vicons/ionicons5';
+import { userApi } from '@/api/user';
 
 export default {
   components: {
@@ -48,7 +50,12 @@ export default {
     CubeOutline,
     AppsSharp
   },
-  setup() {},
+  setup() {
+    const webResources = useWebResources();
+    return {
+      webResources
+    };
+  },
   data() {
     const manageMenu = [
       {
@@ -96,10 +103,33 @@ export default {
         ]
       }
     ];
+    var webResources = this.webResources;
+    var items = [];
+    for (var item of manageMenu) {
+      var subItems = [];
+      for (var subItem of item.children || []) {
+        if (webResources.resource.has(subItem.path)) {
+          subItems.push(subItem);
+        } else if (
+          webResources.isOldConsole &&
+          subItem.path !== '/manage/user'
+        ) {
+          subItems.push(subItem);
+        }
+      }
+      if (subItems.length == 0) {
+        continue;
+      }
+      item.children = subItems;
+      items.push(item);
+    }
+    console.log(items, webResources.resource, webResources.isOldConsole);
+    //var items = manageMenu;
     return {
       path: '/',
       name: 'side nemu',
-      items: [...manageMenu]
+      //items: [...manageMenu]
+      items
     };
   },
   methods: {
@@ -124,14 +154,27 @@ export default {
           }
       }
       */
+    },
+    updateWebResources() {
+      if (!this.webResources.fromRequest) {
+        userApi.getUserWebResources().then((res) => {
+          if (res.status == 200) {
+            if (res.data.success) {
+              this.webResources.update(res.data.data);
+            }
+          }
+        });
+      }
     }
   },
+  mounted() {},
   watch: {
     $route(newRoute, old) {
       this.changeRoute(newRoute);
     }
   },
   created() {
+    this.updateWebResources();
     this.changeRoute(this.$route);
   }
 };

@@ -1,6 +1,6 @@
 import { AxiosResponse } from 'axios';
 import request from '../utils/request';
-import { IApiResult, IPageResult } from '@/types/base';
+import { IApiResult, IPageResult, WebResource } from '@/types/base';
 let axios = request;
 
 export interface ILoginParam {
@@ -78,6 +78,13 @@ class UserApi {
       params: {
         ...param
       }
+    });
+  }
+  getUserWebResources(): Promise<AxiosResponse<IApiResult<WebResource>>> {
+    return axios.request({
+      method: 'get',
+      url: '/nacos/v1/console/user/web_resources',
+      params: {}
     });
   }
   addUser(info: IUpdateUserParam): Promise<AxiosResponse<IApiResult<boolean>>> {

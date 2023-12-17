@@ -46,3 +46,8 @@ export interface IPageResult<T> {
   size: number;
   list: Array<T>;
 }
+
+export interface WebResource {
+  from: string;
+  resources: Array<string>;
+}

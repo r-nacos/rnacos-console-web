@@ -33,7 +33,7 @@
             <span class="query-button-item">
               <n-button tertiary @click="queryList">查询</n-button>
             </span>
-            <span class="query-button-item">
+            <span v-if="webResources.canUpdateConfig" class="query-button-item">
               <n-button type="info" @click="showCreate">新建</n-button>
             </span>
             <span class="query-button-item">
@@ -41,7 +41,7 @@
                 ><n-button type="info">下载</n-button></a
               >
             </span>
-            <span class="query-button-item">
+            <span v-if="webResources.canUpdateConfig" class="query-button-item">
               <n-upload
                 action="/nacos/v1/console/config/import"
                 :headers="uploadHeader"
@@ -96,6 +96,7 @@
 import { ref, reactive, defineComponent } from 'vue';
 import { configApi } from '@/api/config';
 import { namespaceStore } from '@/data/namespace';
+import { useWebResources } from '@/data/resources';
 import { createColumns } from '@/components/config/ConfigColumns';
 import NamespacePopSelect from '@/components/namespace/NamespacePopSelect.vue';
 import SubContentFullPage from '@/components/common/SubContentFullPage';
@@ -117,6 +118,7 @@ export default defineComponent({
   setup(self) {
     //window.$message = useMessage();
     let router = useRouter();
+    let webResources = useWebResources();
     const dataRef = ref([]);
     const useFormRef = ref(false);
     const useDiffFormRef = ref(false);
@@ -270,10 +272,12 @@ export default defineComponent({
       detailItem,
       showHistory,
       updateItem,
-      removeItem
+      removeItem,
+      webResources
     );
     return {
       columns,
+      webResources,
       data: dataRef,
       useForm: useFormRef,
       useDiffForm: useDiffFormRef,

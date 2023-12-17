@@ -63,9 +63,12 @@
         <template #footer>
           <n-space align="baseline">
             <n-button text @click="closeForm">返回</n-button>
-            <n-button type="primary" @click="submitForm">{{
-              getSubmitName
-            }}</n-button>
+            <n-button
+              v-if="webResources.canUpdateConfig"
+              type="primary"
+              @click="submitForm"
+              >{{ getSubmitName }}</n-button
+            >
           </n-space>
         </template>
       </n-drawer-content>
@@ -87,6 +90,7 @@
 <script>
 import { defineComponent } from 'vue';
 import { configApi } from '@/api/config';
+import { useWebResources } from '@/data/resources';
 import { createHistoryColumns } from '@/components/config/ConfigColumns';
 import SubContentFullPage from '@/components/common/SubContentFullPage';
 import DiffComponent from '@/components/config/DiffComponent.vue';
@@ -102,6 +106,7 @@ export default defineComponent({
   },
   setup() {
     let route = useRoute();
+    let webResources = useWebResources();
     let query = route.query;
     let param = {
       group: query.group || '',
@@ -218,9 +223,10 @@ export default defineComponent({
       useDiffFormRef.value = true;
       //doRollback(row.content)
     };
-    let columns = createHistoryColumns(showDetail, rollback);
+    let columns = createHistoryColumns(showDetail, rollback, webResources);
     return {
       columns,
+      webResources,
       data: dataRef,
       pagination: paginationReactive,
       loading: loadingRef,

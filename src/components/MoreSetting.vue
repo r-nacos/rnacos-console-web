@@ -1,5 +1,5 @@
 <template>
-  <div class="wrap">
+  <div v-if="!webResources.isOldConsole" class="wrap">
     <n-dropdown :options="options" @select="handleSelect" size="medium">
       <span class="icon">
         <n-icon size="16" class="dropdown">
@@ -41,6 +41,7 @@ import {
 import { NIcon, useMessage } from 'naive-ui';
 import { userApi } from '@/api/user';
 import ResetPassword from './user/ResetPassword.vue';
+import { useWebResources } from '@/data/resources';
 
 const renderIcon = (icon) => {
   return () => {
@@ -55,6 +56,7 @@ export default defineComponent({
     EllipsisHorizontal
   },
   setup(self) {
+    let webResources = useWebResources();
     window.$message = useMessage();
     const useFormRef = ref(false);
     const resetModel = reactive({
@@ -68,6 +70,7 @@ export default defineComponent({
       resetModel.newPasswordRepeated = null;
     };
     return {
+      webResources,
       options: [
         {
           label: '修改密码',

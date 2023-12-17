@@ -1,6 +1,6 @@
 <template>
   <ul class="wrap">
-    <template v-for="(item, index) in items" :key="index">
+    <template v-for="(item, index) in webResources.sideMenu" :key="index">
       <template v-if="item.children">
         <li class="group-item">
           <span class="icon">
@@ -52,114 +52,7 @@ export default {
   },
   setup() {
     const webResources = useWebResources();
-    return {
-      webResources
-    };
-  },
-  data() {
-    const manageMenu = [
-      {
-        name: '配置管理',
-        icon: markRaw(CubeOutline),
-        children: [
-          {
-            name: '配置列表',
-            path: '/manage/configs'
-          }
-          /*
-          {
-              name:"配置",
-              path:"/manage/config"
-          },
-          */
-        ]
-      },
-      {
-        name: '服务管理',
-        icon: markRaw(ServerOutline),
-        children: [
-          {
-            name: '服务列表',
-            path: '/manage/service'
-          }
-        ]
-      },
-      {
-        name: '系统管理',
-        icon: markRaw(AppsSharp),
-        children: [
-          {
-            name: '用户管理',
-            path: '/manage/user'
-          },
-          {
-            name: '命名空间',
-            path: '/manage/namespace'
-          },
-          {
-            name: '集群信息',
-            path: '/manage/cluster'
-          },
-          {
-            name: '关于',
-            path: '/manage/about'
-          }
-        ]
-      }
-    ];
-    var webResources = this.webResources;
-    var items = [];
-    for (var item of manageMenu) {
-      var subItems = [];
-      for (var subItem of item.children || []) {
-        if (webResources.resource.has(subItem.path)) {
-          subItems.push(subItem);
-        } else if (
-          webResources.isOldConsole &&
-          subItem.path !== '/manage/user'
-        ) {
-          subItems.push(subItem);
-        }
-      }
-      if (subItems.length == 0) {
-        continue;
-      }
-      item.children = subItems;
-      items.push(item);
-    }
-    console.log(items, webResources.resource, webResources.isOldConsole);
-    //var items = manageMenu;
-    return {
-      path: '/',
-      name: 'side nemu',
-      //items: [...manageMenu]
-      items
-    };
-  },
-  methods: {
-    changeRoute(route) {
-      this.path = route.path;
-      /*
-      for(const i in this.items) {
-          var item = this.items[i];
-          if(route.path===item.path){
-              item.select = true;
-          }
-          else{
-              item.select = false;
-              for(const subitem of (item.children || [])) {
-                  if(route.path===item.path){
-                      subitem.select = true;
-                  }
-                  else{
-                      subitem.select = false;
-                  }
-              }
-          }
-      }
-      */
-    },
-    updateWebResources() {
+    let updateWebResources = function () {
       if (!this.webResources.fromRequest) {
         userApi.getUserWebResources().then((res) => {
           if (res.status == 200) {
@@ -169,6 +62,17 @@ export default {
           }
         });
       }
+    };
+    return {
+      path: '/',
+      name: 'side nemu',
+      webResources,
+      updateWebResources
+    };
+  },
+  methods: {
+    changeRoute(route) {
+      this.path = route.path;
     }
   },
   mounted() {},

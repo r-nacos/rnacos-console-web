@@ -14,6 +14,7 @@ import Login from '@/pages/Login.vue';
 import UserListPage from '@/pages/UserListPage.vue';
 import NoPermission from '@/pages/NoPermission.vue';
 import About from '@/pages/About.vue';
+import { ServerOutline, CubeOutline, AppsSharp } from '@vicons/ionicons5';
 
 export const routes = [
   {
@@ -130,6 +131,57 @@ function buildManageMenu(routes) {
 //const manageMenu = buildManageMenu(routes)
 
 export const manageMenu = buildManageMenu(routes);
+
+export const sideAllMenu = [
+  {
+    name: '配置管理',
+    icon: markRaw(CubeOutline),
+    children: [
+      {
+        name: '配置列表',
+        path: '/manage/configs'
+      }
+      /*
+      {
+          name:"配置",
+          path:"/manage/config"
+      },
+      */
+    ]
+  },
+  {
+    name: '服务管理',
+    icon: markRaw(ServerOutline),
+    children: [
+      {
+        name: '服务列表',
+        path: '/manage/service'
+      }
+    ]
+  },
+  {
+    name: '系统管理',
+    icon: markRaw(AppsSharp),
+    children: [
+      {
+        name: '用户管理',
+        path: '/manage/user'
+      },
+      {
+        name: '命名空间',
+        path: '/manage/namespace'
+      },
+      {
+        name: '集群信息',
+        path: '/manage/cluster'
+      },
+      {
+        name: '关于',
+        path: '/manage/about'
+      }
+    ]
+  }
+];
 
 //export default routes ;
 /*

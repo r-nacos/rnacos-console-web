@@ -129,9 +129,9 @@ export const createHistoryColumns = function (detail, rollback, webResources) {
                   </NPopconfirm>
       */
       render(row) {
-        let rollback;
+        let rollbackButton;
         if (webResources.canUpdateConfig) {
-          rollback = (
+          rollbackButton = (
             <NButton
               size="tiny"
               quaternary
@@ -142,7 +142,7 @@ export const createHistoryColumns = function (detail, rollback, webResources) {
             </NButton>
           );
         } else {
-          rollback = <span></span>;
+          rollbackButton = <span></span>;
         }
         return (
           <div>
@@ -154,7 +154,7 @@ export const createHistoryColumns = function (detail, rollback, webResources) {
             >
               详情
             </NButton>
-            {rollback}
+            {rollbackButton}
           </div>
         );
       }

@@ -1,5 +1,26 @@
 import { ISize, WebResource } from '@/types/base';
+import { sideAllMenu } from '@/route/routes';
 import { defineStore } from 'pinia';
+
+function sideMenu(resource: Set<string>, isOldConsole: boolean) {
+  var items = [];
+  for (var item of sideAllMenu) {
+    var subItems = [];
+    for (var subItem of item.children || []) {
+      if (resource.has(subItem.path)) {
+        subItems.push(subItem);
+      } else if (isOldConsole && subItem.path != '/manage/user') {
+        subItems.push(subItem);
+      }
+    }
+    if (subItems.length == 0) {
+      continue;
+    }
+    item.children = subItems;
+    items.push(item);
+  }
+  return items;
+}
 
 export const useWebResources = defineStore('webResources', {
   state: () => ({
@@ -10,12 +31,14 @@ export const useWebResources = defineStore('webResources', {
     version: 'x',
     canUpdateConfig: true,
     canUpdateService: true,
-    canUpdateNamespace: true
+    canUpdateNamespace: true,
+    sideMenu: sideMenu(new Set(), true)
   }),
   getters: {},
   actions: {
     update(webResource: WebResource) {
-      this.resource = new Set(webResource.resources);
+      let resource = new Set(webResource.resources);
+      this.resource = resource;
       this.isOldConsole = webResource.from === 'OLD_CONSOLE';
       this.fromRequest = true;
       this.canUpdateConfig = this.resource.has('CONFIG_UPDATE');
@@ -23,6 +46,8 @@ export const useWebResources = defineStore('webResources', {
       this.canUpdateNamespace = this.resource.has('NAMESPACE_UPDATE');
       this.version = 'v' + webResource.version;
       this.username = webResource.username || '';
+      this.sideMenu = sideMenu(resource, this.isOldConsole);
+      return this.sideMenu;
     },
     clear() {
       this.resource = new Set();

@@ -14,6 +14,7 @@ import { Close } from '@vicons/ionicons5';
 import namespaceApi from '@/api/namespace';
 //import {createColumns} from '../components/namespace/NamespaceColumns'
 //import NamespacePopSelect from '../components/namespace/NamespacePopSelect.vue';
+import { useWebResources } from '@/data/resources';
 import { namespaceStore } from '../data/namespace';
 import { IHandeNamespace, INamespace } from '@/types/namespace';
 import styles from './NamespacePage.module.css';
@@ -25,7 +26,8 @@ declare var window: MyWindow;
 
 export const createColumns = function (
   showUpdate: IHandeNamespace,
-  remove: IHandeNamespace
+  remove: IHandeNamespace,
+  webResources: { canUpdateNamespace: boolean }
 ): IColumn[] {
   const columns = [
     {
@@ -35,42 +37,45 @@ export const createColumns = function (
     {
       title: '命名空间ID',
       key: 'namespaceId'
-    },
-    {
-      title: '操作',
-      key: 'type',
-      fixed: 'right',
-      render(row: INamespace) {
-        if (row.namespaceId === '') {
-          return (
-            <NTag size="small" type="info">
-              保留空间
-            </NTag>
-          );
-        }
-        return (
-          <div>
-            <NButton
-              size="tiny"
-              quaternary
-              type="info"
-              onClick={() => showUpdate(row)}
-            >
-              编辑
-            </NButton>
-            <NButton
-              size="tiny"
-              quaternary
-              type="error"
-              onClick={() => remove(row)}
-            >
-              删除
-            </NButton>
-          </div>
-        );
-      }
     }
   ];
+  let optColumn = {
+    title: '操作',
+    key: 'type',
+    fixed: 'right',
+    render(row: INamespace) {
+      if (row.namespaceId === '') {
+        return (
+          <NTag size="small" type="info">
+            保留空间
+          </NTag>
+        );
+      }
+      return (
+        <div>
+          <NButton
+            size="tiny"
+            quaternary
+            type="info"
+            onClick={() => showUpdate(row)}
+          >
+            编辑
+          </NButton>
+          <NButton
+            size="tiny"
+            quaternary
+            type="error"
+            onClick={() => remove(row)}
+          >
+            删除
+          </NButton>
+        </div>
+      );
+    }
+  };
+  if (webResources.canUpdateNamespace) {
+    columns.push(optColumn);
+  }
   return columns;
 };
 
@@ -110,6 +115,7 @@ export default defineComponent({
     //NamespacePopSelect,
   },
   setup() {
+    let webResources = useWebResources();
     const dataRef = ref([
       {
         namespaceId: '',
@@ -192,10 +198,15 @@ export default defineComponent({
           window.$message.error(err.message);
         });
     };
-    const columns: IColumn[] = createColumns(showUpdate, removeItem);
+    const columns: IColumn[] = createColumns(
+      showUpdate,
+      removeItem,
+      webResources
+    );
     return {
       useForm: useFormRef,
       columns,
+      webResources,
       data: dataRef,
       model: modelRef,
       pagination: {
@@ -277,6 +288,20 @@ export default defineComponent({
     this.loadNamespace();
   },
   render() {
+    let createButton;
+    if (this.webResources.canUpdateNamespace) {
+      createButton = (
+        <NButton
+          onClick={() => {
+            this.showCreate();
+          }}
+        >
+          创建命名空间
+        </NButton>
+      );
+    } else {
+      createButton = <span></span>;
+    }
     return (
       <div id="wrap" class="wrap">
         <div class={styles.ops}>
@@ -284,13 +309,7 @@ export default defineComponent({
             <span>命名空间</span>
           </div>
           <NSpace class={styles.opsButton} size={3}>
-            <NButton
-              onClick={() => {
-                this.showCreate();
-              }}
-            >
-              创建命名空间
-            </NButton>
+            {createButton}
             <NButton
               onClick={() => {
                 this.loadNamespace();

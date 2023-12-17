@@ -21,7 +21,7 @@ export default defineComponent({
   },
   methods: {
     setConfig() {
-      console.log('setConfig', this.group, this.dataId);
+      //console.log('setConfig', this.group, this.dataId);
       let config: IConfig = {
         tenant: this.tenant,
         group: this.group,
@@ -31,7 +31,7 @@ export default defineComponent({
       configApi
         .setConfig(config)
         .then((res) => {
-          console.log('response', res.request.responseText);
+          //console.log('response', res.request.responseText);
           if (res.status == 200) {
             this.content = '';
           }
@@ -41,7 +41,7 @@ export default defineComponent({
         });
     },
     getConfig() {
-      console.log('getConfig', this.group, this.dataId);
+      //console.log('getConfig', this.group, this.dataId);
       let configKey: IConfigKey = {
         tenant: this.tenant,
         group: this.group,
@@ -50,7 +50,7 @@ export default defineComponent({
       configApi
         .getConfig(configKey)
         .then((res) => {
-          console.log('response', res.request.responseText);
+          //console.log('response', res.request.responseText);
           if (res.status == 200) {
             this.content = res.request.responseText;
           }
@@ -70,7 +70,7 @@ export default defineComponent({
               type="text"
               value={this.tenant}
               onChange={(e) => {
-                console.log('tenant change');
+                //console.log('tenant change');
                 this.tenant = (e.target as HTMLInputElement).value;
               }}
             />

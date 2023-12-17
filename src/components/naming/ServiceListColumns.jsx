@@ -4,7 +4,8 @@ export const createColumns = function (
   showInstances,
   detail,
   showUpdate,
-  remove
+  remove,
+  webResources
 ) {
   const removeConfirmSlots = {
     trigger: () => {
@@ -37,6 +38,34 @@ export const createColumns = function (
       title: '操作',
       key: 'type',
       render(row) {
+        let editButton;
+        let removePopconfirm;
+        if (webResources.canUpdateService) {
+          editButton = (
+            <NButton
+              size="tiny"
+              quaternary
+              type="info"
+              onClick={() => showUpdate(row)}
+            >
+              编辑
+            </NButton>
+          );
+          removePopconfirm = (
+            <NPopconfirm
+              onPositiveClick={() => remove(row)}
+              v-slots={removeConfirmSlots}
+            >
+              <span>
+                确认要删服务名称为:{row.name},服务组为:{row.groupName}
+                ,的配置吗？
+              </span>
+            </NPopconfirm>
+          );
+        } else {
+          editButton = <span></span>;
+          removePopconfirm = editButton;
+        }
         return (
           <div>
             <NButton
@@ -55,23 +84,8 @@ export const createColumns = function (
             >
               详情
             </NButton>
-            <NButton
-              size="tiny"
-              quaternary
-              type="info"
-              onClick={() => showUpdate(row)}
-            >
-              编辑
-            </NButton>
-            <NPopconfirm
-              onPositiveClick={() => remove(row)}
-              v-slots={removeConfirmSlots}
-            >
-              <span>
-                确认要删服务名称为:{row.name},服务组为:{row.groupName}
-                ,的配置吗？
-              </span>
-            </NPopconfirm>
+            {editButton}
+            {removePopconfirm}
           </div>
         );
       }

@@ -75,6 +75,7 @@
 import { defineComponent } from 'vue';
 import { namingApi } from '@/api/naming';
 //import { namespaceStore } from "@/data/namespace";
+import { useWebResources } from '@/data/resources';
 import { createColumns } from '@/components/naming/InstanceListColumns';
 import ServiceInstanceDetail from './ServiceInstanceDetail.vue';
 import * as constant from '@/types/constant';
@@ -86,6 +87,7 @@ export default defineComponent({
   },
   setup() {
     let route = useRoute();
+    let webResources = useWebResources();
     let query = route.query;
     let param = {
       serviceName: query.serviceName,
@@ -226,9 +228,10 @@ export default defineComponent({
       }
     };
 
-    let columns = createColumns(showUpdate, onLine, offLine);
+    let columns = createColumns(showUpdate, onLine, offLine, webResources);
     return {
       columns,
+      webResources,
       data: dataRef,
       sourceData: sourceDataRef,
       pagination: paginationReactive,

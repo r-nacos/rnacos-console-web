@@ -33,7 +33,10 @@
             <span class="query-button-item">
               <n-button tertiary @click="queryList">查询</n-button>
             </span>
-            <span class="query-button-item">
+            <span
+              v-if="webResources.canUpdateService"
+              class="query-button-item"
+            >
               <n-button type="info" @click="showCreate">新建</n-button>
             </span>
           </div>
@@ -77,6 +80,7 @@
 import { ref, reactive, defineComponent } from 'vue';
 import { namingApi } from '@/api/naming';
 import { namespaceStore } from '@/data/namespace';
+import { useWebResources } from '@/data/resources';
 import { createColumns } from '@/components/naming/ServiceListColumns.jsx';
 import NamespacePopSelect from '@/components/namespace/NamespacePopSelect.vue';
 import ServiceDetail from './ServiceDetail.vue';
@@ -90,6 +94,7 @@ export default defineComponent({
   },
   setup() {
     let router = useRouter();
+    let webResources = useWebResources();
     const dataRef = ref([]);
     const loadingRef = ref(false);
     const paramRef = ref({
@@ -233,10 +238,12 @@ export default defineComponent({
       showInstances,
       showDetail,
       showUpdate,
-      removeItem
+      removeItem,
+      webResources
     );
     return {
       columns,
+      webResources,
       data: dataRef,
       pagination: paginationReactive,
       loading: loadingRef,

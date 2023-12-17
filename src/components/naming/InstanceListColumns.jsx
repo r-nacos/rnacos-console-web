@@ -11,7 +11,12 @@ let slots ={
 };
 */
 
-export const createColumns = function (showUpdate, onLine, offLine) {
+export const createColumns = function (
+  showUpdate,
+  onLine,
+  offLine,
+  webResources
+) {
   const columns = [
     {
       title: 'IP',
@@ -46,47 +51,50 @@ export const createColumns = function (showUpdate, onLine, offLine) {
       render(row) {
         return <span>{JSON.stringify(row.metadata)}</span>;
       }
-    },
-    {
-      title: '操作',
-      key: '_type',
-      fixed: 'right',
-      render(row) {
-        const onOffLine = () => {
-          // v-slots={slots}
-          return (
-            <NSwitch
-              size="small"
-              default-value={row.enabled}
-              onUpdateValue={(enabled) => {
-                if (enabled == row.enabled) {
-                  //操作中
-                  return;
-                }
-                if (enabled) {
-                  onLine(row);
-                } else {
-                  offLine(row);
-                }
-              }}
-            />
-          );
-        };
-        return (
-          <div>
-            <span style={{ 'padding-right': '5px' }}>{onOffLine()}</span>
-            <NButton
-              size="tiny"
-              type="info"
-              quaternary
-              onClick={() => showUpdate(row)}
-            >
-              编辑
-            </NButton>
-          </div>
-        );
-      }
     }
   ];
+  let optColumn = {
+    title: '操作',
+    key: '_type',
+    fixed: 'right',
+    render(row) {
+      const onOffLine = () => {
+        // v-slots={slots}
+        return (
+          <NSwitch
+            size="small"
+            default-value={row.enabled}
+            onUpdateValue={(enabled) => {
+              if (enabled == row.enabled) {
+                //操作中
+                return;
+              }
+              if (enabled) {
+                onLine(row);
+              } else {
+                offLine(row);
+              }
+            }}
+          />
+        );
+      };
+      return (
+        <div>
+          <span style={{ 'padding-right': '5px' }}>{onOffLine()}</span>
+          <NButton
+            size="tiny"
+            type="info"
+            quaternary
+            onClick={() => showUpdate(row)}
+          >
+            编辑
+          </NButton>
+        </div>
+      );
+    }
+  };
+  if (webResources.canUpdateService) {
+    columns.push(optColumn);
+  }
   return columns;
 };

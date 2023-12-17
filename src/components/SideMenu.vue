@@ -99,6 +99,10 @@ export default {
           {
             name: '集群信息',
             path: '/manage/cluster'
+          },
+          {
+            name: '关于',
+            path: '/manage/about'
           }
         ]
       }

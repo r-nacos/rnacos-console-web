@@ -6,6 +6,8 @@ export const useWebResources = defineStore('webResources', {
     resource: new Set(),
     isOldConsole: true,
     fromRequest: false,
+    username: '',
+    version: 'x',
     canUpdateConfig: true,
     canUpdateService: true,
     canUpdateNamespace: true
@@ -19,6 +21,8 @@ export const useWebResources = defineStore('webResources', {
       this.canUpdateConfig = this.resource.has('CONFIG_UPDATE');
       this.canUpdateService = this.resource.has('SERVICE_UPDATE');
       this.canUpdateNamespace = this.resource.has('NAMESPACE_UPDATE');
+      this.version = 'v' + webResource.version;
+      this.username = webResource.username || '';
     },
     clear() {
       this.resource = new Set();
@@ -27,6 +31,8 @@ export const useWebResources = defineStore('webResources', {
       this.canUpdateConfig = true;
       this.canUpdateService = true;
       this.canUpdateNamespace = true;
+      this.username = '';
+      this.version = 'x';
     }
   }
 });

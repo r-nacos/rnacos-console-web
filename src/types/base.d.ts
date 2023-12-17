@@ -49,5 +49,7 @@ export interface IPageResult<T> {
 
 export interface WebResource {
   from: string;
+  version: string;
+  username: ?string;
   resources: Array<string>;
 }

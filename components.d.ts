@@ -9,12 +9,11 @@ declare module 'vue' {
   export interface GlobalComponents {
     DiffComponent: typeof import('./src/components/config/DiffComponent.vue')['default']
     Foo: typeof import('./src/components/Foo.vue')['default']
-    LoginFrom: typeof import('./src/components/user/LoginFrom.vue')['default']
     MainLayout: typeof import('./src/components/layout/MainLayout.vue')['default']
     MoreSetting: typeof import('./src/components/MoreSetting.vue')['default']
-    MoveSetting: typeof import('./src/components/MoreSetting.vue')['default']
     NamespacePopSelect: typeof import('./src/components/namespace/NamespacePopSelect.vue')['default']
     NButton: typeof import('naive-ui')['NButton']
+    NCard: typeof import('naive-ui')['NCard']
     NConfigProvider: typeof import('naive-ui')['NConfigProvider']
     NDataTable: typeof import('naive-ui')['NDataTable']
     NDrawer: typeof import('naive-ui')['NDrawer']

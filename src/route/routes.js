@@ -12,11 +12,13 @@ import Tmp from '@/pages/Tmp.vue';
 import DiffDemo from '@/pages/DiffDemo.vue';
 import Login from '@/pages/Login.vue';
 import UserListPage from '@/pages/UserListPage.vue';
+import NoPermission from '@/pages/NoPermission.vue';
+import About from '@/pages/About.vue';
 
 export const routes = [
   {
     path: '/',
-    redirect: '/manage/configs'
+    redirect: '/manage/about'
     /*
         name: 'index',
         meta: {'title':'index title'},
@@ -28,6 +30,12 @@ export const routes = [
     name: 'not found',
     meta: { title: '404' },
     component: NotFound
+  },
+  {
+    path: '/nopermission',
+    name: 'no permission',
+    meta: { title: 'no permission' },
+    component: NoPermission
   },
   {
     path: '/p/login',
@@ -96,6 +104,12 @@ export const routes = [
         name: 'cluster',
         meta: { title: '集群信息' },
         component: ClusterPageVue
+      },
+      {
+        path: '/manage/about',
+        name: 'about',
+        meta: { title: '关于' },
+        component: About
       }
     ]
   }

@@ -16,8 +16,9 @@ function sideMenu(resource: Set<string>, isOldConsole: boolean) {
     if (subItems.length == 0) {
       continue;
     }
-    item.children = subItems;
-    items.push(item);
+    let newItem = { ...item };
+    newItem.children = subItems;
+    items.push(newItem);
   }
   return items;
 }

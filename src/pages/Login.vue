@@ -133,6 +133,7 @@ export default defineComponent({
               });
               return;
             } else {
+              gen_captcha();
               //console.log(res.data);
               if (res.data.code === 'SYSTEM_ERROR') {
                 window.$message.error('登录失败，用户名或密码错误!');
@@ -143,10 +144,12 @@ export default defineComponent({
               }
             }
           } else {
+            gen_captcha();
             window.$message.error('请求失败，response code' + res.status);
           }
         })
         .catch((err) => {
+          gen_captcha();
           window.$message.error('请求失败,' + err.message);
         });
     };

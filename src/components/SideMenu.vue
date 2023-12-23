@@ -63,17 +63,17 @@ export default {
         });
       }
     };
+    let pathRef = ref('/');
+    let changeRoute = function (route) {
+      pathRef.value = route.path;
+    };
     return {
-      path: '/',
+      path: pathRef,
       name: 'side nemu',
       webResources,
+      changeRoute,
       updateWebResources
     };
-  },
-  methods: {
-    changeRoute(route) {
-      this.path = route.path;
-    }
   },
   mounted() {},
   watch: {

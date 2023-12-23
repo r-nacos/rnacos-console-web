@@ -3,8 +3,9 @@
     <div class="content">
       <n-space vertical>
         <n-card title="系统简介" size="medium">
-          <p>r-nacos是一个用rust实现的nacos服务。</p>
-          <p>r-nacos是一个轻量、快速、稳定、高性能的注册中心、配置中心服务。</p>
+          <p>r-nacos是一个用rust实现的nacos服务。完全兼容nacos sdk协议。</p>
+          <p>它相对来说有轻量、快速、稳定、高性能等特点。</p>
+          <p>使用过程有什么问题可以到 github提issue。</p>
           <p>
             <a href="https://github.com/heqingpan/rnacos">r-nacos github</a>
             <br />

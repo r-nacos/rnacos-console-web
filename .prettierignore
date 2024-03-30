@@ -1,0 +1,24 @@
+.nuxt
+.local
+.output.js
+/node_modules/**
+
+**/*.svg
+**/*.sh
+.gitignore
+README.md
+
+ /public/
+/public/*
+/src/assets/font-awesome-4.7.0
+/dist/*
+.cz-config.js
+tsconfig.json
+.prettierignore
+package.json
+package-lock.json
+yarn-error.log
+yarn.lock
+vuepress.config.ts
+.catch
+docs

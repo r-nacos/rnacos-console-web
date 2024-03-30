@@ -1,0 +1,7 @@
+.vsoce/*
+node_modules/*
+types/*
+temp/*
+public/*
+docs/*.md
+.editorconfig

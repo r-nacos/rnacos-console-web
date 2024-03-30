@@ -1,0 +1,8 @@
+{
+  "include": ["proxy.ts", "components.d.ts", "vite.config.*", "vitest.config.*", "cypress.config.*", "playwright.config.*"],
+  "exclude": [],
+  "compilerOptions": {
+    "composite": true,
+    "types": ["node"]
+  }
+}

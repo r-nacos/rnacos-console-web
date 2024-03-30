@@ -1,6 +1,6 @@
 <template>
   <n-select
-    class="popselect"
+    class="on-select"
     v-model:value="value.namespaceId"
     :options="optionList"
     size="medium"
@@ -13,49 +13,32 @@
   </n-select>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
-
-import { namespaceStore } from '../../data/namespace';
-
-export default defineComponent({
-  emits: ['change'],
-  setup() {},
-  data() {
-    /*
-        var obj={
-            namespaceId:namespaceStore.current.namespaceId,
-            namespaceName:namespaceStore.current.namespaceName,
-        };
-        */
-    return {
-      value: namespaceStore.current,
-      optionList: namespaceStore.optionList
-    };
-  },
-  methods: {
-    update(v: string) {
-      for (var item of this.optionList) {
-        if (item.value === v) {
-          let obj = {
-            namespaceId: item.value,
-            namespaceName: item.label
-          };
-          this.value = obj;
-          namespaceStore.setCurrent(obj);
-          this.$emit('change');
-        }
+<script lang="ts" setup>
+import { namespaceStore } from '@/data/namespace'
+let value = namespaceStore.current as any
+let optionList = namespaceStore.optionList as any
+const emits = defineEmits(['change'])
+const update = (v: string) => {
+  for (let item of optionList) {
+    if (item.value === v) {
+      let obj = {
+        namespaceId: item.value,
+        namespaceName: item.label,
       }
+      value = obj
+      namespaceStore.setCurrent(obj)
+      emits('change')
     }
-  },
-  created() {
-    namespaceStore.initLoad();
   }
-});
+}
+
+onMounted(() => {
+  namespaceStore.initLoad()
+})
 </script>
 
 <style scoped>
-.popselect {
+.on-select {
   width: 200px;
 }
 </style>

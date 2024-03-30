@@ -1,61 +1,61 @@
-import { Ref, UnwrapRef, reactive, ref } from 'vue';
-import namespaceApi from '../api/namespace';
-import { INamespace, INamespaceStore } from '@/types/namespace';
-import { ILabelItem } from '@/types/base';
+import namespaceApi from '@/apis/namespace'
+import type { INamespace, INamespaceStore } from '@/types/namespace'
+import type { ILabelItem } from '@/types/base'
+import type { UnwrapRef } from 'vue'
 
 // 前期没有使用 pinia,后继调整时考虑迁移到pinia
 
 function createStore(): INamespaceStore {
   const currentRef: Ref<UnwrapRef<INamespace>> = ref({
     namespaceId: '',
-    namespaceName: 'public'
-  });
+    namespaceName: 'public',
+  })
   const listListRef: Ref<UnwrapRef<Array<INamespace>>> = ref([
     {
       namespaceId: '',
-      namespaceName: 'public'
-    }
-  ]);
+      namespaceName: 'public',
+    },
+  ])
   const optionListRef: Ref<UnwrapRef<Array<ILabelItem>>> = ref([
     {
       label: 'public',
-      value: ''
-    }
-  ]);
-  const loadRef = ref(false);
+      value: '',
+    },
+  ])
+  const loadRef = ref(false)
   const setCurrent = function (current: INamespace) {
-    currentRef.value = current;
-  };
+    currentRef.value = current
+  }
   const setLastList = function (list: Array<INamespace>) {
-    var optionList = [];
-    for (var item of list) {
-      var obj = {
+    const optionList = []
+    for (const item of list) {
+      const obj = {
         label: item.namespaceName,
-        value: item.namespaceId
-      } as ILabelItem;
-      optionList.push(obj);
+        value: item.namespaceId,
+      } as ILabelItem
+      optionList.push(obj)
     }
-    listListRef.value = list;
-    optionListRef.value = optionList;
-    loadRef.value = true;
-  };
+    listListRef.value = list
+    optionListRef.value = optionList
+    loadRef.value = true
+  }
   const initLoad = function () {
     if (!loadRef.value) {
-      namespaceApi.queryList().then((res) => {
+      namespaceApi.queryList().then((res: any) => {
         if (res.status == 200 && res.data.data.length > 0) {
-          setLastList(res.data.data);
+          setLastList(res.data.data)
         }
-      });
+      })
     }
-  };
+  }
   return {
     current: currentRef,
     listList: listListRef,
     optionList: optionListRef,
     setCurrent,
     setLastList,
-    initLoad
-  };
+    initLoad,
+  }
 }
 
-export const namespaceStore: INamespaceStore = createStore();
+export const namespaceStore: INamespaceStore = createStore()

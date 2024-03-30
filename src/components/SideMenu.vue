@@ -1,25 +1,30 @@
 <template>
   <ul class="wrap">
-    <template v-for="(item, index) in webResources.sideMenu" :key="index">
+    <template
+      v-for="(item, index) in webResources.sideMenu"
+      :key="index"
+    >
       <template v-if="item.children">
         <li class="group-item">
           <span class="icon">
-            <n-icon size="16" color="#2f6cf7" :component="item.icon" />
+            <n-icon
+              size="16"
+              color="#2f6cf7"
+              :component="item.icon"
+            />
           </span>
           <span>{{ item.name }}</span>
-          <!--
-                    <n-icon size="20">
-                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1024 1024"><path d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2L227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z" fill="currentColor"></path></svg>
-                    </n-icon>
-                    -->
         </li>
         <li
           class="item"
-          :class="{ select: this.path === subitem.path }"
+          :class="{ select: path === subitem.path }"
           v-for="(subitem, subindex) in item.children || []"
           :key="index + subindex"
         >
-          <router-link class="link" :to="{ path: subitem.path }">
+          <router-link
+            class="link"
+            :to="{ path: subitem.path }"
+          >
             {{ subitem.name }}
           </router-link>
         </li>
@@ -28,9 +33,12 @@
       <li
         v-else
         class="group-item"
-        :class="{ select: this.path === item.path }"
+        :class="{ select: path === item.path }"
       >
-        <router-link class="link" :to="{ path: item.path }">
+        <router-link
+          class="link"
+          :to="{ path: path }"
+        >
           {{ item.name }}
         </router-link>
       </li>
@@ -38,57 +46,46 @@
   </ul>
 </template>
 
-<script>
-//import {manageMenu} from '@/route/routes.js'
-import { useWebResources } from '@/data/resources';
-import { ServerOutline, CubeOutline, AppsSharp } from '@vicons/ionicons5';
-import { userApi } from '@/api/user';
+<script setup lang="ts">
+import { useWebResources } from '@/data/resources'
+import { ServerOutline, CubeOutline, AppsSharp } from '@vicons/ionicons5'
+import { userApi } from '@/apis/user'
+const route = useRoute()
+const webResources = useWebResources()
 
-export default {
-  components: {
-    ServerOutline,
-    CubeOutline,
-    AppsSharp
-  },
-  setup() {
-    const webResources = useWebResources();
-    let updateWebResources = function () {
-      if (!this.webResources.fromRequest) {
-        userApi.getUserWebResources().then((res) => {
-          if (res.status == 200) {
-            if (res.data.success) {
-              this.webResources.update(res.data.data);
-            }
-          }
-        });
+let updateWebResources = function () {
+  if (!webResources.fromRequest) {
+    userApi.getUserWebResources().then(res => {
+      if (res.status == 200) {
+        if (res.data.success) {
+          webResources.update(res?.data?.data as any)
+        }
       }
-    };
-    let pathRef = ref('/');
-    let changeRoute = function (route) {
-      pathRef.value = route.path;
-    };
-    return {
-      path: pathRef,
-      name: 'side nemu',
-      webResources,
-      changeRoute,
-      updateWebResources
-    };
-  },
-  mounted() {},
-  watch: {
-    $route(newRoute, old) {
-      this.changeRoute(newRoute);
-    }
-  },
-  created() {
-    this.updateWebResources();
-    this.changeRoute(this.$route);
+    })
   }
-};
+}
+let path = ref(route.path)
+
+let changeRoute = function (route: any) {
+  path.value = route.path
+}
+
+watch(
+  () => route,
+  (nv, ov) => {
+    changeRoute(nv)
+  },
+  {
+    deep: true,
+  },
+)
+
+onBeforeMount(() => {
+  updateWebResources()
+})
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .wrap {
   background: #ffffff;
   padding: 15px 8px;
@@ -104,10 +101,6 @@ export default {
   display: flex;
   gap: 2px;
   align-items: center;
-  /*
-        border-width: 0 0 1px 0;
-        cursor: pointer;
-        */
 }
 
 .group-item .icon {

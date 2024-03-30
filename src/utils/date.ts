@@ -7,7 +7,7 @@ function fnum(v: number): string {
 
 export const toDatetime = function (date: Date): string {
   var y = date.getFullYear(),
-    M = date.getMonth()+1,
+    M = date.getMonth() + 1,
     d = date.getDate(),
     h = date.getHours(),
     m = date.getMinutes(),

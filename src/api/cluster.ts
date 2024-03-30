@@ -8,7 +8,7 @@ class ClusterApi {
   queryNodeList(): Promise<AxiosResponse<IConsoleResult<Array<IClusterNode>>>> {
     return axios.request({
       method: 'get',
-      url: '/nacos/v1/console/cluster/cluster_node_list'
+      url: '/rnacos/api/console/cluster/cluster_node_list'
     });
   }
 }

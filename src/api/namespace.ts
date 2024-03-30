@@ -7,13 +7,13 @@ class NamespaceApi {
   queryList(): Promise<AxiosResponse> {
     return axios.request({
       method: 'get',
-      url: '/nacos/v1/console/namespaces'
+      url: '/rnacos/api/console/namespaces'
     });
   }
   add(namespace: INamespace): Promise<AxiosResponse> {
     return axios.request({
       method: 'post',
-      url: '/nacos/v1/console/namespaces',
+      url: '/rnacos/api/console/namespaces',
       data: {
         ...namespace
       }
@@ -22,7 +22,7 @@ class NamespaceApi {
   update(namespace: INamespace): Promise<AxiosResponse> {
     return axios.request({
       method: 'put',
-      url: '/nacos/v1/console/namespaces',
+      url: '/rnacos/api/console/namespaces',
       data: {
         ...namespace
       }
@@ -31,7 +31,7 @@ class NamespaceApi {
   delete(namespace: INamespace): Promise<AxiosResponse> {
     return axios.request({
       method: 'delete',
-      url: '/nacos/v1/console/namespaces',
+      url: '/rnacos/api/console/namespaces',
       data: {
         namespaceId: namespace.namespaceId
       }

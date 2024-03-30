@@ -34,35 +34,35 @@ class NamingApi {
   ): Promise<AxiosResponse<IServiceQueryPageResult<IServiceQueryItem>>> {
     return axios.request({
       method: 'get',
-      url: '/nacos/v1/ns/catalog/services',
+      url: '/rnacos/api/console/ns/services',
       params: param
     });
   }
   createService(info: IServiceInfo): Promise<AxiosResponse> {
     return axios.request({
       method: 'post',
-      url: '/nacos/v1/ns/service',
+      url: '/rnacos/api/console/ns/service',
       data: info
     });
   }
   updateService(info: IServiceInfo): Promise<AxiosResponse> {
     return axios.request({
       method: 'put',
-      url: '/nacos/v1/ns/service',
+      url: '/rnacos/api/console/ns/service',
       data: info
     });
   }
   removeService(key: IServiceKey): Promise<AxiosResponse> {
     return axios.request({
       method: 'delete',
-      url: '/nacos/v1/ns/service',
+      url: '/rnacos/api/console/ns/service',
       data: key
     });
   }
   queryServiceInstances(key: IServiceKey): Promise<AxiosResponse> {
     return axios.request({
       method: 'get',
-      url: '/nacos/v1/console/instances',
+      url: '/rnacos/api/console/instances',
       params: key
     });
   }
@@ -70,7 +70,7 @@ class NamingApi {
   updateInstance(instance: IServiceInstance): Promise<AxiosResponse> {
     return axios.request({
       method: 'put',
-      url: '/nacos/v1/ns/instance',
+      url: '/rnacos/api/console/ns/instance',
       data: instance
     });
   }

@@ -44,20 +44,20 @@ class UserApi {
   login(info: ILoginParam): Promise<AxiosResponse<IApiResult<boolean>>> {
     return axios.request({
       method: 'post',
-      url: '/nacos/v1/console/login/login',
+      url: '/rnacos/api/console/login/login',
       data: info
     });
   }
   genCaptcha(): Promise<AxiosResponse<IApiResult<string>>> {
     return axios.request({
       method: 'get',
-      url: '/nacos/v1/console/login/captcha'
+      url: '/rnacos/api/console/login/captcha'
     });
   }
   logout(): Promise<AxiosResponse<IApiResult<boolean>>> {
     return axios.request({
       method: 'post',
-      url: '/nacos/v1/console/login/logout'
+      url: '/rnacos/api/console/login/logout'
     });
   }
   resetPassword(
@@ -65,7 +65,7 @@ class UserApi {
   ): Promise<AxiosResponse<IApiResult<boolean>>> {
     return axios.request({
       method: 'post',
-      url: '/nacos/v1/console/user/reset_password',
+      url: '/rnacos/api/console/user/reset_password',
       data: info
     });
   }
@@ -74,7 +74,7 @@ class UserApi {
   ): Promise<AxiosResponse<IApiResult<IPageResult<IUserInfo>>>> {
     return axios.request({
       method: 'get',
-      url: '/nacos/v1/console/user/list',
+      url: '/rnacos/api/console/user/list',
       params: {
         ...param
       }
@@ -83,14 +83,14 @@ class UserApi {
   getUserWebResources(): Promise<AxiosResponse<IApiResult<WebResource>>> {
     return axios.request({
       method: 'get',
-      url: '/nacos/v1/console/user/web_resources',
+      url: '/rnacos/api/console/user/web_resources',
       params: {}
     });
   }
   addUser(info: IUpdateUserParam): Promise<AxiosResponse<IApiResult<boolean>>> {
     return axios.request({
       method: 'post',
-      url: '/nacos/v1/console/user/add',
+      url: '/rnacos/api/console/user/add',
       data: info
     });
   }
@@ -99,7 +99,7 @@ class UserApi {
   ): Promise<AxiosResponse<IApiResult<boolean>>> {
     return axios.request({
       method: 'post',
-      url: '/nacos/v1/console/user/update',
+      url: '/rnacos/api/console/user/update',
       data: info
     });
   }
@@ -108,7 +108,7 @@ class UserApi {
   ): Promise<AxiosResponse<IApiResult<boolean>>> {
     return axios.request({
       method: 'post',
-      url: '/nacos/v1/console/user/remove',
+      url: '/rnacos/api/console/user/remove',
       data: info
     });
   }

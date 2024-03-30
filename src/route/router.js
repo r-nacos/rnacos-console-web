@@ -15,12 +15,12 @@ const setRouteTitle = function (route) {
 };
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory("/rnacos"),
   routes
 });
 
 router.afterEach((to, from) => {
-  if (to.name === undefined && to.fullPath !== '/404') {
+  if (to.name === undefined && to.fullPath !== '/rnacos/404' && to.fullPath !== '/404' ) {
     router.replace('/404?path=' + encodeURIComponent(to.fullPath));
   } else {
     setRouteTitle(to);

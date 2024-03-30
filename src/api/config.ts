@@ -37,7 +37,7 @@ class ConfigApi {
   setConfig(config: IConfig): Promise<AxiosResponse> {
     return axios.request({
       method: 'post',
-      url: '/nacos/v1/cs/configs',
+      url: '/rnacos/api/console/cs/configs',
       data: {
         ...config
       }
@@ -47,7 +47,7 @@ class ConfigApi {
   getConfig(configKey: IConfigKey): Promise<AxiosResponse> {
     return axios.request({
       method: 'get',
-      url: '/nacos/v1/cs/configs',
+      url: '/rnacos/api/console/cs/configs',
       params: {
         ...configKey
       }
@@ -57,7 +57,7 @@ class ConfigApi {
   removeConfig(configKey: IConfigKey): Promise<AxiosResponse> {
     return axios.request({
       method: 'delete',
-      url: '/nacos/v1/cs/configs',
+      url: '/rnacos/api/console/cs/configs',
       data: {
         ...configKey
       }
@@ -67,7 +67,7 @@ class ConfigApi {
   queryConfigPage(queryParam: IConfigQueryParam): Promise<AxiosResponse> {
     return axios.request({
       method: 'get',
-      url: '/nacos/v1/console/configs',
+      url: '/rnacos/api/console/configs',
       params: {
         ...queryParam
       }
@@ -79,7 +79,7 @@ class ConfigApi {
   ): Promise<AxiosResponse> {
     return axios.request({
       method: 'get',
-      url: '/nacos/v1/console/config/history',
+      url: '/rnacos/api/console/config/history',
       params: {
         ...queryParam
       }

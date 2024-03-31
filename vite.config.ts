@@ -100,7 +100,7 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
       target: 'esnext',
       sourcemap: !isProd,
       reportCompressedSize: false,
-      chunkSizeWarningLimit: 700,
+      chunkSizeWarningLimit: 500,
       minify: 'terser',
       terserOptions: {
         compress: {

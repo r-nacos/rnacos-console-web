@@ -10,7 +10,7 @@
         list: apis.userList,
       },
       param: {
-        like_username: '',
+        likeUsername: '',
         pageNo: 1,
         pageSize: 10,
         isRev: false,
@@ -28,10 +28,10 @@
         >
           <n-form-item
             label="用户名"
-            path="param.like_username"
+            path="param.likeUsername"
           >
             <n-input
-              v-model:value="param.like_username"
+              v-model:value="param.likeUsername"
               placeholder="输入用户名"
               clearable
             />

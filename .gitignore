@@ -3,6 +3,8 @@ node_modules
 dist
 dist-ssr
 coverage
+docs/.vuepress/.cache
+docs/.vuepress/.temp
 
 # .vscode/*
 !.vscode/extensions.json

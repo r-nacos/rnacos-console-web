@@ -150,18 +150,23 @@ const closeDrawer = () => {
 const loadData = async () => {
   let url = `${props.config.apis?.list}`
   if (url) {
-    let resp = (await apis.getJSON(url, {
+    let resp = await apis.getJSON(url, {
       params: state.param,
-    })) as any
+    })
+    console.log(resp.data, 'response')
+    // if (data.code === 200) {
     // 兼容处理
-    if (Array.isArray(resp.data)) {
-      state.tableData = resp.data || []
+    if (Array.isArray(resp.data.data)) {
+      state.tableData = resp.data?.data || []
     } else {
-      console.log(resp.data, 'resp')
       if (Array.isArray(resp.data.list)) {
         state.tableData = resp.data.list || []
+        return
+      } else if (Array.isArray(resp.data.data.list)) {
+        state.tableData = resp.data.data.list || []
       }
     }
+    // }
   } else {
     state.tableData = (props.data || []) as any
   }

@@ -43,6 +43,7 @@ instance.interceptors.response.use((response: AxiosResponse) => {
     url += '?redirect_url=' + encodeURIComponent(location.pathname + location.search)
     location.href = url
   }
+  return response
 })
 
 export enum HttpMethod {

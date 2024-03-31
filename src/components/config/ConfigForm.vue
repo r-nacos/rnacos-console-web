@@ -4,11 +4,16 @@
       v-model:show="showModal"
       class="custom-card"
       preset="card"
-      :style="bodyStyle"
+      :style="{
+        width: '1000px',
+      }"
       title="添加配置"
       size="huge"
       :bordered="false"
-      :segmented="segmented"
+      :segmented="{
+        content: 'soft',
+        footer: 'soft',
+      }"
       @close="onClose"
     >
       <n-form
@@ -52,10 +57,28 @@
         </n-form-item>
         <n-form-item
           path="content"
+          label="配置格式"
+        >
+          <n-radio
+            v-for="i in list"
+            :key="i"
+            :checked="checkedValue === i"
+            :value="i"
+            :name="i"
+            @change="handleChange"
+          >
+            {{ i }}
+          </n-radio>
+        </n-form-item>
+        <n-form-item
+          path="content"
           label="配置内容"
         >
-        {{ formDataRef.content }}
-          <Editor v-model="formDataRef.content"/>
+          <Editor
+            v-if="showEditor"
+            v-model="formDataRef.content"
+            :language-type="checkedValue"
+          />
           <!-- <n-input
             :disabled="isReadonly"
             type="textarea"
@@ -90,6 +113,7 @@ import { namespaceStore } from '@/data/namespace'
 import { configApi } from '@/apis/config'
 import { useMessage } from 'naive-ui'
 import Editor from './Editor.vue'
+import apis from '@/apis'
 const emits = defineEmits(['closeModal', 'refreshData'])
 const message = useMessage()
 let props = defineProps({
@@ -103,27 +127,35 @@ let props = defineProps({
   },
 })
 const formDataRef = ref<any>(props.formData)
-formDataRef.value.content = `{
-   root: true,
-   extends: [
-    "plugin:vue/vue3-essential",
-    "eslint:recommended",
-    "@vue/eslint-config-typescript",
-    "@vue/eslint-config-prettier",
-    "vue-global-api"
-   ],
-   parserOptions: {
-    ecmaVersion: "latest",
-   },
-   rules: {
-    "no-console": process.env.NODE_ENV === "production" ? "warn" : "off",
-    "no-debugger": process.env.NODE_ENV === "production" ? "warn" : "off",
-    endOfLine: "auto",
-    "prettier/prettier": ["error", { "endOfLine": "auto" }]
+const showEditor = ref(true)
 
-   },
-  }`
+// 配置文件类型
+const list = ['TEXT', 'JSON', 'XML', 'YAML', 'HTML', 'Properties']
+const checkedValue = ref<string | null>('TEXT')
+
+onMounted(async () => {
+  // formData
+  if (formDataRef.value.mode === constant.FORM_MODE_UPDATE) {
+    showEditor.value = false
+    let resp = await apis.getJSON(apis.getConfig, {
+      params: {
+        tenant: formDataRef.value.tenant,
+        group: formDataRef.value.group,
+        dataId: formDataRef.value.dataId,
+      },
+    })
+    formDataRef.value.content = `${resp.data || ''}`
+    showEditor.value = true
+  }
+})
+
+const handleChange = (e: Event) => {
+  checkedValue.value = (e.target as HTMLInputElement).value
+}
+
 const isReadonly = props.formData.mode === constant.FORM_MODE_DETAIL
+
+// 表单校验规则
 const rules = {
   group: [
     {
@@ -150,15 +182,11 @@ const rules = {
     },
   ],
 }
-const showModal = computed(() => props.visible)
-const bodyStyle = {
-  width: '1000px',
-}
-const segmented = {
-  content: 'soft',
-  footer: 'soft',
-} as const
 
+// 显示模态框
+const showModal = computed(() => props.visible)
+
+// 提交表单
 const submitDiffForm = () => {
   let config = {
     dataId: formDataRef.value.dataId,
@@ -181,6 +209,7 @@ const submitDiffForm = () => {
     })
 }
 
+// 关闭弹框
 const onClose = () => {
   emits('closeModal')
 }

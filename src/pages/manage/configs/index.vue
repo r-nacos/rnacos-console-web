@@ -53,6 +53,7 @@
         <n-button
           class="mg-r10"
           @click="createHandle"
+          type="info"
         >
           新建
         </n-button>
@@ -60,10 +61,15 @@
           ref="downloadRef"
           @click="download"
         >
-          <n-button class="mg-r10">下载</n-button>
+          <n-button
+            type="info"
+            class="mg-r10"
+          >
+            下载
+          </n-button>
         </a>
         <n-upload
-          action="/nacos/v1/console/config/import"
+          :action="apis.configImport"
           :headers="uploadHeader"
           :show-file-list="false"
           @before-upload="doBeforeUpload"
@@ -75,6 +81,7 @@
     </template>
   </PageContainer>
   <ConfigForm
+    v-if="visible"
     :formData="modelRef"
     :visible="visible"
     @close-modal="visible = false"
@@ -138,9 +145,39 @@ const param = {
   pageSize: paginationReactive.pageSize,
 }
 
+/**
+ * 创建配置
+ */
 const createHandle = () => {
-  modelRef.value.mode = constant.FORM_MODE_CREATE
+  modelRef.value = {
+    dataId: '',
+    group: 'DEFAULT_GROUP',
+    md5: '',
+    showMd5: true,
+    content: '',
+    sourceContent: '',
+    mode: constant.FORM_MODE_CREATE,
+  }
   visible.value = true
+}
+
+/**
+ * 修改
+ *
+ * @param row 行数据
+ */
+const updateItem = (row: any) => {
+  modelRef.value = {
+    dataId: row.dataId || '',
+    group: row.group || 'DEFAULT_GROUP',
+    md5: row.md5 || '',
+    showMd5: row.showMd5 || true,
+    content: row.content || '',
+    sourceContent: row.sourceContent || '',
+    mode: constant.FORM_MODE_UPDATE,
+  }
+  visible.value = true
+  // doShowConfigDetail(row, constant.FORM_MODE_UPDATE)
 }
 
 const doBeforeUpload = () => {
@@ -214,15 +251,6 @@ const doShowConfigDetail = (row: any, mode: any) => {
 }
 
 /**
- * 修改
- *
- * @param row 行数据
- */
-const updateItem = (row: any) => {
-  doShowConfigDetail(row, constant.FORM_MODE_UPDATE)
-}
-
-/**
  *
  * @param row 详情数据
  */
@@ -283,6 +311,7 @@ const removeConfirmSlots = {
     )
   },
 }
+
 const columns = [
   {
     title: '配置ID',
@@ -345,6 +374,7 @@ const columns = [
     },
   },
 ]
+
 const rowKey = (rowData: any) => {
   return rowData.group + '@@' + rowData.dataId
 }
@@ -357,10 +387,6 @@ const handlerUploadFinish = ({ event }: any) => {
     message.error('上传处理失败')
   }
 }
-
-onMounted(() => {
-  // doHandlePageChange(1)
-})
 
 const download = () => {
   paramRef.value.tenant = namespaceStore.current.value.namespaceId

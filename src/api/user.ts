@@ -15,7 +15,7 @@ export interface IResetPasswordParam {
 }
 
 export interface IUserPageParam {
-  like_username?: string;
+  likeUsername?: string;
   pageNo: Number;
   pageSize: Number;
   isRev: boolean;

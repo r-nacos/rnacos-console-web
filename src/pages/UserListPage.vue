@@ -163,7 +163,7 @@ export default defineComponent({
 
     const doQueryList = () => {
       return userApi.getUserList({
-        like_username: paramRef.value.username,
+        likeUsername: paramRef.value.username,
         pageNo: paginationReactive.page,
         pageSize: paginationReactive.pageSize
       });

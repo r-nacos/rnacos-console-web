@@ -43,7 +43,7 @@
             </span>
             <span v-if="webResources.canUpdateConfig" class="query-button-item">
               <n-upload
-                action="/nacos/v1/console/config/import"
+                action="/rnacos/api/console/config/import"
                 :headers="uploadHeader"
                 :show-file-list="false"
                 @before-upload="doBeforeUpload"
@@ -367,7 +367,7 @@ export default defineComponent({
     download() {
       this.param.tenant = namespaceStore.current.value.namespaceId;
       var params = qs.stringify(this.param);
-      var url = '/nacos/v1/console/config/download?' + params;
+      var url = '/rnacos/api/console/config/download?' + params;
       this.$refs.download.setAttribute('href', url);
       return true;
     }

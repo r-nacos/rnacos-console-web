@@ -42,6 +42,7 @@ import { NIcon, useMessage } from 'naive-ui';
 import { userApi } from '@/api/user';
 import ResetPassword from './user/ResetPassword.vue';
 import { useWebResources } from '@/data/resources';
+import router from '@/route/router.js';
 
 const renderIcon = (icon) => {
   return () => {
@@ -90,7 +91,7 @@ export default defineComponent({
             if (res.status == 200) {
               window.$message.info('退出登录成功');
               setTimeout(() => {
-                location.href = '/p/login';
+                router.push('/p/login');
               }, 500);
             }
           });

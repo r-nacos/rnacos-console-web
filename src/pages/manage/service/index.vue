@@ -6,6 +6,9 @@
       form: {
         title: '服务',
       },
+      apis: {
+        list: apis.services,
+      },
     }"
     :data="tableData"
     @on-save="onSave"
@@ -41,8 +44,8 @@
       <div>
         <n-button
           tertiary
-          @click="doHandlePageChange(1, param)"
           class="mg-r10"
+          @click="methods.onSearch()"
         >
           查询
         </n-button>
@@ -130,10 +133,8 @@
   </PageContainer>
 </template>
 <script lang="tsx" setup title="服务列表" layout="nav">
-import { getRoleNameByCode, roleOptions } from '@/data/role'
-import { userApi } from '@/apis/user'
-import { useMessage, type FormInst, NButton, NPopconfirm, NTag, NSwitch } from 'naive-ui'
-import { toDateTime } from '@/utils/date'
+import apis from '@/apis/index'
+import { useMessage, type FormInst, NButton, NPopconfirm } from 'naive-ui'
 import constant from '@/types/constant'
 import { useWebResources } from '@/data/resources'
 import { namingApi } from '@/apis/naming'
@@ -145,20 +146,7 @@ const pageContainer = ref<any>(null)
 let route = useRoute()
 let webResources = useWebResources()
 let query = route.query
-let param = {
-  serviceName: query.serviceName,
-  groupName: query.groupName || '',
-  namespaceId: query.namespaceId || '',
-}
-const paramRef = ref({
-  serviceParam: '',
-  groupParam: '',
-  namespaceId: '',
-  pageNo: 1,
-  pageSize: 20,
-})
 const router = useRouter()
-const namespaceId = computed(() => namespaceStore.current.value.namespaceId || '')
 const paginationReactive = reactive({
   page: 1,
   pageCount: 1,
@@ -168,59 +156,6 @@ const paginationReactive = reactive({
     return `总行数: ${itemCount}`
   },
 })
-
-const setRowEnabled = (row: { ip: any; port: any; enabled: any }, enabled: boolean) => {
-  let instance = {
-    namespaceId: param.namespaceId,
-    groupName: param.groupName,
-    serviceName: param.serviceName,
-    ip: row.ip,
-    port: row.port,
-    //weight: row.weight,
-    enabled: enabled,
-    //metadata: row.metadata,
-  } as any
-  namingApi
-    .updateInstance(instance)
-    .then((res: { status: string | number }) => {
-      if (res.status == 200) {
-        if (enabled) {
-          message.info('上线成功!')
-        } else {
-          message.info('下线成功!')
-        }
-        row.enabled = enabled
-        setCurrentPageData(paginationReactive.page || 1)
-        //reloadData()
-        return
-      }
-      message.error('设置失败，response code' + res.status)
-    })
-    .catch((err: { message: string }) => {
-      message.error('设置失败，' + err.message)
-    })
-}
-
-const sourceDataRef = ref<any>({})
-
-const setCurrentPageData = (currentPage: number) => {
-  let pageSize = paginationReactive.pageSize
-  let offset = (currentPage - 1) * pageSize
-  let endIndex = Math.min(offset + pageSize, sourceDataRef.value.length)
-  let data = []
-  for (let i = offset; i < endIndex; i++) {
-    data.push(sourceDataRef.value[i])
-  }
-  tableData.value = data
-}
-
-const onLine = (row: any) => {
-  setRowEnabled(row, true)
-}
-
-const offLine = (row: any) => {
-  setRowEnabled(row, false)
-}
 
 const rules = {
   serviceName: [
@@ -285,6 +220,24 @@ const removeConfirmSlots = {
     )
   },
 }
+
+/**
+ *
+ * @param $event 事件
+ *
+ * @param row 数据项
+ */
+const showUpdate = ($event: MouseEvent, row: any) => {
+  pageContainer.value?.updateForm({
+    ip: row.ip,
+    port: row.port.toString(),
+    enabled: row.enabled,
+    weight: (row.weight || 1).toString(),
+    metadata: JSON.stringify(row.metadata || {}),
+    mode: constant.FORM_MODE_UPDATE,
+  })
+}
+
 const columns = [
   {
     title: '服务名称',
@@ -305,7 +258,7 @@ const columns = [
   {
     title: '操作',
     key: 'type',
-    render(row) {
+    render(row: any) {
       let editButton
       let removePopconfirm
       if (webResources.canUpdateService) {
@@ -314,7 +267,7 @@ const columns = [
             size="tiny"
             quaternary
             type="info"
-            onClick={() => showUpdate(row)}>
+            onClick={$event => showUpdate($event, row)}>
             编辑
           </NButton>
         )
@@ -399,59 +352,6 @@ const removeItem = (row: any) => {
     })
 }
 
-const doQueryList = () => {
-  return namingApi.queryServicePage({
-    namespaceId: namespaceStore.current.value.namespaceId,
-    accessToken: null,
-    serviceNameParam: paramRef.value.serviceParam,
-    groupNameParam: paramRef.value.groupParam,
-    pageNo: paginationReactive.page,
-    pageSize: paginationReactive.pageSize,
-  } as any)
-}
-
-// 获取数据
-const doHandlePageChange = async (currentPage: number, param: any = {}) => {
-  doQueryList()
-    .then((res: any) => {
-      if (res.status == 200) {
-        let count = res.data.count
-        let pageSize = paginationReactive.pageSize
-        tableData.value = res.data.serviceList
-        paginationReactive.itemCount = count
-        paginationReactive.pageCount = Math.round((count + pageSize - 1) / pageSize)
-      } else {
-        message.error('request err,status code:' + res.status)
-        tableData.value = []
-      }
-    })
-    .catch((err: any) => {
-      message.error('request err,message' + err.message)
-      tableData.value = []
-    })
-}
-
-onMounted(() => {
-  doHandlePageChange(1)
-})
-
-/**
- *
- * @param $event 事件
- *
- * @param row 数据项
- */
-const showUpdate = ($event: MouseEvent, row: any) => {
-  pageContainer.value?.updateForm({
-    ip: row.ip,
-    port: row.port.toString(),
-    enabled: row.enabled,
-    weight: (row.weight || 1).toString(),
-    metadata: JSON.stringify(row.metadata || {}),
-    mode: constant.FORM_MODE_UPDATE,
-  })
-}
-
 // 表单提交
 const onSave = (data: any) => {
   formRef.value?.validate(errors => {
@@ -473,8 +373,7 @@ const onSave = (data: any) => {
           .then(res => {
             if (res.status == 200) {
               message.success('设置成功!')
-              doHandlePageChange(1)
-              pageContainer.value?.closeDrawer()
+              pageContainer.value?.refreshData()
               return
             }
             message.error('设置失败，response code' + res.status)
@@ -488,8 +387,7 @@ const onSave = (data: any) => {
           .then(res => {
             if (res.status == 200) {
               message.success('设置成功!')
-              doHandlePageChange(1)
-              pageContainer.value?.closeDrawer()
+              pageContainer.value?.refreshData()
               return
             }
             message.error('设置失败，response code' + res.status)

@@ -6,7 +6,7 @@
     >
       <slot
         name="header"
-        :methods="{ createForm, refreshData }"
+        :methods="{ createForm, refreshData, onSearch }"
         :param="state.param"
       ></slot>
     </div>
@@ -42,6 +42,7 @@
       :trap-focus="false"
       v-model:show="showDrawer"
       default-width="600"
+      :width="config.drawer?.width"
       resizable
     >
       <NDrawerContent
@@ -58,7 +59,14 @@
           :methods="{ onSave, onValidateFail, closeDrawer }"
         ></slot>
         <template #footer>
-          <n-space align="baseline">
+          <slot
+            name="footer"
+            v-if="slots.footer"
+          ></slot>
+          <n-space
+            v-else
+            align="baseline"
+          >
             <n-button
               text
               @click="closeDrawer"
@@ -67,7 +75,7 @@
             </n-button>
             <n-button
               type="primary"
-              @click="onSave"
+              @click="confirm"
             >
               确认
             </n-button>
@@ -79,11 +87,12 @@
 </template>
 <script setup lang="ts">
 import type { CrudOptions } from '@/types/base'
-import { NCard, NDrawerContent } from 'naive-ui'
+import { NCard, NDrawerContent, useMessage } from 'naive-ui'
 import type { AnyObj } from '@/utils'
 import constant from '@/types/constant'
 import apis from '@/apis/index'
 const slots = useSlots()
+const toast = useMessage()
 console.log(slots.actions, 'slots')
 const emits = defineEmits(['onSave'])
 let props = defineProps({
@@ -129,10 +138,84 @@ const updateForm = (itemData: AnyObj) => {
 }
 
 /**
+ * 确认
+ */
+const confirm = () => {
+  if (state.formData.mode === 'add' || state.formData.mode === constant.FORM_MODE_CREATE) {
+    onSave()
+  } else {
+    onUpdate()
+  }
+}
+
+/**
  * 保存表单数据
  */
-const onSave = () => {
-  emits('onSave', state.formData)
+const onSave = async () => {
+  // 调用表单校验
+  if (props.config.validator && typeof props.config.validator === 'function') {
+    let vr = await props.config.validator()
+    if (!vr) {
+      return
+    }
+  }
+  let { data } = await apis.postJSON(`${props.config.apis?.create || ''}`, {
+    data: state.formData,
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+  })
+  if (data.code === 200 && data.data === true) {
+    toast.success('添加成功')
+    refreshData()
+  } else {
+    toast.error(data.message || '添加失败')
+  }
+}
+
+/**
+ * 更新表单数据
+ */
+const onUpdate = async () => {
+  // 调用表单校验
+  if (props.config.validator && typeof props.config.validator === 'function') {
+    let vr = await props.config.validator()
+    if (!vr) {
+      return
+    }
+  }
+  let { data } = await apis.putJSON(`${props.config.apis?.update || ''}`, {
+    data: state.formData,
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+  })
+  if (data.code === 200 && data.data === true) {
+    toast.success('修改成功')
+    refreshData()
+  } else {
+    toast.error(data.message || '修改失败')
+  }
+}
+
+/**
+ * 删除数据
+ *
+ * @param params 删除参数
+ */
+const onDelete = async (params: AnyObj) => {
+  let { data } = await apis.deleteJSON(`${props.config.apis?.delete || ''}`, {
+    data: params,
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+  })
+  if (data.code === 200 && data.data === true) {
+    toast.success('删除成功')
+    refreshData()
+  } else {
+    toast.error(data.message || '删除失败')
+  }
 }
 
 /**
@@ -178,6 +261,10 @@ const refreshData = () => {
   loadData()
 }
 
+const onSearch = () => {
+  loadData()
+}
+
 onMounted(() => {
   loadData()
 })
@@ -189,11 +276,42 @@ const onValidateFail = () => {
   console.log('onValidateFail')
 }
 
+const saveUpdateForm = async (data: AnyObj) => {
+  let url = `${props.config?.apis?.update || ''}`
+  if (!url) {
+    toast.error('请传入update-api')
+    return
+  }
+  let res = await apis.putJSON(`${props.config?.apis?.update || ''}`, {
+    data: {
+      ...data,
+    },
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+  })
+  if (res.status == 200) {
+    if (res.data.code == 200) {
+      refreshData()
+      toast.success(res.data.message || '修改成功')
+    } else {
+      toast.error(res.data.message || '修改失败')
+    }
+  } else {
+    toast.error('request err,status code:' + res.status)
+  }
+}
+
 defineExpose({
+  onSave,
+  onSearch,
+  onUpdate,
+  onDelete,
   createForm,
   updateForm,
   closeDrawer,
   refreshData,
+  saveUpdateForm,
 })
 </script>
 

@@ -24,11 +24,11 @@ const instance: AxiosInstance = axios.create(cfg)
 
 instance.interceptors.request.use(
   (config: AxiosRequestConfig): any => {
-    const headers = new AxiosHeaders()
-    headers.set('accessToken', 'Bearer token')
-    if (headers.get('accessToken')) {
-      config.headers = headers
-    }
+    // const headers = new AxiosHeaders()
+    // headers.set('accessToken', 'Bearer token')
+    // if (headers.get('accessToken')) {
+    //   config.headers = headers
+    // }
     return config
   },
   (error: AxiosError) => {
@@ -57,7 +57,7 @@ export enum HttpMethod {
 interface HttpResponse extends AxiosResponse {
   code: number
   data: any
-  msg: string
+  message: string
 }
 
 const request = (cfg: AxiosRequestConfig): Promise<HttpResponse> => {

@@ -109,7 +109,7 @@ export default defineComponent({
             if (res.status == 200) {
               window.$message.info('退出登录成功')
               setTimeout(() => {
-                location.href = '/p/login'
+                location.href = '/login'
               }, 500)
             }
           })

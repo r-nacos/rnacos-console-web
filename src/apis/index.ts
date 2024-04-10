@@ -1,21 +1,26 @@
 import { postJSON, getJSON, putJSON, deleteJSON, request } from '@/config/axios'
 
-const commonPath = `/nacos/v1`
-const rnacosPath = '/rnacos/api/console'
+const commonPath = `/rnacos/api/console`
 
 export default {
   // 命名空间列表
-  namespaces: `${commonPath}/console/namespaces`,
+  namespaces: `${commonPath}/namespaces`,
   // 配置列表
-  configs: `${rnacosPath}/configs`,
+  configs: `${commonPath}/configs`,
+  // 保存配置
+  crudConfigs: `${commonPath}/cs/configs`,
   // 集群列表
-  clusterNodeList: `${rnacosPath}/cluster/cluster_node_list`,
+  clusterNodeList: `${commonPath}/cluster/cluster_node_list`,
   // 用户列表
-  userList: `${rnacosPath}/user/list`,
+  userList: `${commonPath}/user/list`,
   // 上传文件
-  configImport: `${commonPath}/console/config/import`,
+  configImport: `${commonPath}/config/import`,
+  // 下载配置
+  configDownload: `${commonPath}/config/download`,
   // 获取配置
-  getConfig: `${rnacosPath}/cs/configs`,
+  getConfig: `${commonPath}/cs/configs`,
+  // 服务列表
+  services: `${commonPath}/ns/services`,
   postJSON,
   getJSON,
   putJSON,

@@ -1,133 +1,93 @@
 <template>
   <div class="form-config">
-    <n-modal
-      v-model:show="showModal"
-      class="custom-card"
-      preset="card"
-      :style="{
-        width: '1000px',
-      }"
-      title="添加配置"
-      size="huge"
-      :bordered="false"
-      :segmented="{
-        content: 'soft',
-        footer: 'soft',
-      }"
-      @close="onClose"
+    <NForm
+      ref="formRef"
+      :model="formDataRef"
+      :rules="rules"
     >
-      <n-form
-        ref="formRef"
-        :model="formDataRef"
-        :rules="rules"
+      <NFormItem
+        path="dataId"
+        label="配置ID"
       >
-        <n-form-item
-          path="dataId"
-          label="配置ID"
+        <NInput
+          :disabled="isReadonly"
+          placeholder="输入配置ID"
+          v-model:value="formDataRef.dataId"
+          @keydown.enter.prevent
+        />
+      </NFormItem>
+      <NFormItem
+        path="group"
+        label="配置组"
+      >
+        <NInput
+          :disabled="isReadonly"
+          placeholder="输入配置组"
+          v-model:value="formDataRef.group"
+          @keydown.enter.prevent
+        />
+      </NFormItem>
+      <NFormItem
+        v-show="formDataRef.showMd5"
+        path="md5"
+        label="MD5"
+      >
+        <NInput
+          :disabled="true"
+          placeholder=""
+          v-model:value="formDataRef.md5"
+          @keydown.enter.prevent
+        />
+      </NFormItem>
+      <NFormItem
+        path="content"
+        label="配置格式"
+      >
+        <NRadio
+          v-for="i in list"
+          :key="i"
+          :checked="checkedValue === i"
+          :value="i"
+          :name="i"
+          @change="handleChange"
         >
-          <n-input
-            :disabled="isReadonly"
-            placeholder="输入配置ID"
-            v-model:value="formDataRef.dataId"
-            @keydown.enter.prevent
-          />
-        </n-form-item>
-        <n-form-item
-          path="group"
-          label="配置组"
-        >
-          <n-input
-            :disabled="isReadonly"
-            placeholder="输入配置组"
-            v-model:value="formDataRef.group"
-            @keydown.enter.prevent
-          />
-        </n-form-item>
-        <n-form-item
-          v-show="formDataRef.showMd5"
-          path="md5"
-          label="MD5"
-        >
-          <n-input
-            :disabled="true"
-            placeholder=""
-            v-model:value="formDataRef.md5"
-            @keydown.enter.prevent
-          />
-        </n-form-item>
-        <n-form-item
-          path="content"
-          label="配置格式"
-        >
-          <n-radio
-            v-for="i in list"
-            :key="i"
-            :checked="checkedValue === i"
-            :value="i"
-            :name="i"
-            @change="handleChange"
-          >
-            {{ i }}
-          </n-radio>
-        </n-form-item>
-        <n-form-item
-          path="content"
-          label="配置内容"
-        >
-          <Editor
-            v-if="showEditor"
-            v-model="formDataRef.content"
-            :language-type="checkedValue"
-          />
-          <!-- <n-input
-            :disabled="isReadonly"
-            type="textarea"
-            placeholder="输入配置内容"
-            :autosize="{ minRows: 5 }"
-            v-model:value="formDataRef.content"
-          /> -->
-        </n-form-item>
-      </n-form>
-      <template #footer>
-        <div class="text-right">
-          <n-button
-            class="mg-r10"
-            @click="onClose"
-          >
-            取消
-          </n-button>
-          <n-button
-            type="info"
-            @click="submitDiffForm"
-          >
-            确定
-          </n-button>
-        </div>
-      </template>
-    </n-modal>
+          {{ i }}
+        </NRadio>
+      </NFormItem>
+      <NFormItem
+        path="content"
+        label="配置内容"
+      >
+        <Editor
+          v-if="showEditor"
+          v-model="formDataRef.content"
+          :language-type="checkedValue"
+        />
+      </NFormItem>
+    </NForm>
   </div>
 </template>
 <script lang="ts" setup>
 import constant from '@/types/constant'
 import { namespaceStore } from '@/data/namespace'
 import { configApi } from '@/apis/config'
-import { useMessage } from 'naive-ui'
+import { useMessage, NForm, NFormItem, NInput, NRadio } from 'naive-ui'
 import Editor from './Editor.vue'
 import apis from '@/apis'
+import DiffContent from './DiffContent.vue'
 const emits = defineEmits(['closeModal', 'refreshData'])
 const message = useMessage()
+const showDiff = ref(false)
 let props = defineProps({
   formData: {
     type: Object,
     required: true,
   },
-  visible: {
-    type: Boolean,
-    default: false,
-  },
 })
 const formDataRef = ref<any>(props.formData)
 const showEditor = ref(true)
+const oldVal = ref('')
+const saveData = ref<any>({})
 
 // 配置文件类型
 const list = ['TEXT', 'JSON', 'XML', 'YAML', 'HTML', 'Properties']
@@ -145,6 +105,7 @@ onMounted(async () => {
       },
     })
     formDataRef.value.content = `${resp.data || ''}`
+    oldVal.value = `${resp.data || ''}`
     showEditor.value = true
   }
 })
@@ -188,25 +149,20 @@ const showModal = computed(() => props.visible)
 
 // 提交表单
 const submitDiffForm = () => {
-  let config = {
+  saveData.value = {
     dataId: formDataRef.value.dataId,
     group: formDataRef.value.group,
     tenant: namespaceStore.current.value.namespaceId,
     content: formDataRef.value.content,
   }
-  configApi
-    .setConfig(config)
-    .then(res => {
-      if (res.status == 200) {
-        message.success('设置成功!')
-        emits('refreshData')
-        return
-      }
-      message.error('设置失败，response code' + res.status)
-    })
-    .catch(err => {
-      message.error('设置失败，' + err.message)
-    })
+  showDiff.value = true
+}
+
+const closeModal = (bool: boolean = false) => {
+  if (bool) {
+    emits('refreshData')
+  }
+  emits('closeModal')
 }
 
 // 关闭弹框

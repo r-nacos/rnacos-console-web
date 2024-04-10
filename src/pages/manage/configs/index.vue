@@ -8,8 +8,14 @@
       },
       apis: {
         list: apis.configs,
+        create: apis.crudConfigs,
+        update: apis.crudConfigs,
+        delete: apis.crudConfigs,
       },
       param: param,
+      drawer: {
+        width: drawerWidth,
+      },
     }"
     :data="tableData"
   >
@@ -19,14 +25,14 @@
         <NamespacePopSelect @change="doQueryList" />
       </div>
     </template>
-    <template #actions="{ param }">
+    <template #actions="{ param, methods }">
       <div>
-        <n-form
+        <NForm
           label-placement="left"
           label-width="auto"
           inline
         >
-          <n-form-item
+          <NFormItem
             label="配置"
             path="param.dataParam"
           >
@@ -35,8 +41,8 @@
               placeholder="输入配置ID"
               clearable
             />
-          </n-form-item>
-          <n-form-item
+          </NFormItem>
+          <NFormItem
             label="配置组"
             path="param.groupParam"
           >
@@ -45,28 +51,38 @@
               placeholder="输入配置组"
               clearable
             />
-          </n-form-item>
-        </n-form>
+          </NFormItem>
+        </NForm>
       </div>
       <div class="actions-right">
-        <n-button class="mg-r10">查询</n-button>
-        <n-button
+        <NButton class="mg-r10 mg-l10">查询</NButton>
+        <NButton
           class="mg-r10"
-          @click="createHandle"
+          @click="
+            methods.createForm({
+              dataId: '',
+              group: 'DEFAULT_GROUP',
+              md5: '',
+              showMd5: true,
+              content: '',
+              sourceContent: '',
+              mode: constant.FORM_MODE_CREATE,
+            })
+          "
           type="info"
         >
           新建
-        </n-button>
+        </NButton>
         <a
           ref="downloadRef"
           @click="download"
         >
-          <n-button
+          <NButton
             type="info"
             class="mg-r10"
           >
             下载
-          </n-button>
+          </NButton>
         </a>
         <n-upload
           :action="apis.configImport"
@@ -75,22 +91,64 @@
           @before-upload="doBeforeUpload"
           @finish="handlerUploadFinish"
         >
-          <n-button type="info">上传文件</n-button>
+          <NButton type="info">上传文件</NButton>
         </n-upload>
       </div>
     </template>
+    <template #form="{ formData }">
+      <ConfigForm
+        ref="configForm"
+        :formData="formData"
+        v-if="visibleType == 1"
+      />
+      <DiffContent
+        v-else
+        :nv="formData.content"
+        :ov="JSON.stringify(formData.content)"
+      />
+    </template>
+    <template>
+      <NSpace
+        align="baseline"
+        v-if="visibleType == 1"
+      >
+        <NButton
+          text
+          @click="closeDrawer"
+        >
+          返回
+        </NButton>
+        <NButton
+          type="primary"
+          @click="onNext"
+        >
+          确认
+        </NButton>
+      </NSpace>
+      <NSpace
+        align="baseline"
+        v-else
+      >
+        <NButton
+          text
+          @click="onPrev"
+        >
+          返回
+        </NButton>
+        <NButton
+          type="primary"
+          @click="onSave()"
+        >
+          确认
+        </NButton>
+      </NSpace>
+    </template>
   </PageContainer>
-  <ConfigForm
-    v-if="visible"
-    :formData="modelRef"
-    :visible="visible"
-    @close-modal="visible = false"
-    @refreshData="refreshData"
-  />
 </template>
 
 <script lang="tsx" setup title="配置列表" layout="nav">
 import NamespacePopSelect from '@/components/namespace/NamespacePopSelect.vue'
+import DiffContent from '@/components/config/DiffContent.vue'
 import apis from '@/apis/index'
 import { configApi } from '@/apis/config'
 import { namespaceStore } from '@/data/namespace'
@@ -98,15 +156,20 @@ import { useWebResources } from '@/data/resources'
 import { useRouter } from 'vue-router'
 import * as constant from '@/types/constant'
 import qs from 'qs'
-import { NButton, NPopconfirm, NUpload, useMessage } from 'naive-ui'
+import { NButton, NPopconfirm, NUpload, useMessage, NSpace, NForm, NFormItem } from 'naive-ui'
 import ConfigForm from '@/components/config/ConfigForm.vue'
+import { useLayoutSize } from '@/store/index'
+import type { CrudOptions } from '@/types/base'
+const pageContainer = ref<HTMLDivElement>() as any
+const configForm = ref<HTMLDivElement>() as any
+let layoutSize = useLayoutSize()
 let router = useRouter()
 let webResources = useWebResources()
 const downloadRef = ref<any>(null)
 const tableData = ref([])
 const useFormRef = ref(false)
-const loadingRef = ref(false)
-const visible = ref(false)
+const visibleType = ref(1)
+const drawerWidth = ref(600)
 const paramRef = ref({
   dataParam: '',
   groupParam: '',
@@ -119,7 +182,41 @@ const uploadHeader = ref({
   tenant: namespaceStore.current.value.namespaceId,
 })
 const message = useMessage()
+
+onMounted(() => {
+  let bd = document.querySelector('body')
+  if (bd) {
+    drawerWidth.value = bd?.clientWidth - layoutSize.siderWidth
+  }
+})
+
+/**
+ * 上一步
+ */
+const onPrev = () => {
+  visibleType.value = 1
+}
+
+/**
+ * 下一步进行diff对比
+ */
+const onNext = () => {
+  console.log('next')
+  visibleType.value = 2
+}
+
+/* 关闭表单 */
+const closeDrawer = () => {
+  pageContainer.value?.closeDrawer()
+}
+
+// 保存数据
+const onSave = () => {
+  pageContainer.value?.onSave()
+}
+
 const getTenant = computed(() => namespaceStore.current.value.namespaceId)
+
 const getDetailTitle = computed(() => {
   if (modelRef.value.mode === constant.FORM_MODE_UPDATE) {
     return '编辑配置'
@@ -128,6 +225,7 @@ const getDetailTitle = computed(() => {
   }
   return '编辑详情'
 })
+
 const paginationReactive = reactive({
   page: 1,
   pageCount: 1,
@@ -137,6 +235,7 @@ const paginationReactive = reactive({
     return `总行数: ${itemCount}`
   },
 })
+
 const param = {
   tenant: namespaceStore.current.value.namespaceId,
   dataParam: paramRef.value.dataParam,
@@ -158,7 +257,6 @@ const createHandle = () => {
     sourceContent: '',
     mode: constant.FORM_MODE_CREATE,
   }
-  visible.value = true
 }
 
 /**
@@ -176,8 +274,6 @@ const updateItem = (row: any) => {
     sourceContent: row.sourceContent || '',
     mode: constant.FORM_MODE_UPDATE,
   }
-  visible.value = true
-  // doShowConfigDetail(row, constant.FORM_MODE_UPDATE)
 }
 
 const doBeforeUpload = () => {
@@ -187,17 +283,18 @@ const doBeforeUpload = () => {
 }
 
 const doQueryList = () => {
-  return configApi.queryConfigPage({
-    tenant: namespaceStore.current.value.namespaceId,
-    dataParam: paramRef.value.dataParam,
-    groupParam: paramRef.value.groupParam,
-    pageNo: paginationReactive.page,
-    pageSize: paginationReactive.pageSize,
-  })
+  console.log(namespaceStore.current.value.namespaceId, 'namespaceStore.current.value.namespaceId')
+  // return configApi.queryConfigPage({
+  //   tenant: namespaceStore.current.value.namespaceId,
+  //   dataParam: paramRef.value.dataParam,
+  //   groupParam: paramRef.value.groupParam,
+  //   pageNo: paginationReactive.page,
+  //   pageSize: paginationReactive.pageSize,
+  // })
 }
 
 const doHandlePageChange = (currentPage: number) => {
-  doQueryList()
+  /* doQueryList()
     .then(res => {
       loadingRef.value = false
       if (res.status == 200) {
@@ -215,11 +312,7 @@ const doHandlePageChange = (currentPage: number) => {
       message.error('request err,message' + err.message)
       tableData.value = []
       loadingRef.value = false
-    })
-}
-
-const refreshData = () => {
-  visible.value = false
+    }) */
 }
 
 const doShowConfigDetail = (row: any, mode: any) => {
@@ -263,24 +356,11 @@ const detailItem = (row: any) => {
  * @param row 行数据
  */
 const removeItem = (row: any) => {
-  let config = {
+  pageContainer.value?.onDelete({
     tenant: row.tenant,
     group: row.group,
     dataId: row.dataId,
-  }
-  configApi
-    .removeConfig(config)
-    .then(res => {
-      if (res.status == 200) {
-        message.info('删除配置成功')
-        doHandlePageChange(1)
-      } else {
-        message.error('删除配置报错,response code:' + res.status)
-      }
-    })
-    .catch(err => {
-      message.error('删除配置报错,' + err.message)
-    })
+  })
 }
 
 /**
@@ -391,7 +471,7 @@ const handlerUploadFinish = ({ event }: any) => {
 const download = () => {
   paramRef.value.tenant = namespaceStore.current.value.namespaceId
   let params = qs.stringify(paramRef.value)
-  let url = '/nacos/v1/console/config/download?' + params
+  let url = apis.configDownload + '?' + params
   downloadRef.value?.setAttribute('href', url)
   return true
 }

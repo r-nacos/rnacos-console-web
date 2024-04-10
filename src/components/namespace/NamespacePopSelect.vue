@@ -18,8 +18,13 @@ import { namespaceStore } from '@/data/namespace'
 let value = namespaceStore.current as any
 let optionList = namespaceStore.optionList as any
 const emits = defineEmits(['change'])
+
+/**
+ *
+ * @param v 选中项
+ */
 const update = (v: string) => {
-  for (let item of optionList) {
+  for (let item of optionList.value) {
     if (item.value === v) {
       let obj = {
         namespaceId: item.value,

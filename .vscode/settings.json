@@ -1,0 +1,16 @@
+{
+  "workbench.colorTheme": "Monokai Dark Soda",
+  "prettier.enable": true,
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit",
+    "source.fixAll.stylelint": "explicit"
+  },
+  "stylelint.validate": ["css", "less", "postcss", "scss", "vue", "sass", "html"],
+  "vue.codeActions.enabled": false,
+  "rust-analyzer.showUnlinkedFileNotification": false,
+  "[rust]": {
+    "editor.defaultFormatter": "rust-lang.rust-analyzer"
+  }
+}

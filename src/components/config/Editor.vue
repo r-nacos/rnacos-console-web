@@ -1,8 +1,7 @@
 <template>
-  <div
-    ref="editorRef"
-    class="editor-main"
-  ></div>
+  <div class="editor-main">
+    <div ref="editorRef"></div>
+  </div>
 </template>
 <script lang="ts" setup>
 import { basicSetup, EditorView } from 'codemirror'
@@ -11,10 +10,8 @@ import { html } from '@codemirror/lang-html'
 import { json } from '@codemirror/lang-json'
 import { xml } from '@codemirror/lang-xml'
 import { yaml } from '@codemirror/lang-yaml'
-import { oneDarkTheme } from '@codemirror/theme-one-dark'
 import { onMounted, ref } from 'vue'
-import { darkTheme } from 'naive-ui'
-import { monokai, monokaiInit } from '@uiw/codemirror-theme-monokai'
+import { monokai } from '@uiw/codemirror-theme-monokai'
 const props = defineProps(['modelValue', 'languageType'])
 const emits = defineEmits(['update:modelValue'])
 const editorRef = ref()
@@ -117,9 +114,11 @@ onMounted(() => {
 <style lang="scss" scoped>
 .editor-main {
   width: 100%;
-  height: 400px;
+  height: 300px;
   border: 1px solid #f2f2f2;
   border-radius: 6px;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background: #272822;
 }
 </style>

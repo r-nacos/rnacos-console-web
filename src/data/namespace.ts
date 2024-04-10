@@ -1,7 +1,7 @@
-import namespaceApi from '@/apis/namespace'
 import type { INamespace, INamespaceStore } from '@/types/namespace'
 import type { ILabelItem } from '@/types/base'
 import type { UnwrapRef } from 'vue'
+import apis from '@/apis'
 
 // 前期没有使用 pinia,后继调整时考虑迁移到pinia
 
@@ -41,7 +41,7 @@ function createStore(): INamespaceStore {
   }
   const initLoad = function () {
     if (!loadRef.value) {
-      namespaceApi.queryList().then((res: any) => {
+      apis.getJSON(apis.namespaces).then((res: any) => {
         if (res.status == 200 && res.data.data.length > 0) {
           setLastList(res.data.data)
         }

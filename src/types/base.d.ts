@@ -57,16 +57,26 @@ export interface WebResource {
 }
 
 export interface CrudOptions<T> {
+  // 表格配置
   columns: TableColumn<T>[]
+  // api接口配置
   apis?: {
     create?: string
     update?: string
     delete?: string
     list?: string
   }
-  pagination: AnyObj
+  // 分页配置
+  pagination?: AnyObj | undefined
+  // 表单配置
   form?: {
-    title?: '标题'
+    title?: string
   }
+  // 请求参数
   param?: {}
+  // 抽屉设置
+  drawer?: {
+    width?: number | string | undefined
+  }
+  validator?: Function
 }

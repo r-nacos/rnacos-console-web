@@ -8,16 +8,23 @@
       },
       apis: {
         list: apis.namespaces,
+        update: apis.namespaces,
+        create: apis.namespaces,
+        delete: apis.namespaces,
       },
+      validator: validator,
     }"
-    @on-save="onSave"
   >
     <template #header="{ methods }">
       <div>命名空间</div>
       <div>
         <n-button
           class="mg-r10"
-          @click="methods.createForm()"
+          @click="
+            methods.createForm({
+              mode: 'add',
+            })
+          "
         >
           创建命名空间
         </n-button>
@@ -48,12 +55,10 @@
 </template>
 
 <script lang="tsx" setup title="命名空间管理" layout="nav">
-import { NPopconfirm, useMessage, NTag, NButton, NDataTable, NForm, NFormItem, NInput, NSpace, NDrawer, NDrawerContent, type FormItemRule, type FormInst } from 'naive-ui'
+import { NPopconfirm, NTag, NButton, NForm, NFormItem, NInput, type FormItemRule, type FormInst } from 'naive-ui'
 import apis from '@/apis/index'
-import namespaceApi from '@/apis/namespace'
 import type { INamespace } from '@/types/namespace'
 import constant from '@/types/constant'
-const message = useMessage()
 const formRef = ref<FormInst | null>(null)
 const pageContainer = ref<any>(null)
 
@@ -145,72 +150,22 @@ const rules = {
     },
   ],
 }
+
 /**
  * 保存数据
  *
  * @param data 保存数据
  */
-const onSave = (data: any) => {
-  formRef.value?.validate((errors: any) => {
-    if (!errors) {
-      if (data.mode === constant.FORM_MODE_CREATE) {
-        doCreate(data)
+const validator = (data: any) => {
+  return new Promise((resolve, reject) => {
+    formRef.value?.validate((errors: any) => {
+      if (!errors) {
+        resolve(true)
       } else {
-        doUpdate(data)
+        reject('表单验证不通过')
       }
-    }
+    })
   })
-}
-
-/**
- * 创建
- *
- * @param data 数据项
- */
-const doCreate = (data: any) => {
-  data.mode = 'add' // 注意后期统一
-  namespaceApi
-    .add(data)
-    .then(res => {
-      if (res.status == 200) {
-        if (res.data.code == 200) {
-          pageContainer.value?.refreshData()
-          message.success(res.data.message || '新增成功')
-        } else {
-          message.error(res.data.message)
-        }
-      } else {
-        message.error('request err,status code:' + res.status)
-      }
-    })
-    .catch(err => {
-      message.error(err.message)
-    })
-}
-
-/**
- * 更新
- *
- * @param data 数据项
- */
-const doUpdate = (data: any) => {
-  namespaceApi
-    .update(data)
-    .then(res => {
-      if (res.status == 200) {
-        if (res.data.code == 200) {
-          pageContainer.value?.refreshData()
-          message.success(res.data.message || '修改成功')
-        } else {
-          message.error(res.data.message)
-        }
-      } else {
-        message.error('request err,status code:' + res.status)
-      }
-    })
-    .catch(err => {
-      message.error(err.message)
-    })
 }
 
 /**
@@ -233,21 +188,6 @@ const showUpdate = ($event: MouseEvent, row: INamespace) => {
  * @param row 当前行数据
  */
 const remove = (row: INamespace) => {
-  namespaceApi
-    .delete(row)
-    .then(res => {
-      if (res.status == 200) {
-        if (res.data.code == 200) {
-          pageContainer.value.refreshData()
-        } else {
-          message.error(res.data.message)
-        }
-      } else {
-        message.error('request err,status code:' + res.status)
-      }
-    })
-    .catch(err => {
-      message.error(err.message)
-    })
+  pageContainer.value?.onDelete({ namespaceId: row.namespaceId })
 }
 </script>

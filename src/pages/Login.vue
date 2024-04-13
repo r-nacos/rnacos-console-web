@@ -55,6 +55,7 @@ import { useMessage } from 'naive-ui';
 import { userApi } from '@/api/user';
 import { useRoute } from 'vue-router';
 import { encryptAes } from '@/utils/CryptoUtils';
+import router from '@/route/router.js';
 
 export default defineComponent({
   setup() {
@@ -145,7 +146,8 @@ export default defineComponent({
                 if (res.status == 200) {
                   if (res.data.success) {
                     webResources.update(res.data.data);
-                    location.href = redirect_url;
+                    router.push(redirect_url);
+                    //location.href = redirect_url;
                   }
                 }
               });

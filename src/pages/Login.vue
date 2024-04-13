@@ -146,8 +146,12 @@ export default defineComponent({
                 if (res.status == 200) {
                   if (res.data.success) {
                     webResources.update(res.data.data);
-                    router.push(redirect_url);
-                    //location.href = redirect_url;
+                    if(redirect_url=="/"){
+                      router.push(redirect_url);
+                    }
+                    else{
+                      location.href = redirect_url;
+                    }
                   }
                 }
               });

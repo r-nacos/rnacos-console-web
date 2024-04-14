@@ -139,7 +139,7 @@ const getCaptcha = async () => {
       message.error(data.message || '获取验证码失败')
     }
   } else {
-    message.error('获取验证码失败')
+    message.error('请求失败')
   }
 }
 
@@ -172,7 +172,6 @@ const submit = async () => {
         message.error('登录失败,未知错误')
       }
     }
-    console.log()
   } else {
     getCaptcha()
     message.error('请求失败')

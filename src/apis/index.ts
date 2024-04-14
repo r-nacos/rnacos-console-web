@@ -15,6 +15,8 @@ export default {
   logout: `${apiBasePath}/login/logout`,
   // 获取资源
   userWebResources: `${apiBasePath}/user/web_resources`,
+  // 重置密码
+  userResetPassword: `${apiBasePath}/user/reset_password`,
 
   // v1
   // 命名空间列表

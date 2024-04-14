@@ -48,27 +48,10 @@
 
 <script setup lang="ts">
 import { useWebResources } from '@/data/resources'
-import { ServerOutline, CubeOutline, AppsSharp } from '@vicons/ionicons5'
-import { userApi } from '@/apis/user'
+import apis from '@/apis'
 const route = useRoute()
 const webResources = useWebResources()
-
-let updateWebResources = function () {
-  if (!webResources.fromRequest) {
-    userApi.getUserWebResources().then(res => {
-      if (res.status == 200) {
-        if (res.data.success) {
-          webResources.update(res?.data?.data as any)
-        }
-      }
-    })
-  }
-}
-let path = ref(route.path)
-
-let changeRoute = function (route: any) {
-  path.value = route.path
-}
+const path = ref(route.path)
 
 watch(
   () => route,
@@ -79,6 +62,19 @@ watch(
     deep: true,
   },
 )
+
+const changeRoute = (route: any) => {
+  path.value = route.path
+}
+
+const updateWebResources = async () => {
+  let { status, data } = await apis.getJSON(apis.userWebResources)
+  if (status === 200 && typeof data === 'object') {
+    if (data.success) {
+      webResources.update(data?.data as any)
+    }
+  }
+}
 
 onBeforeMount(() => {
   updateWebResources()
@@ -118,10 +114,10 @@ onBeforeMount(() => {
   line-height: 36px;
   text-align: left;
   /*
-        border-width: 0 0 1px 0;;
-        border: 1px solid #324155;
-        border-width: 0 0 1px 0;;
-        */
+    border-width: 0 0 1px 0;;
+    border: 1px solid #324155;
+    border-width: 0 0 1px 0;;
+  */
 }
 
 .item:hover,

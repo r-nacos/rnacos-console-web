@@ -1,8 +1,22 @@
 import { postJSON, getJSON, putJSON, deleteJSON, request } from '@/config/axios'
 
+// v1
 const commonPath = `/rnacos/api/console`
+// v2
+const apiBasePath = '/rnacos/api/console/v2'
 
 export default {
+  // v2
+  // 获取验证码
+  captcha: `${apiBasePath}/login/captcha`,
+  // 登录
+  login: `${apiBasePath}/login/login`,
+  // 退出登录
+  logout: `${apiBasePath}/login/logout`,
+  // 获取资源
+  userWebResources: `${apiBasePath}/user/web_resources`,
+
+  // v1
   // 命名空间列表
   namespaces: `${commonPath}/namespaces`,
   // 配置列表
@@ -27,6 +41,7 @@ export default {
   getConfig: `${commonPath}/cs/configs`,
   // 服务列表
   services: `${commonPath}/ns/services`,
+  // 通用请求封装
   postJSON,
   getJSON,
   putJSON,

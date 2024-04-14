@@ -49,7 +49,7 @@
               :src="captcha_img"
               height="60"
               style="margin: 0; padding: 0"
-              @click="gen_captcha"
+              @click="getCaptcha"
             />
           </div>
         </div>
@@ -71,6 +71,7 @@ import { useWebResources } from '@/data/resources'
 import { userApi } from '@/apis/user'
 import { encryptAes } from '@/utils/CryptoUtils'
 import { useMessage, NForm, NFormItem, NInput } from 'naive-ui'
+import apis from '@/apis'
 const message = useMessage()
 const basePath = import.meta.env.VITE_APP_WEB_ROOT_PATH
 const webResources = useWebResources()
@@ -85,6 +86,7 @@ let modelRef = reactive<any>({
   captcha: null,
   token: '',
 })
+/// 表单验证规则
 const rules = {
   username: [
     {
@@ -124,19 +126,25 @@ const rules = {
     },
   ],
 }
-let gen_captcha = function () {
-  userApi.genCaptcha().then(res => {
-    if (res.status == 200 && res.data && res.data.success) {
-      captcha_img.value = 'data:image/png;base64,' + res.data.data
-      let token = res.headers['Captcha-Token'] || res.headers['captcha-token'] || ''
+
+// 获取验证码
+const getCaptcha = async () => {
+  let { status, data, headers } = await apis.getJSON(apis.captcha)
+  if (status === 200 && typeof data === 'object') {
+    if (data.success) {
+      captcha_img.value = 'data:image/png;base64,' + data.data
+      let token = headers['Captcha-Token'] || headers['captcha-token'] || ''
       modelRef.token = token
-      return
+    } else {
+      message.error(data.message || '获取验证码失败')
     }
+  } else {
     message.error('获取验证码失败')
-  })
+  }
 }
 
-let submit = function () {
+// 表单提交
+const submit = async () => {
   let password = modelRef.password
   if (modelRef.token.length >= 32) {
     password = encryptAes(modelRef.token.substring(0, 16), modelRef.token.substring(16, 32), modelRef.password)
@@ -146,46 +154,44 @@ let submit = function () {
     password: password,
     captcha: modelRef.captcha,
   }
-  userApi
-    .login(param)
-    .then(res => {
-      if (res.status == 200) {
-        if (res.data.success) {
-          //message.info('登录成功!');
-          userApi.getUserWebResources().then(res => {
-            if (res.status == 200) {
-              if (res.data.success) {
-                webResources.update(res?.data?.data as any)
-                const url = `${redirect_url}`.replace(basePath, '')
-                router.push(`${url}`)
-              }
-            }
-          })
-          return
-        } else {
-          gen_captcha()
-          //console.log(res.data);
-          if (res.data.code === 'USER_CHECK_ERROR') {
-            message.error('登录失败，用户名或密码错误!')
-          } else if (res.data.code === 'CAPTCHA_CHECK_ERROR') {
-            message.error('验证码校验不通过!')
-          } else if (res.data.code === 'LOGIN_LIMITE_ERROR') {
-            message.error('登录校验太频繁，稍后再试!')
-          } else {
-            message.error('登录失败,未知错误')
-          }
-        }
+  let { status, data } = await apis.postJSON(apis.login, {
+    data: param,
+  })
+  if (status === 200 && typeof data === 'object') {
+    if (data.success) {
+      userWebResources()
+    } else {
+      getCaptcha()
+      if (data.code === 'USER_CHECK_ERROR') {
+        message.error('登录失败，用户名或密码错误!')
+      } else if (data.code === 'CAPTCHA_CHECK_ERROR') {
+        message.error('验证码校验不通过!')
+      } else if (data.code === 'LOGIN_LIMITE_ERROR') {
+        message.error('登录校验太频繁，稍后再试!')
       } else {
-        gen_captcha()
-        message.error('请求失败，response code' + res.status)
+        message.error('登录失败,未知错误')
       }
-    })
-    .catch(err => {
-      gen_captcha()
-      message.error('请求失败,' + err.message)
-    })
+    }
+    console.log()
+  } else {
+    getCaptcha()
+    message.error('请求失败')
+  }
 }
-gen_captcha()
+
+const userWebResources = async () => {
+  let { status, data } = await apis.getJSON(apis.userWebResources)
+  if (status === 200 && typeof data === 'object') {
+    if (data.success) {
+      sessionStorage.setItem('userName', modelRef.username)
+      webResources.update(data?.data as any)
+      const url = `${redirect_url}`.replace(basePath, '')
+      router.push(`${url}`)
+    }
+  }
+}
+
+getCaptcha()
 </script>
 
 <style lang="scss" scoped>

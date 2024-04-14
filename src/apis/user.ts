@@ -41,25 +41,6 @@ export interface IUpdateUserParam {
 }
 
 class UserApi {
-  login(info: ILoginParam): Promise<AxiosResponse<IApiResult<boolean>>> {
-    return axios.request({
-      method: 'post',
-      url: '/nacos/v1/console/login/login',
-      data: info,
-    })
-  }
-  genCaptcha(): Promise<AxiosResponse<IApiResult<string>>> {
-    return axios.request({
-      method: 'get',
-      url: '/nacos/v1/console/login/captcha',
-    })
-  }
-  logout(): Promise<AxiosResponse<IApiResult<boolean>>> {
-    return axios.request({
-      method: 'post',
-      url: '/nacos/v1/console/login/logout',
-    })
-  }
   resetPassword(info: IResetPasswordParam): Promise<AxiosResponse<IApiResult<boolean>>> {
     return axios.request({
       method: 'post',
@@ -74,13 +55,6 @@ class UserApi {
       params: {
         ...param,
       },
-    })
-  }
-  getUserWebResources(): Promise<AxiosResponse<IApiResult<WebResource>>> {
-    return axios.request({
-      method: 'get',
-      url: '/nacos/v1/console/user/web_resources',
-      params: {},
     })
   }
   addUser(info: IUpdateUserParam): Promise<AxiosResponse<IApiResult<boolean>>> {

@@ -214,7 +214,8 @@ const removeConfirmSlots = {
       <NButton
         size="tiny"
         quaternary
-        type="error">
+        type="error"
+      >
         删除
       </NButton>
     )
@@ -267,14 +268,16 @@ const columns = [
             size="tiny"
             quaternary
             type="info"
-            onClick={$event => showUpdate($event, row)}>
+            onClick={$event => showUpdate($event, row)}
+          >
             编辑
           </NButton>
         )
         removePopconfirm = (
           <NPopconfirm
             onPositiveClick={() => removeItem(row)}
-            v-slots={removeConfirmSlots}>
+            v-slots={removeConfirmSlots}
+          >
             <span>
               确认要删服务名称为:{row.name},服务组为:{row.groupName}
               ,的配置吗？
@@ -291,14 +294,16 @@ const columns = [
             size="tiny"
             quaternary
             type="info"
-            onClick={() => showInstances(row)}>
+            onClick={() => showInstances(row)}
+          >
             服务实例
           </NButton>
           <NButton
             size="tiny"
             quaternary
             type="info"
-            onClick={() => showInstances(row)}>
+            onClick={() => showInstances(row)}
+          >
             详情
           </NButton>
           {editButton}

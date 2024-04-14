@@ -166,7 +166,8 @@ const createColumns = () => {
             size="tiny"
             type="info"
             quaternary
-            onClick={() => showUpdate(row)}>
+            onClick={() => showUpdate(row)}
+          >
             编辑
           </NButton>
         </div>

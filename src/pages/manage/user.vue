@@ -8,6 +8,9 @@
       },
       apis: {
         list: apis.userList,
+        create: apis.userAdd,
+        update: apis.userUpdate,
+        delete: apis.userRemove,
       },
       param: {
         likeUsername: '',
@@ -15,8 +18,8 @@
         pageSize: 10,
         isRev: false,
       },
+      validator: validator,
     }"
-    @on-save="onSave"
   >
     <template #header>用户管理</template>
     <template #actions="{ param, methods }">
@@ -261,7 +264,8 @@ const columns = [
             <NButton
               size="tiny"
               quaternary
-              type="error">
+              type="error"
+            >
               删除
             </NButton>
           )
@@ -273,12 +277,14 @@ const columns = [
             size="tiny"
             quaternary
             type="info"
-            onClick={$event => showUpdate($event, row)}>
+            onClick={$event => showUpdate($event, row)}
+          >
             编辑
           </NButton>
           <NPopconfirm
             onPositiveClick={() => removeItem(row)}
-            v-slots={removeConfirmSlots}>
+            v-slots={removeConfirmSlots}
+          >
             <span>确认要删服务名称为:{row.username} 的用户吗？</span>
           </NPopconfirm>
         </>
@@ -322,8 +328,24 @@ const showUpdate = ($event: MouseEvent, row: any) => {
 }
 
 // 表单提交
-const onSave = (data: any) => {
-  formRef.value?.validate(errors => {
+const validator = (data: any) => {
+  return new Promise((resolve, reject) => {
+    formRef.value?.validate(errors => {
+      if (!errors) {
+        resolve({
+          username: data.username,
+          nickname: data.nickname,
+          password: data.password,
+          enable: data.enable,
+          roles: data.roles.join(','),
+        })
+      } else {
+        reject('表单验证不通过')
+      }
+    })
+  })
+
+  /* formRef.value?.validate(errors => {
     if (!errors) {
       let mode = data.mode
       if (mode === constant.FORM_MODE_DETAIL) {
@@ -365,11 +387,10 @@ const onSave = (data: any) => {
             message.error(`操作失败 ${err.message || ''}`)
           })
       }
-    }
-    // else {
-    // console.log(errors)
-    // message.error('请安要求进行表单填写')
-    // }
-  })
+    } */
+  // else {
+  // console.log(errors)
+  // message.error('请安要求进行表单填写')
+  // }
 }
 </script>

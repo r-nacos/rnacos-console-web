@@ -141,26 +141,35 @@ const updateForm = (itemData: AnyObj) => {
  * 确认
  */
 const confirm = () => {
-  if (state.formData.mode === 'add' || state.formData.mode === constant.FORM_MODE_CREATE) {
-    onSave()
+  // 调用表单校验
+  if (props.config.validator && typeof props.config.validator === 'function') {
+    props.config
+      .validator(state.formData)
+      .then((data: any) => {
+        if (state.formData.mode === 'add' || state.formData.mode === constant.FORM_MODE_CREATE) {
+          onSave(data)
+        } else {
+          onUpdate(data)
+        }
+      })
+      .catch(() => {
+        return
+      })
   } else {
-    onUpdate()
+    if (state.formData.mode === 'add' || state.formData.mode === constant.FORM_MODE_CREATE) {
+      onSave(state.formData)
+    } else {
+      onUpdate(state.formData)
+    }
   }
 }
 
 /**
  * 保存表单数据
  */
-const onSave = async () => {
-  // 调用表单校验
-  if (props.config.validator && typeof props.config.validator === 'function') {
-    let vr = await props.config.validator()
-    if (!vr) {
-      return
-    }
-  }
+const onSave = async (formData: any) => {
   let { data } = await apis.postJSON(`${props.config.apis?.create || ''}`, {
-    data: state.formData,
+    data: formData,
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
     },
@@ -176,16 +185,9 @@ const onSave = async () => {
 /**
  * 更新表单数据
  */
-const onUpdate = async () => {
-  // 调用表单校验
-  if (props.config.validator && typeof props.config.validator === 'function') {
-    let vr = await props.config.validator()
-    if (!vr) {
-      return
-    }
-  }
+const onUpdate = async (formData: any) => {
   let { data } = await apis.putJSON(`${props.config.apis?.update || ''}`, {
-    data: state.formData,
+    data: formData,
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
     },

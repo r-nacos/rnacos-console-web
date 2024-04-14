@@ -22,10 +22,10 @@
     <template #header>
       <div>配置列表</div>
       <div>
-        <NamespacePopSelect @change="doQueryList" />
+        <NamespacePopSelect @change="changeNamespace" />
       </div>
     </template>
-    <template #actions="{ param, methods }">
+    <template #actions="{ param }">
       <div>
         <NForm
           label-placement="left"
@@ -58,17 +58,7 @@
         <NButton class="mg-r10 mg-l10">查询</NButton>
         <NButton
           class="mg-r10"
-          @click="
-            methods.createForm({
-              dataId: '',
-              group: 'DEFAULT_GROUP',
-              md5: '',
-              showMd5: true,
-              content: '',
-              sourceContent: '',
-              mode: constant.FORM_MODE_CREATE,
-            })
-          "
+          @click="createForm"
           type="info"
         >
           新建
@@ -104,10 +94,10 @@
       <DiffContent
         v-else
         :nv="formData.content"
-        :ov="JSON.stringify(formData.content)"
+        :ov="state.ov"
       />
     </template>
-    <template>
+    <template #footer>
       <NSpace
         align="baseline"
         v-if="visibleType == 1"
@@ -139,7 +129,7 @@
           type="primary"
           @click="onSave()"
         >
-          确认
+          确认变更
         </NButton>
       </NSpace>
     </template>
@@ -177,6 +167,9 @@ const paramRef = ref({
   pageNo: 1,
   pageSize: 20,
 })
+let state = reactive({
+  ov: '',
+})
 const modelRef = ref({ dataId: '', group: 'DEFAULT_GROUP', md5: '', showMd5: true, content: '', sourceContent: '', mode: constant.FORM_MODE_CREATE })
 const uploadHeader = ref({
   tenant: namespaceStore.current.value.namespaceId,
@@ -189,6 +182,23 @@ onMounted(() => {
     drawerWidth.value = bd?.clientWidth - layoutSize.siderWidth
   }
 })
+
+const changeNamespace = () => {
+  alert('查询')
+}
+
+const createForm = () => {
+  state.ov = ''
+  pageContainer.value?.createForm({
+    dataId: '',
+    group: 'DEFAULT_GROUP',
+    md5: '',
+    showMd5: true,
+    content: '',
+    sourceContent: '',
+    mode: constant.FORM_MODE_CREATE,
+  })
+}
 
 /**
  * 上一步
@@ -215,16 +225,16 @@ const onSave = () => {
   pageContainer.value?.onSave()
 }
 
-const getTenant = computed(() => namespaceStore.current.value.namespaceId)
+// const getTenant = computed(() => namespaceStore.current.value.namespaceId)
 
-const getDetailTitle = computed(() => {
-  if (modelRef.value.mode === constant.FORM_MODE_UPDATE) {
-    return '编辑配置'
-  } else if (modelRef.value.mode === constant.FORM_MODE_CREATE) {
-    return '新增配置'
-  }
-  return '编辑详情'
-})
+// const getDetailTitle = computed(() => {
+//   if (modelRef.value.mode === constant.FORM_MODE_UPDATE) {
+//     return '编辑配置'
+//   } else if (modelRef.value.mode === constant.FORM_MODE_CREATE) {
+//     return '新增配置'
+//   }
+//   return '编辑详情'
+// })
 
 const paginationReactive = reactive({
   page: 1,
@@ -245,74 +255,36 @@ const param = {
 }
 
 /**
- * 创建配置
- */
-const createHandle = () => {
-  modelRef.value = {
-    dataId: '',
-    group: 'DEFAULT_GROUP',
-    md5: '',
-    showMd5: true,
-    content: '',
-    sourceContent: '',
-    mode: constant.FORM_MODE_CREATE,
-  }
-}
-
-/**
  * 修改
  *
  * @param row 行数据
  */
-const updateItem = (row: any) => {
-  modelRef.value = {
-    dataId: row.dataId || '',
-    group: row.group || 'DEFAULT_GROUP',
-    md5: row.md5 || '',
+const updateItem = async (row: any) => {
+  let res = await apis.getJSON(apis.getConfig, {
+    params: {
+      tenant: row.tenant,
+      group: row.group || 'DEFAULT_GROUP',
+      dataId: row.dataId || '',
+    },
+  })
+  visibleType.value = 1
+  state.ov = res.request.responseText
+  pageContainer.value?.updateForm({
+    md5: res.headers['content-md5'] || '',
     showMd5: row.showMd5 || true,
-    content: row.content || '',
+    content: res.request.responseText || '',
     sourceContent: row.sourceContent || '',
     mode: constant.FORM_MODE_UPDATE,
-  }
+    tenant: row.tenant,
+    group: row.group || 'DEFAULT_GROUP',
+    dataId: row.dataId || '',
+  })
 }
 
 const doBeforeUpload = () => {
   uploadHeader.value = {
     tenant: namespaceStore.current.value.namespaceId,
   }
-}
-
-const doQueryList = () => {
-  console.log(namespaceStore.current.value.namespaceId, 'namespaceStore.current.value.namespaceId')
-  // return configApi.queryConfigPage({
-  //   tenant: namespaceStore.current.value.namespaceId,
-  //   dataParam: paramRef.value.dataParam,
-  //   groupParam: paramRef.value.groupParam,
-  //   pageNo: paginationReactive.page,
-  //   pageSize: paginationReactive.pageSize,
-  // })
-}
-
-const doHandlePageChange = (currentPage: number) => {
-  /* doQueryList()
-    .then(res => {
-      loadingRef.value = false
-      if (res.status == 200) {
-        let count = res.data.count
-        let pageSize = paginationReactive.pageSize
-        tableData.value = res.data.list
-        paginationReactive.itemCount = count
-        paginationReactive.pageCount = Math.round((count + pageSize - 1) / pageSize)
-      } else {
-        message.error('request err,status code:' + res.status)
-        tableData.value = []
-      }
-    })
-    .catch(err => {
-      message.error('request err,message' + err.message)
-      tableData.value = []
-      loadingRef.value = false
-    }) */
 }
 
 const doShowConfigDetail = (row: any, mode: any) => {

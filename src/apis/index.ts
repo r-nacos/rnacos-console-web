@@ -13,6 +13,12 @@ export default {
   clusterNodeList: `${commonPath}/cluster/cluster_node_list`,
   // 用户列表
   userList: `${commonPath}/user/list`,
+  // 用户新增
+  userAdd: `${commonPath}/user/add`,
+  // 用户新增
+  userUpdate: `${commonPath}/user/update`,
+  // 用户删除
+  userRemove: `${commonPath}/user/remove`,
   // 上传文件
   configImport: `${commonPath}/config/import`,
   // 下载配置

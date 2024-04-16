@@ -353,7 +353,7 @@ defineExpose({
   }
 
   .page-content {
-    margin: 10px;
+    margin: 10px 0;
   }
 
   .page-table {

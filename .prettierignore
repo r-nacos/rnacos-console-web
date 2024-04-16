@@ -22,3 +22,11 @@ yarn.lock
 vuepress.config.ts
 .catch
 docs
+dist-wrap
+dist
+.vscode
+.husky
+.github
+node_modules
+public
+temp

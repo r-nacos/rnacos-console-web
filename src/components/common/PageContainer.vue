@@ -86,7 +86,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import type { CrudOptions } from '@/types/base'
+import type { CrudOptions, ValidResult } from '@/types/base'
 import { NCard, NDrawerContent, useMessage } from 'naive-ui'
 import type { AnyObj } from '@/utils'
 import constant from '@/types/constant'
@@ -124,6 +124,7 @@ const formTitle = computed(() => props.config.form?.title + (state.formData.mode
  */
 const createForm = (model: AnyObj = {}) => {
   state.formData = { ...model, mode: constant.FORM_MODE_CREATE }
+  console.log(state.formData, 'state.formData')
   showDrawer.value = true
 }
 
@@ -145,11 +146,14 @@ const confirm = () => {
   if (props.config.validator && typeof props.config.validator === 'function') {
     props.config
       .validator(state.formData)
-      .then((data: any) => {
-        if (state.formData.mode === 'add' || state.formData.mode === constant.FORM_MODE_CREATE) {
-          onSave(data)
-        } else {
-          onUpdate(data)
+      .then((data: ValidResult) => {
+        console.log(data, 'data')
+        if (data.result) {
+          if (state.formData.mode === 'add' || state.formData.mode === constant.FORM_MODE_CREATE) {
+            onSave(data.data)
+          } else {
+            onUpdate(data.data)
+          }
         }
       })
       .catch(() => {
@@ -168,35 +172,40 @@ const confirm = () => {
  * 保存表单数据
  */
 const onSave = async (formData: any) => {
-  let { data } = await apis.postJSON(`${props.config.apis?.create || ''}`, {
+  let { status, data } = await apis.postJSON(`${props.config.apis?.create || ''}`, {
     data: formData,
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
   })
-  if (data.code === 200 && data.data === true) {
-    toast.success('添加成功')
-    refreshData()
+  if (status === 200 && data && typeof data === 'object') {
+    if (data.success) {
+      toast.success('添加成功')
+      refreshData()
+    } else {
+      toast.error('添加失败')
+    }
   } else {
-    toast.error(data.message || '添加失败')
+    toast.error('请求失败')
   }
 }
 
 /**
  * 更新表单数据
+ * headers: {
+ *   'Content-Type': 'application/x-www-form-urlencoded',
+ * },
  */
 const onUpdate = async (formData: any) => {
-  let { data } = await apis.putJSON(`${props.config.apis?.update || ''}`, {
+  let { status, data } = await apis.postJSON(`${props.config.apis?.update || ''}`, {
     data: formData,
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
   })
-  if (data.code === 200 && data.data === true) {
-    toast.success('修改成功')
-    refreshData()
+  if (status === 200 && data && typeof data === 'object') {
+    if (data.success) {
+      toast.success('修改成功')
+      refreshData()
+    } else {
+      toast.error(data.message || '修改失败')
+    }
   } else {
-    toast.error(data.message || '修改失败')
+    toast.error('请求失败')
   }
 }
 
@@ -206,17 +215,18 @@ const onUpdate = async (formData: any) => {
  * @param params 删除参数
  */
 const onDelete = async (params: AnyObj) => {
-  let { data } = await apis.deleteJSON(`${props.config.apis?.delete || ''}`, {
+  let { status, data } = await apis.postJSON(`${props.config.apis?.delete || ''}`, {
     data: params,
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
   })
-  if (data.code === 200 && data.data === true) {
-    toast.success('删除成功')
-    refreshData()
+  if (status === 200 && data && typeof data === 'object') {
+    if (data.success) {
+      toast.success('删除成功')
+      refreshData()
+    } else {
+      toast.error(data.success || '删除失败')
+    }
   } else {
-    toast.error(data.message || '删除失败')
+    toast.error('请求失败')
   }
 }
 

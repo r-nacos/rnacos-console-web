@@ -156,7 +156,7 @@ const submitForm = () => {
           newPassword: formModel.newPassword,
         },
       })
-      if (status === 200 && typeof data === 'object') {
+      if (status === 200 && data && typeof data === 'object') {
         if (data.success) {
           message.success('修改密码成功!')
           closeForm()

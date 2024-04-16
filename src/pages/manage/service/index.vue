@@ -7,7 +7,10 @@
         title: '服务',
       },
       apis: {
-        list: apis.services,
+        list: apis.serviceList,
+        create: apis.serviceAdd,
+        update: apis.serviceUpdate,
+        delete: apis.serviceDelete,
       },
     }"
     :data="tableData"
@@ -55,7 +58,7 @@
             methods.createForm({
               groupName: '',
               serviceName: '',
-              protectThreshold: '0',
+              protectThreshold: 0,
               metadata: '',
               selector: '',
               mode: constant.FORM_MODE_CREATE,
@@ -101,7 +104,7 @@
           <n-input
             :disabled="isReadonly"
             placeholder="输入保护阀值"
-            v-model:value="formData.protectThreshold"
+            v-model:value.number="formData.protectThreshold"
             @keydown.enter.prevent
           />
         </n-form-item>
@@ -229,11 +232,12 @@ const removeConfirmSlots = {
  * @param row 数据项
  */
 const showUpdate = ($event: MouseEvent, row: any) => {
+  console.log(row, 'row')
   pageContainer.value?.updateForm({
     ip: row.ip,
-    port: row.port.toString(),
+    port: `${row.port}`,
     enabled: row.enabled,
-    weight: (row.weight || 1).toString(),
+    weight: `${row.weight || 1}`,
     metadata: JSON.stringify(row.metadata || {}),
     mode: constant.FORM_MODE_UPDATE,
   })
@@ -341,24 +345,16 @@ const removeItem = (row: any) => {
     groupName: row.groupName,
     serviceName: row.name,
   }
-  namingApi
-    .removeService(serviceKey)
-    .then(res => {
-      if (res.status == 200) {
-        message.success('删除服务成功!')
-        doHandlePageChange(paginationReactive.page || 1)
-        return
-      }
-      message.error('删除服务报错,' + res.data)
-    })
-    .catch(err => {
-      //message.error("删除服务报错," + err.message);
-      message.error('删除服务报错,' + err.response.data)
-    })
+  pageContainer.value?.onDelete({
+    namespaceId: namespaceStore.current.value.namespaceId,
+    groupName: row.groupName,
+    serviceName: row.name,
+  })
 }
 
 // 表单提交
 const onSave = (data: any) => {
+  alert(1)
   formRef.value?.validate(errors => {
     if (!errors) {
       if (data.mode === constant.FORM_MODE_DETAIL) {

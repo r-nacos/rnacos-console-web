@@ -7,10 +7,10 @@
         title: '配置',
       },
       apis: {
-        list: apis.configs,
-        create: apis.crudConfigs,
-        update: apis.crudConfigs,
-        delete: apis.crudConfigs,
+        list: apis.configList,
+        create: apis.configAdd,
+        update: apis.configUpdate,
+        delete: apis.configRemove,
       },
       param: param,
       drawer: {
@@ -357,7 +357,8 @@ const removeConfirmSlots = {
       <NButton
         size="tiny"
         quaternary
-        type="error">
+        type="error"
+      >
         删除
       </NButton>
     )
@@ -386,14 +387,16 @@ const columns = [
             size="tiny"
             quaternary
             type="info"
-            onClick={() => updateItem(row)}>
+            onClick={() => updateItem(row)}
+          >
             编辑
           </NButton>
         )
         removePopconfirm = (
           <NPopconfirm
             onPositiveClick={() => removeItem(row)}
-            v-slots={removeConfirmSlots}>
+            v-slots={removeConfirmSlots}
+          >
             <span>
               确认要删配置组为:{row.group},ID为:{row.dataId}的配置吗？
             </span>
@@ -409,14 +412,16 @@ const columns = [
             size="tiny"
             quaternary
             type="info"
-            onClick={() => detailItem(row)}>
+            onClick={() => detailItem(row)}
+          >
             详情
           </NButton>
           <NButton
             size="tiny"
             quaternary
             type="info"
-            onClick={() => showHistory(row)}>
+            onClick={() => showHistory(row)}
+          >
             历史记录
           </NButton>
           {editButton}

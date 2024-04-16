@@ -130,7 +130,7 @@ const rules = {
 // 获取验证码
 const getCaptcha = async () => {
   let { status, data, headers } = await apis.getJSON(apis.captcha)
-  if (status === 200 && typeof data === 'object') {
+  if (status === 200 && data && typeof data === 'object') {
     if (data.success) {
       captcha_img.value = 'data:image/png;base64,' + data.data
       let token = headers['Captcha-Token'] || headers['captcha-token'] || ''
@@ -180,7 +180,7 @@ const submit = async () => {
 
 const userWebResources = async () => {
   let { status, data } = await apis.getJSON(apis.userWebResources)
-  if (status === 200 && typeof data === 'object') {
+  if (status === 200 && data && typeof data === 'object') {
     if (data.success) {
       sessionStorage.setItem('userName', modelRef.username)
       webResources.update(data?.data as any)

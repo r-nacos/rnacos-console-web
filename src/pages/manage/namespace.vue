@@ -7,10 +7,10 @@
         title: '命名空间',
       },
       apis: {
-        list: apis.namespaces,
-        update: apis.namespaces,
-        create: apis.namespaces,
-        delete: apis.namespaces,
+        list: apis.namespacesList,
+        update: apis.namespacesUpdate,
+        create: apis.namespacesAdd,
+        delete: apis.namespacesRemove,
       },
       validator: validator,
     }"
@@ -83,7 +83,8 @@ const columns = [
         return (
           <NTag
             size="small"
-            type="info">
+            type="info"
+          >
             保留空间
           </NTag>
         )
@@ -94,7 +95,8 @@ const columns = [
             <NButton
               size="tiny"
               quaternary
-              type="error">
+              type="error"
+            >
               删除
             </NButton>
           )
@@ -106,12 +108,14 @@ const columns = [
             size="tiny"
             quaternary
             type="info"
-            onClick={$event => showUpdate($event, row)}>
+            onClick={$event => showUpdate($event, row)}
+          >
             编辑
           </NButton>
           <NPopconfirm
             onPositiveClick={() => remove(row)}
-            v-slots={removeConfirmSlots}>
+            v-slots={removeConfirmSlots}
+          >
             <span>确定要删除此命名空间吗</span>
           </NPopconfirm>
         </div>
@@ -160,7 +164,10 @@ const validator = (data: any) => {
   return new Promise((resolve, reject) => {
     formRef.value?.validate((errors: any) => {
       if (!errors) {
-        resolve(true)
+        resolve({
+          result: true,
+          data: data,
+        })
       } else {
         reject('表单验证不通过')
       }

@@ -293,20 +293,13 @@ const columns = [
   },
 ]
 
+/**
+ * 删除用户
+ *
+ * @param row 当前行数据
+ */
 const removeItem = (row: any) => {
-  userApi
-    .removeUser({ username: row.username })
-    .then(res => {
-      if (res.status == 200) {
-        message.success('删除成功!')
-        pageContainer.value?.refreshData()
-        return
-      }
-      message.error('操作失败，response code' + res.status)
-    })
-    .catch(err => {
-      message.error('操作失败' + err.message)
-    })
+  pageContainer.value?.onDelete({ username: row.username })
 }
 
 /**
@@ -333,64 +326,20 @@ const validator = (data: any) => {
     formRef.value?.validate(errors => {
       if (!errors) {
         resolve({
-          username: data.username,
-          nickname: data.nickname,
-          password: data.password,
-          enable: data.enable,
-          roles: data.roles.join(','),
+          result: true,
+          data: {
+            username: data.username,
+            nickname: data.nickname,
+            password: data.password,
+            enable: data.enable,
+            roles: data.roles.join(','),
+            mode: data.mode,
+          },
         })
       } else {
         reject('表单验证不通过')
       }
     })
   })
-
-  /* formRef.value?.validate(errors => {
-    if (!errors) {
-      let mode = data.mode
-      if (mode === constant.FORM_MODE_DETAIL) {
-        return
-      }
-      let userData = {
-        username: data.username,
-        nickname: data.nickname,
-        password: data.password,
-        enable: data.enable,
-        roles: data.roles.join(','),
-      }
-      if (data.mode === constant.FORM_MODE_CREATE) {
-        userApi
-          .addUser(userData)
-          .then(res => {
-            if (res.status == 200) {
-              message.success('操作成功!')
-              pageContainer.value?.refreshData()
-              return
-            }
-            message.error('操作失败，response code' + res.status)
-          })
-          .catch(err => {
-            message.error('操作失败' + err.message)
-          })
-      } else {
-        userApi
-          .updateUser(userData)
-          .then(res => {
-            if (res.status == 200) {
-              message.success('操作成功!')
-              pageContainer.value?.refreshData()
-              return
-            }
-            message.error(`操作失败，response code: ${res.status}`)
-          })
-          .catch(err => {
-            message.error(`操作失败 ${err.message || ''}`)
-          })
-      }
-    } */
-  // else {
-  // console.log(errors)
-  // message.error('请安要求进行表单填写')
-  // }
 }
 </script>

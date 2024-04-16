@@ -1,7 +1,5 @@
 import { postJSON, getJSON, putJSON, deleteJSON, request } from '@/config/axios'
 
-// v1
-const commonPath = `/rnacos/api/console`
 // v2
 const apiBasePath = '/rnacos/api/console/v2'
 
@@ -17,32 +15,48 @@ export default {
   userWebResources: `${apiBasePath}/user/web_resources`,
   // 重置密码
   userResetPassword: `${apiBasePath}/user/reset_password`,
-
-  // v1
   // 命名空间列表
-  namespaces: `${commonPath}/namespaces`,
+  namespacesList: `${apiBasePath}/namespaces/list`,
+  // 命名空间新增
+  namespacesAdd: `${apiBasePath}/namespaces/add`,
+  //  命名空间更新
+  namespacesUpdate: `${apiBasePath}/namespaces/update`,
+  // 命名空间 删除
+  namespacesRemove: `${apiBasePath}/namespaces/remove`,
   // 配置列表
-  configs: `${commonPath}/configs`,
+  configs: `${apiBasePath}/configs`,
   // 保存配置
-  crudConfigs: `${commonPath}/cs/configs`,
+  crudConfigs: `${apiBasePath}/cs/configs`,
   // 集群列表
-  clusterNodeList: `${commonPath}/cluster/cluster_node_list`,
-  // 用户列表
-  userList: `${commonPath}/user/list`,
-  // 用户新增
-  userAdd: `${commonPath}/user/add`,
-  // 用户新增
-  userUpdate: `${commonPath}/user/update`,
-  // 用户删除
-  userRemove: `${commonPath}/user/remove`,
-  // 上传文件
-  configImport: `${commonPath}/config/import`,
-  // 下载配置
-  configDownload: `${commonPath}/config/download`,
-  // 获取配置
-  getConfig: `${commonPath}/cs/configs`,
-  // 服务列表
-  services: `${commonPath}/ns/services`,
+  clusterNodeList: `${apiBasePath}/cluster/cluster_node_list`,
+  // 用户相关
+  userList: `${apiBasePath}/user/list`, // 用户列表
+  userAdd: `${apiBasePath}/user/add`, // 用户新增
+  userUpdate: `${apiBasePath}/user/update`, // 用户新增
+  userRemove: `${apiBasePath}/user/remove`, // 用户删除
+
+  // 配置相关
+  configList: `${apiBasePath}/config/list`, // 配置列表
+  configDownload: `${apiBasePath}/config/download`, // 下载配置
+  configInfo: `${apiBasePath}/config/info`, // 配置详情
+  configHistory: `${apiBasePath}/config/history`, // 配置历史
+  configImport: `${apiBasePath}/config/import`, // 导入配置
+  configAdd: `${apiBasePath}/config/add`, // 新增配置
+  configUpdate: `${apiBasePath}/config/update`, // 更新配置
+  configRemove: `${apiBasePath}/config/remove`, // 删除配置
+
+  // 服务相关
+  serviceList: `${apiBasePath}/service/list`, // 服务列表
+  serviceAdd: `${apiBasePath}/service/add`, // 新增服务信息
+  serviceUpdate: `${apiBasePath}/service/update`, // 更新服务信息
+  serviceDelete: `${apiBasePath}/service/remove`, // 删除服务信息
+
+  // 实列
+  instanceList: `${apiBasePath}/instance/list`,
+  instanceAdd: `${apiBasePath}/instance/add`,
+  instanceUpdate: `${apiBasePath}/instance/update`,
+  instanceDelete: `${apiBasePath}/instance/remove`,
+
   // 通用请求封装
   postJSON,
   getJSON,

@@ -7,6 +7,12 @@
       form: {
         title: '服务器实列',
       },
+      apis: {
+        list: apis.instanceList,
+        create: apis.instanceAdd,
+        update: apis.instanceUpdate,
+        delete: apis.instanceDelete,
+      },
     }"
     :data="tableData"
     @on-save="onSave"
@@ -75,6 +81,7 @@ import { namespaceStore } from '@/data/namespace'
 import { namingApi } from '@/apis/naming'
 import type { INamespace } from '@/types/namespace'
 import { useWebResources } from '@/data/resources'
+import apis from '@/apis'
 const message = useMessage()
 const formRef = ref<FormInst | null>(null)
 const pageContainer = ref<any>(null)
@@ -186,15 +193,15 @@ const reloadData = () => {
   doHandlePageChange(paginationReactive.page || 1)
 }
 
-const doQueryList = () => {
+/* const doQueryList = () => {
   return namingApi.queryServiceInstances({
     serviceName: paramRef.value.serviceName,
     groupName: paramRef.value.groupName,
     namespaceId: paramRef.value.namespaceId,
   })
-}
+} */
 
-const doHandlePageChange = currentPage => {
+/* const doHandlePageChange = currentPage => {
   doQueryList()
     .then(res => {
       loadingRef.value = false
@@ -216,7 +223,7 @@ const doHandlePageChange = currentPage => {
       dataRef.value = []
       loadingRef.value = false
     })
-}
+} */
 
 /**
  * 表单校验
@@ -259,7 +266,7 @@ const offLine = (row: any) => {
   setRowEnabled(row, false)
 }
 
-const setRowEnabled = (row, enabled) => {
+/* const setRowEnabled = (row, enabled) => {
   let instance = {
     namespaceId: param.namespaceId,
     groupName: param.groupName,
@@ -290,14 +297,14 @@ const setRowEnabled = (row, enabled) => {
     .catch(err => {
       window.$message.error('设置失败，' + err.message)
     })
-}
+} */
 
 /**
  * 保存数据
  *
  * @param data 保存数据
  */
-const onSave = (data: any) => {
+/* const onSave = (data: any) => {
   formRef.value?.validate((errors: any) => {
     if (!errors) {
       if (data.mode === 'add') {
@@ -308,11 +315,11 @@ const onSave = (data: any) => {
     }
   })
 }
-
+ */
 /**
  * 加载列表数据
  */
-const doLoadNamespace = () => {
+/* const doLoadNamespace = () => {
   doQueryList()
     .then(res => {
       loadingRef.value = false
@@ -335,8 +342,8 @@ const doLoadNamespace = () => {
       loadingRef.value = false
     })
 }
-
+ */
 onMounted(() => {
-  doLoadNamespace()
+  // doLoadNamespace()
 })
 </script>

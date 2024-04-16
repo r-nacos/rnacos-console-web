@@ -80,3 +80,8 @@ export interface CrudOptions<T> {
   }
   validator?: Function
 }
+
+export interface ValidResult {
+  result: boolean
+  data: AnyObj
+}

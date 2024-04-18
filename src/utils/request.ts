@@ -43,9 +43,27 @@ class HttpRequest {
     return config;
   }
 
+  getJsonInsideConfig() {
+    const config = {
+      //baseURL: this.baseURL,
+      timeout: 1000,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
+    return config;
+  }
+
   request(options: AxiosRequestConfig): Promise<AxiosResponse> {
     const instance = axios.create();
     options = Object.assign(this.getInsideConfig(), options);
+    this.interceptors(instance, options.url);
+    return instance(options);
+  }
+
+  requestJSON(options: AxiosRequestConfig): Promise<AxiosResponse> {
+    const instance = axios.create();
+    options = Object.assign(this.getJsonInsideConfig(), options);
     this.interceptors(instance, options.url);
     return instance(options);
   }

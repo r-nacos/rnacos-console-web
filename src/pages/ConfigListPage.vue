@@ -140,6 +140,7 @@ export default defineComponent({
       showMd5: true,
       sourceContent: '',
       content: '',
+      configType: 'text',
       mode: ''
     });
     const paginationReactive = reactive({
@@ -198,6 +199,7 @@ export default defineComponent({
         group: row.group,
         dataId: row.dataId
       };
+      /*
       configApi
         .getConfig(config)
         .then((res) => {
@@ -208,6 +210,30 @@ export default defineComponent({
               content: res.request.responseText,
               sourceContent: res.request.responseText,
               md5: res.headers['content-md5'] || '',
+              ...config
+            };
+            useFormRef.value = true;
+          } else {
+            window.$message.error('查询配置报错,response code:' + res.status);
+          }
+        })
+        .catch((err) => {
+          window.$message.error('查询配置报错,' + err.message);
+        });
+        */
+      configApi
+        .getConfigV2(config)
+        .then((res) => {
+          console.log(res.data);
+          if (res.status == 200 && res.data.success) {
+            modelRef.value = {
+              mode: mode,
+              showMd5: true,
+              content: res.data.data.value,
+              sourceContent: res.data.data.value,
+              md5: res.data.data.md5 || '',
+              desc: res.data.data.desc,
+              configType: res.data.data.configType || 'text',
               ...config
             };
             useFormRef.value = true;
@@ -232,6 +258,7 @@ export default defineComponent({
         md5: '',
         showMd5: true,
         content: '',
+        configType: 'text',
         sourceContent: '',
         mode: constant.FORM_MODE_CREATE
       };
@@ -337,10 +364,12 @@ export default defineComponent({
         dataId: this.model.dataId,
         group: this.model.group,
         tenant: this.getTenant,
-        content: this.model.content
+        content: this.model.content,
+        configType: this.model.configType,
+        desc: this.model.desc
       };
       configApi
-        .setConfig(config)
+        .setConfigV2(config)
         .then((res) => {
           if (res.status == 200) {
             window.$message.info('设置成功!');

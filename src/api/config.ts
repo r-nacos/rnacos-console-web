@@ -1,5 +1,6 @@
 import { AxiosResponse } from 'axios';
 import request from '../utils/request';
+import { IApiResult } from '@/types/base';
 let axios = request;
 
 export interface IConfig {
@@ -9,6 +10,8 @@ export interface IConfig {
   content?: string;
   md5?: string;
   modifiedTime?: number;
+  desc?: string;
+  configType?: string;
 }
 
 export interface IConfigKey {
@@ -44,10 +47,30 @@ class ConfigApi {
     });
   }
 
-  getConfig(configKey: IConfigKey): Promise<AxiosResponse> {
+  setConfigV2(config: IConfig): Promise<AxiosResponse> {
+    return axios.requestJSON({
+      method: 'post',
+      url: '/rnacos/api/console/v2/config/update',
+      data: JSON.stringify(config)
+    });
+  }
+
+  getConfig(
+    configKey: IConfigKey
+  ): Promise<AxiosResponse<IApiResult<IConfig>>> {
     return axios.request({
       method: 'get',
       url: '/rnacos/api/console/cs/configs',
+      params: {
+        ...configKey
+      }
+    });
+  }
+
+  getConfigV2(configKey: IConfigKey): Promise<AxiosResponse> {
+    return axios.request({
+      method: 'get',
+      url: '/rnacos/api/console/v2/config/info',
       params: {
         ...configKey
       }

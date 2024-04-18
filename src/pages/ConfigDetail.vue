@@ -25,7 +25,26 @@
           @keydown.enter.prevent
         />
       </n-form-item>
+      <n-form-item path="configType" label="配置格式">
+        <!--
+        <n-radio-group v-model="langType"  name="configType">
+        -->
+        <n-radio-group v-model:value="langType" name="configType">
+          <n-space>
+            <n-radio
+              v-for="item in langs"
+              :key="item.value"
+              :value="item.value"
+              @change="langChange"
+            >
+              {{ item.label }}
+            </n-radio>
+          </n-space>
+        </n-radio-group>
+      </n-form-item>
       <n-form-item path="content" label="配置内容">
+        <!--
+
         <n-input
           :disabled="isReadonly"
           type="textarea"
@@ -33,6 +52,18 @@
           :autosize="{ minRows: 5 }"
           v-model:value="model.content"
         />
+        -->
+        <div class="code-container" @click="focusEvent">
+          <code-mirror
+            v-model="model.content"
+            :foucsValue="focusValue"
+            :lang="lang"
+            :disabled="isReadonly"
+            :basic="true"
+            :tab="true"
+            :extensions="extensions"
+          />
+        </div>
       </n-form-item>
     </n-form>
   </div>
@@ -40,8 +71,82 @@
 
 <script>
 import { defineComponent } from 'vue';
+import CodeMirror from '@/components/config/CodeMirror';
+import { solarizedDark } from 'cm6-theme-solarized-dark';
+import { json } from '@codemirror/lang-json';
+import { xml } from '@codemirror/lang-xml';
+import { html } from '@codemirror/lang-html';
+import { yaml } from '@codemirror/lang-yaml';
 export default defineComponent({
+  components: { CodeMirror },
   props: ['model'],
+  setup(props) {
+    const extensions = [solarizedDark];
+
+    const langs = [
+      {
+        value: 'text',
+        label: 'TEXT'
+      },
+      {
+        value: 'json',
+        label: 'JSON'
+      },
+      {
+        value: 'xml',
+        label: 'XML'
+      },
+      {
+        value: 'yaml',
+        label: 'YAML'
+      },
+      {
+        value: 'html',
+        label: 'HTML'
+      },
+      {
+        value: 'properties',
+        label: 'Properties'
+      },
+      {
+        value: 'toml',
+        label: 'TOML'
+      }
+    ];
+    const langMap = {
+      json: json(),
+      xml: xml(),
+      yaml: yaml(),
+      html: html()
+    };
+    let model = props.model;
+    //console.log("model value:",model);
+
+    const lang = ref();
+    lang.value = langMap[model.configType];
+    const langType = ref();
+    //const doc = ref("123434324")
+    //doc.value = model.content;
+    const focusValue = ref(0);
+    const langChange = function (e) {
+      langType.value = e.target.value;
+      lang.value = langMap[e.target.value];
+    };
+    const focusEvent = function (e) {
+      focusValue.value += 1;
+    };
+
+    return {
+      //doc,
+      focusValue,
+      langs,
+      lang,
+      langType,
+      extensions,
+      langChange,
+      focusEvent
+    };
+  },
   computed: {
     isReadonly() {
       return this.model.mode === 'detail';
@@ -89,5 +194,14 @@ export default defineComponent({
   padding: 3px;
   border-radius: 5px;
   min-width: 500px;
+}
+
+.code-container {
+  height: 300px;
+  width: 100%;
+  border: 1px solid #ccc;
+  position: relative;
+  overflow: scroll;
+  background-color: #002b36;
 }
 </style>

@@ -1,15 +1,15 @@
-import Boo from '@/components/Boo.jsx';
+//import Boo from '@/components/Boo.jsx';
 import MainLayout from '@/components/layout/MainLayout.vue';
-import Config from '@/pages/Config';
+//import Config from '@/pages/Config';
 import NamespacePage from '@/pages/NamespacePage';
-import ConfigListPage from '@/pages/ConfigListPage.vue';
-import ConfigHistoryListPage from '@/pages/ConfigHistoryListPage.vue';
+//import ConfigListPage from '@/pages/ConfigListPage.vue';
+//import ConfigHistoryListPage from '@/pages/ConfigHistoryListPage.vue';
 import ServiceListPage from '@/pages/ServiceListPage.vue';
 import ServiceInstanceListPage from '@/pages/ServiceInstanceListPage.vue';
 import NotFound from '@/pages/NotFound.vue';
 import ClusterPageVue from '@/pages/ClusterPage.vue';
-import Tmp from '@/pages/Tmp.vue';
-import DiffDemo from '@/pages/DiffDemo.vue';
+//import Tmp from '@/pages/Tmp.vue';
+//import DiffDemo from '@/pages/DiffDemo.vue';
 import Login from '@/pages/Login.vue';
 import UserListPage from '@/pages/UserListPage.vue';
 import NoPermission from '@/pages/NoPermission.vue';
@@ -54,13 +54,13 @@ export const routes = [
         path: '/manage/configs',
         name: 'manange configs',
         meta: { title: '配置列表' },
-        component: ConfigListPage
+        component: (() => import('@/pages/ConfigListPage.vue')) 
       },
       {
         path: '/manage/config/history',
         name: 'manange configs history',
         meta: { title: '配置历史记录' },
-        component: ConfigHistoryListPage
+        component: (() => import('@/pages/ConfigHistoryListPage.vue')) 
       },
       /*
             {
@@ -69,13 +69,13 @@ export const routes = [
                 meta: {'title':'config title'},
                 component: Config,
             },
-            */
       {
         path: '/manage/tmp',
         name: 'manange tmp',
         meta: { title: 'tmp' },
         component: DiffDemo
       },
+      */
       {
         path: '/manage/service',
         name: 'manange service',

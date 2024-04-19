@@ -54,13 +54,13 @@ export const routes = [
         path: '/manage/configs',
         name: 'manange configs',
         meta: { title: '配置列表' },
-        component: (() => import('@/pages/ConfigListPage.vue')) 
+        component: () => import('@/pages/ConfigListPage.vue')
       },
       {
         path: '/manage/config/history',
         name: 'manange configs history',
         meta: { title: '配置历史记录' },
-        component: (() => import('@/pages/ConfigHistoryListPage.vue')) 
+        component: () => import('@/pages/ConfigHistoryListPage.vue')
       },
       /*
             {

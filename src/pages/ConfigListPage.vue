@@ -202,7 +202,6 @@ export default defineComponent({
       configApi
         .getConfigV2(config)
         .then((res) => {
-          console.log(res.data);
           if (res.status == 200 && res.data.success) {
             modelRef.value = {
               mode: mode,

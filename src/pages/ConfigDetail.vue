@@ -143,7 +143,6 @@ const lang = ref();
 const focusValue = ref(0);
 const doChangeLang = function (v) {
   if (v) {
-    console.log('doChangeLang', v);
     lang.value = langMap[v];
     props.model.configType = v;
   }
@@ -188,7 +187,6 @@ const langChange = function (e) {
 watch(
   () => props.model.configType,
   (nv, ov) => {
-    console.log('watch change configType');
     doChangeLang(props.model.configType);
   }
 );

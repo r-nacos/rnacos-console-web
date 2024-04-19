@@ -75,7 +75,7 @@
         @close="closeForm"
         @submit="submitForm"
       >
-        <ConfigDetail :model="model" />
+        <ConfigDetail :model="model" :fromHistory="false" />
       </SubContentFullPage>
     </Transition>
     <Transition name="slide-fade">
@@ -199,28 +199,6 @@ export default defineComponent({
         group: row.group,
         dataId: row.dataId
       };
-      /*
-      configApi
-        .getConfig(config)
-        .then((res) => {
-          if (res.status == 200) {
-            modelRef.value = {
-              mode: mode,
-              showMd5: true,
-              content: res.request.responseText,
-              sourceContent: res.request.responseText,
-              md5: res.headers['content-md5'] || '',
-              ...config
-            };
-            useFormRef.value = true;
-          } else {
-            window.$message.error('查询配置报错,response code:' + res.status);
-          }
-        })
-        .catch((err) => {
-          window.$message.error('查询配置报错,' + err.message);
-        });
-        */
       configApi
         .getConfigV2(config)
         .then((res) => {

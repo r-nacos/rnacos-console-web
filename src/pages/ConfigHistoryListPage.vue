@@ -59,7 +59,7 @@
       resizable
     >
       <n-drawer-content :title="getDetailTitle" closable>
-        <ConfigDetail :model="model" />
+        <ConfigDetail :model="model" :fromHistory="true" />
         <template #footer>
           <n-space align="baseline">
             <n-button text @click="closeForm">返回</n-button>

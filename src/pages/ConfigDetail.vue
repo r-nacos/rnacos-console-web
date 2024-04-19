@@ -17,7 +17,7 @@
           @keydown.enter.prevent
         />
       </n-form-item>
-      <n-form-item v-show="model.showMd5" path="md5" label="MD5">
+      <n-form-item v-show="!isHistory" path="md5" label="MD5">
         <n-input
           :disabled="true"
           placeholder=""
@@ -25,7 +25,7 @@
           @keydown.enter.prevent
         />
       </n-form-item>
-      <n-form-item path="desc" label="描述">
+      <n-form-item v-show="!isHistory" path="desc" label="描述">
         <n-input
           :disabled="isReadonly"
           placeholder="输入描述备注信息"
@@ -35,11 +35,15 @@
           @keydown.enter.prevent
         />
       </n-form-item>
-      <n-form-item path="configType" label="配置格式">
+      <n-form-item v-show="!isHistory" path="configType" label="配置格式">
         <!--
         <n-radio-group v-model:value="langType"  name="configType">
         -->
-        <n-radio-group v-model:value="model.configType" name="configType">
+        <n-radio-group
+          :disabled="isReadonly"
+          v-model:value="model.configType"
+          name="configType"
+        >
           <n-space>
             <n-radio
               v-for="item in langs"
@@ -79,135 +83,115 @@
   </div>
 </template>
 
-<script>
-import { defineComponent } from 'vue';
+<script setup>
 import CodeMirror from '@/components/config/CodeMirror';
 import { solarizedDark } from 'cm6-theme-solarized-dark';
 import { json } from '@codemirror/lang-json';
 import { xml } from '@codemirror/lang-xml';
 import { html } from '@codemirror/lang-html';
 import { yaml } from '@codemirror/lang-yaml';
-export default defineComponent({
-  components: { CodeMirror },
-  props: ['model'],
-  setup(props) {
-    const extensions = [solarizedDark];
 
-    const langs = [
-      {
-        value: 'text',
-        label: 'TEXT'
-      },
-      {
-        value: 'json',
-        label: 'JSON'
-      },
-      {
-        value: 'xml',
-        label: 'XML'
-      },
-      {
-        value: 'yaml',
-        label: 'YAML'
-      },
-      {
-        value: 'html',
-        label: 'HTML'
-      },
-      {
-        value: 'properties',
-        label: 'Properties'
-      },
-      {
-        value: 'toml',
-        label: 'TOML'
-      }
-    ];
-    const langMap = {
-      json: json(),
-      xml: xml(),
-      yaml: yaml(),
-      html: html()
-    };
-    //let model = props.model;
-    //console.log("model configType:",model.configType.value);
+const props = defineProps(['model', 'fromHistory']);
+const extensions = [solarizedDark];
 
-    const lang = ref();
-    //lang.value = langMap[model.configType.value];
-    const langType = ref();
-    //const doc = ref("123434324")
-    //doc.value = model.content;
-    const focusValue = ref(0);
-    const doChangeLang = function(v) {
-      lang.value = langMap[v];
-    }
-    const langChange = function (e) {
-
-      //langType.value = e.target.value;
-      //model.configType.value = e.target.value;
-      doChangeLang(e.target.value)
-    };
-    const focusEvent = function (e) {
-      focusValue.value += 1;
-    };
-
-    return {
-      //doc,
-      focusValue,
-      langs,
-      lang,
-      langType,
-      extensions,
-      doChangeLang,
-      //langChange,
-      focusEvent
-    };
+const langs = [
+  {
+    value: 'text',
+    label: 'TEXT'
   },
-  computed: {
-    isReadonly() {
-      return this.model.mode === 'detail';
-    }
+  {
+    value: 'json',
+    label: 'JSON'
   },
-  data() {
-    const rules = {
-      group: [
-        {
-          required: true,
-          validator(rule, value) {
-            if (!value) {
-              return new Error('需要输入配置组');
-            }
-            return true;
-          },
-          trigger: ['input', 'blur']
-        }
-      ],
-
-      dataId: [
-        {
-          required: true,
-          validator(rule, value) {
-            if (!value) {
-              return new Error('需要输入配置ID');
-            }
-            return true;
-          },
-          trigger: ['input', 'blur']
-        }
-      ]
-    };
-    return {
-      rules
-    };
+  {
+    value: 'xml',
+    label: 'XML'
   },
-  methods: {
-    langChange(e) {
-      let v = e.target.value;
-      this.doChangeLang(v)
-      this.props.model.configType = v;
-    }
+  {
+    value: 'yaml',
+    label: 'YAML'
+  },
+  {
+    value: 'html',
+    label: 'HTML'
+  },
+  {
+    value: 'properties',
+    label: 'Properties'
+  },
+  {
+    value: 'toml',
+    label: 'TOML'
   }
-});
+];
+const yamlLang = yaml();
+const langMap = {
+  json: json(),
+  xml: xml(),
+  yaml: yamlLang,
+  html: html(),
+  toml: yamlLang,
+  properties: yamlLang
+};
+//let model = props.model;
+//console.log("model configType:",model.configType.value);
+
+const lang = ref();
+//const langType = ref();
+//const doc = ref("123434324")
+//doc.value = model.content;
+const focusValue = ref(0);
+const doChangeLang = function (v) {
+  if (v) {
+    console.log('doChangeLang', v);
+    lang.value = langMap[v];
+    props.model.configType = v;
+  }
+};
+const focusEvent = function (e) {
+  focusValue.value += 1;
+};
+const isReadonly = computed(() => props.model.mode === 'detail');
+const isHistory = computed(() => props.fromHistory);
+const rules = {
+  group: [
+    {
+      required: true,
+      validator(rule, value) {
+        if (!value) {
+          return new Error('需要输入配置组');
+        }
+        return true;
+      },
+      trigger: ['input', 'blur']
+    }
+  ],
+
+  dataId: [
+    {
+      required: true,
+      validator(rule, value) {
+        if (!value) {
+          return new Error('需要输入配置ID');
+        }
+        return true;
+      },
+      trigger: ['input', 'blur']
+    }
+  ]
+};
+const langChange = function (e) {
+  let v = e.target.value;
+  doChangeLang(v);
+};
+
+watch(
+  () => props.model.configType,
+  (nv, ov) => {
+    console.log('watch change configType');
+    doChangeLang(props.model.configType);
+  }
+);
 </script>
 
 <style scoped>

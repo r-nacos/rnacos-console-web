@@ -25,11 +25,21 @@
           @keydown.enter.prevent
         />
       </n-form-item>
+      <n-form-item path="desc" label="描述">
+        <n-input
+          :disabled="isReadonly"
+          placeholder="输入描述备注信息"
+          v-model:value="model.desc"
+          type="textarea"
+          :autosize="{ minRows: 2 }"
+          @keydown.enter.prevent
+        />
+      </n-form-item>
       <n-form-item path="configType" label="配置格式">
         <!--
-        <n-radio-group v-model="langType"  name="configType">
+        <n-radio-group v-model:value="langType"  name="configType">
         -->
-        <n-radio-group v-model:value="langType" name="configType">
+        <n-radio-group v-model:value="model.configType" name="configType">
           <n-space>
             <n-radio
               v-for="item in langs"
@@ -55,10 +65,10 @@
         -->
         <div class="code-container" @click="focusEvent">
           <code-mirror
+            :disabled="isReadonly"
             v-model="model.content"
             :foucsValue="focusValue"
             :lang="lang"
-            :disabled="isReadonly"
             :basic="true"
             :tab="true"
             :extensions="extensions"
@@ -119,18 +129,23 @@ export default defineComponent({
       yaml: yaml(),
       html: html()
     };
-    let model = props.model;
-    //console.log("model value:",model);
+    //let model = props.model;
+    //console.log("model configType:",model.configType.value);
 
     const lang = ref();
-    lang.value = langMap[model.configType];
+    //lang.value = langMap[model.configType.value];
     const langType = ref();
     //const doc = ref("123434324")
     //doc.value = model.content;
     const focusValue = ref(0);
+    const doChangeLang = function(v) {
+      lang.value = langMap[v];
+    }
     const langChange = function (e) {
-      langType.value = e.target.value;
-      lang.value = langMap[e.target.value];
+
+      //langType.value = e.target.value;
+      //model.configType.value = e.target.value;
+      doChangeLang(e.target.value)
     };
     const focusEvent = function (e) {
       focusValue.value += 1;
@@ -143,7 +158,8 @@ export default defineComponent({
       lang,
       langType,
       extensions,
-      langChange,
+      doChangeLang,
+      //langChange,
       focusEvent
     };
   },
@@ -184,7 +200,13 @@ export default defineComponent({
       rules
     };
   },
-  methods: {}
+  methods: {
+    langChange(e) {
+      let v = e.target.value;
+      this.doChangeLang(v)
+      this.props.model.configType = v;
+    }
+  }
 });
 </script>
 

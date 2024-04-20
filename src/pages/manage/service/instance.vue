@@ -14,8 +14,6 @@
         delete: apis.instanceDelete,
       },
     }"
-    :data="tableData"
-    @on-save="onSave"
   >
     <template #header>
       <div>服务实例列表</div>
@@ -76,7 +74,7 @@
 </template>
 
 <script lang="tsx" setup title="服务实例列表" layout="nav">
-import { NPopconfirm, NBreadcrumb, useMessage, NBreadcrumbItem, NTag, NButton, NDataTable, NForm, NFormItem, NInput, NSpace, NDrawer, NDrawerContent, type FormItemRule, type FormInst } from 'naive-ui'
+import { NPopconfirm, NBreadcrumb, useMessage, NSwitch, NBreadcrumbItem, NTag, NButton, NDataTable, NForm, NFormItem, NInput, NSpace, NDrawer, NDrawerContent, type FormItemRule, type FormInst } from 'naive-ui'
 import { namespaceStore } from '@/data/namespace'
 import { namingApi } from '@/apis/naming'
 import type { INamespace } from '@/types/namespace'
@@ -173,8 +171,7 @@ const createColumns = () => {
             size="tiny"
             type="info"
             quaternary
-            onClick={() => showUpdate(row)}
-          >
+            onClick={() => showUpdate(row)}>
             编辑
           </NButton>
         </div>
@@ -189,8 +186,18 @@ const createColumns = () => {
 
 const columns = createColumns()
 
-const reloadData = () => {
-  doHandlePageChange(paginationReactive.page || 1)
+const showUpdate = () => {}
+
+const onLine = (row: any) => {
+  setRowEnabled(row, true)
+}
+
+const offLine = (row: any) => {
+  setRowEnabled(row, false)
+}
+
+const setRowEnabled = (row: any, bool: boolean) => {
+  console.log(row, bool)
 }
 
 /* const doQueryList = () => {
@@ -255,95 +262,4 @@ const rules = {
     },
   ],
 }
-const tableData = ref([])
-const useFormRef = ref(false)
-
-const onLine = (row: any) => {
-  setRowEnabled(row, true)
-}
-
-const offLine = (row: any) => {
-  setRowEnabled(row, false)
-}
-
-/* const setRowEnabled = (row, enabled) => {
-  let instance = {
-    namespaceId: param.namespaceId,
-    groupName: param.groupName,
-    serviceName: param.serviceName,
-
-    ip: row.ip,
-    port: row.port,
-    //weight: row.weight,
-    enabled: enabled,
-    //metadata: row.metadata,
-  }
-  namingApi
-    .updateInstance(instance)
-    .then(res => {
-      if (res.status == 200) {
-        if (enabled) {
-          window.$message.info('上线成功!')
-        } else {
-          window.$message.info('下线成功!')
-        }
-        row.enabled = enabled
-        setCurrentPageData(paginationReactive.page || 1)
-        //reloadData()
-        return
-      }
-      window.$message.error('设置失败，response code' + res.status)
-    })
-    .catch(err => {
-      window.$message.error('设置失败，' + err.message)
-    })
-} */
-
-/**
- * 保存数据
- *
- * @param data 保存数据
- */
-/* const onSave = (data: any) => {
-  formRef.value?.validate((errors: any) => {
-    if (!errors) {
-      if (data.mode === 'add') {
-        doCreate(data)
-      } else {
-        doUpdate(data)
-      }
-    }
-  })
-}
- */
-/**
- * 加载列表数据
- */
-/* const doLoadNamespace = () => {
-  doQueryList()
-    .then(res => {
-      loadingRef.value = false
-      if (res.status == 200) {
-        let count = res.data.count
-        let pageSize = paginationReactive.pageSize
-        paginationReactive.itemCount = count
-        paginationReactive.pageCount = Math.round((count + pageSize - 1) / pageSize)
-        loadedRef.value = true
-        sourceDataRef.value = res.data.list || []
-        setCurrentPageData(currentPage)
-      } else {
-        window.$message.error('request err,status code:' + res.status)
-        dataRef.value = []
-      }
-    })
-    .catch(err => {
-      window.$message.error('request err,message' + err.message)
-      dataRef.value = []
-      loadingRef.value = false
-    })
-}
- */
-onMounted(() => {
-  // doLoadNamespace()
-})
 </script>

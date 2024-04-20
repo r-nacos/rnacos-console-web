@@ -148,7 +148,6 @@
 </template>
 <script lang="tsx" setup title="用户管理" layout="nav">
 import { getRoleNameByCode, roleOptions } from '@/data/role'
-import { userApi } from '@/apis/user'
 import { useMessage, type FormInst, NButton, NPopconfirm, NTag } from 'naive-ui'
 import { toDateTime } from '@/utils/date'
 import constant from '@/types/constant'
@@ -264,8 +263,7 @@ const columns = [
             <NButton
               size="tiny"
               quaternary
-              type="error"
-            >
+              type="error">
               删除
             </NButton>
           )
@@ -277,14 +275,12 @@ const columns = [
             size="tiny"
             quaternary
             type="info"
-            onClick={$event => showUpdate($event, row)}
-          >
+            onClick={$event => showUpdate($event, row)}>
             编辑
           </NButton>
           <NPopconfirm
             onPositiveClick={() => removeItem(row)}
-            v-slots={removeConfirmSlots}
-          >
+            v-slots={removeConfirmSlots}>
             <span>确认要删服务名称为:{row.username} 的用户吗？</span>
           </NPopconfirm>
         </>
@@ -320,21 +316,22 @@ const showUpdate = ($event: MouseEvent, row: any) => {
   })
 }
 
-// 表单提交
+/**
+ * 表单验证
+ *
+ * @param data 此处主要是验证之后再次控制提交的数据，便于提交之前再做一次自定义调整
+ */
 const validator = (data: any) => {
   return new Promise((resolve, reject) => {
     formRef.value?.validate(errors => {
       if (!errors) {
         resolve({
-          result: true,
-          data: {
-            username: data.username,
-            nickname: data.nickname,
-            password: data.password,
-            enable: data.enable,
-            roles: data.roles.join(','),
-            mode: data.mode,
-          },
+          username: data.username,
+          nickname: data.nickname,
+          password: data.password,
+          enable: data.enable,
+          roles: data.roles.join(','),
+          mode: data.mode,
         })
       } else {
         reject('表单验证不通过')

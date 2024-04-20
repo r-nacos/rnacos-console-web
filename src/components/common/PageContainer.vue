@@ -86,7 +86,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import type { CrudOptions, ValidResult } from '@/types/base'
+import type { CrudOptions } from '@/types/base'
 import { NCard, NDrawerContent, useMessage } from 'naive-ui'
 import type { AnyObj } from '@/utils'
 import constant from '@/types/constant'
@@ -142,17 +142,17 @@ const updateForm = (itemData: AnyObj) => {
  * 确认
  */
 const confirm = () => {
-  // 调用表单校验
+  // 调用表单校验 此处主要是验证之后再次控制提交的数据，便于提交之前再做一次自定义调整
   if (props.config.validator && typeof props.config.validator === 'function') {
     props.config
       .validator(state.formData)
-      .then((data: ValidResult) => {
-        console.log(data, 'data')
-        if (data.result) {
-          if (state.formData.mode === 'add' || state.formData.mode === constant.FORM_MODE_CREATE) {
-            onSave(data.data)
+      .then((data: AnyObj) => {
+        console.log(data, `mode: ${data.mode || ''} type:submit`)
+        if (data) {
+          if (data.mode === 'add' || data.mode === constant.FORM_MODE_CREATE) {
+            onSave(data)
           } else {
-            onUpdate(data.data)
+            onUpdate(data)
           }
         }
       })

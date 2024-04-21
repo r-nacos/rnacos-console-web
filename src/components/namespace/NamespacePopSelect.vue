@@ -32,7 +32,7 @@ const update = (v: string) => {
       }
       value = obj
       namespaceStore.setCurrent(obj)
-      emits('change')
+      emits('change', obj)
     }
   }
 }

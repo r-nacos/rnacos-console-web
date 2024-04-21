@@ -8,7 +8,7 @@
       <n-layout-sider>
         <SystemSideMenu />
       </n-layout-sider>
-      <n-layout-content>
+      <n-layout-content style="padding: 0; margin: 0">
         <router-view></router-view>
       </n-layout-content>
     </n-layout>

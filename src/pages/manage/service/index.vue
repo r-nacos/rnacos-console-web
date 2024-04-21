@@ -14,8 +14,6 @@
       },
       pagination: paginationReactive,
     }"
-    :data="tableData"
-    @on-save="onSave"
   >
     <template #header>服务列表</template>
     <template #actions="{ param, methods }">
@@ -25,24 +23,24 @@
           label-width="auto"
           inline
         >
-          <n-form-item
+          <NFormItem
             label="服务名称"
             path="param.serviceParam"
           >
-            <n-input
+            <NInput
               v-model:value="param.serviceName"
               placeholder="输入服务名称"
             />
-          </n-form-item>
-          <n-form-item
+          </NFormItem>
+          <NFormItem
             label="服务组"
             path="param.groupParam"
           >
-            <n-input
+            <NInput
               v-model:value="param.groupName"
               placeholder=""
             />
-          </n-form-item>
+          </NFormItem>
         </n-form>
       </div>
       <div>
@@ -71,79 +69,77 @@
       </div>
     </template>
     <template #form="{ formData, isKeyReadonly, isReadonly }">
-      <n-form
+      <NForm
         ref="formRef"
         :model="formData"
         :rules="rules"
       >
-        <n-form-item
+        <NFormItem
           path="serviceName"
           label="服务名称"
         >
-          <n-input
+          <NInput
             :disabled="isKeyReadonly"
             placeholder="输入服务名称"
             v-model:value="formData.serviceName"
             @keydown.enter.prevent
           />
-        </n-form-item>
-        <n-form-item
+        </NFormItem>
+        <NFormItem
           path="groupName"
           label="服务组"
         >
-          <n-input
+          <NInput
             :disabled="isKeyReadonly"
             placeholder="输入服务组"
             v-model:value="formData.groupName"
             @keydown.enter.prevent
           />
-        </n-form-item>
-        <n-form-item
+        </NFormItem>
+        <NFormItem
           path="protectThreshold"
           label="保护阀值"
         >
-          <n-input
+          <NInput
             :disabled="isReadonly"
             placeholder="输入保护阀值"
             v-model:value.number="formData.protectThreshold"
             @keydown.enter.prevent
           />
-        </n-form-item>
-        <n-form-item
+        </NFormItem>
+        <NFormItem
           path="metadata"
           label="元数据"
         >
-          <n-input
+          <NInput
             :disabled="isReadonly"
             type="textarea"
             placeholder="输入元数据"
             :autosize="{ minRows: 3 }"
             v-model:value="formData.metadata"
           />
-        </n-form-item>
-        <n-form-item
+        </NFormItem>
+        <NFormItem
           path="selector"
           label="服务路由类型"
         >
-          <n-input
+          <NInput
             :disabled="true"
             placeholder="暂不支持"
             v-model:value="formData.selector"
             @keydown.enter.prevent
           />
-        </n-form-item>
-      </n-form>
+        </NFormItem>
+      </NForm>
     </template>
   </PageContainer>
 </template>
 <script lang="tsx" setup title="服务列表" layout="nav">
 import apis from '@/apis/index'
-import { useMessage, type FormInst, NButton, NPopconfirm } from 'naive-ui'
+import { useMessage, type FormInst, NButton, NPopconfirm, NForm, NFormItem } from 'naive-ui'
 import constant from '@/types/constant'
 import { useWebResources } from '@/data/resources'
-import { namingApi } from '@/apis/naming'
 import { namespaceStore } from '@/data/namespace'
-const tableData = ref<any>([])
 const message = useMessage()
 const formRef = ref<FormInst | null>(null)
 const pageContainer = ref<any>(null)
@@ -238,17 +234,34 @@ const removeConfirmSlots = {
  *
  * @param row 数据项
  */
-const showUpdate = ($event: MouseEvent, row: any) => {
-  pageContainer.value?.updateForm({
-    ip: row.ip,
-    port: `${row.port}`,
-    enabled: row.enabled,
-    weight: `${row.weight || 1}`,
-    metadata: JSON.stringify(row.metadata || {}),
-    mode: constant.FORM_MODE_UPDATE,
-  })
+const showForm = (row: any, mode: string) => {
+  console.log(row, 'row')
+  if (mode === constant.FORM_MODE_UPDATE) {
+    pageContainer.value?.updateForm({
+      namespaceId: row.namespaceId,
+      groupName: row.groupName,
+      serviceName: row.name,
+      protectThreshold: row.protectThreshold,
+      metadata: row.metadata,
+      tenant: row.getTenant,
+      mode: mode,
+    })
+  } else {
+    pageContainer.value?.showDetail({
+      namespaceId: row.namespaceId,
+      groupName: row.groupName,
+      serviceName: row.name,
+      protectThreshold: row.protectThreshold,
+      metadata: row.metadata,
+      tenant: row.getTenant,
+      mode: mode,
+    })
+  }
 }
 
+/**
+ * 表格字段列表
+ */
 const columns = [
   {
     title: '服务名称',
@@ -278,7 +291,7 @@ const columns = [
             size="tiny"
             quaternary
             type="info"
-            onClick={$event => showUpdate($event, row)}>
+            onClick={() => showForm(row, constant.FORM_MODE_UPDATE)}>
             编辑
           </NButton>
         )
@@ -309,7 +322,7 @@ const columns = [
             size="tiny"
             quaternary
             type="info"
-            onClick={() => showInstances(row)}>
+            onClick={() => showForm(row, constant.FORM_MODE_DETAIL)}>
             详情
           </NButton>
           {editButton}
@@ -346,58 +359,6 @@ const removeItem = (row: any) => {
     namespaceId: namespaceStore.current.value.namespaceId,
     groupName: row.groupName,
     serviceName: row.name,
-  })
-}
-
-// 表单提交
-const onSave = (data: any) => {
-  formRef.value?.validate(errors => {
-    if (!errors) {
-      if (data.mode === constant.FORM_MODE_DETAIL) {
-        return
-      }
-      let serviceInfo = {
-        namespaceId: namespaceStore.current.value.namespaceId,
-        groupName: data.groupName,
-        serviceName: data.serviceName,
-        protectThreshold: data.protectThreshold,
-        metadata: data.metadata,
-        tenant: undefined, // this.getTenant 这里是个bug
-      } as any
-      if (data.mode === constant.FORM_MODE_CREATE) {
-        namingApi
-          .createService(serviceInfo)
-          .then(res => {
-            if (res.status == 200) {
-              message.success('设置成功!')
-              pageContainer.value?.refreshData()
-              return
-            }
-            message.error('设置失败，response code' + res.status)
-          })
-          .catch(err => {
-            message.error('设置失败，' + err.message)
-          })
-      } else {
-        namingApi
-          .updateService(serviceInfo)
-          .then(res => {
-            if (res.status == 200) {
-              message.success('设置成功!')
-              pageContainer.value?.refreshData()
-              return
-            }
-            message.error('设置失败，response code' + res.status)
-          })
-          .catch(err => {
-            message.error('设置失败，' + err.message)
-          })
-      }
-    }
-    // else {
-    // console.log(errors)
-    // message.error('请安要求进行表单填写')
-    // }
   })
 }
 </script>

@@ -40,6 +40,20 @@
         />
       </NFormItem>
       <NFormItem
+        v-show="!isHistory"
+        path="desc"
+        label="描述"
+      >
+        <NInput
+          :disabled="isReadonly"
+          placeholder="输入描述备注信息"
+          v-model:value="formDataRef.desc"
+          type="textarea"
+          :autosize="{ minRows: 2 }"
+          @keydown.enter.prevent
+        />
+      </NFormItem>
+      <NFormItem
         path="content"
         label="配置格式"
       >
@@ -69,49 +83,35 @@
 </template>
 <script lang="ts" setup>
 import constant from '@/types/constant'
-import { namespaceStore } from '@/data/namespace'
-import { configApi } from '@/apis/config'
 import { useMessage, NForm, NFormItem, NInput, NRadio } from 'naive-ui'
 import Editor from './Editor.vue'
-import apis from '@/apis'
-import DiffContent from './DiffContent.vue'
 const emits = defineEmits(['closeModal', 'refreshData'])
 const message = useMessage()
-const showDiff = ref(false)
 let props = defineProps({
   formData: {
     type: Object,
     required: true,
   },
+  isHistory: {
+    type: Boolean,
+    default: false,
+  },
 })
 const formDataRef = ref<any>(props.formData)
 const showEditor = ref(true)
-const oldVal = ref('')
-const saveData = ref<any>({})
 
 // 配置文件类型
-const list = ['TEXT', 'JSON', 'XML', 'YAML', 'HTML', 'Properties']
+const list = ['TEXT', 'JSON', 'XML', 'YAML', 'HTML', 'Properties', 'TOML']
 const checkedValue = ref<string | null>('TEXT')
 
-onMounted(async () => {
-  // formData
-  if (formDataRef.value.mode === constant.FORM_MODE_UPDATE) {
-    showEditor.value = false
-    let resp = await apis.getJSON(apis.getConfig, {
-      params: {
-        tenant: formDataRef.value.tenant,
-        group: formDataRef.value.group,
-        dataId: formDataRef.value.dataId,
-      },
-    })
-    formDataRef.value.content = `${resp.data || ''}`
-    oldVal.value = `${resp.data || ''}`
-    showEditor.value = true
-  }
-})
-
+/**
+ * 配置格式
+ *
+ * @param e
+ */
 const handleChange = (e: Event) => {
   checkedValue.value = (e.target as HTMLInputElement).value
+  formDataRef.value.configType = checkedValue.value
 }
 
 const isReadonly = props.formData.mode === constant.FORM_MODE_DETAIL
@@ -142,31 +142,5 @@ const rules = {
       trigger: ['input', 'blur'],
     },
   ],
-}
-
-// 显示模态框
-const showModal = computed(() => props.visible)
-
-// 提交表单
-const submitDiffForm = () => {
-  saveData.value = {
-    dataId: formDataRef.value.dataId,
-    group: formDataRef.value.group,
-    tenant: namespaceStore.current.value.namespaceId,
-    content: formDataRef.value.content,
-  }
-  showDiff.value = true
-}
-
-const closeModal = (bool: boolean = false) => {
-  if (bool) {
-    emits('refreshData')
-  }
-  emits('closeModal')
-}
-
-// 关闭弹框
-const onClose = () => {
-  emits('closeModal')
 }
 </script>

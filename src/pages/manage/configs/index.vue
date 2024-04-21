@@ -12,12 +12,12 @@
         update: apis.configUpdate,
         delete: apis.configRemove,
       },
-      param: param,
+      param: paramRef,
       drawer: {
         width: drawerWidth,
       },
+      pagination: paginationReactive,
     }"
-    :data="tableData"
   >
     <template #header>
       <div>配置列表</div>
@@ -97,7 +97,7 @@
         :ov="state.ov"
       />
     </template>
-    <template #footer>
+    <template #footer="{ formData }">
       <NSpace
         align="baseline"
         v-if="visibleType == 1"
@@ -127,7 +127,7 @@
         </NButton>
         <NButton
           type="primary"
-          @click="onSave()"
+          @click="onSave(formData)"
         >
           确认变更
         </NButton>
@@ -140,7 +140,6 @@
 import NamespacePopSelect from '@/components/namespace/NamespacePopSelect.vue'
 import DiffContent from '@/components/config/DiffContent.vue'
 import apis from '@/apis/index'
-import { configApi } from '@/apis/config'
 import { namespaceStore } from '@/data/namespace'
 import { useWebResources } from '@/data/resources'
 import { useRouter } from 'vue-router'
@@ -149,28 +148,27 @@ import qs from 'qs'
 import { NButton, NPopconfirm, NUpload, useMessage, NSpace, NForm, NFormItem } from 'naive-ui'
 import ConfigForm from '@/components/config/ConfigForm.vue'
 import { useLayoutSize } from '@/store/index'
-import type { CrudOptions } from '@/types/base'
+import type { AnyObj } from '@/utils'
+import type { INamespace } from '@/types/namespace'
 const pageContainer = ref<HTMLDivElement>() as any
 const configForm = ref<HTMLDivElement>() as any
 let layoutSize = useLayoutSize()
 let router = useRouter()
 let webResources = useWebResources()
 const downloadRef = ref<any>(null)
-const tableData = ref([])
-const useFormRef = ref(false)
 const visibleType = ref(1)
 const drawerWidth = ref(600)
 const paramRef = ref({
   dataParam: '',
   groupParam: '',
-  tenant: '',
+  tenant: namespaceStore.current.value.namespaceId,
   pageNo: 1,
   pageSize: 20,
 })
 let state = reactive({
   ov: '',
+  mode: '',
 })
-const modelRef = ref({ dataId: '', group: 'DEFAULT_GROUP', md5: '', showMd5: true, content: '', sourceContent: '', mode: constant.FORM_MODE_CREATE })
 const uploadHeader = ref({
   tenant: namespaceStore.current.value.namespaceId,
 })
@@ -183,12 +181,23 @@ onMounted(() => {
   }
 })
 
-const changeNamespace = () => {
-  alert('查询')
+/**
+ * 改变命名空间
+ *
+ * @param nm
+ */
+const changeNamespace = (nm: INamespace) => {
+  paramRef.value.tenant = nm.namespaceName
+  pageContainer.value?.refreshData()
 }
 
+/**
+ * 新建表单
+ */
 const createForm = () => {
   state.ov = ''
+  visibleType.value = 1
+  state.mode = constant.FORM_MODE_CREATE
   pageContainer.value?.createForm({
     dataId: '',
     group: 'DEFAULT_GROUP',
@@ -196,6 +205,8 @@ const createForm = () => {
     showMd5: true,
     content: '',
     sourceContent: '',
+    desc: '',
+    configType: '',
     mode: constant.FORM_MODE_CREATE,
   })
 }
@@ -211,7 +222,10 @@ const onPrev = () => {
  * 下一步进行diff对比
  */
 const onNext = () => {
-  console.log('next')
+  if (state.mode === constant.FORM_MODE_DETAIL) {
+    pageContainer.value?.closeDrawer()
+    return
+  }
   visibleType.value = 2
 }
 
@@ -220,38 +234,64 @@ const closeDrawer = () => {
   pageContainer.value?.closeDrawer()
 }
 
-// 保存数据
-const onSave = () => {
-  pageContainer.value?.onSave()
+/**
+ * 保存配置数据
+ *
+ * @param formData 配置项
+ */
+const onSave = (formData: AnyObj) => {
+  pageContainer.value?.onSave(formData)
+  visibleType.value = 1
 }
 
-// const getTenant = computed(() => namespaceStore.current.value.namespaceId)
-
-// const getDetailTitle = computed(() => {
-//   if (modelRef.value.mode === constant.FORM_MODE_UPDATE) {
-//     return '编辑配置'
-//   } else if (modelRef.value.mode === constant.FORM_MODE_CREATE) {
-//     return '新增配置'
-//   }
-//   return '编辑详情'
-// })
-
+/**
+ * 分页
+ */
 const paginationReactive = reactive({
   page: 1,
   pageCount: 1,
   pageSize: 10,
   itemCount: 0,
   prefix({ itemCount }: any) {
+    paginationReactive.itemCount = itemCount
     return `总行数: ${itemCount}`
+  },
+  onChange: (page: number) => {
+    paginationReactive.page = page
+  },
+  onUpdatePageSize: (pageSize: number) => {
+    paginationReactive.pageSize = pageSize
+    paginationReactive.page = 1
   },
 })
 
-const param = {
-  tenant: namespaceStore.current.value.namespaceId,
-  dataParam: paramRef.value.dataParam,
-  groupParam: paramRef.value.groupParam,
-  pageNo: paginationReactive.page,
-  pageSize: paginationReactive.pageSize,
+/**
+ * 获取配置内容
+ *
+ * @param row 行数据
+ */
+const getConfig = (row: any) => {
+  // eslint-disable-next-line no-async-promise-executor
+  return new Promise(async (resolve, reject) => {
+    let { status, data } = await apis.getJSON(apis.configInfo, {
+      params: {
+        tenant: row.tenant,
+        group: row.group || 'DEFAULT_GROUP',
+        dataId: row.dataId || '',
+      },
+    })
+    if (status === 200 && data.data && typeof data.data === 'object') {
+      if (data.success) {
+        resolve(data.data)
+      } else {
+        message.success('获取请求配置失败')
+        reject({})
+      }
+    } else {
+      message.error('请求失败')
+      reject({})
+    }
+  })
 }
 
 /**
@@ -260,67 +300,53 @@ const param = {
  * @param row 行数据
  */
 const updateItem = async (row: any) => {
-  let res = await apis.getJSON(apis.getConfig, {
-    params: {
+  getConfig(row).then((data: any) => {
+    visibleType.value = 1
+    state.mode = constant.FORM_MODE_UPDATE
+    state.ov = `${data.value || ''}`
+    pageContainer.value?.updateForm({
+      md5: `${data.md5 || ''}`,
+      showMd5: row.showMd5 || true,
+      content: `${data.value || ''}`,
+      sourceContent: row.sourceContent || '',
+      mode: constant.FORM_MODE_UPDATE,
       tenant: row.tenant,
       group: row.group || 'DEFAULT_GROUP',
       dataId: row.dataId || '',
-    },
-  })
-  visibleType.value = 1
-  state.ov = res.request.responseText
-  pageContainer.value?.updateForm({
-    md5: res.headers['content-md5'] || '',
-    showMd5: row.showMd5 || true,
-    content: res.request.responseText || '',
-    sourceContent: row.sourceContent || '',
-    mode: constant.FORM_MODE_UPDATE,
-    tenant: row.tenant,
-    group: row.group || 'DEFAULT_GROUP',
-    dataId: row.dataId || '',
+      desc: '',
+      configType: '',
+    })
   })
 }
 
+/**
+ * 下载前处理
+ */
 const doBeforeUpload = () => {
   uploadHeader.value = {
     tenant: namespaceStore.current.value.namespaceId,
   }
 }
 
-const doShowConfigDetail = (row: any, mode: any) => {
-  let config = {
-    tenant: row.tenant,
-    group: row.group,
-    dataId: row.dataId,
-  }
-  configApi
-    .getConfig(config)
-    .then(res => {
-      if (res.status == 200) {
-        modelRef.value = {
-          mode: mode,
-          showMd5: true,
-          content: res.request.responseText,
-          sourceContent: res.request.responseText,
-          md5: res.headers['content-md5'] || '',
-          ...config,
-        }
-        useFormRef.value = true
-      } else {
-        message.error('查询配置报错,response code:' + res.status)
-      }
-    })
-    .catch(err => {
-      message.error('查询配置报错,' + err.message)
-    })
-}
-
 /**
  *
  * @param row 详情数据
  */
-const detailItem = (row: any) => {
-  doShowConfigDetail(row, constant.FORM_MODE_DETAIL)
+const detailItem = async (row: any) => {
+  getConfig(row).then((data: any) => {
+    visibleType.value = 1
+    state.mode = constant.FORM_MODE_DETAIL
+    pageContainer.value?.showDetail({
+      md5: data.md5 || '',
+      showMd5: row.showMd5 || true,
+      content: data.value || '',
+      sourceContent: row.sourceContent || '',
+      mode: constant.FORM_MODE_DETAIL,
+      tenant: row.tenant,
+      group: row.group || 'DEFAULT_GROUP',
+      dataId: row.dataId || '',
+    })
+  })
 }
 
 /**
@@ -342,7 +368,7 @@ const removeItem = (row: any) => {
  */
 const showHistory = (row: any) => {
   router.push({
-    path: '/manage/config/history',
+    path: '/manage/configs/history',
     query: {
       tenant: row.tenant,
       group: row.group,
@@ -357,8 +383,7 @@ const removeConfirmSlots = {
       <NButton
         size="tiny"
         quaternary
-        type="error"
-      >
+        type="error">
         删除
       </NButton>
     )
@@ -387,16 +412,14 @@ const columns = [
             size="tiny"
             quaternary
             type="info"
-            onClick={() => updateItem(row)}
-          >
+            onClick={() => updateItem(row)}>
             编辑
           </NButton>
         )
         removePopconfirm = (
           <NPopconfirm
             onPositiveClick={() => removeItem(row)}
-            v-slots={removeConfirmSlots}
-          >
+            v-slots={removeConfirmSlots}>
             <span>
               确认要删配置组为:{row.group},ID为:{row.dataId}的配置吗？
             </span>
@@ -412,16 +435,14 @@ const columns = [
             size="tiny"
             quaternary
             type="info"
-            onClick={() => detailItem(row)}
-          >
+            onClick={() => detailItem(row)}>
             详情
           </NButton>
           <NButton
             size="tiny"
             quaternary
             type="info"
-            onClick={() => showHistory(row)}
-          >
+            onClick={() => showHistory(row)}>
             历史记录
           </NButton>
           {editButton}
@@ -432,19 +453,23 @@ const columns = [
   },
 ]
 
-const rowKey = (rowData: any) => {
-  return rowData.group + '@@' + rowData.dataId
-}
-
+/**
+ * 文件上传
+ *
+ * @param param 文件上传
+ */
 const handlerUploadFinish = ({ event }: any) => {
   if (event.target.status == 200) {
     message.info('上传成功')
-    doHandlePageChange(1)
+    pageContainer.value?.refreshData()
   } else {
     message.error('上传处理失败')
   }
 }
 
+/**
+ * 下载配置
+ */
 const download = () => {
   paramRef.value.tenant = namespaceStore.current.value.namespaceId
   let params = qs.stringify(paramRef.value)

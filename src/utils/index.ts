@@ -94,7 +94,7 @@ export const escapeHtml = function (html) {
   return html.replace(/</g, '&lt;').replace(/>/g, '&gt;')
 }
 
-export const splitLines = value => {
+export const splitLines = (value: string) => {
   const subItems = value.split('\n')
   if (subItems[subItems.length - 1] === '') {
     subItems.pop()
@@ -102,7 +102,7 @@ export const splitLines = value => {
   return subItems
 }
 
-export const handleDiff = function (src, dst) {
+export const handleDiff = function (src: any, dst: any) {
   const diffs = diffLines(src, dst)
   const list = []
   let srcLine = 0
@@ -154,7 +154,7 @@ export const handleDiff = function (src, dst) {
   return list
 }
 
-export const buildDiffResult = function (list) {
+export const buildDiffResult = function (list: { [x: string]: any }) {
   let srcNo = ''
   let srcCode = ''
   let dstNo = ''

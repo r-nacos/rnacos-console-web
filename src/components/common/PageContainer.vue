@@ -61,6 +61,7 @@
         <template #footer>
           <slot
             name="footer"
+            :formData="state.formData"
             v-if="slots.footer"
           ></slot>
           <n-space
@@ -138,6 +139,11 @@ const updateForm = (itemData: AnyObj) => {
   showDrawer.value = true
 }
 
+const showDetail = (itemData: AnyObj) => {
+  state.formData = { ...itemData, mode: constant.FORM_MODE_DETAIL }
+  showDrawer.value = true
+}
+
 /**
  * 确认
  */
@@ -172,7 +178,8 @@ const confirm = () => {
  * 保存表单数据
  */
 const onSave = async (formData: any) => {
-  let { status, data } = await apis.postJSON(`${props.config.apis?.create || ''}`, {
+  let url = formData.mode === 'add' || formData.mode === constant.FORM_MODE_CREATE ? `${props.config.apis?.create || ''}` : `${props.config.apis?.update || ''}`
+  let { status, data } = await apis.postJSON(url, {
     data: formData,
   })
   if (status === 200 && data && typeof data === 'object') {
@@ -327,6 +334,7 @@ defineExpose({
   closeDrawer,
   refreshData,
   saveUpdateForm,
+  showDetail,
 })
 </script>
 
@@ -356,7 +364,7 @@ defineExpose({
   }
 
   .page-content {
-    margin: 10px 0;
+    margin: 10px;
   }
 
   .page-table {

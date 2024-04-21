@@ -43,13 +43,9 @@ let webResources = useWebResources()
 
 <style scoped>
 .page-about {
-  display: flex;
-  position: relative;
   align-items: center;
-  background: #fff;
   flex-direction: column;
-  width: 100%;
-  height: 100%;
+  margin: 10px;
 }
 
 .wrap {

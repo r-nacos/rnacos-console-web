@@ -27,20 +27,22 @@
           @keydown.enter.prevent
         />
       </NFormItem>
+      <template v-if="!isHistory">
+        <NFormItem
+          v-show="formDataRef.showMd5"
+          path="md5"
+          label="MD5"
+        >
+          <NInput
+            :disabled="true"
+            placeholder=""
+            v-model:value="formDataRef.md5"
+            @keydown.enter.prevent
+          />
+        </NFormItem>
+      </template>
       <NFormItem
-        v-show="formDataRef.showMd5"
-        path="md5"
-        label="MD5"
-      >
-        <NInput
-          :disabled="true"
-          placeholder=""
-          v-model:value="formDataRef.md5"
-          @keydown.enter.prevent
-        />
-      </NFormItem>
-      <NFormItem
-        v-show="!isHistory"
+        v-if="!isHistory"
         path="desc"
         label="描述"
       >
@@ -53,21 +55,23 @@
           @keydown.enter.prevent
         />
       </NFormItem>
-      <NFormItem
-        path="content"
-        label="配置格式"
-      >
-        <NRadio
-          v-for="i in list"
-          :key="i"
-          :checked="checkedValue === i"
-          :value="i"
-          :name="i"
-          @change="handleChange"
+      <template v-if="!isHistory">
+        <NFormItem
+          path="content"
+          label="配置格式"
         >
-          {{ i }}
-        </NRadio>
-      </NFormItem>
+          <NRadio
+            v-for="i in list"
+            :key="i"
+            :checked="checkedValue === i"
+            :value="i"
+            :name="i"
+            @change="handleChange"
+          >
+            {{ i }}
+          </NRadio>
+        </NFormItem>
+      </template>
       <NFormItem
         path="content"
         label="配置内容"

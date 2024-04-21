@@ -217,13 +217,16 @@ const onUpdate = async (formData: any) => {
 const onDelete = async (params: AnyObj) => {
   let { status, data } = await apis.postJSON(`${props.config.apis?.delete || ''}`, {
     data: params,
+    // headers: {
+    //   'Content-Type': 'application/x-www-form-urlencoded',
+    // },
   })
   if (status === 200 && data && typeof data === 'object') {
     if (data.success) {
       toast.success('删除成功')
       refreshData()
     } else {
-      toast.error(data.success || '删除失败')
+      toast.error(data.message || '删除失败')
     }
   } else {
     toast.error('请求失败')

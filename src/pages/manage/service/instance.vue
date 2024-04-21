@@ -5,7 +5,7 @@
       columns: columns,
       param: paramRef,
       form: {
-        title: '服务器实列',
+        title: '实例',
       },
       apis: {
         list: apis.instanceList,
@@ -13,60 +13,101 @@
         update: apis.instanceUpdate,
         delete: apis.instanceDelete,
       },
+      pagination: paginationReactive,
+      validator: validator,
     }"
   >
     <template #header>
       <div>服务实例列表</div>
       <n-button @click="router.go(-1)">返回</n-button>
     </template>
-    <template #actions="{ param }">
+    <template #actions="{ param, methods }">
       <div>
         <n-form
           label-placement="left"
           label-width="auto"
           inline
         >
-          <n-form-item
+          <NFormItem
             label="服务名称"
             path="param.serviceParam"
           >
-            <n-input
+            <NInput
               :disabled="true"
               v-model:value="param.serviceName"
               placeholder="输入服务名称"
             />
-          </n-form-item>
-          <n-form-item
+          </NFormItem>
+          <NFormItem
             label="服务组"
             path="param.groupParam"
           >
-            <n-input
+            <NInput
               :disabled="true"
               v-model:value="param.groupName"
               placeholder=""
             />
-          </n-form-item>
+          </NFormItem>
         </n-form>
       </div>
-      <n-button @click="reloadData">刷新</n-button>
+      <n-button @click="methods.refreshData()">刷新</n-button>
     </template>
-    <template #form="{ formData }">
+    <template #form="{ formData, isReadonly }">
       <NForm
         ref="formRef"
         :model="formData"
         :rules="rules"
       >
         <NFormItem
-          path="namespaceName"
-          label="命名空间名称"
+          path="ip"
+          label="IP"
         >
-          <NInput v-model:value="formData.namespaceName" />
+          <NInput
+            :disabled="true"
+            placeholder=""
+            v-model:value="formData.ip"
+            @keydown.enter.prevent
+          />
         </NFormItem>
         <NFormItem
-          path="namespaceId"
-          label="命名空间Id"
+          path="port"
+          label="端口"
         >
-          <NInput v-model:value="formData.namespaceId" />
+          <NInput
+            :disabled="true"
+            placeholder=""
+            v-model:value="formData.port"
+            @keydown.enter.prevent
+          />
+        </NFormItem>
+        <NFormItem
+          path="enabled"
+          label="是否上线"
+        >
+          <NSwitch v-model:value="formData.enabled" />
+        </NFormItem>
+        <NFormItem
+          path="weight"
+          label="权重"
+        >
+          <NInput
+            :disabled="isReadonly"
+            placeholder=""
+            v-model:value.number="formData.weight"
+            @keydown.enter.prevent
+          />
+        </NFormItem>
+        <NFormItem
+          path="metadata"
+          label="元数据"
+        >
+          <NInput
+            :disabled="isReadonly"
+            type="textarea"
+            placeholder="输入元数据"
+            :autosize="{ minRows: 3 }"
+            v-model:value="formData.metadata"
+          />
         </NFormItem>
       </NForm>
     </template>
@@ -74,12 +115,10 @@
 </template>
 
 <script lang="tsx" setup title="服务实例列表" layout="nav">
-import { NPopconfirm, NBreadcrumb, useMessage, NSwitch, NBreadcrumbItem, NTag, NButton, NDataTable, NForm, NFormItem, NInput, NSpace, NDrawer, NDrawerContent, type FormItemRule, type FormInst } from 'naive-ui'
-import { namespaceStore } from '@/data/namespace'
-import { namingApi } from '@/apis/naming'
-import type { INamespace } from '@/types/namespace'
+import { NSwitch, NButton, NForm, NFormItem, NInput, useMessage, type FormItemRule, type FormInst, messageDark } from 'naive-ui'
 import { useWebResources } from '@/data/resources'
 import apis from '@/apis'
+import constant from '@/types/constant'
 const message = useMessage()
 const formRef = ref<FormInst | null>(null)
 const pageContainer = ref<any>(null)
@@ -99,6 +138,13 @@ const paginationReactive = reactive({
   prefix({ itemCount }: any) {
     return `总行数: ${itemCount}`
   },
+  onChange: (page: number) => {
+    paginationReactive.page = page
+  },
+  onUpdatePageSize: (pageSize: number) => {
+    paginationReactive.pageSize = pageSize
+    paginationReactive.page = 1
+  },
 })
 /**
  * 表格表格字段
@@ -116,7 +162,7 @@ const createColumns = () => {
     {
       title: '是否临时实例',
       key: 'ephemeral',
-      render(row) {
+      render(row: { ephemeral: { toString: () => any } }) {
         return <span>{row.ephemeral && row.ephemeral.toString()}</span>
       },
     },
@@ -127,7 +173,7 @@ const createColumns = () => {
     {
       title: '建康状态',
       key: 'healthy',
-      render(row) {
+      render(row: { healthy: { toString: () => any } }) {
         return <span>{row.healthy && row.healthy.toString()}</span>
       },
     },
@@ -135,7 +181,7 @@ const createColumns = () => {
       title: '元数据',
       key: 'metadata',
       width: 200,
-      render(row) {
+      render(row: { metadata: any }) {
         return <span>{row.metadata && JSON.stringify(row.metadata)}</span>
       },
     },
@@ -183,78 +229,113 @@ const createColumns = () => {
   }
   return columns
 }
-
 const columns = createColumns()
 
-const showUpdate = () => {}
+/**
+ * 编辑实列
+ *
+ * @param row 行数据
+ */
+const showUpdate = (row: any) => {
+  pageContainer.value?.updateForm({
+    namespaceId: row.namespaceId || '',
+    groupName: row.groupName || 'DEFAULT_GROUP',
+    serviceName: row.serviceName,
+    ip: row.ip,
+    port: row.port,
+    weight: row.weight,
+    enabled: row.enabled,
+    metadata: JSON.stringify(row.metadata),
+    mode: constant.FORM_MODE_UPDATE,
+  })
+}
 
+// 设置下线
 const onLine = (row: any) => {
   setRowEnabled(row, true)
 }
 
+// 设置在线
 const offLine = (row: any) => {
   setRowEnabled(row, false)
 }
 
-const setRowEnabled = (row: any, bool: boolean) => {
-  console.log(row, bool)
+/**
+ *
+ * @param row 行数据
+ *
+ * @param enabled 开启状态
+ */
+const setRowEnabled = async (row: any, enabled: boolean) => {
+  let { status, data } = await apis.postJSON(apis.instanceUpdate, {
+    data: {
+      namespaceId: row.namespaceId,
+      groupName: row.groupName,
+      serviceName: row.serviceName,
+      ip: row.ip,
+      port: row.port,
+      //weight: row.weight,
+      enabled: `${enabled}`,
+      //metadata: row.metadata,
+    },
+  })
+  if (status === 200 && data && typeof data === 'object') {
+    if (data.success) {
+      row.enabled = enabled
+      if (enabled) {
+        message.success('上线啦')
+      } else {
+        message.warning('下线啦')
+      }
+    } else {
+      message.error(data.message || '操作失败')
+    }
+  } else {
+    message.error('请求失败')
+  }
 }
 
-/* const doQueryList = () => {
-  return namingApi.queryServiceInstances({
-    serviceName: paramRef.value.serviceName,
-    groupName: paramRef.value.groupName,
-    namespaceId: paramRef.value.namespaceId,
-  })
-} */
-
-/* const doHandlePageChange = currentPage => {
-  doQueryList()
-    .then(res => {
-      loadingRef.value = false
-      if (res.status == 200) {
-        let count = res.data.count
-        let pageSize = paginationReactive.pageSize
-        paginationReactive.itemCount = count
-        paginationReactive.pageCount = Math.round((count + pageSize - 1) / pageSize)
-        loadedRef.value = true
-        sourceDataRef.value = res.data.list || []
-        setCurrentPageData(currentPage)
+/**
+ * 保存数据
+ *
+ * @param data 保存数据
+ */
+const validator = (data: any) => {
+  return new Promise((resolve, reject) => {
+    formRef.value?.validate((errors: any) => {
+      if (!errors) {
+        data.enabled = `${data.enabled}`
+        data.weight = parseInt(data.weight)
+        data.port = parseInt(data.port)
+        resolve(data)
       } else {
-        window.$message.error('request err,status code:' + res.status)
-        dataRef.value = []
+        reject('表单验证不通过')
       }
     })
-    .catch(err => {
-      window.$message.error('request err,message' + err.message)
-      dataRef.value = []
-      loadingRef.value = false
-    })
-} */
+  })
+}
 
 /**
  * 表单校验
  */
 const rules = {
-  namespaceId: [
+  weight: [
     {
       required: true,
-      validator(rule: FormItemRule, value: string) {
+      validator(rule: any, value: any) {
         if (!value) {
-          return new Error('需要输入ID')
+          return true //new Error('权重必须填写且只能是数字')
         }
-        return true
-      },
-      trigger: ['input', 'blur'],
-    },
-  ],
-
-  namespaceName: [
-    {
-      required: true,
-      validator(rule: FormItemRule, value: string) {
-        if (!value) {
-          return new Error('需要输入名称')
+        try {
+          let v = parseFloat(value)
+          if (isNaN(v)) {
+            return new Error('权重需为数字')
+          }
+          if (v < 0) {
+            return new Error('权重不能小于0')
+          }
+        } catch {
+          return new Error('权重需为数字')
         }
         return true
       },

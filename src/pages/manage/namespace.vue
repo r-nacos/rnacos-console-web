@@ -58,7 +58,6 @@
 import { NPopconfirm, NTag, NButton, NForm, NFormItem, NInput, type FormItemRule, type FormInst } from 'naive-ui'
 import apis from '@/apis/index'
 import type { INamespace } from '@/types/namespace'
-import constant from '@/types/constant'
 const formRef = ref<FormInst | null>(null)
 const pageContainer = ref<any>(null)
 

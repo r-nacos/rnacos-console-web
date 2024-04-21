@@ -12,6 +12,7 @@
         update: apis.serviceUpdate,
         delete: apis.serviceDelete,
       },
+      pagination: paginationReactive,
     }"
     :data="tableData"
     @on-save="onSave"
@@ -146,9 +147,7 @@ const tableData = ref<any>([])
 const message = useMessage()
 const formRef = ref<FormInst | null>(null)
 const pageContainer = ref<any>(null)
-let route = useRoute()
 let webResources = useWebResources()
-let query = route.query
 const router = useRouter()
 const paginationReactive = reactive({
   page: 1,
@@ -158,8 +157,18 @@ const paginationReactive = reactive({
   prefix({ itemCount }: any) {
     return `总行数: ${itemCount}`
   },
+  onChange: (page: number) => {
+    paginationReactive.page = page
+  },
+  onUpdatePageSize: (pageSize: number) => {
+    paginationReactive.pageSize = pageSize
+    paginationReactive.page = 1
+  },
 })
 
+/**
+ * 表单验证规则
+ */
 const rules = {
   serviceName: [
     {
@@ -173,7 +182,6 @@ const rules = {
       trigger: ['input', 'blur'],
     },
   ],
-
   groupName: [
     {
       required: true,
@@ -217,8 +225,7 @@ const removeConfirmSlots = {
       <NButton
         size="tiny"
         quaternary
-        type="error"
-      >
+        type="error">
         删除
       </NButton>
     )
@@ -232,7 +239,6 @@ const removeConfirmSlots = {
  * @param row 数据项
  */
 const showUpdate = ($event: MouseEvent, row: any) => {
-  console.log(row, 'row')
   pageContainer.value?.updateForm({
     ip: row.ip,
     port: `${row.port}`,
@@ -272,16 +278,14 @@ const columns = [
             size="tiny"
             quaternary
             type="info"
-            onClick={$event => showUpdate($event, row)}
-          >
+            onClick={$event => showUpdate($event, row)}>
             编辑
           </NButton>
         )
         removePopconfirm = (
           <NPopconfirm
             onPositiveClick={() => removeItem(row)}
-            v-slots={removeConfirmSlots}
-          >
+            v-slots={removeConfirmSlots}>
             <span>
               确认要删服务名称为:{row.name},服务组为:{row.groupName}
               ,的配置吗？
@@ -298,16 +302,14 @@ const columns = [
             size="tiny"
             quaternary
             type="info"
-            onClick={() => showInstances(row)}
-          >
+            onClick={() => showInstances(row)}>
             服务实例
           </NButton>
           <NButton
             size="tiny"
             quaternary
             type="info"
-            onClick={() => showInstances(row)}
-          >
+            onClick={() => showInstances(row)}>
             详情
           </NButton>
           {editButton}
@@ -340,11 +342,6 @@ const showInstances = (row: any) => {
  * @param row 含数据
  */
 const removeItem = (row: any) => {
-  let serviceKey = {
-    namespaceId: namespaceStore.current.value.namespaceId,
-    groupName: row.groupName,
-    serviceName: row.name,
-  }
   pageContainer.value?.onDelete({
     namespaceId: namespaceStore.current.value.namespaceId,
     groupName: row.groupName,
@@ -354,7 +351,6 @@ const removeItem = (row: any) => {
 
 // 表单提交
 const onSave = (data: any) => {
-  alert(1)
   formRef.value?.validate(errors => {
     if (!errors) {
       if (data.mode === constant.FORM_MODE_DETAIL) {

@@ -14,11 +14,11 @@
       class="page-content"
       id="page-content"
     >
-      <div
-        v-if="slots.actions"
-        class="page-actions"
-      >
-        <NCard>
+      <NCard>
+        <div
+          v-if="slots.actions"
+          class="page-actions"
+        >
           <div class="action">
             <slot
               name="actions"
@@ -26,18 +26,16 @@
               :param="state.param"
             ></slot>
           </div>
-        </NCard>
-      </div>
-      <div class="page-table">
-        <NCard>
+        </div>
+        <div class="page-table">
           <n-data-table
             :columns="config.columns"
             :data="state.tableData"
             :pagination="config.pagination"
           />
-        </NCard>
-      </div>
-      <div class="page-pager"></div>
+        </div>
+        <div class="page-pager"></div>
+      </NCard>
     </div>
     <NDrawer
       to="#page-content"
@@ -359,6 +357,8 @@ defineExpose({
 
   .page-actions {
     background-color: #fff;
+    padding: 20px 10px 0 0;
+    box-sizing: border-box;
 
     .action {
       display: flex;

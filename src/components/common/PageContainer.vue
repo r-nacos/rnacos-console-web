@@ -32,6 +32,7 @@
             :columns="config.columns"
             :data="state.tableData"
             :pagination="config.pagination"
+            :bordered="false"
           />
         </div>
         <div class="page-pager"></div>
@@ -351,13 +352,14 @@ defineExpose({
     height: 40px;
     background: #fff;
     box-sizing: border-box;
-    padding: 0 20px;
+    padding-left: 10px;
     margin-bottom: 10px;
+    padding-right: 5px;
   }
 
   .page-actions {
     background-color: #fff;
-    padding: 20px 10px 0 0;
+    padding: 16px 0 0 0;
     box-sizing: border-box;
 
     .action {

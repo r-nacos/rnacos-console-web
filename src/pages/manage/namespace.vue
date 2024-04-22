@@ -13,13 +13,14 @@
         delete: apis.namespacesRemove,
       },
       validator: validator,
+      pagination: paginationReactive,
     }"
   >
     <template #header="{ methods }">
       <div>命名空间</div>
       <div>
         <n-button
-          class="mg-r10"
+          class="mg-r5"
           @click="
             methods.createForm({
               mode: 'add',
@@ -60,7 +61,22 @@ import apis from '@/apis/index'
 import type { INamespace } from '@/types/namespace'
 const formRef = ref<FormInst | null>(null)
 const pageContainer = ref<any>(null)
-
+const paginationReactive = reactive({
+  page: 1,
+  pageCount: 1,
+  pageSize: 10,
+  itemCount: 0,
+  prefix({ itemCount }: any) {
+    return `总行数: ${itemCount}`
+  },
+  onChange: (page: number) => {
+    paginationReactive.page = page
+  },
+  onUpdatePageSize: (pageSize: number) => {
+    paginationReactive.pageSize = pageSize
+    paginationReactive.page = 1
+  },
+})
 /**
  * 表格表格字段
  */

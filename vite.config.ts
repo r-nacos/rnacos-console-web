@@ -14,14 +14,8 @@ import proxy from './proxy'
 
 export default ({ command, mode }: ConfigEnv): UserConfig => {
   const env = loadEnv(mode, process.cwd())
-  const buildTime = useDateFormat(new Date(), 'YYYY-MM-DD HH:mm:ss SSS')
   const isProd: boolean = command === 'build' && mode === 'production'
-  const runtime = {
-    env,
-    isProd,
-    buildTime: buildTime.value,
-  }
-  console.log('runtime =>', runtime)
+  const buildTime = useDateFormat(new Date(), 'YYYY-MM-DD HH:mm:ss SSS')
   return {
     css: {
       preprocessorOptions: {
@@ -67,7 +61,7 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
         ],
         eslintrc: {
           enabled: false,
-          filepath: './temp/.eslintrc-auto-import.json', // eslint继承这里进行语法检查
+          filepath: './temp/.eslintrc-auto-import.json',
           globalsPropValue: true,
         },
         dts: './temp/auto-imports.d.ts',
@@ -94,7 +88,11 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
       cors: true,
     },
     define: {
-      Runtime: JSON.stringify(runtime),
+      Runtime: JSON.stringify({
+        env,
+        buildTime: buildTime.value,
+        isProd,
+      }),
     },
     build: {
       target: 'esnext',
@@ -107,10 +105,9 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
           drop_console: isProd,
         },
       },
-      // 在这里配置打包时的rollup配置
       rollupOptions: {
         output: {
-          manualChunks: (id, meta) => {
+          manualChunks: id => {
             if (id.includes('/node_modules/@vue/')) return 'vuejs'
             if (id.includes('/node_modules/vue-router/')) return 'vue-router'
             if (id.includes('/node_modules/pinia/') || id.includes('/node_modules/axios/')) return 'vlibs'

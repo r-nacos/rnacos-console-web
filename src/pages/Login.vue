@@ -68,7 +68,6 @@
 
 <script setup lang="ts" title="rnacos-登录">
 import { useWebResources } from '@/data/resources'
-import { userApi } from '@/apis/user'
 import { encryptAes } from '@/utils/CryptoUtils'
 import { useMessage, NForm, NFormItem, NInput } from 'naive-ui'
 import apis from '@/apis'

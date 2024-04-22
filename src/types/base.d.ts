@@ -85,3 +85,96 @@ export interface ValidResult {
   result: boolean
   data: AnyObj
 }
+
+export interface IServiceQueryPageParam {
+  namespaceId: string
+  serviceNameParam: string
+  groupNameParam: string
+  pageNo: Number
+  pageSize: Number
+  accessToken?: string
+}
+
+export interface IServiceQueryItem {
+  name: string
+  groupName: string
+  clusterCount: Number
+  ip_count: Number
+  healthy_instance_count: Number
+  trigger_flag: Boolean
+  metadata?: string
+  protect_threshold?: Number
+}
+
+export interface IServiceQueryPageResult<T> {
+  count: Number
+  service_list: Array<T>
+}
+
+export interface ILoginParam {
+  username: string
+  password: string
+  captcha: string
+}
+
+export interface IResetPasswordParam {
+  oldPassword: string
+  newPassword: string
+}
+
+export interface IUserPageParam {
+  like_username?: string
+  pageNo: Number
+  pageSize: Number
+  isRev: boolean
+}
+
+export interface IUserInfo {
+  username: string
+  nickname: string
+  password?: string
+  gmtCreate: number
+  gmtModified: number
+  enable: boolean
+  roles: Array<String>
+  extendInfo?: Map<String, String>
+}
+
+export interface IUpdateUserParam {
+  username: string
+  nickname?: string
+  password?: string
+  enable?: boolean
+  roles?: string
+}
+
+export interface IConfig {
+  tenant?: string
+  group: string
+  dataId: string
+  content?: string
+  md5?: string
+  modifiedTime?: number
+}
+
+export interface IConfigKey {
+  tenant?: string
+  group: string
+  dataId: string
+}
+
+export interface IConfigQueryParam {
+  tenant: string
+  groupParam: string
+  dataParam: string
+  pageNo: Number
+  pageSize: Number
+}
+
+export interface IConfigQueryHistoryParam {
+  tenant: string
+  group: string
+  dataId: string
+  pageNo: Number
+  pageSize: Number
+}

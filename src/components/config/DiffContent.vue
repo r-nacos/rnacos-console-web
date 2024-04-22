@@ -11,7 +11,6 @@
 import { MergeView } from '@codemirror/merge'
 import { EditorView, basicSetup } from 'codemirror'
 import { EditorState } from '@codemirror/state'
-import { configApi } from '@/apis/config'
 import { useMessage } from 'naive-ui'
 const diffDom = ref<HTMLElement | HTMLBodyElement>()
 const message = useMessage()
@@ -48,27 +47,6 @@ const initDiffView = (nv: string, ov: string, el: HTMLElement) => {
     },
     parent: el,
   })
-}
-
-const onClose = () => {
-  emits('closeModal')
-}
-
-const submitForm = () => {
-  configApi
-    .setConfig(props.data as any)
-    .then(res => {
-      if (res.status == 200) {
-        message.success('设置成功!')
-        // emits('refreshData')
-        emits('closeModal', true)
-        return
-      }
-      message.error('设置失败，response code' + res.status)
-    })
-    .catch(err => {
-      message.error('设置失败，' + err.message)
-    })
 }
 </script>
 <style lang="scss" scoped>

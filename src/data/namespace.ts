@@ -4,7 +4,6 @@ import type { UnwrapRef } from 'vue'
 import apis from '@/apis'
 
 // 前期没有使用 pinia,后继调整时考虑迁移到pinia
-
 function createStore(): INamespaceStore {
   const currentRef: Ref<UnwrapRef<INamespace>> = ref({
     namespaceId: '',
@@ -23,9 +22,11 @@ function createStore(): INamespaceStore {
     },
   ])
   const loadRef = ref(false)
+
   const setCurrent = function (current: INamespace) {
     currentRef.value = current
   }
+
   const setLastList = function (list: Array<INamespace>) {
     const optionList = []
     for (const item of list) {
@@ -39,15 +40,16 @@ function createStore(): INamespaceStore {
     optionListRef.value = optionList
     loadRef.value = true
   }
-  const initLoad = function () {
+
+  const initLoad = async () => {
     if (!loadRef.value) {
-      apis.getJSON(apis.namespaces).then((res: any) => {
-        if (res.status == 200 && res.data.data.length > 0) {
-          setLastList(res.data.data)
-        }
-      })
+      const { status, data } = await apis.getJSON(apis.namespacesList)
+      if (status == 200 && data && typeof data === 'object' && Array.isArray(data.data)) {
+        setLastList(data.data)
+      }
     }
   }
+
   return {
     current: currentRef,
     listList: listListRef,

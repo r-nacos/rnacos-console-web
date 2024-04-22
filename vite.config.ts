@@ -107,6 +107,19 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
           drop_console: isProd,
         },
       },
+      // 在这里配置打包时的rollup配置
+      rollupOptions: {
+        output: {
+          manualChunks: (id, meta) => {
+            if (id.includes('/node_modules/@vue/')) return 'vuejs'
+            if (id.includes('/node_modules/vue-router/')) return 'vue-router'
+            if (id.includes('/node_modules/pinia/') || id.includes('/node_modules/axios/')) return 'vlibs'
+            if (id.includes('codemirror')) return 'codemirror-core'
+            if (id.includes('/node_modules/naive-ui/')) return 'naive-ui'
+            if (id.includes('/node_modules/')) return 'vendor'
+          },
+        },
+      },
     },
   }
 }

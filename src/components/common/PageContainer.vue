@@ -10,7 +10,10 @@
         :param="state.param"
       ></slot>
     </div>
-    <div class="page-content">
+    <div
+      class="page-content"
+      id="page-content"
+    >
       <div
         v-if="slots.actions"
         class="page-actions"
@@ -37,7 +40,7 @@
       <div class="page-pager"></div>
     </div>
     <NDrawer
-      to="#app"
+      to="#page-content"
       :block-scroll="false"
       :trap-focus="false"
       v-model:show="showDrawer"
@@ -365,10 +368,16 @@ defineExpose({
 
   .page-content {
     margin: 10px;
+    border-radius: 12px;
+    overflow: hidden;
   }
 
   .page-table {
     background-color: #fff;
+  }
+
+  :deep(.n-card__content) {
+    padding: 8px;
   }
 }
 </style>

@@ -5,7 +5,10 @@
       <SystemMoreSetting></SystemMoreSetting>
     </n-layout-header>
     <n-layout has-sider>
-      <n-layout-sider>
+      <n-layout-sider
+        width="200px"
+        class="nav"
+      >
         <SystemSideMenu />
       </n-layout-sider>
       <n-layout-content style="padding: 0; margin: 0">
@@ -36,6 +39,10 @@ import { NLayout, NLayoutHeader, NLayoutSider, NLayoutContent } from 'naive-ui'
 
 .n-layout-sider {
   background: #fff;
+}
+
+.nav {
+  border-right: 1px solid #f2f2f2;
 }
 
 .n-layout-content {

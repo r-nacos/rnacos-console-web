@@ -49,16 +49,12 @@ let webResources = useWebResources()
 }
 
 .wrap {
-  flex: 1 1 auto;
-  display: flex;
-  position: relative;
   align-items: center;
   background: #fff;
   flex-direction: row;
 }
 .content {
   flex: 1 1 auto;
-  margin-top: 20px;
   font-size: 20px;
   line-height: 60px;
   /*

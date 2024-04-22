@@ -4,7 +4,7 @@
     :config="{
       columns: columns,
       form: {
-        title: '配置',
+        title: '历史记录内容',
       },
       apis: {
         list: apis.configHistory,
@@ -14,7 +14,7 @@
       },
       param: paramRef,
       drawer: {
-        width: drawerWidth,
+        width: '100%',
       },
       pagination: paginationReactive,
     }"

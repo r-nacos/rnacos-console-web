@@ -14,7 +14,7 @@
       },
       param: paramRef,
       drawer: {
-        width: drawerWidth,
+        width: '100%',
       },
       pagination: paginationReactive,
     }"

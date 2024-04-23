@@ -19,6 +19,7 @@
         isRev: false,
       },
       validator: validator,
+      pagination: paginationReactive,
     }"
   >
     <template #header>用户管理</template>
@@ -157,6 +158,23 @@ const formRef = ref<FormInst | null>(null)
 const pageContainer = ref<any>(null)
 const state = reactive({
   roleOptions: roleOptions as any,
+})
+const paginationReactive = reactive({
+  page: 1,
+  pageCount: 1,
+  pageSize: 10,
+  itemCount: 0,
+  prefix({ itemCount }: any) {
+    paginationReactive.itemCount = itemCount
+    return `总行数: ${itemCount}`
+  },
+  onChange: (page: number) => {
+    paginationReactive.page = page
+  },
+  onUpdatePageSize: (pageSize: number) => {
+    paginationReactive.pageSize = pageSize
+    paginationReactive.page = 1
+  },
 })
 
 const rules = {

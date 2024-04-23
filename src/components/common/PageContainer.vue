@@ -260,8 +260,6 @@ const loadData = async () => {
     let resp = await apis.getJSON(url, {
       params: state.param,
     })
-    console.log(resp.data, 'response')
-    // if (data.code === 200) {
     // 兼容处理
     if (Array.isArray(resp.data.data)) {
       state.tableData = resp.data?.data || []

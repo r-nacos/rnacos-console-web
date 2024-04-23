@@ -37,10 +37,10 @@ npm run build
 
  ## develop docs
 ```
-pnpm run docs:dev
+npm run docs:dev
 ```
 
  ## build docs
 ```
-pnpm run docs:dev
+npm run docs:build
 ```

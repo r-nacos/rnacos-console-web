@@ -31,6 +31,11 @@ import { NLayout, NLayoutHeader, NLayoutSider, NLayoutContent } from 'naive-ui'
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  .vi-logo {
+    width: 176px;
+    text-align: center;
+  }
 }
 .n-layout-sider,
 .n-layout-content {

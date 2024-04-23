@@ -25,7 +25,6 @@ pnpm i
 ```
 
 ## run project
- - 
  ```
   npm run dev
  ```

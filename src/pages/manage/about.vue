@@ -1,18 +1,33 @@
 <template>
   <div class="page-about">
     <div class="content">
-      <n-space vertical>
+      <n-space
+        vertical
+        class="inner_wrap"
+      >
         <n-card
           title="系统简介"
           size="medium"
         >
-          <p>r-nacos是一个用rust实现的nacos服务。完全兼容nacos sdk协议。</p>
-          <p>它相对来说有轻量、快速、稳定、高性能等特点。</p>
+          <p>r-nacos是一个用rust实现的nacos服务。相较于java nacos来说，是一个提供相同功能，启动更快、占用系统资源更小（初始内存小于10M）、性能更高、运行更稳定的服务。</p>
+          <br />
+          <p>r-nacos设计上完全兼容最新版本nacos面向client sdk 的协议（包含1.x的http OpenApi，和2.x的grpc协议）, 支持使用nacos服务的应用平迁到 r-nacos。</p>
+          <br />
           <p>使用过程有什么问题可以到 github提issue。</p>
           <p>
-            <a href="https://github.com/heqingpan/rnacos">r-nacos github</a>
+            <a
+              href="https://github.com/r-nacos/r-nacos"
+              target="_blank"
+            >
+              r-nacos github
+            </a>
             <br />
-            <a href="https://gitee.com/hqp/rnacos">r-nacos gitee</a>
+            <a
+              href="https://gitee.com/hqp/rnacos"
+              target="_blank"
+            >
+              r-nacos gitee
+            </a>
           </p>
         </n-card>
         <n-card

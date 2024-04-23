@@ -100,8 +100,8 @@ const closeDrawer = () => {
   }
   .icon {
     display: block;
-    width: 25px;
-    height: 20px;
+    width: 20px;
+    height: 15px;
     background: rgba(255, 255, 255, 0.2);
     border-radius: 5px;
     padding: 8px;

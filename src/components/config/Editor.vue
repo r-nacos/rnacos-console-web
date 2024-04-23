@@ -4,48 +4,20 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { basicSetup, EditorView } from 'codemirror'
+import { basicSetup } from 'codemirror'
 import { EditorState } from '@codemirror/state'
 import { html } from '@codemirror/lang-html'
 import { json } from '@codemirror/lang-json'
 import { xml } from '@codemirror/lang-xml'
 import { yaml } from '@codemirror/lang-yaml'
 import { onMounted, ref } from 'vue'
-import { monokai } from '@uiw/codemirror-theme-monokai'
+import { keymap, EditorView } from '@codemirror/view'
+import { defaultKeymap, indentWithTab } from '@codemirror/commands'
+import { oneDark } from '@codemirror/theme-one-dark'
 const props = defineProps(['modelValue', 'languageType'])
 const emits = defineEmits(['update:modelValue'])
 const editorRef = ref()
 const editorView = ref()
-const myTheme = EditorView.theme(
-  {
-    '&': {
-      color: 'white',
-
-      backgroundColor: '#034',
-    },
-
-    '.cm-content': {
-      caretColor: '#0e9',
-    },
-
-    '&.cm-focused .cm-cursor': {
-      borderLeftColor: '#0e9',
-    },
-
-    '&.cm-focused .cm-selectionBackground, ::selection': {
-      backgroundColor: '#074',
-    },
-
-    '.cm-gutters': {
-      backgroundColor: '#045',
-
-      color: '#ddd',
-
-      border: 'none',
-    },
-  },
-  { dark: true },
-)
 
 watch(
   () => props.languageType,
@@ -65,33 +37,39 @@ const initEditor = () => {
 
   let lang = {} as any
   switch (props.languageType) {
-    case 'TEXT':
+    case 'text':
       lang = html()
       break
-    case 'JSON':
+    case 'json':
       lang = json()
       break
-    case 'XML':
+    case 'xml':
       lang = xml()
       break
-    case 'YAML':
+    case 'yaml':
       lang = yaml()
       break
-    case 'HTML':
+    case 'html':
       lang = html()
       break
-    case 'Properties':
+    case 'properties':
       lang = yaml()
       break
+    case 'toml':
+      lang = yaml()
+      break
+    default:
+      lang = html()
   }
-
   const startState = EditorState.create({
     doc: props.modelValue,
     extensions: [
+      keymap.of(defaultKeymap),
+      keymap.of([indentWithTab]),
       basicSetup,
-      // javascript(),
       lang,
-      monokai,
+      // monokai,
+      oneDark,
       EditorView.updateListener.of(function (e) {
         const val = e.state.doc.toString()
         emits('update:modelValue', val)

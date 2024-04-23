@@ -61,14 +61,14 @@
           label="配置格式"
         >
           <NRadio
-            v-for="i in list"
+            v-for="(o, i) in list"
             :key="i"
-            :checked="checkedValue === i"
-            :value="i"
-            :name="i"
-            @change="handleChange"
+            :checked="checkedValue === o.value"
+            :value="o.value"
+            :name="o.label"
+            @change="handleChange(o)"
           >
-            {{ i }}
+            {{ o.label }}
           </NRadio>
         </NFormItem>
       </template>
@@ -105,17 +105,25 @@ const formDataRef = ref<any>(props.formData)
 const showEditor = ref(true)
 
 // 配置文件类型
-const list = ['TEXT', 'JSON', 'XML', 'YAML', 'HTML', 'Properties', 'TOML']
-const checkedValue = ref<string | null>('TEXT')
+const list = [
+  { label: 'TEXT', value: 'text' },
+  { label: 'JSON', value: 'json' },
+  { label: 'XML', value: 'xml' },
+  { label: 'YAML', value: 'yaml' },
+  { label: 'HTML', value: 'html' },
+  { label: 'Properties', value: 'properties' },
+  { label: 'TOML', value: 'toml' },
+]
+const checkedValue = ref<string | null>('text')
 
 /**
  * 配置格式
  *
  * @param e
  */
-const handleChange = (e: Event) => {
-  checkedValue.value = (e.target as HTMLInputElement).value
-  formDataRef.value.configType = checkedValue.value
+const handleChange = (o: any) => {
+  formDataRef.value.configType = o.value
+  checkedValue.value = o.value
 }
 
 const isReadonly = props.formData.mode === constant.FORM_MODE_DETAIL

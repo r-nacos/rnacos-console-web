@@ -91,10 +91,10 @@
         :formData="formData"
         v-if="visibleType == 1"
       />
-      <DiffContent
+      <DiffComponent
         v-else
-        :nv="formData.content"
-        :ov="state.ov"
+        :dst="formData.content"
+        :src="state.ov"
       />
     </template>
     <template #footer="{ formData }">
@@ -138,7 +138,7 @@
 
 <script lang="tsx" setup title="配置列表" layout="nav">
 import NamespacePopSelect from '@/components/namespace/NamespacePopSelect.vue'
-import DiffContent from '@/components/config/DiffContent.vue'
+import DiffComponent from '@/components/config/DiffComponent.vue'
 import apis from '@/apis/index'
 import { namespaceStore } from '@/data/namespace'
 import { useWebResources } from '@/data/resources'

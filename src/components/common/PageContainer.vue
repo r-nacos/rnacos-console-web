@@ -35,7 +35,20 @@
             :bordered="false"
           />
         </div>
-        <div class="page-pager"></div>
+        <div
+          class="page-pager"
+          v-if="!config.pagination"
+        >
+          <n-pagination
+            :item-count="state.totalCount"
+            :on-update:page="pageUpdate"
+            :on-update:pageSize="pageSizeUpdate"
+            show-size-picker
+            :page-sizes="pageSizes"
+          >
+            <template #prefix>总行数: {{ state.totalCount }}</template>
+          </n-pagination>
+        </div>
       </NCard>
     </div>
     <NDrawer
@@ -96,7 +109,6 @@ import constant from '@/types/constant'
 import apis from '@/apis/index'
 const slots = useSlots()
 const toast = useMessage()
-console.log(slots.actions, 'slots')
 const emits = defineEmits(['onSave'])
 let props = defineProps({
   config: {
@@ -115,7 +127,26 @@ const state = reactive({
   formData: {} as AnyObj,
   param: (props.config.param ? props.config.param : {}) as AnyObj,
   tableData: [],
+  totalCount: 0,
 })
+const pageSizes = [
+  {
+    label: '10 每页',
+    value: 10,
+  },
+  {
+    label: '20 每页',
+    value: 20,
+  },
+  {
+    label: '30 每页',
+    value: 30,
+  },
+  {
+    label: '40 每页',
+    value: 40,
+  },
+]
 
 // 动态标题
 const formTitle = computed(() => props.config.form?.title + (state.formData.mode == constant.FORM_MODE_CREATE ? '新增' : state.formData.mode == constant.FORM_MODE_UPDATE ? '编辑' : '详情'))
@@ -141,6 +172,11 @@ const updateForm = (itemData: AnyObj) => {
   showDrawer.value = true
 }
 
+/**
+ * 显示详情
+ *
+ * @param itemData 详情数据
+ */
 const showDetail = (itemData: AnyObj) => {
   state.formData = { ...itemData, mode: constant.FORM_MODE_DETAIL }
   showDrawer.value = true
@@ -226,9 +262,6 @@ const onUpdate = async (formData: any) => {
 const onDelete = async (params: AnyObj) => {
   let { status, data } = await apis.postJSON(`${props.config.apis?.delete || ''}`, {
     data: params,
-    // headers: {
-    //   'Content-Type': 'application/x-www-form-urlencoded',
-    // },
   })
   if (status === 200 && data && typeof data === 'object') {
     if (data.success) {
@@ -269,6 +302,7 @@ const loadData = async () => {
         return
       } else if (Array.isArray(resp.data.data.list)) {
         state.tableData = resp.data.data.list || []
+        state.totalCount = resp.data.data.totalCount || 0
       }
     }
     // }
@@ -277,16 +311,47 @@ const loadData = async () => {
   }
 }
 
+/**
+ * 页数变更时
+ *
+ * @param page 页数
+ */
+const pageUpdate = (page: number) => {
+  state.param.pageNo = page
+  loadData()
+}
+
+/**
+ * 页条数变更时
+ *
+ * @param pageSize 页条数变更时
+ */
+const pageSizeUpdate = (pageSize: number) => {
+  state.param.pageNo = 1
+  state.param.pageSize = pageSize
+  loadData()
+}
+
+/**
+ * 刷新数据
+ */
 const refreshData = () => {
   state.param.pageNo = 1
   closeDrawer()
   loadData()
 }
 
+/**
+ * 搜索
+ */
 const onSearch = () => {
+  state.param.pageNo = 1
   loadData()
 }
 
+/**
+ * 初始化数据加载
+ */
 onMounted(() => {
   loadData()
 })
@@ -374,6 +439,13 @@ defineExpose({
 
   .page-table {
     background-color: #fff;
+  }
+
+  .page-pager {
+    text-align: right;
+    padding-top: 10px;
+    display: flex;
+    justify-content: right;
   }
 
   :deep(.n-card__content) {

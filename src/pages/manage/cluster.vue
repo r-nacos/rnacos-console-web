@@ -9,6 +9,7 @@
       form: {
         title: '集群信息',
       },
+      pagination: paginationReactive,
     }"
   >
     <template #header>集群信息</template>
@@ -18,7 +19,22 @@
 <script lang="tsx" setup title="集群信息" layout="nav">
 import apis from '@/apis'
 import { NButton } from 'naive-ui'
-
+const paginationReactive = reactive({
+  page: 1,
+  pageCount: 1,
+  pageSize: 10,
+  itemCount: 0,
+  prefix({ itemCount }: any) {
+    return `总行数: ${itemCount}`
+  },
+  onChange: (page: number) => {
+    paginationReactive.page = page
+  },
+  onUpdatePageSize: (pageSize: number) => {
+    paginationReactive.pageSize = pageSize
+    paginationReactive.page = 1
+  },
+})
 /**
  * 表格字段
  */
@@ -35,8 +51,7 @@ const columns = [
               size="tiny"
               strong
               secondary
-              type="primary"
-            >
+              type="primary">
               【查询节点】
             </NButton>
           </span>
@@ -59,8 +74,7 @@ const columns = [
             size="tiny"
             strong
             secondary
-            type="primary"
-          >
+            type="primary">
             是
           </NButton>
         )
@@ -69,8 +83,7 @@ const columns = [
           <NButton
             size="tiny"
             strong
-            secondary
-          >
+            secondary>
             否
           </NButton>
         )
@@ -87,8 +100,7 @@ const columns = [
             size="tiny"
             strong
             secondary
-            type="success"
-          >
+            type="success">
             正常
           </NButton>
         )
@@ -98,8 +110,7 @@ const columns = [
             size="tiny"
             strong
             secondary
-            type="warning"
-          >
+            type="warning">
             失效
           </NButton>
         )

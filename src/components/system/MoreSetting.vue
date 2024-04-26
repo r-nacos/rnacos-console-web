@@ -99,15 +99,14 @@ const closeDrawer = () => {
     display: flex;
   }
   .icon {
-    display: block;
-    width: 20px;
-    height: 15px;
     background: rgba(255, 255, 255, 0.2);
     border-radius: 5px;
-    padding: 8px;
+    width: 32px;
+    height: 32px;
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
+    margin-right: 10px;
   }
 
   .user-name {

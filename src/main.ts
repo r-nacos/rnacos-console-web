@@ -4,6 +4,7 @@ import './logger'
 import router from './router'
 import { directive } from '@/directive/index'
 import PageContainer from './components/common/PageContainer.vue'
+import NamespacePopSelect from '@/components/namespace/NamespacePopSelect.vue'
 
 import './assets/style/index.scss'
 
@@ -16,6 +17,7 @@ directive(app)
 
 // 注册全局组件
 app.component('PageContainer', PageContainer)
+app.component('NamespacePopSelect', NamespacePopSelect)
 
 // 创建路由
 router(app)

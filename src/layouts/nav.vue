@@ -24,7 +24,6 @@ import { NLayout, NLayoutHeader, NLayoutSider, NLayoutContent } from 'naive-ui'
 
 <style scoped lang="scss">
 .n-layout-header {
-  padding: 24px;
   height: 52px;
   background: #2f6cf7;
   color: #fff;

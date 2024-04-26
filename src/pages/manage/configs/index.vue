@@ -16,7 +16,6 @@
       drawer: {
         width: '100%',
       },
-      pagination: paginationReactive,
     }"
   >
     <template #header>
@@ -137,7 +136,6 @@
 </template>
 
 <script lang="tsx" setup title="配置列表" layout="nav">
-import NamespacePopSelect from '@/components/namespace/NamespacePopSelect.vue'
 import DiffComponent from '@/components/config/DiffComponent.vue'
 import apis from '@/apis/index'
 import { namespaceStore } from '@/data/namespace'
@@ -163,7 +161,7 @@ const paramRef = ref({
   groupParam: '',
   tenant: namespaceStore.current.value.namespaceId,
   pageNo: 1,
-  pageSize: 20,
+  pageSize: 10,
 })
 let state = reactive({
   ov: '',
@@ -188,7 +186,7 @@ onMounted(() => {
  */
 const changeNamespace = (nm: INamespace) => {
   paramRef.value.tenant = nm.namespaceName
-  pageContainer.value?.refreshData()
+  pageContainer.value?.onSearch()
 }
 
 /**
@@ -243,27 +241,6 @@ const onSave = (formData: AnyObj) => {
   pageContainer.value?.onSave(formData)
   visibleType.value = 1
 }
-
-/**
- * 分页
- */
-const paginationReactive = reactive({
-  page: 1,
-  pageCount: 1,
-  pageSize: 10,
-  itemCount: 0,
-  prefix({ itemCount }: any) {
-    paginationReactive.itemCount = itemCount
-    return `总行数: ${itemCount}`
-  },
-  onChange: (page: number) => {
-    paginationReactive.page = page
-  },
-  onUpdatePageSize: (pageSize: number) => {
-    paginationReactive.pageSize = pageSize
-    paginationReactive.page = 1
-  },
-})
 
 /**
  * 获取配置内容

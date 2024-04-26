@@ -3,6 +3,7 @@
     ref="pageContainer"
     :config="{
       columns: columns,
+      param: paramRef,
       form: {
         title: '服务',
       },
@@ -12,10 +13,14 @@
         update: apis.serviceUpdate,
         delete: apis.serviceDelete,
       },
-      pagination: paginationReactive,
     }"
   >
-    <template #header>服务列表</template>
+    <template #header>
+      <div>服务列表</div>
+      <div>
+        <NamespacePopSelect @change="changeNamespace" />
+      </div>
+    </template>
     <template #actions="{ param, methods }">
       <div>
         <n-form
@@ -140,27 +145,29 @@ import { useMessage, type FormInst, NButton, NPopconfirm, NForm, NFormItem } fro
 import constant from '@/types/constant'
 import { useWebResources } from '@/data/resources'
 import { namespaceStore } from '@/data/namespace'
+import type { INamespace } from '@/types/namespace'
 const message = useMessage()
 const formRef = ref<FormInst | null>(null)
 const pageContainer = ref<any>(null)
 let webResources = useWebResources()
 const router = useRouter()
-const paginationReactive = reactive({
-  page: 1,
-  pageCount: 1,
+const paramRef = ref({
+  serviceParam: '',
+  groupParam: '',
+  namespaceId: '',
+  pageNo: 1,
   pageSize: 10,
-  itemCount: 0,
-  prefix({ itemCount }: any) {
-    return `总行数: ${itemCount}`
-  },
-  onChange: (page: number) => {
-    paginationReactive.page = page
-  },
-  onUpdatePageSize: (pageSize: number) => {
-    paginationReactive.pageSize = pageSize
-    paginationReactive.page = 1
-  },
 })
+
+/**
+ * 改变命名空间
+ *
+ * @param nm
+ */
+const changeNamespace = (nm: INamespace) => {
+  paramRef.value.namespaceId = nm.namespaceId
+  pageContainer.value?.onSearch()
+}
 
 /**
  * 表单验证规则

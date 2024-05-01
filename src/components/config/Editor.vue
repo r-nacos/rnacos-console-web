@@ -13,7 +13,7 @@ import { yaml } from '@codemirror/lang-yaml'
 import { onMounted, ref } from 'vue'
 import { keymap, EditorView } from '@codemirror/view'
 import { defaultKeymap, indentWithTab } from '@codemirror/commands'
-import { oneDark } from '@codemirror/theme-one-dark'
+import { solarizedDark } from 'cm6-theme-solarized-dark'
 const props = defineProps(['modelValue', 'languageType'])
 const emits = defineEmits(['update:modelValue'])
 const editorRef = ref()
@@ -68,8 +68,7 @@ const initEditor = () => {
       keymap.of([indentWithTab]),
       basicSetup,
       lang,
-      // monokai,
-      oneDark,
+      solarizedDark,
       EditorView.updateListener.of(function (e) {
         const val = e.state.doc.toString()
         emits('update:modelValue', val)
@@ -97,6 +96,6 @@ onMounted(() => {
   border-radius: 6px;
   overflow-x: hidden;
   overflow-y: auto;
-  background: #272822;
+  background: #002b36;
 }
 </style>

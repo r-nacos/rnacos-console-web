@@ -87,9 +87,10 @@
 </template>
 <script lang="ts" setup>
 import constant from '@/types/constant'
-import { useMessage, NForm, NFormItem, NInput, NRadio } from 'naive-ui'
+import { useMessage, NForm, NFormItem, NInput, NRadio, type FormItemRule, type FormInst } from 'naive-ui'
 import Editor from './Editor.vue'
 const emits = defineEmits(['closeModal', 'refreshData'])
+const formRef = ref<FormInst | null>(null)
 const message = useMessage()
 let props = defineProps({
   formData: {
@@ -114,7 +115,7 @@ const list = [
   { label: 'Properties', value: 'properties' },
   { label: 'TOML', value: 'toml' },
 ]
-const checkedValue = ref<string | null>('text')
+const checkedValue = ref<string>('text')
 
 /**
  * 配置格式
@@ -155,4 +156,20 @@ const rules = {
     },
   ],
 }
+
+const validator = (data: any) => {
+  return new Promise((resolve, reject) => {
+    formRef.value?.validate((errors: any) => {
+      if (!errors) {
+        resolve(true)
+      } else {
+        reject('表单验证不通过')
+      }
+    })
+  })
+}
+
+defineExpose({
+  validator,
+})
 </script>

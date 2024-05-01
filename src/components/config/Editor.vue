@@ -4,17 +4,223 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { basicSetup } from 'codemirror'
-import { EditorState } from '@codemirror/state'
+import { basicSetup, minimalSetup } from 'codemirror'
+import { EditorState, Compartment, type Extension } from '@codemirror/state'
 import { html } from '@codemirror/lang-html'
 import { json } from '@codemirror/lang-json'
 import { xml } from '@codemirror/lang-xml'
 import { yaml } from '@codemirror/lang-yaml'
 import { onMounted, ref } from 'vue'
-import { keymap, EditorView } from '@codemirror/view'
+import { keymap, EditorView, type ViewUpdate } from '@codemirror/view'
 import { defaultKeymap, indentWithTab } from '@codemirror/commands'
 import { solarizedDark } from 'cm6-theme-solarized-dark'
-const props = defineProps(['modelValue', 'languageType'])
+import { diagnosticCount as linterDagnosticCount, lintGutter, type Diagnostic, type LintSource } from '@codemirror/lint'
+import type { LanguageSupport } from '@codemirror/language'
+const props = defineProps({
+  languageType: {
+    type: String,
+    default: 'text',
+  },
+  modelValue: {
+    type: String,
+    default: '',
+  },
+  focusValue: {
+    type: Number,
+    default: 0,
+  },
+  /**
+   * Theme
+   *
+   * @see {@link https://codemirror.net/docs/ref/#view.EditorView^theme}
+   */
+  theme: {
+    type: Object,
+    default: () => {},
+  },
+  themeDark: {
+    type: Boolean,
+    default: false,
+  },
+  /**
+   * Use Basic Setup
+   *
+   * @see {@link https://codemirror.net/docs/ref/#codemirror.basicSetup}
+   */
+  basic: {
+    type: Boolean,
+    default: false,
+  },
+  /**
+   * Use Minimal Setup (The basic setting has priority.)
+   *
+   * @see {@link https://codemirror.net/docs/ref/#codemirror.minimalSetup}
+   */
+  minimal: {
+    type: Boolean,
+    default: false,
+  },
+  /**
+   * Placeholder
+   *
+   * @see {@link https://codemirror.net/docs/ref/#view.placeholder}
+   */
+  placeholder: {
+    type: String as PropType<string | HTMLElement>,
+    default: undefined,
+  },
+  /**
+   * Line wrapping
+   *
+   * An extension that enables line wrapping in the editor (by setting CSS white-space to pre-wrap in the content).
+   *
+   * @see {@link https://codemirror.net/docs/ref/#view.EditorView%5ElineWrapping}
+   */
+  wrap: {
+    type: Boolean,
+    default: false,
+  },
+  /**
+   * Allow tab key indent.
+   *
+   * @see {@link https://codemirror.net/examples/tab/}
+   */
+  tab: {
+    type: Boolean,
+    default: true,
+  },
+  /**
+   * Allow Multiple Selection.
+   *
+   * @see {@link https://codemirror.net/docs/ref/#state.EditorState^allowMultipleSelections}
+   */
+  allowMultipleSelections: {
+    type: Boolean,
+    default: false,
+  },
+  /**
+   * Tab size
+   *
+   * @see {@link https://codemirror.net/docs/ref/#state.EditorState^tabSize}
+   */
+  tabSize: {
+    type: Number,
+    default: undefined,
+  },
+  /**
+   * Set line break (separetor) char.
+   *
+   * @see {@link https://codemirror.net/docs/ref/#state.EditorState^lineSeparator}
+   */
+  lineSeparator: {
+    type: String,
+    default: undefined,
+  },
+  /**
+   * Readonly
+   *
+   * @see {@link https://codemirror.net/docs/ref/#state.EditorState^readOnly}
+   */
+  readonly: {
+    type: Boolean,
+    default: false,
+  },
+  /**
+   * Disable input.
+   *
+   * This is the reversed value of the CodeMirror editable.
+   * Similar to `readonly`, but setting this value to true disables dragging.
+   *
+   * @see {@link https://codemirror.net/docs/ref/#view.EditorView^editable}
+   */
+  disabled: {
+    type: Boolean,
+    default: false,
+  },
+  /**
+   * Additional Extension
+   *
+   * @see {@link https://codemirror.net/docs/ref/#state.Extension}
+   */
+  extensions: {
+    type: Array as PropType<Extension[]>,
+    default: () => {
+      return []
+    },
+  },
+  /**
+   * Language Phreses
+   *
+   * @see {@link https://codemirror.net/examples/translate/}
+   */
+  phrases: {
+    type: Object as PropType<Record<string, string>>,
+    default: () => undefined,
+  },
+  /**
+   * CodeMirror Language
+   *
+   * @see {@link https://codemirror.net/docs/ref/#language}
+   */
+  lang: {
+    type: Object as PropType<LanguageSupport>,
+    default: () => undefined,
+  },
+  /**
+   * CodeMirror Linter
+   *
+   * @see {@link https://codemirror.net/docs/ref/#lint.linter}
+   */
+  linter: {
+    type: Function as PropType<LintSource>,
+    default: undefined,
+  },
+  /**
+   * Linter Config
+   *
+   * @see {@link https://codemirror.net/docs/ref/#lint.linter^config}
+   */
+  linterConfig: {
+    type: Object,
+    default: () => {
+      return {}
+    },
+  },
+  /**
+   * Forces any linters configured to run when the editor is idle to run right away.
+   *
+   * @see {@link https://codemirror.net/docs/ref/#lint.forceLinting}
+   */
+  forceLinting: {
+    type: Boolean,
+    default: false,
+  },
+  /**
+   * Show Linter Gutter
+   *
+   * An area to 🔴 the lines with errors will be displayed.
+   * This feature is not enabled if `linter` is not specified.
+   *
+   * @see {@link https://codemirror.net/docs/ref/#lint.lintGutter}
+   */
+  gutter: {
+    type: Boolean,
+    default: false,
+  },
+  /**
+   * Gutter Config
+   *
+   * @see {@link https://codemirror.net/docs/ref/#lint.lintGutter^config}
+   */
+  gutterConfig: {
+    type: Object,
+    default: () => undefined,
+  },
+  tag: {
+    type: String,
+    default: 'div',
+  },
+})
 const emits = defineEmits(['update:modelValue'])
 const editorRef = ref()
 const editorView = ref()
@@ -61,19 +267,31 @@ const initEditor = () => {
     default:
       lang = html()
   }
+  const language = new Compartment()
+  const tabSize = new Compartment()
   const startState = EditorState.create({
     doc: props.modelValue,
     extensions: [
-      keymap.of(defaultKeymap),
-      keymap.of([indentWithTab]),
-      basicSetup,
-      lang,
-      solarizedDark,
+      props.minimal && !props.basic ? minimalSetup : undefined,
+      props.minimal ? minimalSetup : basicSetup,
+      props.theme ? props.theme : solarizedDark,
+      props.wrap ? EditorView.lineWrapping : undefined,
+      props.tab ? keymap.of([indentWithTab]) : keymap.of(defaultKeymap),
+      EditorState.allowMultipleSelections.of(props.allowMultipleSelections),
+      props.tabSize ? tabSize.of(EditorState.tabSize.of(props.tabSize)) : undefined,
+      props.phrases ? EditorState.phrases.of(props.phrases) : undefined,
+      EditorState.readOnly.of(props.readonly),
+      EditorView.editable.of(!props.disabled),
+      props.lineSeparator ? EditorState.lineSeparator.of(props.lineSeparator) : undefined,
+      props.lineSeparator ? EditorState.lineSeparator.of(props.lineSeparator) : undefined,
+      props.lang ? language.of(props.lang) : lang || undefined,
+      props.linter && props.gutter ? lintGutter(props.gutterConfig) : undefined,
+      ...props.extensions,
       EditorView.updateListener.of(function (e) {
         const val = e.state.doc.toString()
         emits('update:modelValue', val)
       }),
-    ],
+    ].filter((extension): extension is Extension => !!extension),
   })
 
   if (editorRef.value) {

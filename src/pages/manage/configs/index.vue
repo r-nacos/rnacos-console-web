@@ -219,12 +219,16 @@ const onPrev = () => {
 /**
  * 下一步进行diff对比
  */
-const onNext = () => {
-  if (state.mode === constant.FORM_MODE_DETAIL) {
-    pageContainer.value?.closeDrawer()
-    return
+const onNext = async () => {
+  let validate = await configForm.value?.validator()
+  console.log(validate, 'validate')
+  if (validate) {
+    if (state.mode === constant.FORM_MODE_DETAIL) {
+      pageContainer.value?.closeDrawer()
+      return
+    }
+    visibleType.value = 2
   }
-  visibleType.value = 2
 }
 
 /* 关闭表单 */

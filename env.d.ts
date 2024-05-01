@@ -1,6 +1,7 @@
 /// <reference types="vite/client" />
 declare module 'qs'
 declare module '@codemirror/lang-json'
+declare module '@codemirror/language'
 
 declare module 'axios' {
   export interface AxiosRequestConfig {

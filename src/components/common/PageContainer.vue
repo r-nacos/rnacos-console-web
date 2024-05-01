@@ -28,7 +28,7 @@
           </div>
         </div>
         <div class="page-table">
-          <n-data-table
+          <NDataTable
             :columns="config.columns"
             :data="state.tableData"
             :pagination="config.pagination"
@@ -39,7 +39,7 @@
           class="page-pager"
           v-if="!config.pagination"
         >
-          <n-pagination
+          <NPagination
             :item-count="state.totalCount"
             :on-update:page="pageUpdate"
             :on-update:pageSize="pageSizeUpdate"
@@ -47,7 +47,7 @@
             :page-sizes="pageSizes"
           >
             <template #prefix>总行数: {{ state.totalCount }}</template>
-          </n-pagination>
+          </NPagination>
         </div>
       </NCard>
     </div>
@@ -57,8 +57,11 @@
       :trap-focus="false"
       v-model:show="showDrawer"
       default-width="600"
+      :height="height"
       :width="config.drawer?.width"
       resizable
+      :placement="placement"
+      :show-mask="false"
     >
       <NDrawerContent
         :title="formTitle"
@@ -79,23 +82,23 @@
             :formData="state.formData"
             v-if="slots.footer"
           ></slot>
-          <n-space
+          <NSpace
             v-else
             align="baseline"
           >
-            <n-button
+            <NButton
               text
               @click="closeDrawer"
             >
               返回
-            </n-button>
-            <n-button
+            </NButton>
+            <NButton
               type="primary"
               @click="confirm"
             >
               确认
-            </n-button>
-          </n-space>
+            </NButton>
+          </NSpace>
         </template>
       </NDrawerContent>
     </NDrawer>
@@ -103,7 +106,7 @@
 </template>
 <script setup lang="ts">
 import type { CrudOptions } from '@/types/base'
-import { NCard, NDrawerContent, useMessage } from 'naive-ui'
+import { NCard, NDrawerContent, useMessage, NButton, NTable } from 'naive-ui'
 import type { AnyObj } from '@/utils'
 import constant from '@/types/constant'
 import apis from '@/apis/index'
@@ -120,7 +123,9 @@ let props = defineProps({
     default: () => [],
   },
 })
+const placement: any = 'auto'
 const showDrawer = ref(false)
+const height = ref(500)
 const state = reactive({
   operationType: 1,
   submitLoading: false,
@@ -349,6 +354,11 @@ const onSearch = () => {
   loadData()
 }
 
+onBeforeMount(() => {
+  // 计算
+  height.value = window.innerHeight - 52
+})
+
 /**
  * 初始化数据加载
  */
@@ -435,6 +445,7 @@ defineExpose({
     margin: 10px;
     border-radius: 12px;
     overflow: hidden;
+    // height: calc(100vh - 112px);
   }
 
   .page-table {

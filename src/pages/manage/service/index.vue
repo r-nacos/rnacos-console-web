@@ -64,7 +64,7 @@
               groupName: '',
               serviceName: '',
               protectThreshold: 0,
-              metadata: {},
+              metadata: JSON.stringify({}),
               selector: '',
               mode: constant.FORM_MODE_CREATE,
             })

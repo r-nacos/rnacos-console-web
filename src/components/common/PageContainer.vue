@@ -60,8 +60,8 @@
       :height="height"
       :width="config.drawer?.width"
       resizable
-      :placement="placement"
-      :show-mask="false"
+      :placement="state.placement"
+      :show-mask="state.showMask"
     >
       <NDrawerContent
         :title="formTitle"
@@ -123,7 +123,6 @@ let props = defineProps({
     default: () => [],
   },
 })
-const placement: any = 'auto'
 const showDrawer = ref(false)
 const height = ref(500)
 const state = reactive({
@@ -133,6 +132,8 @@ const state = reactive({
   param: (props.config.param ? props.config.param : {}) as AnyObj,
   tableData: [],
   totalCount: 0,
+  placement: props.config?.drawer?.placement || ('right' as any),
+  showMask: props.config?.drawer?.showMask || true,
 })
 const pageSizes = [
   {

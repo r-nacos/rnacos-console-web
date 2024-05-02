@@ -15,8 +15,11 @@
       param: paramRef,
       drawer: {
         width: '100%',
+        placement: 'auto',
+        showMask: false,
       },
     }"
+    show
   >
     <template #header>
       <div>配置列表</div>

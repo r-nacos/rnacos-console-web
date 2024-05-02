@@ -77,6 +77,8 @@ export interface CrudOptions<T> {
   // 抽屉设置
   drawer?: {
     width?: number | string | undefined
+    placement?: string
+    showMask: boolean
   }
   validator?: Function
 }

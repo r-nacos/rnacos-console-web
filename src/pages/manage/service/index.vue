@@ -13,6 +13,7 @@
         update: apis.serviceUpdate,
         delete: apis.serviceDelete,
       },
+      validator: validator,
     }"
   >
     <template #header>
@@ -63,7 +64,7 @@
               groupName: '',
               serviceName: '',
               protectThreshold: 0,
-              metadata: '',
+              metadata: {},
               selector: '',
               mode: constant.FORM_MODE_CREATE,
             })
@@ -167,6 +168,30 @@ const paramRef = ref({
 const changeNamespace = (nm: INamespace) => {
   paramRef.value.namespaceId = nm.namespaceId
   pageContainer.value?.onSearch()
+}
+
+/**
+ * 保存数据
+ *
+ * @param data 保存数据
+ */
+const validator = (data: any) => {
+  return new Promise((resolve, reject) => {
+    formRef.value?.validate((errors: any) => {
+      if (!errors) {
+        try {
+          let nData = JSON.parse(JSON.stringify(data)) as any
+          nData.metadata = JSON.parse(nData.metadata)
+          resolve(nData)
+        } catch (e) {
+          message.error('元数据格式不正确，解析失败，需要正确的json格式数据')
+          reject('元数据格式不正确，解析失败，需要正确的json格式数据')
+        }
+      } else {
+        reject('表单验证不通过')
+      }
+    })
+  })
 }
 
 /**

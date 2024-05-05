@@ -370,10 +370,10 @@ const initEditor = () => {
     })
   }
 
-  if (getBrowserType() !== BrowserType.Chrome) {
-    editorView.value && editorView.value.contentDOM && editorView.value.contentDOM.addEventListener('mouseleave', mouseleave, false)
-    editorView.value && editorView.value.contentDOM && editorView.value.contentDOM.addEventListener('mouseenter', mouseenter, false)
-  }
+  // if (getBrowserType() !== BrowserType.Chrome) {
+  //   editorView.value && editorView.value.contentDOM && editorView.value.contentDOM.addEventListener('mouseleave', mouseleave, false)
+  //   editorView.value && editorView.value.contentDOM && editorView.value.contentDOM.addEventListener('mouseenter', mouseenter, false)
+  // }
 }
 
 onMounted(() => {

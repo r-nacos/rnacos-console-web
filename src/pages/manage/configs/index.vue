@@ -87,10 +87,11 @@
         </n-upload>
       </div>
     </template>
-    <template #form="{ formData }">
+    <template #form="{ formData, isReadonly }">
       <ConfigForm
         ref="configForm"
         :formData="formData"
+        :isReadonly="isReadonly"
         v-if="visibleType == 1"
       />
       <DiffComponent
@@ -298,7 +299,7 @@ const updateItem = async (row: any) => {
       group: row.group || 'DEFAULT_GROUP',
       dataId: row.dataId || '',
       desc: '',
-      configType: '',
+      configType: data.configType,
     })
   })
 }

@@ -1,5 +1,8 @@
 <template>
-  <div class="editor-main">
+  <div
+    class="editor-main"
+    @click="clickHandler"
+  >
     <div ref="editorRef"></div>
   </div>
 </template>
@@ -16,6 +19,22 @@ import { defaultKeymap, indentWithTab } from '@codemirror/commands'
 import { solarizedDark } from 'cm6-theme-solarized-dark'
 import { diagnosticCount as linterDagnosticCount, lintGutter, type Diagnostic, type LintSource } from '@codemirror/lint'
 import type { LanguageSupport } from '@codemirror/language'
+enum BrowserType {
+  // 位置浏览器
+  unknown = 'unknown',
+  // ie浏览器
+  IE = 'IE',
+  // 火狐浏览器
+  Firefox = 'Firefox',
+  // 欧朋浏览器
+  Opera = 'Opera',
+  // 谷歌浏览器
+  Chrome = 'Chrome',
+  // 苹果浏览器
+  Safari = 'Safari',
+  // ie浏览器 11
+  Trident = 'Trident',
+}
 const props = defineProps({
   languageType: {
     type: String,
@@ -233,6 +252,56 @@ watch(
   },
 )
 
+// 鼠标移除编辑器区域
+const mouseleave = () => {
+  if (editorView.value && editorView.value.contentDOM) {
+    let b = editorView.value.contentDOM.getAttribute('contenteditable')
+    if (b === 'true') {
+      editorView.value.contentDOM.setAttribute('contenteditable', 'false')
+    }
+  }
+}
+
+// 鼠标移入到编辑器区域
+const mouseenter = () => {
+  if (editorView.value && editorView.value.contentDOM) {
+    editorView.value.contentDOM.setAttribute('contenteditable', 'true')
+    editorView.value.contentDOM.focus()
+  }
+}
+
+/* 兼容火狐处理 */
+const clickHandler = () => {
+  if (editorView.value) {
+    editorView.value.focus()
+  }
+}
+
+const getBrowserType = () => {
+  const userAgent = navigator.userAgent //取得浏览器的userAgent字符串
+  let browser = BrowserType.unknown
+  if (userAgent.indexOf(BrowserType.IE) != -1) {
+    //字符串含有IE字段，表明是IE浏览器
+    browser = BrowserType.IE
+  } else if (userAgent.indexOf(BrowserType.Firefox) != -1) {
+    //字符串含有Firefox字段，表明是火狐浏览器
+    browser = BrowserType.Firefox
+  } else if (userAgent.indexOf('OPR') != -1) {
+    //Opera
+    browser = BrowserType.Opera
+  } else if (userAgent.indexOf(BrowserType.Chrome) != -1) {
+    //Chrome
+    browser = BrowserType.Chrome
+  } else if (userAgent.indexOf(BrowserType.Safari) != -1) {
+    //Safari
+    browser = BrowserType.Safari
+  } else if (userAgent.indexOf(BrowserType.Trident) != -1) {
+    //IE内核
+    browser = BrowserType.Trident
+  }
+  return browser
+}
+
 /**
  * 初始化编辑器
  */
@@ -299,6 +368,11 @@ const initEditor = () => {
       state: startState,
       parent: editorRef.value,
     })
+  }
+
+  if (getBrowserType() !== BrowserType.Chrome) {
+    editorView.value && editorView.value.contentDOM && editorView.value.contentDOM.addEventListener('mouseleave', mouseleave, false)
+    editorView.value && editorView.value.contentDOM && editorView.value.contentDOM.addEventListener('mouseenter', mouseenter, false)
   }
 }
 

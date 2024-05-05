@@ -61,6 +61,7 @@
           label="配置格式"
         >
           <NRadio
+            :disabled="isDisabled"
             v-for="(o, i) in list"
             :key="i"
             :checked="checkedValue === o.value"
@@ -80,6 +81,7 @@
           v-if="showEditor"
           v-model="formDataRef.content"
           :language-type="checkedValue"
+          :disabled="isDisabled"
         />
       </NFormItem>
     </NForm>
@@ -115,7 +117,7 @@ const list = [
   { label: 'Properties', value: 'properties' },
   { label: 'TOML', value: 'toml' },
 ]
-const checkedValue = ref<string>('text')
+const checkedValue = ref<string>(props.formData.configType || 'text')
 
 /**
  * 配置格式
@@ -128,6 +130,7 @@ const handleChange = (o: any) => {
 }
 
 const isReadonly = props.formData.mode === constant.FORM_MODE_DETAIL
+const isDisabled = props.formData.mode === constant.FORM_MODE_DETAIL
 
 // 表单校验规则
 const rules = {

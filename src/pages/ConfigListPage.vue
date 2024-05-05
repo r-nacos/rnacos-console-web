@@ -248,11 +248,15 @@ export default defineComponent({
         dataId: row.dataId
       };
       configApi
-        .removeConfig(config)
+        .removeConfigV2(config)
         .then((res) => {
           if (res.status == 200) {
-            window.$message.info('删除配置成功');
-            doHandlePageChange(1);
+            if (res.data.success) {
+              window.$message.info('删除配置成功');
+              doHandlePageChange(1);
+            } else {
+              window.$message.error('删除配置报错,' + res.data.message);
+            }
           } else {
             window.$message.error('删除配置报错,response code:' + res.status);
           }
@@ -349,10 +353,14 @@ export default defineComponent({
         .setConfigV2(config)
         .then((res) => {
           if (res.status == 200) {
-            window.$message.info('设置成功!');
-            this.useForm = false;
-            this.useDiffForm = false;
-            this.queryList();
+            if (res.data.success) {
+              window.$message.info('设置成功!');
+              this.useForm = false;
+              this.useDiffForm = false;
+              this.queryList();
+            } else {
+              window.$message.error('设置失败，' + res.data.message);
+            }
             return;
           }
           window.$message.error('设置失败，response code' + res.status);

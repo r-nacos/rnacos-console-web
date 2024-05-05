@@ -203,13 +203,17 @@ export default defineComponent({
         content: content
       };
       configApi
-        .setConfig(config)
+        .setConfigV2(config)
         .then((res) => {
           if (res.status == 200) {
-            window.$message.info('恢复成功!');
-            useFormRef.value = false;
-            useDiffFormRef.value = false;
-            doHandlePageChange(1);
+            if (res.data.success) {
+              window.$message.info('恢复成功!');
+              useFormRef.value = false;
+              useDiffFormRef.value = false;
+              doHandlePageChange(1);
+            } else {
+              window.$message.error('恢复失败，' + res.data.message);
+            }
             return;
           }
           window.$message.error('恢复失败，response code' + res.status);

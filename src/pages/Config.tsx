@@ -29,7 +29,7 @@ export default defineComponent({
         content: this.content
       };
       configApi
-        .setConfig(config)
+        .setConfigV2(config)
         .then((res) => {
           //console.log('response', res.request.responseText);
           if (res.status == 200) {

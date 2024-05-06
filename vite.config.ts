@@ -105,6 +105,8 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
           drop_console: isProd,
         },
       },
+      assetsDir: 'rnacos/assets',
+      outDir: 'dist',
       rollupOptions: {
         output: {
           manualChunks: id => {

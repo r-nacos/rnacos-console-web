@@ -228,10 +228,18 @@ const onSave = async (formData: any) => {
   })
   if (status === 200 && data && typeof data === 'object') {
     if (data.success) {
-      toast.success('添加成功')
+      if (formData.mode === constant.FORM_MODE_CREATE) {
+        toast.success('添加成功')
+      } else {
+        toast.success('编辑成功')
+      }
       refreshData()
     } else {
-      toast.error('添加失败')
+      if (formData.mode === constant.FORM_MODE_CREATE) {
+        toast.success('添加失败')
+      } else {
+        toast.success('编辑失败')
+      }
     }
   } else {
     toast.error('请求失败')

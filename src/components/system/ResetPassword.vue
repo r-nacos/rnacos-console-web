@@ -157,8 +157,8 @@ const submitForm = () => {
         },
       })
       if (status === 200 && data && typeof data === 'object') {
-        if (data.success) {
-          message.success('修改密码成功!')
+        if (data.info) {
+          message.info('修改密码成功!')
           closeForm()
         } else {
           message.error(data.message || '密码修改失败')

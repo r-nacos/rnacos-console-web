@@ -266,10 +266,10 @@ const getConfig = (row: any) => {
       },
     })
     if (status === 200 && data.data && typeof data.data === 'object') {
-      if (data.success) {
+      if (data.info) {
         resolve(data.data)
       } else {
-        message.success('获取请求配置失败')
+        message.info('获取请求配置失败')
         reject({})
       }
     } else {

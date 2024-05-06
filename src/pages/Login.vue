@@ -130,7 +130,7 @@ const rules = {
 const getCaptcha = async () => {
   let { status, data, headers } = await apis.getJSON(apis.captcha)
   if (status === 200 && data && typeof data === 'object') {
-    if (data.success) {
+    if (data.info) {
       captcha_img.value = 'data:image/png;base64,' + data.data
       let token = headers['Captcha-Token'] || headers['captcha-token'] || ''
       modelRef.token = token
@@ -157,7 +157,7 @@ const submit = async () => {
     data: param,
   })
   if (status === 200 && typeof data === 'object') {
-    if (data.success) {
+    if (data.info) {
       userWebResources()
     } else {
       getCaptcha()
@@ -180,7 +180,7 @@ const submit = async () => {
 const userWebResources = async () => {
   let { status, data } = await apis.getJSON(apis.userWebResources)
   if (status === 200 && data && typeof data === 'object') {
-    if (data.success) {
+    if (data.info) {
       sessionStorage.setItem('userName', modelRef.username)
       webResources.update(data?.data as any)
       const url = `${redirect_url}`.replace(basePath, '')

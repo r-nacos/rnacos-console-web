@@ -19,30 +19,6 @@ p {
   padding: 0;
 }
 
-/* 进度条样式 */
-#nprogress .bar {
-  background: #06ae56 !important;
-}
-#nprogress .spinner {
-  display: block;
-  position: fixed;
-  z-index: 1031;
-  top: 50% !important;
-  right: 50% !important;
-}
-
-#nprogress .spinner-icon {
-  width: 80px !important;
-  height: 80px !important;
-  box-sizing: border-box;
-  border: solid 2px transparent;
-  border-top-color: #06ae56;
-  border-left-color: #95ec69;
-  border-radius: 50%;
-  -webkit-animation: nprogress-spinner 400ms linear infinite;
-  animation: nprogress-spinner 400ms linear infinite;
-}
-
 html,
 body,
 div,

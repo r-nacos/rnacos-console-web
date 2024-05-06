@@ -227,18 +227,18 @@ const onSave = async (formData: any) => {
     data: formData,
   })
   if (status === 200 && data && typeof data === 'object') {
-    if (data.success) {
+    if (data.info) {
       if (formData.mode === constant.FORM_MODE_CREATE) {
-        toast.success('添加成功')
+        toast.info('添加成功')
       } else {
-        toast.success('编辑成功')
+        toast.info('编辑成功')
       }
       refreshData()
     } else {
       if (formData.mode === constant.FORM_MODE_CREATE) {
-        toast.success('添加失败')
+        toast.info('添加失败')
       } else {
-        toast.success('编辑失败')
+        toast.info('编辑失败')
       }
     }
   } else {
@@ -257,8 +257,8 @@ const onUpdate = async (formData: any) => {
     data: formData,
   })
   if (status === 200 && data && typeof data === 'object') {
-    if (data.success) {
-      toast.success('修改成功')
+    if (data.info) {
+      toast.info('修改成功')
       refreshData()
     } else {
       toast.error(data.message || '修改失败')
@@ -278,8 +278,8 @@ const onDelete = async (params: AnyObj) => {
     data: params,
   })
   if (status === 200 && data && typeof data === 'object') {
-    if (data.success) {
-      toast.success('删除成功')
+    if (data.info) {
+      toast.info('删除成功')
       refreshData()
     } else {
       toast.error(data.message || '删除失败')
@@ -399,7 +399,7 @@ const saveUpdateForm = async (data: AnyObj) => {
   if (res.status == 200) {
     if (res.data.code == 200) {
       refreshData()
-      toast.success(res.data.message || '修改成功')
+      toast.info(res.data.message || '修改成功')
     } else {
       toast.error(res.data.message || '修改失败')
     }

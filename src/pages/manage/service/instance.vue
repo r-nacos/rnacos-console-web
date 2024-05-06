@@ -280,10 +280,10 @@ const setRowEnabled = async (row: any, enabled: boolean) => {
     },
   })
   if (status === 200 && data && typeof data === 'object') {
-    if (data.success) {
+    if (data.info) {
       row.enabled = enabled
       if (enabled) {
-        message.success('上线啦')
+        message.info('上线啦')
       } else {
         message.warning('下线啦')
       }

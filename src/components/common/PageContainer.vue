@@ -435,13 +435,13 @@ defineExpose({
     background: #fff;
     box-sizing: border-box;
     padding-left: 10px;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
     padding-right: 5px;
   }
 
   .page-actions {
     background-color: #fff;
-    padding: 16px 0 0 0;
+    padding: 8px 0 0 0;
     box-sizing: border-box;
 
     .action {
@@ -451,7 +451,7 @@ defineExpose({
   }
 
   .page-content {
-    margin: 10px;
+    margin: 0 8px;
     border-radius: 12px;
     overflow: hidden;
     // height: calc(100vh - 112px);

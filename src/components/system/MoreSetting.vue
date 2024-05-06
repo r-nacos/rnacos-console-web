@@ -71,7 +71,7 @@ const handleSelect = async (key: string) => {
   if (key === 'logout') {
     const { status, data } = await apis.postJSON(apis.logout)
     if (status === 200 && data && typeof data === 'object') {
-      if (data.info) {
+      if (data.success) {
         message.info('退出登录成功')
         setTimeout(() => {
           location.href = '/login'

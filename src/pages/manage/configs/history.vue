@@ -14,7 +14,8 @@
       },
       param: paramRef,
       drawer: {
-        width: '100%',
+        width: '600px',
+        placement: 'right',
       },
       pagination: paginationReactive,
     }"
@@ -219,7 +220,7 @@ const getConfig = (row: any) => {
       },
     })
     if (status === 200 && data.data && typeof data.data === 'object') {
-      if (data.info) {
+      if (data.success) {
         resolve(data.data)
       } else {
         message.info('获取请求配置失败')

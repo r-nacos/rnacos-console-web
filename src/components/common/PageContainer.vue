@@ -227,7 +227,7 @@ const onSave = async (formData: any) => {
     data: formData,
   })
   if (status === 200 && data && typeof data === 'object') {
-    if (data.info) {
+    if (data.success) {
       if (formData.mode === constant.FORM_MODE_CREATE) {
         toast.info('添加成功')
       } else {
@@ -257,7 +257,7 @@ const onUpdate = async (formData: any) => {
     data: formData,
   })
   if (status === 200 && data && typeof data === 'object') {
-    if (data.info) {
+    if (data.success) {
       toast.info('修改成功')
       refreshData()
     } else {
@@ -278,7 +278,7 @@ const onDelete = async (params: AnyObj) => {
     data: params,
   })
   if (status === 200 && data && typeof data === 'object') {
-    if (data.info) {
+    if (data.success) {
       toast.info('删除成功')
       refreshData()
     } else {

@@ -70,7 +70,7 @@ const changeRoute = (route: any) => {
 const updateWebResources = async () => {
   let { status, data } = await apis.getJSON(apis.userWebResources)
   if (status === 200 && data && typeof data === 'object') {
-    if (data.info) {
+    if (data.success) {
       webResources.update(data?.data as any)
     }
   }

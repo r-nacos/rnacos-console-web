@@ -298,8 +298,8 @@ const updateItem = async (row: any) => {
       tenant: row.tenant,
       group: row.group || 'DEFAULT_GROUP',
       dataId: row.dataId || '',
-      desc: '',
-      configType: data.configType,
+      desc: data.desc || '',
+      configType: data.configType || 'text',
     })
   })
 }
@@ -330,7 +330,8 @@ const detailItem = async (row: any) => {
       tenant: row.tenant,
       group: row.group || 'DEFAULT_GROUP',
       dataId: row.dataId || '',
-      configType: data.configType,
+      desc: data.desc || '',
+      configType: data.configType || 'text',
     })
   })
 }

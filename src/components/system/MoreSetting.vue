@@ -1,5 +1,8 @@
 <template>
-  <div class="wrap">
+  <div
+    class="wrap"
+    v-if="!webResources.isOldConsole"
+  >
     <n-dropdown
       :options="options"
       @select="handleSelect"

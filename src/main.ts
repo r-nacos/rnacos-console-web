@@ -5,7 +5,7 @@ import router from './router'
 import { directive } from '@/directive/index'
 import PageContainer from './components/common/PageContainer.vue'
 import NamespacePopSelect from '@/components/namespace/NamespacePopSelect.vue'
-
+import 'animate.css'
 import './assets/style/index.scss'
 
 // 注册svg

@@ -50,6 +50,9 @@ dependencies:
   '@vueuse/core':
     specifier: ^10.9.0
     version: 10.9.0(vue@3.4.21)
+  animate.css:
+    specifier: ^4.1.1
+    version: 4.1.1
   axios:
     specifier: ^1.6.8
     version: 1.6.8
@@ -3102,6 +3105,10 @@ packages:
       '@algolia/requester-common': 4.23.2
       '@algolia/requester-node-http': 4.23.2
       '@algolia/transporter': 4.23.2
+    dev: false
+
+  /animate.css@4.1.1:
+    resolution: {integrity: sha512-+mRmCTv6SbCmtYJCN4faJMNFVNN5EuCTTprDTAo7YzIGji2KADmakjVA3+8mVDkZ2Bf09vayB35lSQIex2+QaQ==}
     dev: false
 
   /ansi-escapes@3.2.0:

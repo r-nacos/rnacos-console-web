@@ -72,6 +72,7 @@
     "@vicons/ionicons5": "^0.12.0",
     "@vuepress/plugin-docsearch": "2.0.0-rc.0",
     "@vueuse/core": "^10.9.0",
+    "animate.css": "^4.1.1",
     "axios": "^1.6.8",
     "cm6-theme-solarized-dark": "^0.2.0",
     "codemirror": "^6.0.1",

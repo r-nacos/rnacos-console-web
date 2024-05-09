@@ -92,10 +92,13 @@
         ref="configForm"
         :formData="formData"
         :isReadonly="isReadonly"
-        v-if="visibleType == 1"
+        v-show="visibleType == 1"
+        class="animate__animated animate__fadeIn"
+        enter-active-class="animate__fadeIn"
+        leave-active-class="animate__fadeOutDown"
       />
       <DiffComponent
-        v-else
+        v-show="visibleType == 2"
         :dst="formData.content"
         :src="state.ov"
       />

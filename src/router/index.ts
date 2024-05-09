@@ -146,6 +146,7 @@ const init = async (app: App<Element>) => {
    * 路由前置守卫
    */
   router.beforeEach((to, form, next) => {
+    Nprogress.configure({ showSpinner: false })
     Nprogress.start()
     if (isMobile() && to.query.vconsole) {
       Logger.log('动态开启vconsole')

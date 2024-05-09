@@ -99,6 +99,7 @@
         <NButton
           type="primary"
           @click="onSave(formData)"
+          v-if="webResources.canUpdateConfig"
         >
           确认变更
         </NButton>

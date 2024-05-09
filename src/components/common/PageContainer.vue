@@ -102,6 +102,15 @@
         </template>
       </NDrawerContent>
     </NDrawer>
+    <slot
+      name="custom"
+      :operationType="state.operationType"
+      :submitLoading="state.submitLoading"
+      :formData="state.formData"
+      :isReadonly="state.formData.mode === constant.FORM_MODE_DETAIL"
+      :isKeyReadonly="state.formData.mode !== constant.FORM_MODE_CREATE"
+      :methods="{ onSave, onValidateFail, closeDrawer }"
+    ></slot>
   </div>
 </template>
 <script setup lang="ts">
@@ -164,7 +173,6 @@ const formTitle = computed(() => props.config.form?.title + (state.formData.mode
  */
 const createForm = (model: AnyObj = {}) => {
   state.formData = { ...model, mode: constant.FORM_MODE_CREATE }
-  console.log(state.formData, 'state.formData')
   showDrawer.value = true
 }
 
@@ -186,6 +194,11 @@ const updateForm = (itemData: AnyObj) => {
 const showDetail = (itemData: AnyObj) => {
   state.formData = { ...itemData, mode: constant.FORM_MODE_DETAIL }
   showDrawer.value = true
+}
+
+// 初始化
+const initFormData = (itemData: AnyObj) => {
+  state.formData = { ...itemData }
 }
 
 /**
@@ -415,6 +428,7 @@ defineExpose({
   onDelete,
   createForm,
   updateForm,
+  initFormData,
   closeDrawer,
   refreshData,
   saveUpdateForm,
@@ -437,6 +451,7 @@ defineExpose({
     padding-left: 10px;
     margin-bottom: 8px;
     padding-right: 5px;
+    border-bottom: 1px solid $border-bottom-color;
   }
 
   .page-actions {

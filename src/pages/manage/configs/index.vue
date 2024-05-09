@@ -15,7 +15,7 @@
       param: paramRef,
       drawer: {
         width: '100%',
-        placement: 'auto',
+        placement: placement,
         showMask: false,
       },
     }"
@@ -62,6 +62,7 @@
           class="mg-r10"
           @click="createForm"
           type="info"
+          v-if="webResources.canUpdateConfig"
         >
           新建
         </NButton>
@@ -73,7 +74,7 @@
             type="info"
             class="mg-r10"
           >
-            下载
+            导出
           </NButton>
         </a>
         <n-upload
@@ -82,68 +83,27 @@
           :show-file-list="false"
           @before-upload="doBeforeUpload"
           @finish="handlerUploadFinish"
+          v-if="webResources.canUpdateConfig"
         >
-          <NButton type="info">上传文件</NButton>
+          <NButton type="info">导入</NButton>
         </n-upload>
       </div>
     </template>
-    <template #form="{ formData, isReadonly }">
-      <ConfigForm
-        ref="configForm"
+    <template #custom="{ formData, isReadonly }">
+      <ConfigFormContainer
         :formData="formData"
         :isReadonly="isReadonly"
-        v-show="visibleType == 1"
-        class="animate__animated animate__fadeIn"
-        enter-active-class="animate__fadeIn"
-        leave-active-class="animate__fadeOutDown"
-      />
-      <DiffComponent
-        v-show="visibleType == 2"
-        :dst="formData.content"
-        :src="state.ov"
-      />
-    </template>
-    <template #footer="{ formData }">
-      <NSpace
-        align="baseline"
-        v-if="visibleType == 1"
-      >
-        <NButton
-          text
-          @click="closeDrawer"
-        >
-          返回
-        </NButton>
-        <NButton
-          type="primary"
-          @click="onNext"
-        >
-          确认
-        </NButton>
-      </NSpace>
-      <NSpace
-        align="baseline"
-        v-else
-      >
-        <NButton
-          text
-          @click="onPrev"
-        >
-          返回
-        </NButton>
-        <NButton
-          type="primary"
-          @click="onSave(formData)"
-        >
-          确认变更
-        </NButton>
-      </NSpace>
+        :ov="state.ov"
+        :visibleType="visibleType"
+        :showForm="showForm"
+        @cancel="cancel"
+      ></ConfigFormContainer>
     </template>
   </PageContainer>
 </template>
 
 <script lang="tsx" setup title="配置列表" layout="nav">
-import DiffComponent from '@/components/config/DiffComponent.vue'
+import ConfigFormContainer from '@/components/config/ConfigFormContainer.vue'
 import apis from '@/apis/index'
 import { namespaceStore } from '@/data/namespace'
 import { useWebResources } from '@/data/resources'
@@ -151,18 +111,17 @@ import { useRouter } from 'vue-router'
 import * as constant from '@/types/constant'
 import qs from 'qs'
 import { NButton, NPopconfirm, NUpload, useMessage, NSpace, NForm, NFormItem } from 'naive-ui'
-import ConfigForm from '@/components/config/ConfigForm.vue'
 import { useLayoutSize } from '@/store/index'
 import type { AnyObj } from '@/utils'
 import type { INamespace } from '@/types/namespace'
 const pageContainer = ref<HTMLDivElement>() as any
-const configForm = ref<HTMLDivElement>() as any
 let layoutSize = useLayoutSize()
 let router = useRouter()
 let webResources = useWebResources()
 const downloadRef = ref<any>(null)
 const visibleType = ref(1)
 const drawerWidth = ref(600)
+const placement = ref('auto')
 const paramRef = ref({
   dataParam: '',
   groupParam: '',
@@ -177,6 +136,7 @@ let state = reactive({
 const uploadHeader = ref({
   tenant: namespaceStore.current.value.namespaceId,
 })
+let showForm = ref(false)
 const message = useMessage()
 
 onMounted(() => {
@@ -185,6 +145,13 @@ onMounted(() => {
     drawerWidth.value = bd?.clientWidth - layoutSize.siderWidth
   }
 })
+
+const cancel = (type: string = '') => {
+  showForm.value = false
+  if (type === 'refreshData') {
+    pageContainer.value?.refreshData()
+  }
+}
 
 /**
  * 改变命名空间
@@ -203,7 +170,7 @@ const createForm = () => {
   state.ov = ''
   visibleType.value = 1
   state.mode = constant.FORM_MODE_CREATE
-  pageContainer.value?.createForm({
+  pageContainer.value?.initFormData({
     dataId: '',
     group: 'DEFAULT_GROUP',
     md5: '',
@@ -214,43 +181,7 @@ const createForm = () => {
     configType: '',
     mode: constant.FORM_MODE_CREATE,
   })
-}
-
-/**
- * 上一步
- */
-const onPrev = () => {
-  visibleType.value = 1
-}
-
-/**
- * 下一步进行diff对比
- */
-const onNext = async () => {
-  let validate = await configForm.value?.validator()
-  console.log(validate, 'validate')
-  if (validate) {
-    if (state.mode === constant.FORM_MODE_DETAIL) {
-      pageContainer.value?.closeDrawer()
-      return
-    }
-    visibleType.value = 2
-  }
-}
-
-/* 关闭表单 */
-const closeDrawer = () => {
-  pageContainer.value?.closeDrawer()
-}
-
-/**
- * 保存配置数据
- *
- * @param formData 配置项
- */
-const onSave = (formData: AnyObj) => {
-  pageContainer.value?.onSave(formData)
-  visibleType.value = 1
+  showForm.value = true
 }
 
 /**
@@ -289,10 +220,9 @@ const getConfig = (row: any) => {
  */
 const updateItem = async (row: any) => {
   getConfig(row).then((data: any) => {
-    visibleType.value = 1
     state.mode = constant.FORM_MODE_UPDATE
     state.ov = `${data.value || ''}`
-    pageContainer.value?.updateForm({
+    pageContainer.value?.initFormData({
       md5: `${data.md5 || ''}`,
       showMd5: row.showMd5 || true,
       content: `${data.value || ''}`,
@@ -304,6 +234,8 @@ const updateItem = async (row: any) => {
       desc: data.desc || '',
       configType: data.configType || 'text',
     })
+    showForm.value = true
+    visibleType.value = 1
   })
 }
 
@@ -322,9 +254,8 @@ const doBeforeUpload = () => {
  */
 const detailItem = async (row: any) => {
   getConfig(row).then((data: any) => {
-    visibleType.value = 1
     state.mode = constant.FORM_MODE_DETAIL
-    pageContainer.value?.showDetail({
+    pageContainer.value?.initFormData({
       md5: data.md5 || '',
       showMd5: row.showMd5 || true,
       content: data.value || '',
@@ -336,6 +267,8 @@ const detailItem = async (row: any) => {
       desc: data.desc || '',
       configType: data.configType || 'text',
     })
+    showForm.value = true
+    visibleType.value = 1
   })
 }
 
@@ -416,8 +349,7 @@ const columns = [
           </NPopconfirm>
         )
       } else {
-        editButton = <span></span>
-        removePopconfirm = editButton
+        removePopconfirm = <span></span>
       }
       return (
         <div>

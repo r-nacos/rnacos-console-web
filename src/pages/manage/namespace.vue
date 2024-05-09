@@ -20,6 +20,7 @@
       <div>命名空间</div>
       <div>
         <n-button
+          v-if="webResources.canUpdateNamespace"
           class="mg-r5"
           @click="
             methods.createForm({
@@ -59,6 +60,8 @@
 import { NPopconfirm, NTag, NButton, NForm, NFormItem, NInput, type FormItemRule, type FormInst } from 'naive-ui'
 import apis from '@/apis/index'
 import type { INamespace } from '@/types/namespace'
+import { useWebResources } from '@/data/resources'
+let webResources = useWebResources()
 const formRef = ref<FormInst | null>(null)
 const pageContainer = ref<any>(null)
 const paginationReactive = reactive({
@@ -89,6 +92,8 @@ const columns = [
     title: '命名空间ID',
     key: 'namespaceId',
   },
+]
+const optColumn = [
   {
     title: '操作',
     key: 'type',
@@ -134,6 +139,9 @@ const columns = [
     },
   },
 ]
+if (webResources.canUpdateNamespace) {
+  columns.push(optColumn)
+}
 
 /**
  * 表单校验

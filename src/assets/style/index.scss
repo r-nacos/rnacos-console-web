@@ -111,3 +111,10 @@ $scrollbar-color: #ececec !default;
 .actions-right {
   display: flex;
 }
+.icon-style {
+  font-size: 26px;
+  position: relative;
+  right: 5px;
+  top: 2px;
+  cursor: pointer;
+}

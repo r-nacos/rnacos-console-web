@@ -58,6 +58,7 @@
           查询
         </n-button>
         <n-button
+          v-if="webResources.canUpdateService"
           type="info"
           @click="
             methods.createForm({

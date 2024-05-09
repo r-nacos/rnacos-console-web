@@ -46,7 +46,7 @@ import { NLayout, NLayoutHeader, NLayoutSider, NLayoutContent } from 'naive-ui'
 }
 
 .nav {
-  border-right: 1px solid #f2f2f2;
+  border-right: 1px solid $border-bottom-color;
 }
 
 .n-layout-content {

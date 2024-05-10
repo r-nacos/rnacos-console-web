@@ -32,7 +32,7 @@ import { NLayout, NLayoutHeader, NLayoutSider, NLayoutContent } from 'naive-ui'
   align-items: center;
 
   .vi-logo {
-    width: 176px;
+    width: 200px;
     text-align: center;
   }
 }

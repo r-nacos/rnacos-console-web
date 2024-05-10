@@ -20,10 +20,6 @@ let router = useRouter()
 const goBack = () => {
   router.go(-1)
 }
-
-onMounted(() => {
-  sessionStorage.removeItem('currentMenuList')
-})
 </script>
 <style lang="scss" scoped>
 .page-not-found {

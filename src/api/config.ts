@@ -87,6 +87,14 @@ class ConfigApi {
     });
   }
 
+  removeConfigV2(configKey: IConfigKey): Promise<AxiosResponse> {
+    return axios.requestJSON({
+      method: 'post',
+      url: '/rnacos/api/console/v2/config/remove',
+      data: JSON.stringify(configKey)
+    });
+  }
+
   queryConfigPage(queryParam: IConfigQueryParam): Promise<AxiosResponse> {
     return axios.request({
       method: 'get',

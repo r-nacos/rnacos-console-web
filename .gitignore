@@ -5,6 +5,7 @@ dist-ssr
 coverage
 docs/.vuepress/.cache
 docs/.vuepress/.temp
+.components.d.ts
 
 # .vscode/*
 !.vscode/extensions.json

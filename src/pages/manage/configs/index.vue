@@ -112,7 +112,6 @@ import * as constant from '@/types/constant'
 import qs from 'qs'
 import { NButton, NPopconfirm, NUpload, useMessage, NSpace, NForm, NFormItem } from 'naive-ui'
 import { useLayoutSize } from '@/store/index'
-import type { AnyObj } from '@/utils'
 import type { INamespace } from '@/types/namespace'
 const pageContainer = ref<HTMLDivElement>() as any
 let layoutSize = useLayoutSize()
@@ -382,10 +381,10 @@ const columns = [
  */
 const handlerUploadFinish = ({ event }: any) => {
   if (event.target.status == 200) {
-    message.info('上传成功')
+    message.info('导入成功')
     pageContainer.value?.refreshData()
   } else {
-    message.error('上传处理失败')
+    message.error('导入处理失败')
   }
 }
 

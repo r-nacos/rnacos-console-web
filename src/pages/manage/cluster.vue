@@ -51,7 +51,8 @@ const columns = [
               size="tiny"
               strong
               secondary
-              type="primary">
+              type="primary"
+            >
               【查询节点】
             </NButton>
           </span>
@@ -74,7 +75,8 @@ const columns = [
             size="tiny"
             strong
             secondary
-            type="primary">
+            type="primary"
+          >
             是
           </NButton>
         )
@@ -83,7 +85,8 @@ const columns = [
           <NButton
             size="tiny"
             strong
-            secondary>
+            secondary
+          >
             否
           </NButton>
         )
@@ -100,7 +103,8 @@ const columns = [
             size="tiny"
             strong
             secondary
-            type="success">
+            type="success"
+          >
             正常
           </NButton>
         )
@@ -110,7 +114,8 @@ const columns = [
             size="tiny"
             strong
             secondary
-            type="warning">
+            type="warning"
+          >
             失效
           </NButton>
         )

@@ -35,10 +35,10 @@ class HttpRequest {
       //baseURL: this.baseURL,
       timeout: 1000,
       headers: {
-        'Content-Type': 'application/json'
-      }
-    };
-    return config;
+        'Content-Type': 'application/json',
+      },
+    }
+    return config
   }
 
   request(options: AxiosRequestConfig): Promise<AxiosResponse> {
@@ -49,10 +49,10 @@ class HttpRequest {
   }
 
   requestJSON(options: AxiosRequestConfig): Promise<AxiosResponse> {
-    const instance = axios.create();
-    options = Object.assign(this.getJsonInsideConfig(), options);
-    this.interceptors(instance, options.url);
-    return instance(options);
+    const instance = axios.create()
+    options = Object.assign(this.getJsonInsideConfig(), options)
+    this.interceptors(instance, options.url)
+    return instance(options)
   }
 }
 

@@ -1,39 +1,39 @@
-import { AxiosResponse } from 'axios';
-import request from '../utils/request';
-import { IApiResult } from '@/types/base';
-let axios = request;
+import { AxiosResponse } from 'axios'
+import request from '../utils/request'
+import { IApiResult } from '@/types/base'
+let axios = request
 
 export interface IConfig {
-  tenant?: string;
-  group: string;
-  dataId: string;
-  content?: string;
-  md5?: string;
-  modifiedTime?: number;
-  desc?: string;
-  configType?: string;
+  tenant?: string
+  group: string
+  dataId: string
+  content?: string
+  md5?: string
+  modifiedTime?: number
+  desc?: string
+  configType?: string
 }
 
 export interface IConfigKey {
-  tenant?: string;
-  group: string;
-  dataId: string;
+  tenant?: string
+  group: string
+  dataId: string
 }
 
 export interface IConfigQueryParam {
-  tenant: string;
-  groupParam: string;
-  dataParam: string;
-  pageNo: Number;
-  pageSize: Number;
+  tenant: string
+  groupParam: string
+  dataParam: string
+  pageNo: Number
+  pageSize: Number
 }
 
 export interface IConfigQueryHistoryParam {
-  tenant: string;
-  group: string;
-  dataId: string;
-  pageNo: Number;
-  pageSize: Number;
+  tenant: string
+  group: string
+  dataId: string
+  pageNo: Number
+  pageSize: Number
 }
 
 class ConfigApi {
@@ -42,29 +42,27 @@ class ConfigApi {
       method: 'post',
       url: '/rnacos/api/console/cs/configs',
       data: {
-        ...config
-      }
-    });
+        ...config,
+      },
+    })
   }
 
   setConfigV2(config: IConfig): Promise<AxiosResponse> {
     return axios.requestJSON({
       method: 'post',
       url: '/rnacos/api/console/v2/config/update',
-      data: JSON.stringify(config)
-    });
+      data: JSON.stringify(config),
+    })
   }
 
-  getConfig(
-    configKey: IConfigKey
-  ): Promise<AxiosResponse<IApiResult<IConfig>>> {
+  getConfig(configKey: IConfigKey): Promise<AxiosResponse<IApiResult<IConfig>>> {
     return axios.request({
       method: 'get',
       url: '/rnacos/api/console/cs/configs',
       params: {
-        ...configKey
-      }
-    });
+        ...configKey,
+      },
+    })
   }
 
   getConfigV2(configKey: IConfigKey): Promise<AxiosResponse> {
@@ -72,9 +70,9 @@ class ConfigApi {
       method: 'get',
       url: '/rnacos/api/console/v2/config/info',
       params: {
-        ...configKey
-      }
-    });
+        ...configKey,
+      },
+    })
   }
 
   removeConfig(configKey: IConfigKey): Promise<AxiosResponse> {
@@ -82,17 +80,17 @@ class ConfigApi {
       method: 'delete',
       url: '/rnacos/api/console/cs/configs',
       data: {
-        ...configKey
-      }
-    });
+        ...configKey,
+      },
+    })
   }
 
   removeConfigV2(configKey: IConfigKey): Promise<AxiosResponse> {
     return axios.requestJSON({
       method: 'post',
       url: '/rnacos/api/console/v2/config/remove',
-      data: JSON.stringify(configKey)
-    });
+      data: JSON.stringify(configKey),
+    })
   }
 
   queryConfigPage(queryParam: IConfigQueryParam): Promise<AxiosResponse> {
@@ -100,21 +98,19 @@ class ConfigApi {
       method: 'get',
       url: '/rnacos/api/console/configs',
       params: {
-        ...queryParam
-      }
-    });
+        ...queryParam,
+      },
+    })
   }
 
-  queryConfigHistoryPage(
-    queryParam: IConfigQueryHistoryParam
-  ): Promise<AxiosResponse> {
+  queryConfigHistoryPage(queryParam: IConfigQueryHistoryParam): Promise<AxiosResponse> {
     return axios.request({
       method: 'get',
       url: '/rnacos/api/console/config/history',
       params: {
-        ...queryParam
-      }
-    });
+        ...queryParam,
+      },
+    })
   }
 }
-export const configApi = new ConfigApi();
+export const configApi = new ConfigApi()

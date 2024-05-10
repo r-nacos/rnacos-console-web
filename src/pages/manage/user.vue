@@ -281,7 +281,8 @@ const columns = [
             <NButton
               size="tiny"
               quaternary
-              type="error">
+              type="error"
+            >
               删除
             </NButton>
           )
@@ -293,12 +294,14 @@ const columns = [
             size="tiny"
             quaternary
             type="info"
-            onClick={$event => showUpdate($event, row)}>
+            onClick={$event => showUpdate($event, row)}
+          >
             编辑
           </NButton>
           <NPopconfirm
             onPositiveClick={() => removeItem(row)}
-            v-slots={removeConfirmSlots}>
+            v-slots={removeConfirmSlots}
+          >
             <span>确认要删服务名称为:{row.username} 的用户吗？</span>
           </NPopconfirm>
         </>

@@ -30,7 +30,7 @@
     "cz": "cz",
     "prepare": "husky install",
     "lint-staged": "lint-staged",
-    "commit": "git add . && cz-customizable"
+    "commit": "npm run code-format && git add . && cz-customizable"
   },
   "config": {
     "commitizen": {

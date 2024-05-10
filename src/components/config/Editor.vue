@@ -390,4 +390,7 @@ onMounted(() => {
   overflow-y: auto;
   background: #002b36;
 }
+:deep(.ͼ1.cm-focused) {
+  outline: none;
+}
 </style>

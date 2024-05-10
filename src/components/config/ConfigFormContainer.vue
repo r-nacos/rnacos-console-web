@@ -126,7 +126,6 @@ const onPrev = () => {
  */
 const onNext = async () => {
   let validate = await configForm.value?.validator()
-  console.log(validate, 'validate')
   if (validate) {
     if (props.formData.mode === constant.FORM_MODE_DETAIL) {
       emits('cancel')

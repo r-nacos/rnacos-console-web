@@ -12,7 +12,7 @@ class Log implements Logger {
   log(...args: any[]) {
     if (this.open) {
       if (this.showLine) {
-        // console.log(args)
+        console.log(args)
       } else {
         args.forEach((arg: any) => {
           console.log(arg)

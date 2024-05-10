@@ -173,7 +173,6 @@ const init = async (app: App<Element>) => {
    */
   router.afterEach(to => {
     Nprogress.done()
-    console.log('route => fullPath:', to.fullPath, 'location => href:', window.location.href)
     const meta: AnyObject = to.meta || {}
     const { title, pv } = meta
     useTitle(title || '')

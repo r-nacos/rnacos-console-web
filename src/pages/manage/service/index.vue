@@ -268,7 +268,6 @@ const removeConfirmSlots = {
  * @param row 数据项
  */
 const showForm = (row: any, mode: string) => {
-  console.log(row, 'row')
   if (mode === constant.FORM_MODE_UPDATE) {
     pageContainer.value?.updateForm({
       namespaceId: row.namespaceId,

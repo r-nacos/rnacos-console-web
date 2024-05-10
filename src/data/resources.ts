@@ -82,7 +82,7 @@ export const useWebResources = defineStore('webResources', {
     isOldConsole: true,
     fromRequest: false,
     username: '',
-    version: VERSION,
+    version: '',
     canUpdateConfig: true,
     canUpdateService: true,
     canUpdateNamespace: true,
@@ -111,7 +111,7 @@ export const useWebResources = defineStore('webResources', {
       this.canUpdateService = true
       this.canUpdateNamespace = true
       this.username = ''
-      this.version = VERSION
+      this.version = ''
     },
   },
 })

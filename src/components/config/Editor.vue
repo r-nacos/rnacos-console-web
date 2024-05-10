@@ -247,7 +247,6 @@ const editorView = ref()
 watch(
   () => props.languageType,
   (nv, ov) => {
-    console.log(editorView.value)
     initEditor()
   },
 )

@@ -210,7 +210,6 @@ const confirm = () => {
     props.config
       .validator(state.formData)
       .then((data: AnyObj) => {
-        console.log(data, `mode: ${data.mode || ''} type:submit`)
         if (data) {
           if (data.mode === 'add' || data.mode === constant.FORM_MODE_CREATE) {
             onSave(data)
@@ -391,9 +390,7 @@ onMounted(() => {
 /**
  * 表单验证
  */
-const onValidateFail = () => {
-  console.log('onValidateFail')
-}
+const onValidateFail = () => {}
 
 const saveUpdateForm = async (data: AnyObj) => {
   let url = `${props.config?.apis?.update || ''}`

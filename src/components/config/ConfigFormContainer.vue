@@ -1,10 +1,5 @@
 <template>
-  <Transition
-    appear
-    name="animate__animated animate__fadeIn"
-    enter-active-class="animate__fadeIn"
-    leave-active-class="animate__fadeOut"
-  >
+  <Transition name="slide-fade">
     <div
       class="custom-modal"
       v-if="showForm"
@@ -202,16 +197,23 @@ const onSave = async (formData: AnyObj) => {
     padding-right: 10px;
   }
 
+  .content {
+    height: calc(100vh - 145px);
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
   .footer {
     display: flex;
     justify-content: right;
     position: absolute;
     width: calc(100% - 20px);
     bottom: 0;
-    height: 50px;
+    height: 46px;
     align-items: center;
     margin-right: 20px;
     border-top: 1px solid #ccc;
+    background-color: #fff;
   }
 }
 </style>

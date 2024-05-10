@@ -118,3 +118,13 @@ $scrollbar-color: #ececec !default;
   top: 2px;
   cursor: pointer;
 }
+.slide-fade-enter-active,
+.slide-fade-leave-active {
+  transition: all 0.2s ease;
+}
+
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+  transform: translateY(10px);
+  opacity: 0;
+}

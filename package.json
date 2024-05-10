@@ -1,8 +1,12 @@
 {
   "name": "rnacos-console",
-  "author": "heqingpan@126.com",
+  "version": "dev",
+  "authors": [
+    "heqingpan@126.com"
+  ],
   "homepage": "https://github.com/heqingpan/rnacos-console-web",
   "repository": "https://github.com/heqingpan/rnacos-console-web.git",
+  "private": true,
   "keywords": [
     "nacos",
     "rnacos",
@@ -10,49 +14,126 @@
     "admin",
     "vue3"
   ],
-  "private": true,
-  "version": "0.3.12",
-  "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc && vite build",
-    "preview": "vite preview",
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
-    "format": "prettier --write src/"
+    "dev:debug": "vite --debug",
+    "dev:test": "vite --mode test",
+    "build": "vite build --mode production",
+    "preview": "vite preview --mode test",
+    "docs:dev": "vuepress dev docs",
+    "docs:build": "vuepress build docs",
+    "lint:fix": "eslint --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix",
+    "lint": "eslint ./src",
+    "type-check": "vue-tsc --noEmit",
+    "code-format": "prettier --write .",
+    "git-cz": "npm run code-format && git add . && git-cz",
+    "cz": "cz",
+    "prepare": "husky install",
+    "lint-staged": "lint-staged",
+    "commit": "git add . && cz-customizable"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-customizable"
+    },
+    "cz-customizable": {
+      "config": "./config/.cz-config.ts"
+    },
+    "prettier": {
+      "config": "./config/.prettierrc.ts"
+    }
+  },
+  "pre-commit": [
+    "prettier --write ."
+  ],
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{ts,js,vue,jsx,tsx}": [
+      "prettier --write ."
+    ]
   },
   "dependencies": {
+    "@codemirror/commands": "^6.5.0",
     "@codemirror/lang-html": "^6.4.8",
+    "@codemirror/lang-javascript": "^6.2.2",
     "@codemirror/lang-json": "^6.0.1",
     "@codemirror/lang-xml": "^6.1.0",
     "@codemirror/lang-yaml": "^6.0.0",
-    "axios": "^1.3.6",
+    "@codemirror/language": "^6.10.1",
+    "@codemirror/lint": "^6.7.0",
+    "@codemirror/merge": "^6.6.1",
+    "@codemirror/state": "^6.4.1",
+    "@codemirror/view": "^6.26.3",
+    "@types/crypto-js": "^4.2.2",
+    "@vicons/ionicons5": "^0.12.0",
+    "@vuepress/plugin-docsearch": "2.0.0-rc.0",
+    "@vueuse/core": "^10.9.0",
+    "animate.css": "^4.1.1",
+    "axios": "^1.6.8",
     "cm6-theme-solarized-dark": "^0.2.0",
     "codemirror": "^6.0.1",
     "crypto-js": "^4.2.0",
-    "diff": "^5.1.0",
-    "pinia": "^2.0.35",
-    "qs": "^6.11.2",
-    "vue": "^3.2.47",
-    "vue-demi": "^0.14.7",
-    "vue-router": "^4.1.6"
+    "dayjs": "^1.11.10",
+    "diff": "^5.2.0",
+    "encjs": "^0.0.4",
+    "naive-ui": "^2.38.1",
+    "nprogress": "^0.2.0",
+    "pinia": "^2.1.7",
+    "qs": "^6.12.0",
+    "vue-router": "^4.3.0"
   },
   "devDependencies": {
-    "@rushstack/eslint-patch": "1.5.1",
-    "@types/node": "^18.16.1",
-    "@vicons/ionicons5": "^0.12.0",
-    "@vitejs/plugin-vue": "^4.4.0",
-    "@vitejs/plugin-vue-jsx": "^3.0.1",
-    "@vue/eslint-config-prettier": "^8.0.0",
-    "browserslist": "^4.22.1",
-    "eslint": "^8.54.0",
-    "eslint-plugin-vue": "9.18.1",
-    "lightningcss": "^1.22.0",
-    "naive-ui": "^2.34.3",
-    "prettier": "^3.1.0",
-    "typescript": "^5.0.2",
-    "unplugin-auto-import": "^0.16.6",
+    "@commitlint/cli": "^19.2.1",
+    "@commitlint/config-conventional": "^17.8.1",
+    "@rushstack/eslint-patch": "^1.10.1",
+    "@types/node": "^20.12.2",
+    "@types/qs": "^6.9.14",
+    "@vant/use": "^1.6.0",
+    "@vitejs/plugin-vue": "^4.6.2",
+    "@vitejs/plugin-vue-jsx": "^3.1.0",
+    "@vue/eslint-config-prettier": "^7.1.0",
+    "@vue/eslint-config-typescript": "^11.0.3",
+    "@vue/tsconfig": "^0.4.0",
+    "@vuepress/bundler-vite": "2.0.0-rc.9",
+    "@vuepress/theme-default": "2.0.0-rc.21",
+    "autoprefixer": "^10.4.19",
+    "commitizen": "^4.3.0",
+    "commitlint": "^17.8.1",
+    "commitlint-config-cz": "^0.13.3",
+    "commitlint-config-git-commit-emoji": "^1.0.0",
+    "consola": "^3.2.3",
+    "cz-conventional-changelog": "^3.3.0",
+    "cz-customizable": "^7.0.0",
+    "eslint": "^8.57.0",
+    "eslint-plugin-vue": "^9.24.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.3.0",
+    "pre-commit": "^1.2.2",
+    "prettier": "^2.8.8",
+    "pretty-quick": "^3.3.1",
+    "sass": "^1.72.0",
+    "terser": "^5.30.0",
+    "typescript": "^5.4.3",
+    "unplugin-auto-import": "^0.16.7",
     "unplugin-vue-components": "^0.25.2",
-    "vite": "^4.4.11",
-    "vue-tsc": "^1.4.2"
-  }
+    "vite": "4.3.9",
+    "vite-plugin-html": "^3.2.2",
+    "vite-plugin-svg-icons": "^2.0.1",
+    "vite-plugin-vue-attribute-extension": "^0.0.3",
+    "vue": "^3.4.21",
+    "vue-tsc": "^1.8.27",
+    "vuepress": "2.0.0-rc.9"
+  },
+  "eslintConfig": {
+    "rules": {
+      "vue/no-parsing-error": 0
+    }
+  },
+  "eslintIgnore": [
+    "docs/*.md"
+  ]
 }

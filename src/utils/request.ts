@@ -1,35 +1,22 @@
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
-import router from '@/route/router.js';
-
+import axios, { type AxiosInstance, type AxiosRequestConfig, type AxiosResponse } from 'axios'
 class HttpRequest {
+  router: any
   constructor() {}
 
   interceptors(instance: AxiosInstance, url: string | undefined) {
-    instance.interceptors.request.use((config) => {
-      /*
-            if(config.method!=="get" && config.data != undefined){
-                config.data = qs.stringify(config.data)
-            }
-            */
-      /*
-            if(config.method==="get" || config.method == undefined){
-                config.paramsSerializer = (params)=> {return qs.stringify(params)}
-            }
-            */
-      return config;
-    });
-    instance.interceptors.response.use((config) => {
-      if (
-        config.headers['No-Logig'] === '1' ||
-        config.headers['no-login'] === '1'
-      ) {
-        router.push(
-          '/p/login?redirect_url=' +
-            encodeURIComponent(location.pathname + location.search)
-        );
+    instance.interceptors.request.use(config => {
+      return config
+    })
+    instance.interceptors.response.use(config => {
+      const basePath = import.meta.env.VITE_APP_WEB_ROOT_PATH
+      if (config.headers['No-Logig'] === '1' || config.headers['no-login'] === '1') {
+        let url = basePath !== '/' ? `${basePath}/login` : '/login'
+        url += '?redirect_url=' + encodeURIComponent(location.pathname + location.search)
+        location.href = url
+        // router.push('/p/login?redirect_url=' + encodeURIComponent(location.pathname + location.search))
       }
-      return config;
-    });
+      return config
+    })
   }
 
   getInsideConfig() {
@@ -37,10 +24,10 @@ class HttpRequest {
       //baseURL: this.baseURL,
       timeout: 1000,
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      }
-    };
-    return config;
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    }
+    return config
   }
 
   getJsonInsideConfig() {
@@ -55,10 +42,10 @@ class HttpRequest {
   }
 
   request(options: AxiosRequestConfig): Promise<AxiosResponse> {
-    const instance = axios.create();
-    options = Object.assign(this.getInsideConfig(), options);
-    this.interceptors(instance, options.url);
-    return instance(options);
+    const instance = axios.create()
+    options = Object.assign(this.getInsideConfig(), options)
+    this.interceptors(instance, options.url)
+    return instance(options)
   }
 
   requestJSON(options: AxiosRequestConfig): Promise<AxiosResponse> {
@@ -69,5 +56,4 @@ class HttpRequest {
   }
 }
 
-const request = new HttpRequest();
-export default request;
+export default new HttpRequest()

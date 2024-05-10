@@ -1,8 +1,5 @@
 <template>
   <div>
-    <!-- 
-    <div><span>配置变更比较</span></div>
-    -->
     <div class="result-wrap">
       <div class="inner-wrap">
         <div class="result-title">当前配置:</div>
@@ -30,20 +27,19 @@
   </div>
 </template>
 
-<script>
-import { defineComponent, ref } from 'vue';
-import { handleDiff, buildDiffResult } from '@/utils/utils';
+<script lang="ts" setup>
+import { handleDiff, buildDiffResult } from '@/utils'
+let props = defineProps({
+  src: {
+    type: String,
+  },
+  dst: {
+    type: String,
+  },
+})
 
-export default defineComponent({
-  props: ['src', 'dst'],
-  setup(props) {
-    var list = handleDiff(props['src'] || '', props['dst'] || '');
-    var res = buildDiffResult(list);
-    return {
-      ...res
-    };
-  }
-});
+let list = handleDiff(props['src'] || '', props['dst'] || '')
+let { srcNo, srcCode, dstNo, dstCode } = buildDiffResult(list)
 </script>
 
 <style scoped>

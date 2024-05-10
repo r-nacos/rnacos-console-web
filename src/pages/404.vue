@@ -14,7 +14,7 @@
     </div>
   </div>
 </template>
-<script lang="ts" setup title="404" layout="nav">
+<script lang="ts" setup title="404">
 import { NButton } from 'naive-ui'
 let router = useRouter()
 const goBack = () => {

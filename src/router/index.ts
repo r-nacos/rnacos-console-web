@@ -132,7 +132,7 @@ const init = async (app: App<Element>) => {
   // 匹配不到的路由跳转到404
   routes.push({
     path: '/:pathMatch(.*)*',
-    redirect: '/error/notFound',
+    redirect: '/404',
   })
   const router = createRouter({
     history: createWebHistory(import.meta.env.VITE_APP_WEB_ROOT_PATH),

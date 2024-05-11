@@ -109,13 +109,12 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
       outDir: 'dist',
       rollupOptions: {
         output: {
-          manualChunks: id => {
-            if (id.includes('/node_modules/@vue/')) return 'vuejs'
-            if (id.includes('/node_modules/vue-router/')) return 'vue-router'
-            if (id.includes('/node_modules/pinia/') || id.includes('/node_modules/axios/')) return 'vlibs'
-            if (id.includes('codemirror')) return 'codemirror-core'
-            if (id.includes('/node_modules/naive-ui/')) return 'naive-ui'
-            if (id.includes('/node_modules/')) return 'vendor'
+          manualChunks: {
+            vue: ['vue', 'vue-router'],
+            axios: ['axios'],
+            pinia: ['pinia'],
+            codemirror: ['@codemirror/commands', '@codemirror/language', '@codemirror/merge', '@codemirror/state', '@codemirror/view'],
+            'codemirror-language': ['@codemirror/lang-yaml', '@codemirror/lint', '@codemirror/lang-html', '@codemirror/lang-javascript', '@codemirror/lang-json', '@codemirror/lang-xml'],
           },
         },
       },

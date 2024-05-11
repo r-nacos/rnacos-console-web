@@ -82,7 +82,7 @@ dependencies = [
 
 [[package]]
 name = "rnacos-web-dist-wrap"
-version = "0.3.12"
+version = "0.4.0-beta.1"
 dependencies = [
  "rust-embed",
 ]

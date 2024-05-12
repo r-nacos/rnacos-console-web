@@ -11,7 +11,11 @@ export default defineUserConfig({
     navbar: [
         {
             text: "首页",
-            link: "/home/",
+            link: "/",
+        },
+        {
+          text: "组件",
+          link: "/home/",
         },
         {
             text: "常见问题",

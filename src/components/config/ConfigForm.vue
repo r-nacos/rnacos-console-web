@@ -75,13 +75,13 @@
       </template>
       <NFormItem
         path="content"
-        label="配置内容"
+        label="配置内容(*F10*网页全屏)"
       >
         <Editor
           v-if="showEditor"
           v-model="formDataRef.content"
           :language-type="checkedValue"
-          :disabled="isDisabled"
+          :readonly="isDisabled"
         />
       </NFormItem>
     </NForm>

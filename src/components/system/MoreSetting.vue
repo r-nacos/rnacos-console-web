@@ -34,6 +34,7 @@ import { EllipsisHorizontal, LogOutOutline, Pencil as EditIcon } from '@vicons/i
 import { NIcon, useMessage } from 'naive-ui'
 import { useWebResources } from '@/data/resources'
 import apis from '@/apis'
+let router = useRouter()
 const message = useMessage()
 const renderIcon = (icon: any) => {
   return () => {
@@ -77,7 +78,7 @@ const handleSelect = async (key: string) => {
       if (data.success) {
         message.info('退出登录成功')
         setTimeout(() => {
-          location.href = '/p/login'
+          router.push('/p/login')
         }, 500)
       } else {
         message.info(data.message || '退出失败')

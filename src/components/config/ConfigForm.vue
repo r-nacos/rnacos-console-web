@@ -75,7 +75,7 @@
       </template>
       <NFormItem
         path="content"
-        label="配置内容(*F10*网页全屏)"
+        label="配置内容(F10键切换全屏)"
       >
         <Editor
           v-if="showEditor"

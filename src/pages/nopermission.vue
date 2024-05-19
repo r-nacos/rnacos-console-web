@@ -1,3 +1,3 @@
-<template layout="nav" title="nopermission">
+<template title="nopermission">
   <div class="page-nopermission">nopermission</div>
 </template>

@@ -4,13 +4,13 @@ class HttpRequest {
   constructor() {}
 
   interceptors(instance: AxiosInstance, url: string | undefined) {
-    instance.interceptors.request.use(config => {
+    instance.interceptors.request.use((config: any) => {
       return config
     })
-    instance.interceptors.response.use(config => {
+    instance.interceptors.response.use((config: { headers: { [x: string]: string } }) => {
       const basePath = import.meta.env.VITE_APP_WEB_ROOT_PATH
       if (config.headers['No-Logig'] === '1' || config.headers['no-login'] === '1') {
-        let url = basePath !== '/' ? `${basePath}/login` : '/login'
+        let url = basePath !== '/' ? `${basePath}/p/login` : '/p/login'
         url += '?redirect_url=' + encodeURIComponent(location.pathname + location.search)
         location.href = url
         // router.push('/p/login?redirect_url=' + encodeURIComponent(location.pathname + location.search))

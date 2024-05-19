@@ -77,7 +77,7 @@ const handleSelect = async (key: string) => {
       if (data.success) {
         message.info('退出登录成功')
         setTimeout(() => {
-          location.href = '/login'
+          location.href = '/p/login'
         }, 500)
       } else {
         message.info(data.message || '退出失败')

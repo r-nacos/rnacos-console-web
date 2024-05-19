@@ -145,23 +145,13 @@ const init = async (app: App<Element>) => {
   /**
    * 路由前置守卫
    */
-  router.beforeEach((to, form, next) => {
+  router.beforeEach((to: { query: { vconsole: any }; meta: { isAuth: any } }, form: any, next: () => void) => {
     Nprogress.configure({ showSpinner: false })
     Nprogress.start()
     if (isMobile() && to.query.vconsole) {
       Logger.log('动态开启vconsole')
     }
     if (to.meta.isAuth) {
-      /* if (to.meta.isAuth) {
-        const token = sessionStorage.getItem('token')
-        if (token) {
-          next()
-        } else {
-          next('/login')
-        }
-      } else {
-        next()
-      } */
       next()
     } else {
       next()
@@ -171,7 +161,7 @@ const init = async (app: App<Element>) => {
   /**
    * 路由后置守卫
    */
-  router.afterEach(to => {
+  router.afterEach((to: { meta: {} }) => {
     Nprogress.done()
     const meta: AnyObject = to.meta || {}
     const { title, pv } = meta

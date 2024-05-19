@@ -39,7 +39,7 @@ instance.interceptors.request.use(
 instance.interceptors.response.use((response: AxiosResponse) => {
   const basePath = import.meta.env.VITE_APP_WEB_ROOT_PATH
   if (response.headers['No-Logig'] === '1' || response.headers['no-login'] === '1') {
-    let url = basePath !== '/' ? `${basePath}/login` : '/login'
+    let url = basePath !== '/' ? `${basePath}/p/login` : '/p/login'
     url += '?redirect_url=' + encodeURIComponent(location.pathname + location.search)
     location.href = url
   }

@@ -2,6 +2,7 @@
   <div
     class="editor-main"
     @click="clickHandler"
+    ref="editorMainRef"
   >
     <div ref="editorRef"></div>
   </div>
@@ -14,7 +15,7 @@ import { json } from '@codemirror/lang-json'
 import { xml } from '@codemirror/lang-xml'
 import { yaml } from '@codemirror/lang-yaml'
 import { onMounted, ref } from 'vue'
-import { keymap, EditorView, type ViewUpdate } from '@codemirror/view'
+import { keymap, EditorView, type ViewUpdate, type KeyBinding } from '@codemirror/view'
 import { defaultKeymap, indentWithTab } from '@codemirror/commands'
 import { solarizedDark } from 'cm6-theme-solarized-dark'
 import { diagnosticCount as linterDagnosticCount, lintGutter, type Diagnostic, type LintSource } from '@codemirror/lint'
@@ -241,6 +242,7 @@ const props = defineProps({
   },
 })
 const emits = defineEmits(['update:modelValue'])
+const editorMainRef = ref()
 const editorRef = ref()
 const editorView = ref()
 
@@ -309,6 +311,14 @@ const initEditor = () => {
     editorView.value.destroy()
   }
 
+  const fullscreenKeyBinding: KeyBinding = {
+    key: 'F10',
+    run: function (view: EditorView) {
+      toggleFullScreen()
+      return false
+    },
+  }
+
   let lang = {} as any
   switch (props.languageType) {
     case 'text':
@@ -344,7 +354,7 @@ const initEditor = () => {
       props.minimal ? minimalSetup : basicSetup,
       props.theme ? props.theme : solarizedDark,
       props.wrap ? EditorView.lineWrapping : undefined,
-      props.tab ? keymap.of([indentWithTab]) : keymap.of(defaultKeymap),
+      props.tab ? keymap.of([indentWithTab, fullscreenKeyBinding]) : keymap.of(defaultKeymap),
       EditorState.allowMultipleSelections.of(props.allowMultipleSelections),
       props.tabSize ? tabSize.of(EditorState.tabSize.of(props.tabSize)) : undefined,
       props.phrases ? EditorState.phrases.of(props.phrases) : undefined,
@@ -375,6 +385,18 @@ const initEditor = () => {
   // }
 }
 
+function toggleFullScreen() {
+  const editor = editorMainRef.value
+  if (editor) {
+    editor.classList.toggle('fullscreen')
+    if (editor.classList.contains('fullscreen')) {
+      /* empty */
+    } else {
+      editor.style.height = ''
+    }
+  }
+}
+
 onMounted(() => {
   initEditor()
 })
@@ -391,5 +413,14 @@ onMounted(() => {
 }
 :deep(.ͼ1.cm-focused) {
   outline: none;
+}
+.fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 100vh !important;
+  z-index: 9999;
 }
 </style>

@@ -218,6 +218,7 @@ getCaptcha()
 }
 
 .login_form {
+  width: 320px;
   border: 1px solid #ccc;
   padding: 10px 20px 20px;
   background: #fff;

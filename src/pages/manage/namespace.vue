@@ -64,6 +64,7 @@ import { useWebResources } from '@/data/resources'
 let webResources = useWebResources()
 const formRef = ref<FormInst | null>(null)
 const pageContainer = ref<any>(null)
+const columns = ref<any>([])
 const paginationReactive = reactive({
   page: 1,
   pageCount: 1,
@@ -83,18 +84,18 @@ const paginationReactive = reactive({
 /**
  * 表格表格字段
  */
-const columns = [
-  {
-    title: '命名空间名称',
-    key: 'namespaceName',
-  },
-  {
-    title: '命名空间ID',
-    key: 'namespaceId',
-  },
-]
-const optColumn = [
-  {
+const createColumns = () => {
+  const columns = [
+    {
+      title: '命名空间名称',
+      key: 'namespaceName',
+    },
+    {
+      title: '命名空间ID',
+      key: 'namespaceId',
+    },
+  ]
+  const optColumn = {
     title: '操作',
     key: 'type',
     fixed: 'right',
@@ -141,11 +142,17 @@ const optColumn = [
         </div>
       )
     },
-  },
-]
-if (webResources.canUpdateNamespace) {
-  columns.push(optColumn)
+  }
+
+  if (webResources.canUpdateNamespace) {
+    columns.push(optColumn)
+  }
+  return columns
 }
+
+onMounted(() => {
+  columns.value = createColumns()
+})
 
 /**
  * 表单校验

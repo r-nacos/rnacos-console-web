@@ -41,6 +41,7 @@
                 placeholder="验证码"
                 v-model:value="modelRef.captcha"
                 @keydown.enter.prevent
+                @keyup.enter="submit"
               />
             </n-form-item>
           </div>

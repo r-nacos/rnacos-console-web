@@ -78,7 +78,7 @@ import { useMessage, NButton } from 'naive-ui'
 import constant from '@/types/constant'
 import type { AnyObj } from 'encjs/core/base'
 import { CloseOutline } from '@vicons/ionicons5'
-
+import { namespaceStore } from '@/data/namespace'
 const toast = useMessage()
 const configForm = ref<HTMLDivElement>() as any
 let props = defineProps({
@@ -134,13 +134,13 @@ const onNext = async () => {
     vt.value = 2
   }
 }
-
 /**
  * 保存配置数据
  *
  * @param formData 配置项
  */
 const onSave = async (formData: AnyObj) => {
+  formData.tenant = namespaceStore.current.value.namespaceId
   let url = formData.mode === 'add' || formData.mode === constant.FORM_MODE_CREATE ? `${apis.configAdd || ''}` : `${apis.configUpdate || ''}`
   let { status, data } = await apis.postJSON(url, {
     data: formData,

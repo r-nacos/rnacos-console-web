@@ -1,7 +1,7 @@
 <template>
   <n-select
     class="on-select"
-    v-model:value="value.namespaceId"
+    v-model:value="namespaceId"
     :options="optionList"
     size="medium"
     @update:value="update"
@@ -14,10 +14,12 @@
 </template>
 
 <script lang="ts" setup>
+import { ref } from 'vue'
 import { namespaceStore } from '@/data/namespace'
 let value = namespaceStore.current as any
 let optionList = namespaceStore.optionList as any
 const emits = defineEmits(['change'])
+const namespaceId = ref(value.namespaceId)
 
 /**
  *
@@ -32,6 +34,7 @@ const update = (v: string) => {
       }
       value = obj
       namespaceStore.setCurrent(obj)
+      localStorage.setItem('currentNamespace', JSON.stringify(obj))
       emits('change', obj)
     }
   }
@@ -39,6 +42,11 @@ const update = (v: string) => {
 
 onMounted(() => {
   namespaceStore.initLoad()
+  let currentNamespace = localStorage.getItem('currentNamespace')
+  if (currentNamespace) {
+    namespaceId.value = JSON.parse(currentNamespace).namespaceId
+    emits('change', JSON.parse(currentNamespace))
+  }
 })
 </script>
 

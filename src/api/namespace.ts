@@ -1,7 +1,7 @@
-import { AxiosResponse } from 'axios'
+import type { AxiosResponse } from 'axios'
 import request from '../utils/request'
-import { INamespace } from '@/types/namespace'
-let axios = request
+import type { INamespace } from '@/types/namespace'
+const axios = request
 
 class NamespaceApi {
   queryList(): Promise<AxiosResponse> {

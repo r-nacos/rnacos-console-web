@@ -10,7 +10,7 @@
         label="配置ID"
       >
         <NInput
-          :disabled="isReadonly"
+          :disabled="isReadonly || formData.mode === constant.FORM_MODE_UPDATE"
           placeholder="输入配置ID"
           v-model:value="formDataRef.dataId"
           @keydown.enter.prevent
@@ -21,7 +21,7 @@
         label="配置组"
       >
         <NInput
-          :disabled="isReadonly"
+          :disabled="isReadonly || formData.mode === constant.FORM_MODE_UPDATE"
           placeholder="输入配置组"
           v-model:value="formDataRef.group"
           @keydown.enter.prevent

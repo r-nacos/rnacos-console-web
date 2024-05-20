@@ -1,7 +1,7 @@
-import { AxiosResponse } from 'axios'
+import type { AxiosResponse } from 'axios'
 import request from '../utils/request'
-import { IApiResult, IPageResult, WebResource } from '@/types/base'
-let axios = request
+import type { IApiResult, IPageResult, WebResource } from '@/types/base'
+const axios = request
 
 export interface ILoginParam {
   username: string

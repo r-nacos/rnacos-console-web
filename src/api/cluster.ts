@@ -1,8 +1,8 @@
-import { AxiosResponse } from 'axios'
+import type { AxiosResponse } from 'axios'
 import request from '../utils/request'
-import { IClusterNode } from '@/types/cluster'
-import { IConsoleResult } from '@/types/base'
-let axios = request
+import type { IClusterNode } from '@/types/cluster'
+import type { IConsoleResult } from '@/types/base'
+const axios = request
 
 class ClusterApi {
   queryNodeList(): Promise<AxiosResponse<IConsoleResult<Array<IClusterNode>>>> {

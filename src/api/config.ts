@@ -1,7 +1,7 @@
-import { AxiosResponse } from 'axios'
+import type { AxiosResponse } from 'axios'
 import request from '../utils/request'
-import { IApiResult } from '@/types/base'
-let axios = request
+import type { IApiResult } from '@/types/base'
+const axios = request
 
 export interface IConfig {
   tenant?: string

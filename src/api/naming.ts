@@ -1,7 +1,7 @@
-import { AxiosResponse } from 'axios'
+import type { AxiosResponse } from 'axios'
 import request from '../utils/request'
-import { IServiceInfo, IServiceInstance, IServiceKey } from '@/types/service'
-let axios = request
+import type { IServiceInfo, IServiceInstance, IServiceKey } from '@/types/service'
+const axios = request
 
 export interface IServiceQueryPageParam {
   namespaceId: string

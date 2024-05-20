@@ -62,6 +62,7 @@
           type="info"
           @click="
             methods.createForm({
+              namespaceId: namespaceStore.current.value.namespaceId || '',
               groupName: '',
               serviceName: '',
               protectThreshold: 0,
@@ -156,7 +157,7 @@ const router = useRouter()
 const paramRef = ref({
   serviceParam: '',
   groupParam: '',
-  namespaceId: '',
+  namespaceId: namespaceStore.current.value.namespaceId,
   pageNo: 1,
   pageSize: 10,
 })

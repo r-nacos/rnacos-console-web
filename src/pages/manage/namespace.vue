@@ -50,7 +50,10 @@
           path="namespaceId"
           label="命名空间Id"
         >
-          <NInput v-model:value="formData.namespaceId" />
+          <NInput
+            v-model:value="formData.namespaceId"
+            :disabled="formData.mode === 'update'"
+          />
         </NFormItem>
       </NForm>
     </template>

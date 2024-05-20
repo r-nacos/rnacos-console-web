@@ -15,6 +15,7 @@
       validator: validator,
       pagination: paginationReactive,
     }"
+    @notify="notify"
   >
     <template #header="{ methods }">
       <div>命名空间</div>
@@ -61,6 +62,8 @@ import { NPopconfirm, NTag, NButton, NForm, NFormItem, NInput, type FormItemRule
 import apis from '@/apis/index'
 import type { INamespace } from '@/types/namespace'
 import { useWebResources } from '@/data/resources'
+import { namespaceStore } from '@/data/namespace'
+
 let webResources = useWebResources()
 const formRef = ref<FormInst | null>(null)
 const pageContainer = ref<any>(null)
@@ -148,6 +151,11 @@ const createColumns = () => {
     columns.push(optColumn)
   }
   return columns
+}
+
+// 通知更新命名空间
+const notify = (mark: string = '') => {
+  namespaceStore.refresh()
 }
 
 onMounted(() => {

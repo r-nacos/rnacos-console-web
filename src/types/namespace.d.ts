@@ -16,5 +16,6 @@ export interface INamespaceStore {
   optionList: Ref<UnwrapRef<Array<ILabelItem>>>
   setCurrent: (arg0: INamespace) => any
   setLastList: (list: Array<INamespace>) => any
-  initLoad: () => any
+  initLoad: () => void
+  refresh: () => void
 }

@@ -121,7 +121,7 @@ import constant from '@/types/constant'
 import apis from '@/apis/index'
 const slots = useSlots()
 const toast = useMessage()
-const emits = defineEmits(['onSave'])
+const emits = defineEmits(['onSave', 'notify'])
 let props = defineProps({
   config: {
     type: Object as PropType<CrudOptions<Object>>,
@@ -130,6 +130,10 @@ let props = defineProps({
   data: {
     type: Array<any>,
     default: () => [],
+  },
+  callback: {
+    type: Function,
+    default: undefined,
   },
 })
 const showDrawer = ref(false)
@@ -242,8 +246,10 @@ const onSave = async (formData: any) => {
     if (data.success) {
       if (formData.mode === constant.FORM_MODE_CREATE) {
         toast.info('添加成功')
+        emits('notify', 'add')
       } else {
         toast.info('编辑成功')
+        emits('notify', 'edit')
       }
       refreshData()
     } else {
@@ -271,6 +277,7 @@ const onUpdate = async (formData: any) => {
   if (status === 200 && data && typeof data === 'object') {
     if (data.success) {
       toast.info('修改成功')
+      emits('notify', 'edit')
       refreshData()
     } else {
       toast.error(data.message || '修改失败')
@@ -292,6 +299,7 @@ const onDelete = async (params: AnyObj) => {
   if (status === 200 && data && typeof data === 'object') {
     if (data.success) {
       toast.info('删除成功')
+      emits('notify', 'delete')
       refreshData()
     } else {
       toast.error(data.message || '删除失败')

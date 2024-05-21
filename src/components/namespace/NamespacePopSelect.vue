@@ -1,7 +1,7 @@
 <template>
   <n-select
     class="on-select"
-    v-model:value="value.namespaceId"
+    v-model:value="namespaceId"
     :options="optionList"
     size="medium"
     @update:value="update"
@@ -18,7 +18,7 @@ import { namespaceStore } from '@/data/namespace'
 let value = namespaceStore.current as any
 let optionList = namespaceStore.optionList as any
 const emits = defineEmits(['change'])
-
+const namespaceId = ref(namespaceStore.current.value.namespaceId || '')
 /**
  *
  * @param v 选中项
@@ -30,7 +30,7 @@ const update = (v: string) => {
         namespaceId: item.value,
         namespaceName: item.label,
       }
-      value = obj
+      namespaceId.value = item.value
       namespaceStore.setCurrent(obj)
       emits('change', obj)
     }

@@ -57,7 +57,12 @@
         </NForm>
       </div>
       <div class="actions-right">
-        <NButton class="mg-r10 mg-l10" @click="onSearch">查询</NButton>
+        <NButton
+          class="mg-r10 mg-l10"
+          @click="onSearch"
+        >
+          查询
+        </NButton>
         <NButton
           class="mg-r10"
           @click="createForm"

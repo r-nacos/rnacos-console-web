@@ -57,7 +57,7 @@
         </NForm>
       </div>
       <div class="actions-right">
-        <NButton class="mg-r10 mg-l10">查询</NButton>
+        <NButton class="mg-r10 mg-l10" @click="onSearch">查询</NButton>
         <NButton
           class="mg-r10"
           @click="createForm"
@@ -152,13 +152,18 @@ const cancel = (type: string = '') => {
   }
 }
 
+/** 查询 */
+const onSearch = () => {
+  pageContainer.value?.onSearch()
+}
+
 /**
  * 改变命名空间
  *
  * @param nm
  */
 const changeNamespace = (nm: INamespace) => {
-  paramRef.value.tenant = nm.namespaceName
+  paramRef.value.tenant = nm.namespaceId
   pageContainer.value?.onSearch()
 }
 

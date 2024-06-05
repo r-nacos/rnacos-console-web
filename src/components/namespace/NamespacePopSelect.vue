@@ -19,8 +19,7 @@ import { namespaceStore } from '@/data/namespace'
 let value = namespaceStore.current as any
 let optionList = namespaceStore.optionList as any
 const emits = defineEmits(['change'])
-const namespaceId = ref(value.namespaceId)
-
+const namespaceId = ref(namespaceStore.current.value.namespaceId || '')
 /**
  *
  * @param v 选中项
@@ -32,7 +31,7 @@ const update = (v: string) => {
         namespaceId: item.value,
         namespaceName: item.label,
       }
-      value = obj
+      namespaceId.value = item.value
       namespaceStore.setCurrent(obj)
       localStorage.setItem('currentNamespace', JSON.stringify(obj))
       emits('change', obj)

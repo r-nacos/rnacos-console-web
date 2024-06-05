@@ -50,6 +50,13 @@ function createStore(): INamespaceStore {
     }
   }
 
+  const refresh = async () => {
+    const { status, data } = await apis.getJSON(apis.namespacesList)
+    if (status == 200 && data && typeof data === 'object' && Array.isArray(data.data)) {
+      setLastList(data.data)
+    }
+  }
+
   return {
     current: currentRef,
     listList: listListRef,
@@ -57,6 +64,7 @@ function createStore(): INamespaceStore {
     setCurrent,
     setLastList,
     initLoad,
+    refresh,
   }
 }
 

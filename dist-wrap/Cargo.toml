@@ -1,13 +1,13 @@
 [package]
 name = "rnacos-web-dist-wrap"
-version = "0.4.0"
+version = "0.4.1"
 edition = "2018"
 authors = ["heqingpan <heqingpan@126.com>"]
 license = "MIT/Apache-2.0"
 description = "rnacos server's console front-end dist embed wrap project."
 
 readme = "README.md"
-keywords = ["rnacos"]
+keywords = ["rnacos","r-nacos","nacos"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

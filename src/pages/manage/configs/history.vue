@@ -211,26 +211,28 @@ const paginationReactive = reactive({
  * @param row 行数据
  */
 const getConfig = (row: any) => {
-  // eslint-disable-next-line no-async-promise-executor
-  return new Promise(async (resolve, reject) => {
-    let { status, data } = await apis.getJSON(apis.configInfo, {
-      params: {
-        tenant: row.tenant,
-        group: row.group || 'DEFAULT_GROUP',
-        dataId: row.dataId || '',
-      },
-    })
-    if (status === 200 && data.data && typeof data.data === 'object') {
-      if (data.success) {
-        resolve(data.data)
-      } else {
-        message.info('获取请求配置失败')
-        reject({})
-      }
-    } else {
-      message.error('请求失败')
-      reject({})
-    }
+  return new Promise((resolve, reject) => {
+    apis
+      .getJSON(apis.configInfo, {
+        params: {
+          tenant: row.tenant,
+          group: row.group || 'DEFAULT_GROUP',
+          dataId: row.dataId || '',
+        },
+      })
+      .then(res => {
+        if (res.status === 200 && res.data.data && typeof res.data.data === 'object') {
+          if (res.data.success) {
+            resolve(res.data.data)
+          } else {
+            message.info('获取请求配置失败')
+            reject({})
+          }
+        } else {
+          message.error('请求失败')
+          reject({})
+        }
+      })
   })
 }
 
@@ -239,10 +241,12 @@ const getConfig = (row: any) => {
  *
  * @param row 行数据
  */
-const updateItem = async (row: any) => {
+const rollback = async (row: any) => {
+  console.log(row, 'row')
   getConfig(row).then((data: any) => {
     visibleType.value = 2
     state.mode = constant.FORM_MODE_UPDATE
+    // 历史的值
     state.ov = `${data.value || ''}`
     pageContainer.value?.updateForm({
       md5: `${data.md5 || ''}`,
@@ -267,10 +271,11 @@ const detailItem = async (row: any) => {
   getConfig(row).then((data: any) => {
     visibleType.value = 1
     state.mode = constant.FORM_MODE_DETAIL
+    // 此处详情应该是历史的数据
     pageContainer.value?.showDetail({
       md5: data.md5 || '',
       showMd5: row.showMd5 || true,
-      content: data.value || '',
+      content: row.content || '',
       sourceContent: row.sourceContent || '',
       mode: constant.FORM_MODE_DETAIL,
       tenant: row.tenant,
@@ -317,7 +322,7 @@ const columns = [
             size="tiny"
             quaternary
             type="primary"
-            onClick={() => updateItem(row)}
+            onClick={() => rollback(row)}
           >
             恢复
           </NButton>

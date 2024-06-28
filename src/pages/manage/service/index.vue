@@ -34,7 +34,7 @@
             path="param.serviceParam"
           >
             <NInput
-              v-model:value="param.serviceName"
+              v-model:value="param.serviceNameParam"
               placeholder="输入服务名称"
             />
           </NFormItem>

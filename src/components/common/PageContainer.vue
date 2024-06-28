@@ -22,7 +22,7 @@
           <div class="action">
             <slot
               name="actions"
-              :methods="{ createForm, refreshData, loadData }"
+              :methods="{ createForm, refreshData, loadData, onSearch }"
               :param="state.param"
             ></slot>
           </div>

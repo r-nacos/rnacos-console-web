@@ -36,6 +36,7 @@
             <NInput
               v-model:value="param.serviceNameParam"
               placeholder="输入服务名称"
+              clearable
             />
           </NFormItem>
           <NFormItem
@@ -44,7 +45,8 @@
           >
             <NInput
               v-model:value="param.groupName"
-              placeholder=""
+              placeholder="输入服务组"
+              clearable
             />
           </NFormItem>
         </n-form>

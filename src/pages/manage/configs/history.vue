@@ -64,7 +64,7 @@
       />
       <DiffContent
         v-else
-        :nv="formData.content"
+        :nv="state.nv"
         :ov="state.ov"
       />
     </template>
@@ -136,6 +136,7 @@ const paramRef = ref({
   pageSize: 20,
 })
 let state = reactive({
+  nv: '',
   ov: '',
   mode: '',
 })
@@ -247,11 +248,13 @@ const rollback = async (row: any) => {
     visibleType.value = 2
     state.mode = constant.FORM_MODE_UPDATE
     // 历史的值
-    state.ov = `${data.value || ''}`
+    state.nv = `${data.value || ''}`
+    state.ov = `${row.content || ''}`
+    // 当前数据
     pageContainer.value?.updateForm({
       md5: `${data.md5 || ''}`,
       showMd5: row.showMd5 || true,
-      content: `${data.value || ''}`,
+      content: `${row.content || ''}`,
       sourceContent: row.sourceContent || '',
       mode: constant.FORM_MODE_UPDATE,
       tenant: row.tenant,

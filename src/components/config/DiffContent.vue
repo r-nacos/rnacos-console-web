@@ -1,8 +1,8 @@
 <template>
   <div class="diff-container">
     <div class="diff-val">
-      <div class="item">当前值</div>
-      <div class="item">原始值</div>
+      <div class="item">当前配置:</div>
+      <div class="item">待提交的新配置:</div>
     </div>
     <div ref="diffDom"></div>
   </div>

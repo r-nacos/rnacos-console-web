@@ -44,7 +44,7 @@
             path="param.groupParam"
           >
             <NInput
-              v-model:value="param.groupName"
+              v-model:value="param.groupNameParam"
               placeholder="输入服务组"
               clearable
             />
@@ -157,8 +157,8 @@ const pageContainer = ref<any>(null)
 let webResources = useWebResources()
 const router = useRouter()
 const paramRef = ref({
-  serviceParam: '',
-  groupParam: '',
+  serviceNameParam: '',
+  groupNameParam: '',
   namespaceId: namespaceStore.current.value.namespaceId,
   pageNo: 1,
   pageSize: 10,

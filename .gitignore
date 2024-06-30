@@ -30,3 +30,6 @@ lerna-debug.log*
 temp
 package-lock.json
 pnpm-lock.yaml
+#dist-wrap
+dist-wrap/Cargo.lock
+dist-wrap/target/

@@ -457,6 +457,11 @@ defineExpose({
     margin-bottom: 8px;
     padding-right: 5px;
     border-bottom: 1px solid $border-bottom-color;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 999;
+    width: 100%;
   }
 
   .page-actions {
@@ -474,6 +479,7 @@ defineExpose({
     margin: 0 8px;
     border-radius: 12px;
     overflow: hidden;
+    margin-top: 50px;
     // height: calc(100vh - 112px);
   }
 

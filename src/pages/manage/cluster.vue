@@ -24,6 +24,8 @@ const paginationReactive = reactive({
   pageCount: 1,
   pageSize: 10,
   itemCount: 0,
+  pageSizes: [10, 20, 30, 40],
+  showSizePicker: true,
   prefix({ itemCount }: any) {
     return `总行数: ${itemCount}`
   },

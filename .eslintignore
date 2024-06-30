@@ -5,3 +5,4 @@ temp/*
 public/*
 docs/*.md
 .editorconfig
+dist-wrap/Cargo.lock

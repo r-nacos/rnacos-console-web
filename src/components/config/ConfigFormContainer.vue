@@ -102,6 +102,10 @@ let props = defineProps({
     type: String,
     default: '',
   },
+  isClone: {
+    type: Boolean,
+    default: false,
+  },
 })
 const emits = defineEmits(['cancel'])
 const vt = ref(props.visibleType)
@@ -127,6 +131,10 @@ const onPrev = () => {
 const onNext = async () => {
   let validate = await configForm.value?.validator()
   if (validate) {
+    if (props.isClone) {
+      onSave(props.formData)
+      return
+    }
     if (props.formData.mode === constant.FORM_MODE_DETAIL) {
       emits('cancel')
       return

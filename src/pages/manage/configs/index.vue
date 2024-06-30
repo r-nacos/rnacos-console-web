@@ -101,6 +101,7 @@
         :ov="state.ov"
         :visibleType="visibleType"
         :showForm="showForm"
+        :is-clone="state.isClone"
         @cancel="cancel"
       ></ConfigFormContainer>
     </template>
@@ -136,6 +137,7 @@ const paramRef = ref({
 let state = reactive({
   ov: '',
   mode: '',
+  isClone: false,
 })
 const uploadHeader = ref({
   tenant: namespaceStore.current.value.namespaceId,
@@ -176,6 +178,7 @@ const changeNamespace = (nm: INamespace) => {
  * 新建表单
  */
 const createForm = () => {
+  state.isClone = false
   state.ov = ''
   visibleType.value = 1
   state.mode = constant.FORM_MODE_CREATE
@@ -228,6 +231,7 @@ const getConfig = (row: any) => {
  * @param row 行数据
  */
 const cloneItem = async (row: any) => {
+  state.isClone = true
   getConfig(row).then((data: any) => {
     state.mode = constant.FORM_MODE_CREATE
     state.ov = ``

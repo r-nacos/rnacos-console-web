@@ -227,6 +227,32 @@ const getConfig = (row: any) => {
  *
  * @param row 行数据
  */
+const cloneItem = async (row: any) => {
+  getConfig(row).then((data: any) => {
+    state.mode = constant.FORM_MODE_CREATE
+    state.ov = ``
+    pageContainer.value?.initFormData({
+      md5: ``,
+      showMd5: true,
+      content: `${data.value || ''}`,
+      sourceContent: '',
+      mode: state.mode,
+      tenant: row.tenant,
+      group: row.group || 'DEFAULT_GROUP',
+      dataId: '',
+      desc: data.desc || '',
+      configType: data.configType || 'text',
+    })
+    showForm.value = true
+    visibleType.value = 1
+  })
+}
+
+/**
+ * 修改
+ *
+ * @param row 行数据
+ */
 const updateItem = async (row: any) => {
   getConfig(row).then((data: any) => {
     state.mode = constant.FORM_MODE_UPDATE
@@ -236,7 +262,7 @@ const updateItem = async (row: any) => {
       showMd5: row.showMd5 || true,
       content: `${data.value || ''}`,
       sourceContent: row.sourceContent || '',
-      mode: constant.FORM_MODE_UPDATE,
+      mode: state.mode,
       tenant: row.tenant,
       group: row.group || 'DEFAULT_GROUP',
       dataId: row.dataId || '',
@@ -315,8 +341,7 @@ const removeConfirmSlots = {
       <NButton
         size="tiny"
         quaternary
-        type="error"
-      >
+        type="error">
         删除
       </NButton>
     )
@@ -338,23 +363,32 @@ const columns = [
     fixed: 'right',
     render(row: { group: any; dataId: any }) {
       let editButton
+      let cloneButton
       let removePopconfirm
+      console.log(webResources.canUpdateConfig, 'webResources.canUpdateConfig')
       if (webResources.canUpdateConfig) {
         editButton = (
           <NButton
             size="tiny"
             quaternary
             type="info"
-            onClick={() => updateItem(row)}
-          >
+            onClick={() => updateItem(row)}>
             编辑
+          </NButton>
+        )
+        cloneButton = (
+          <NButton
+            size="tiny"
+            quaternary
+            type="info"
+            onClick={() => cloneItem(row)}>
+            克隆
           </NButton>
         )
         removePopconfirm = (
           <NPopconfirm
             onPositiveClick={() => removeItem(row)}
-            v-slots={removeConfirmSlots}
-          >
+            v-slots={removeConfirmSlots}>
             <span>
               确认要删配置组为:{row.group},ID为:{row.dataId}的配置吗？
             </span>
@@ -369,19 +403,18 @@ const columns = [
             size="tiny"
             quaternary
             type="info"
-            onClick={() => detailItem(row)}
-          >
+            onClick={() => detailItem(row)}>
             详情
           </NButton>
           <NButton
             size="tiny"
             quaternary
             type="info"
-            onClick={() => showHistory(row)}
-          >
+            onClick={() => showHistory(row)}>
             历史记录
           </NButton>
           {editButton}
+          {cloneButton}
           {removePopconfirm}
         </div>
       )

@@ -341,7 +341,8 @@ const removeConfirmSlots = {
       <NButton
         size="tiny"
         quaternary
-        type="error">
+        type="error"
+      >
         删除
       </NButton>
     )
@@ -372,7 +373,8 @@ const columns = [
             size="tiny"
             quaternary
             type="info"
-            onClick={() => updateItem(row)}>
+            onClick={() => updateItem(row)}
+          >
             编辑
           </NButton>
         )
@@ -381,14 +383,16 @@ const columns = [
             size="tiny"
             quaternary
             type="info"
-            onClick={() => cloneItem(row)}>
+            onClick={() => cloneItem(row)}
+          >
             克隆
           </NButton>
         )
         removePopconfirm = (
           <NPopconfirm
             onPositiveClick={() => removeItem(row)}
-            v-slots={removeConfirmSlots}>
+            v-slots={removeConfirmSlots}
+          >
             <span>
               确认要删配置组为:{row.group},ID为:{row.dataId}的配置吗？
             </span>
@@ -403,14 +407,16 @@ const columns = [
             size="tiny"
             quaternary
             type="info"
-            onClick={() => detailItem(row)}>
+            onClick={() => detailItem(row)}
+          >
             详情
           </NButton>
           <NButton
             size="tiny"
             quaternary
             type="info"
-            onClick={() => showHistory(row)}>
+            onClick={() => showHistory(row)}
+          >
             历史记录
           </NButton>
           {editButton}

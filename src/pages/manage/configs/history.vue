@@ -81,9 +81,9 @@
         </NButton>
         <NButton
           type="primary"
-          @click="onNext"
+          @click="onSave(formData)"
         >
-          确认
+          恢复历史记录
         </NButton>
       </NSpace>
       <NSpace
@@ -163,9 +163,29 @@ const onPrev = () => {
 /**
  * 下一步进行diff对比
  */
-const onNext = () => {
+const onNext = (row: any) => {
+  console.log(row, 'row')
   if (state.mode === constant.FORM_MODE_DETAIL) {
-    pageContainer.value?.closeDrawer()
+    getConfig(row).then((data: any) => {
+      visibleType.value = 1
+      // 历史的值
+      state.nv = `${data.value || ''}`
+      state.ov = `${row.content || ''}`
+      // 当前数据
+      pageContainer.value?.updateForm({
+        md5: `${data.md5 || ''}`,
+        showMd5: row.showMd5 || true,
+        content: `${row.content || ''}`,
+        sourceContent: row.sourceContent || '',
+        mode: constant.FORM_MODE_UPDATE,
+        tenant: row.tenant,
+        group: row.group || 'DEFAULT_GROUP',
+        dataId: row.dataId || '',
+        desc: '',
+        configType: '',
+      })
+    })
+    // pageContainer.value?.closeDrawer()
     return
   }
   visibleType.value = 2

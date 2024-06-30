@@ -14,7 +14,7 @@
       },
       param: paramRef,
       drawer: {
-        width: '600px',
+        width: '100%',
         placement: 'right',
       },
       pagination: paginationReactive,
@@ -62,10 +62,10 @@
         :is-history="true"
         v-if="visibleType == 1"
       />
-      <DiffContent
+      <DiffComponent
         v-else
-        :nv="state.nv"
-        :ov="state.ov"
+        :dst="state.ov"
+        :src="state.nv"
       />
     </template>
     <template #footer="{ formData }">
@@ -109,7 +109,8 @@
 </template>
 
 <script lang="tsx" setup title="配置历史记录列表" layout="nav">
-import DiffContent from '@/components/config/DiffContent.vue'
+// import DiffContent from '@/components/config/DiffContent.vue'
+import DiffComponent from '@/components/config/DiffComponent.vue'
 import apis from '@/apis/index'
 import { namespaceStore } from '@/data/namespace'
 import { useWebResources } from '@/data/resources'

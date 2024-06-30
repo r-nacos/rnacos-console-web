@@ -14,7 +14,7 @@
       },
       param: paramRef,
       drawer: {
-        width: '100%',
+        width: state.width,
         placement: 'right',
       },
       pagination: paginationReactive,
@@ -81,7 +81,7 @@
         </NButton>
         <NButton
           type="primary"
-          @click="onSave(formData)"
+          @click="onNext(formData)"
         >
           恢复历史记录
         </NButton>
@@ -109,7 +109,6 @@
 </template>
 
 <script lang="tsx" setup title="配置历史记录列表" layout="nav">
-// import DiffContent from '@/components/config/DiffContent.vue'
 import DiffComponent from '@/components/config/DiffComponent.vue'
 import apis from '@/apis/index'
 import { namespaceStore } from '@/data/namespace'
@@ -140,12 +139,9 @@ let state = reactive({
   nv: '',
   ov: '',
   mode: '',
-})
-const uploadHeader = ref({
-  tenant: namespaceStore.current.value.namespaceId,
+  width: '600px',
 })
 const message = useMessage()
-
 onMounted(() => {
   let bd = document.querySelector('body')
   if (bd) {
@@ -164,28 +160,9 @@ const onPrev = () => {
  * 下一步进行diff对比
  */
 const onNext = (row: any) => {
-  console.log(row, 'row')
   if (state.mode === constant.FORM_MODE_DETAIL) {
-    getConfig(row).then((data: any) => {
-      visibleType.value = 1
-      // 历史的值
-      state.nv = `${data.value || ''}`
-      state.ov = `${row.content || ''}`
-      // 当前数据
-      pageContainer.value?.updateForm({
-        md5: `${data.md5 || ''}`,
-        showMd5: row.showMd5 || true,
-        content: `${row.content || ''}`,
-        sourceContent: row.sourceContent || '',
-        mode: constant.FORM_MODE_UPDATE,
-        tenant: row.tenant,
-        group: row.group || 'DEFAULT_GROUP',
-        dataId: row.dataId || '',
-        desc: '',
-        configType: '',
-      })
-    })
-    // pageContainer.value?.closeDrawer()
+    state.width = '100%'
+    rollback(row)
     return
   }
   visibleType.value = 2

@@ -1,5 +1,8 @@
 <template>
-  <div class="page-container">
+  <div
+    class="page-container"
+    id="page-container"
+  >
     <div
       class="page-header"
       v-if="slots.header"
@@ -52,7 +55,7 @@
       </NCard>
     </div>
     <NDrawer
-      to="#page-content"
+      to="#page-container"
       :block-scroll="false"
       :trap-focus="false"
       v-model:show="showDrawer"
@@ -445,6 +448,9 @@ defineExpose({
 .page-container {
   box-sizing: border-box;
   border-radius: 10px;
+  position: relative;
+  width: 100%;
+  height: 100%;
 
   .page-header {
     display: flex;
@@ -457,10 +463,12 @@ defineExpose({
     margin-bottom: 8px;
     padding-right: 5px;
     border-bottom: 1px solid $border-bottom-color;
+    /*
     position: absolute;
     top: 0;
     left: 0;
     z-index: 999;
+    */
     width: 100%;
   }
 
@@ -479,7 +487,7 @@ defineExpose({
     margin: 0 8px;
     border-radius: 12px;
     overflow: hidden;
-    margin-top: 50px;
+    // margin-top: 50px;
     // height: calc(100vh - 112px);
   }
 

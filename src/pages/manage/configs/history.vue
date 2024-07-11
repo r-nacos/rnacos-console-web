@@ -335,7 +335,8 @@ const columns = [
             size="tiny"
             quaternary
             type="primary"
-            onClick={() => rollback(row)}>
+            onClick={() => rollback(row)}
+          >
             恢复
           </NButton>
         )
@@ -348,7 +349,8 @@ const columns = [
             size="tiny"
             quaternary
             type="info"
-            onClick={() => detailItem(row)}>
+            onClick={() => detailItem(row)}
+          >
             详情
           </NButton>
           {rollbackButton}

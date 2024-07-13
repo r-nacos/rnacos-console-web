@@ -7,14 +7,14 @@ import {
   TitleComponent,
   TooltipComponent,
   GridComponent,
-  LegendComponent,
+  LegendComponent
   //DatasetComponent,
   //TransformComponent
 } from 'echarts/components';
 // 标签自动布局、全局过渡动画等特性
-import { 
-    LabelLayout, 
-    //UniversalTransition 
+import {
+  LabelLayout
+  //UniversalTransition
 } from 'echarts/features';
 // 引入 Canvas 渲染器，注意引入 CanvasRenderer 或者 SVGRenderer 是必须的一步
 import { CanvasRenderer } from 'echarts/renderers';
@@ -33,4 +33,4 @@ echarts.use([
   CanvasRenderer
 ]);
 
-export default echarts
+export default echarts;

@@ -10,6 +10,7 @@ import NotFound from '@/pages/NotFound.vue';
 import ClusterPageVue from '@/pages/ClusterPage.vue';
 //import Tmp from '@/pages/Tmp.vue';
 //import DiffDemo from '@/pages/DiffDemo.vue';
+import ChartDemo from '@/pages/ChartDemo.vue';
 import Login from '@/pages/Login.vue';
 import UserListPage from '@/pages/UserListPage.vue';
 import NoPermission from '@/pages/NoPermission.vue';
@@ -69,13 +70,13 @@ export const routes = [
                 meta: {'title':'config title'},
                 component: Config,
             },
+      */
       {
         path: '/manage/tmp',
         name: 'manange tmp',
         meta: { title: 'tmp' },
-        component: DiffDemo
+        component: ChartDemo
       },
-      */
       {
         path: '/manage/service',
         name: 'manange service',

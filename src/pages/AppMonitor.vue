@@ -11,11 +11,26 @@
           <n-form label-placement="left" label-width="auto">
             <div class="paramWrap">
               <n-form-item label="服务节点" path="param.nodeId">
-                <n-input
+                <n-select
+                  class="paramselect"
                   v-model:value="param.nodeId"
-                  placeholder="服务节点"
-                  clearable
-                />
+                  :options="nodeList"
+                  size="medium"
+                  @update:value="viewGroupUpdate"
+                  scrollable
+                >
+                </n-select>
+              </n-form-item>
+              <n-form-item label="视图间隔类型">
+                <n-select
+                  class="paramselect"
+                  v-model:value="param.timelineGroupName"
+                  :options="viewGroup"
+                  size="medium"
+                  @update:value="viewGroupUpdate"
+                  scrollable
+                >
+                </n-select>
               </n-form-item>
             </div>
           </n-form>
@@ -40,7 +55,8 @@
 import { ref, onMounted, onUnmounted } from 'vue';
 //import echarts from '@/utils/EchartsWrap.js';
 import { splitAndFillGroup, ChartViewManager } from '@/utils/EchartsUtils.js';
-import { metricsApi, DEFAULT_KEYS } from '@/api/metrics';
+import { metricsApi } from '@/api/metrics';
+import { clusterApi } from '@/api/cluster';
 
 const metricKeys = [
   'app_cpu_usage',
@@ -84,6 +100,24 @@ const charList = [
   }
 ];
 
+const viewGroup = [
+  {
+    label: '最小间隔',
+    value: 'LEAST'
+  },
+  {
+    label: '分钟',
+    value: 'MINUTE'
+  }
+];
+
+const nodeList = ref([
+  {
+    label: '直连节点',
+    value: 0
+  }
+]);
+
 /*
 function initChartData(item){
   item.obj=null;
@@ -98,9 +132,14 @@ const chartManager = new ChartViewManager(charList);
 const inited = ref(false);
 
 const param = ref({
-  nodeId: 0
-  //timelineGroupName:'LEAST',
+  nodeId: 0,
+  timelineGroupName: 'LEAST'
 });
+
+function viewGroupUpdate(e) {
+  //console.log("viewGroupUpdate",e,param.value.timelineGroupName);
+  queryList();
+}
 
 async function loadData() {
   let paramObj = {
@@ -115,6 +154,30 @@ async function loadData() {
   chartManager.loadData(data);
 }
 
+async function initNodeData() {
+  let resp = await clusterApi.queryNodeList();
+  if (resp.status != 200 || resp.data.code != 200) {
+    //console.log('initNodeData', resp);
+    throw new Error('queryNodeList error');
+  }
+  let data = resp.data.data;
+  if (data.length > 0) {
+    let list = [
+      {
+        label: '直连节点',
+        value: 0
+      }
+    ];
+    for (let item of data) {
+      list.push({
+        label: item.nodeId + '@' + item.addr,
+        value: item.nodeId
+      });
+    }
+    nodeList.value = list;
+  }
+}
+
 function queryList() {
   loadData().then(() => {});
 }
@@ -124,7 +187,8 @@ function resize() {
 }
 
 onMounted(() => {
-  console.log('onMounted');
+  //console.log('onMounted');
+  initNodeData().then(() => {});
   //initChart();
   chartManager.initChartView();
   inited.value = true;
@@ -132,7 +196,7 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-  console.log('onUnmounted');
+  //console.log('onUnmounted');
   chartManager.dispose();
   inited.value = false;
 });
@@ -237,5 +301,9 @@ window.addEventListener('resize', function () {
   width: 100%;
   height: 300px;
   background: #fff;
+}
+
+.paramselect {
+  width: 200px;
 }
 </style>

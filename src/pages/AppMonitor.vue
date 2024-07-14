@@ -67,8 +67,6 @@ import { clusterApi } from '@/api/cluster';
 
 function emptyFunc() {}
 
-
-
 const charList = [
   {
     id: 'app_cpu_usage',
@@ -84,7 +82,7 @@ const charList = [
         key: 'app_memory_usage',
         keyType: null,
         subType: null
-      },
+      }
       //{ name: '内存(M)', key: 'app_rss_memory', keyType: null, subType: null }
     ]
   },
@@ -100,42 +98,72 @@ const charList = [
     id: 'http_request_rps',
     title: 'http请求rps',
     series: [
-      { name: 'http请求rps', key: 'http_request_handle_rt_summary', keyType: 'summary', subType: "rps"},
+      {
+        name: 'http请求rps',
+        key: 'http_request_handle_rt_summary',
+        keyType: 'summary',
+        subType: 'rps'
+      }
     ]
   },
   {
     id: 'http_request_count',
     title: 'http请求数量',
     series: [
-      { name: 'http请求数量', key: 'http_request_handle_rt_summary', keyType: 'summary', subType: "count"},
+      {
+        name: 'http请求数量',
+        key: 'http_request_handle_rt_summary',
+        keyType: 'summary',
+        subType: 'count'
+      }
     ]
   },
   {
     id: 'http_request_rt',
     title: 'http请求平均处理时长',
     series: [
-      { name: 'http请求平均处理时长(ms)', key: 'http_request_handle_rt_summary', keyType: 'summary', subType: "average"},
+      {
+        name: 'http请求平均处理时长(ms)',
+        key: 'http_request_handle_rt_summary',
+        keyType: 'summary',
+        subType: 'average'
+      }
     ]
   },
   {
     id: 'grpc_request_rps',
     title: 'grpc请求rps',
     series: [
-      { name: 'grpc请求rps', key: 'grpc_request_handle_rt_summary', keyType: 'summary', subType: "rps"},
+      {
+        name: 'grpc请求rps',
+        key: 'grpc_request_handle_rt_summary',
+        keyType: 'summary',
+        subType: 'rps'
+      }
     ]
   },
   {
     id: 'grpc_request_count',
     title: 'grpc请求数量',
     series: [
-      { name: 'grpc请求数量', key: 'grpc_request_handle_rt_summary', keyType: 'summary', subType: "count"},
+      {
+        name: 'grpc请求数量',
+        key: 'grpc_request_handle_rt_summary',
+        keyType: 'summary',
+        subType: 'count'
+      }
     ]
   },
   {
     id: 'grpc_request_rt',
     title: 'grpc请求平均处理时长',
     series: [
-      { name: 'grpc请求平均处理时长(ms)', key: 'grpc_request_handle_rt_summary', keyType: 'summary', subType: "average"},
+      {
+        name: 'grpc请求平均处理时长(ms)',
+        key: 'grpc_request_handle_rt_summary',
+        keyType: 'summary',
+        subType: 'average'
+      }
     ]
   },
   {
@@ -146,12 +174,26 @@ const charList = [
   {
     id: 'config_listener_client_size',
     title: 'http监听配置链接数量',
-    series: [{ name: 'http监听配置链接数量(个)', key: null, keyType: null, subType: null }]
+    series: [
+      {
+        name: 'http监听配置链接数量(个)',
+        key: null,
+        keyType: null,
+        subType: null
+      }
+    ]
   },
   {
     id: 'config_subscriber_client_size',
     title: 'grpc监听配置链接数量',
-    series: [{ name: 'grpc监听配置链接数量(个)', key: null, keyType: null, subType: null }]
+    series: [
+      {
+        name: 'grpc监听配置链接数量(个)',
+        key: null,
+        keyType: null,
+        subType: null
+      }
+    ]
   },
   {
     id: 'naming_service_size',
@@ -169,9 +211,14 @@ const charList = [
     id: 'naming_subscriber_client_size',
     title: 'grpc监听服务链接数量',
     series: [
-      { name: 'grpc监听服务链接数量(个)', key: null, keyType: null, subType: null }
+      {
+        name: 'grpc监听服务链接数量(个)',
+        key: null,
+        keyType: null,
+        subType: null
+      }
     ]
-  },
+  }
   /*
   {
     id: 'http_request_handle_rt_summary',
@@ -254,7 +301,7 @@ function resetAutoLoad() {
     autoLoad.value.running &&
     autoLoad.value.timeoutId != null
   ) {
-    console.log('resetAutoLoad clear oldTimeout');
+    //console.log('resetAutoLoad clear oldTimeout');
     clearTimeout(autoLoad.value.timeoutId);
   }
   autoLoad.value.resetting = false;
@@ -268,13 +315,13 @@ function tryAutoLoad(continuous) {
     (continuous || !autoLoad.value.running)
   ) {
     autoLoad.value.running = true;
-    console.log('tryAutodelayLoad', autoLoad.value.interval);
+    //console.log('tryAutodelayLoad', autoLoad.value.interval);
     autoLoad.value.timeoutId = setTimeout(
       incrementLoadData,
       autoLoad.value.interval
     );
   } else {
-    console.log('tryAutodelayLoad stop');
+    //console.log('tryAutodelayLoad stop');
     autoLoad.value.running = false;
   }
 }

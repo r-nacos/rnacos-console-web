@@ -96,18 +96,18 @@ export class ChartViewManager {
     this.isInit = true;
   }
 
-  getDependKeys(){
+  getDependKeys() {
     let keySet = new Set();
     for (var item of this.chartList) {
-      for(var serie of item.series){
+      for (var serie of item.series) {
         keySet.add(serie.key || item.id);
       }
     }
-    let keys = []
-    for(var key of keySet){
-      keys.push(key)
+    let keys = [];
+    for (var key of keySet) {
+      keys.push(key);
     }
-    return keys
+    return keys;
   }
 
   followShow(source, params) {

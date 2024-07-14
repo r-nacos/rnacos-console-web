@@ -160,18 +160,18 @@ function viewGroupUpdate(e) {
 }
 
 function updateAutoLoad(v) {
-  console.log('updateAutoLoad', v, autoLoad.value.enable);
+  //console.log('updateAutoLoad', v, autoLoad.value.enable);
 }
 
 function resetAutoLoad() {
-  console.log('resetAutoLoad');
+  //console.log('resetAutoLoad');
   autoLoad.value.resetting = true;
   if (
     autoLoad.value.enable &&
     autoLoad.value.running &&
     autoLoad.value.timeoutId != null
   ) {
-    console.log('resetAutoLoad clear oldTimeout');
+    //console.log('resetAutoLoad clear oldTimeout');
     clearTimeout(autoLoad.value.timeoutId);
   }
   autoLoad.value.resetting = false;
@@ -185,13 +185,13 @@ function tryAutoLoad(continuous) {
     (continuous || !autoLoad.value.running)
   ) {
     autoLoad.value.running = true;
-    console.log('tryAutodelayLoad', autoLoad.value.interval);
+    //console.log('tryAutodelayLoad', autoLoad.value.interval);
     autoLoad.value.timeoutId = setTimeout(
       incrementLoadData,
       autoLoad.value.interval
     );
   } else {
-    console.log('tryAutodelayLoad stop');
+    //console.log('tryAutodelayLoad stop');
     autoLoad.value.running = false;
   }
 }
@@ -199,11 +199,11 @@ function tryAutoLoad(continuous) {
 function incrementLoadData() {
   autoLoad.value.timeoutId = null;
   if (!autoLoad.value.enable) {
-    console.log('incrementLoadData stop');
+    //console.log('incrementLoadData stop');
     autoLoad.value.running = false;
     return;
   }
-  console.log('incrementLoadData');
+  //console.log('incrementLoadData');
   doIncrementLoadData().then(emptyFunc);
   tryAutoLoad(true);
 }
@@ -219,6 +219,9 @@ async function doIncrementLoadData() {
     throw new Error('queryTimeLine error');
   }
   let data = resp.data.data;
+  if (data.lastTime > autoLoad.value.lastTimestamp) {
+    autoLoad.value.lastTimestamp = data.lastTime;
+  }
   chartManager.incrementData(data);
 }
 

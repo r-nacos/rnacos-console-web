@@ -58,6 +58,7 @@ export class ChartViewManager {
   constructor(chartList) {
     this.chartList = chartList;
     this.innerInit();
+    this.isInit = false;
   }
 
   innerInit() {
@@ -85,6 +86,7 @@ export class ChartViewManager {
       ele.addEventListener('mouseenter', this.buildEleEntryHandle(item.id));
       ele.addEventListener('mouseleave', this.buildEleLeaveHandle(item.id));
     }
+    this.isInit = true;
   }
 
   followShow(source, params) {
@@ -180,6 +182,13 @@ export class ChartViewManager {
     viewItem.obj.setOption(viewItem.option);
   }
 
+  concatItemData(viewItem, indexList, dataList) {
+    viewItem.option.xAxis.data = viewItem.option.xAxis.data.concat(indexList);
+    viewItem.option.series[0].data =
+      viewItem.option.series[0].data.concat(dataList);
+    viewItem.obj.setOption(viewItem.option);
+  }
+
   loadData(data) {
     //console.log("ChartManager loadData",data);
     //let indexList = data.timeIndex
@@ -199,7 +208,23 @@ export class ChartViewManager {
   }
 
   incrementData(data) {
-    console.log('ChartManager incrementData', data);
+    //console.log('ChartManager incrementData', data);
+    let indexList = [];
+    for (var v of data.timeIndex) {
+      //indexList.push(toDatetime(new Date(v)));
+      indexList.push(toTime(new Date(v)));
+    }
+    if (indexList.length == 0) {
+      return;
+    }
+    for (var key in data.gaugeData) {
+      let viewItem = this.chartMap[key];
+      if (!viewItem) {
+        continue;
+      }
+      let obj = data.gaugeData[key];
+      this.concatItemData(viewItem, indexList, obj);
+    }
   }
 
   resize() {

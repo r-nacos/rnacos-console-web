@@ -70,13 +70,13 @@ export const routes = [
                 meta: {'title':'config title'},
                 component: Config,
             },
-      */
       {
         path: '/manage/tmp',
         name: 'manange tmp',
         meta: { title: 'tmp' },
         component: () => import('@/pages/ChartDemo.vue')
       },
+      */
       {
         path: '/manage/service',
         name: 'manange service',

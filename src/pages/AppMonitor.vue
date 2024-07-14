@@ -1,113 +1,122 @@
 <template>
   <div class="wrap">
-    <div class="params"></div>
-    <div class="char_root">
-      <div v-for="charList in charGroup" class="char_group">
-        <div v-for="item in charList" class="char_item">
-          <div v-if="item.id != null" :id="item.id" class="char"></div>
+    <div class="header">
+      <div class="title">
+        <span> 系统监控 </span>
+      </div>
+    </div>
+    <div class="content-wrap">
+      <div class="form-container">
+        <div class="query-params">
+          <n-form label-placement="left" label-width="auto">
+            <div class="paramWrap">
+              <n-form-item label="服务节点" path="param.nodeId">
+                <n-input
+                  v-model:value="param.nodeId"
+                  placeholder="服务节点"
+                  clearable
+                />
+              </n-form-item>
+            </div>
+          </n-form>
+          <div class="queryButton">
+            <span class="query-button-item">
+              <n-button tertiary @click="queryList">查询</n-button>
+            </span>
+          </div>
+        </div>
+        <div class="char_root">
+          <div v-for="charList in charGroup" class="char_group">
+            <div v-for="item in charList" class="char_item">
+              <div v-if="item.id != null" :id="item.id" class="char"></div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </template>
 <script setup>
-import echarts from '@/utils/EchartsWrap.js';
-import { splitAndFillGroup, ChartViewManager } from '@/utils/EchartsUtils.js';
 import { ref, onMounted, onUnmounted } from 'vue';
+//import echarts from '@/utils/EchartsWrap.js';
+import { splitAndFillGroup, ChartViewManager } from '@/utils/EchartsUtils.js';
+import { metricsApi, DEFAULT_KEYS } from '@/api/metrics';
+
+const metricKeys = [
+  'app_cpu_usage',
+  'app_memory_usage',
+  'app_rss_memory',
+  'config_data_size',
+  'naming_service_size',
+  'naming_instance_size'
+];
 
 const charList = [
   {
-    id: 'c1',
-    ele: null,
-    obj: null
+    id: 'app_cpu_usage',
+    title: 'CPU使用率',
+    name: 'CPU使用率(%)'
   },
   {
-    id: 'c2',
-    ele: null,
-    obj: null
+    id: 'app_memory_usage',
+    title: '内存使用率',
+    name: '内存使用率(%)'
   },
   {
-    id: 'c3',
-    ele: null,
-    obj: null
+    id: 'app_rss_memory',
+    title: '内存',
+    name: '内存(M)'
   },
   {
-    id: 'c4',
-    ele: null,
-    obj: null
+    id: 'config_data_size',
+    title: '配置数量',
+    name: '配置数量(个)'
   },
   {
-    id: 'c5',
-    ele: null,
-    obj: null
+    id: 'naming_service_size',
+    title: '服务数量',
+    name: '服务数量(个)'
   },
   {
-    id: 'c6',
-    ele: null,
-    obj: null
-  },
-  {
-    id: 'c7',
-    ele: null,
-    obj: null
-  },
-  {
-    id: 'c8',
-    ele: null,
-    obj: null
+    id: 'naming_instance_size',
+    title: '服务实例数量',
+    name: '服务实例数量(个)'
   }
-  /*
-   */
 ];
+
+/*
+function initChartData(item){
+  item.obj=null;
+  item.option =initOption(item.title || item.id,item.name || "");
+  return item;
+}
+charList.forEach((e)=>{initChartData(item)});
+*/
 
 const charGroup = splitAndFillGroup(charList, 3, { id: null });
 const chartManager = new ChartViewManager(charList);
 const inited = ref(false);
 
-function updateData() {}
+const param = ref({
+  nodeId: 0
+  //timelineGroupName:'LEAST',
+});
 
-function initChart() {
-  for (var item of charList) {
-    let ele = document.querySelector('#' + item.id);
-    //console.log("query charItem ele",item.id,ele);
-    item.ele = ele;
-    var myChart = echarts.init(ele);
-    item.obj = myChart;
-    myChart.setOption({
-      title: {
-        text: 'ECharts 入门示例'
-      },
-      tooltip: {
-        trigger: 'axis'
-      },
-      legend: {
-        data: ['销量'],
-        bottom: 'bottom'
-      },
-      xAxis: {
-        data: ['1月', '2月', '3月', '4月', '5月', '6月']
-      },
-      yAxis: {},
-      //animation: false,
-      series: [
-        {
-          name: '销量',
-          type: 'line',
-          data: [5, 20, 36, 10, 10, 20]
-        }
-      ]
-    });
-    //ele.addEventListener('mouseenter', buildEleEntryHandle(item.id));
-    //ele.addEventListener('mouseleave', buildEleLeaveHandle(item.id));
-    ele.addEventListener(
-      'mouseenter',
-      chartManager.buildEleEntryHandle(item.id)
-    );
-    ele.addEventListener(
-      'mouseleave',
-      chartManager.buildEleLeaveHandle(item.id)
-    );
+async function loadData() {
+  let paramObj = {
+    keys: metricKeys,
+    ...param.value
+  };
+  let resp = await metricsApi.queryTimeLine(paramObj);
+  if (resp.status != 200 || !resp.data.success) {
+    throw new Error('queryTimeLine error');
   }
+  let data = resp.data.data;
+  chartManager.loadData(data);
+}
+
+function queryList() {
+  loadData().then(() => {});
 }
 
 function resize() {
@@ -116,13 +125,16 @@ function resize() {
 
 onMounted(() => {
   console.log('onMounted');
-  initChart();
+  //initChart();
+  chartManager.initChartView();
   inited.value = true;
+  loadData().then(() => {});
 });
 
 onUnmounted(() => {
   console.log('onUnmounted');
   chartManager.dispose();
+  inited.value = false;
 });
 
 window.addEventListener('resize', function () {
@@ -133,28 +145,84 @@ window.addEventListener('resize', function () {
 <style scoped>
 .wrap {
   position: relative;
-  display: flex;
-  padding: 8px 8px 0px;
+  width: 100%;
+  height: 100%;
+  background: #efefef;
 }
 
-.params {
+.content-wrap {
+  padding: 10px 10px 10px 10px;
+  background: #efefef;
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
   position: relative;
-  flex: 0;
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 16px 8px;
+}
+
+.header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 40px;
+  border-bottom: #ccc 1px solid;
+  background: #fff;
+  padding-right: 3px;
+}
+
+.title {
+  flex: 1 1 auto;
+  font: 14/1.25;
+  line-height: 30px;
+  padding-left: 15px;
+}
+
+.header-button {
+  flex: 0 0 auto;
+}
+
+.namespace {
+  flex: 0 0 auto;
+}
+
+.query-params {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-direction: row;
+}
+
+.paramWrap {
+  display: flex;
+  gap: 8px;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.queryButton {
+  display: flex;
+  align-items: center;
+}
+
+.query-button-item {
+  margin-left: 10px;
 }
 
 .char_root {
   position: relative;
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  padding: 8px 0px;
   /*
-      background: #fff;
-      */
+    background: #fff;
+  */
 }
 .char_group {
   position: relative;
   display: flex;
+  flex-direction: row;
   flex: 1;
 }
 

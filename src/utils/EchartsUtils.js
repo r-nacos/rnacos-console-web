@@ -1,3 +1,6 @@
+import echarts from '@/utils/EchartsWrap.js';
+import { toDatetime, toTime } from './date';
+
 export function splitAndFillGroup(sourceList, groupNumber, defaultObj = null) {
   let groupList = [];
   let group = [];
@@ -24,16 +27,64 @@ export function splitAndFillGroup(sourceList, groupNumber, defaultObj = null) {
 const selectType = 'showTip';
 const unselectType = 'hideTip';
 
+function initOption(title, series_name) {
+  return {
+    title: {
+      text: title
+    },
+    tooltip: {
+      trigger: 'axis'
+    },
+    legend: {
+      data: [series_name],
+      bottom: 'bottom'
+    },
+    xAxis: {
+      data: []
+    },
+    yAxis: {},
+    //animation: false,
+    series: [
+      {
+        name: series_name,
+        type: 'line',
+        data: []
+      }
+    ]
+  };
+}
+
 export class ChartViewManager {
   constructor(chartList) {
     this.chartList = chartList;
-    this.chartMap = (function () {
-      let m = {};
-      for (var item of chartList) {
-        m[item.id] = item;
-      }
-      return m;
-    })();
+    this.innerInit();
+  }
+
+  innerInit() {
+    let m = {};
+    for (var item of this.chartList) {
+      this.initChartData(item);
+      m[item.id] = item;
+    }
+    this.chartMap = m;
+  }
+
+  initChartData(item) {
+    item.obj = null;
+    item.option = initOption(item.title || item.id, item.name || '');
+  }
+
+  initChartView() {
+    for (var item of this.chartList) {
+      let ele = document.querySelector('#' + item.id);
+      //console.log("query charItem ele",item.id,ele);
+      //item.ele = ele;
+      var myChart = echarts.init(ele);
+      item.obj = myChart;
+      //myChart.setOption(item.option);
+      ele.addEventListener('mouseenter', this.buildEleEntryHandle(item.id));
+      ele.addEventListener('mouseleave', this.buildEleLeaveHandle(item.id));
+    }
   }
 
   followShow(source, params) {
@@ -121,6 +172,30 @@ export class ChartViewManager {
     return function (event) {
       This.leaveEvent(source, event);
     };
+  }
+
+  updateItemData(viewItem, indexList, dataList) {
+    viewItem.option.xAxis.data = indexList;
+    viewItem.option.series[0].data = dataList;
+    viewItem.obj.setOption(viewItem.option);
+  }
+
+  loadData(data) {
+    //console.log("ChartManager loadData",data);
+    //let indexList = data.timeIndex
+    let indexList = [];
+    for (var v of data.timeIndex) {
+      //indexList.push(toDatetime(new Date(v)));
+      indexList.push(toTime(new Date(v)));
+    }
+    for (var key in data.gaugeData) {
+      let viewItem = this.chartMap[key];
+      if (!viewItem) {
+        continue;
+      }
+      let obj = data.gaugeData[key];
+      this.updateItemData(viewItem, indexList, obj);
+    }
   }
 
   resize() {

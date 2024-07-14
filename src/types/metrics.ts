@@ -18,7 +18,7 @@ export interface TimelineQueryResponse {
 
 export interface TimelineQueryParam {
   startTime: number;
-  timelineGroupName: String;
+  timelineGroupName: String; //LEAST | MINUTE
   keys: Array<string>;
   nodeId: number;
 }

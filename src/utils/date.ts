@@ -28,6 +28,13 @@ export const toDatetime = function (date: Date): string {
   );
 };
 
+export const toTime = function (date: Date): string {
+  var h = date.getHours(),
+    m = date.getMinutes(),
+    s = date.getSeconds();
+  return fnum(h) + ':' + fnum(m) + ':' + fnum(s);
+};
+
 export const toDate = function (date: Date): string {
   var y = date.getFullYear(),
     M = date.getMonth(),

@@ -1,8 +1,6 @@
 <template>
   <div class="wrap">
-    <div class="params">
-      <button @click="updateData">updateData</button>
-    </div>
+    <div class="params"></div>
     <div class="char_root">
       <div v-for="charList in charGroup" class="char_group">
         <div v-for="item in charList" class="char_item">
@@ -151,8 +149,8 @@ window.addEventListener('resize', function () {
   flex-direction: column;
   padding: 8px 0px;
   /*
-    background: #fff;
-    */
+      background: #fff;
+      */
 }
 .char_group {
   position: relative;

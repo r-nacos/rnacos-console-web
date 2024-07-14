@@ -10,7 +10,7 @@ import NotFound from '@/pages/NotFound.vue';
 import ClusterPageVue from '@/pages/ClusterPage.vue';
 //import Tmp from '@/pages/Tmp.vue';
 //import DiffDemo from '@/pages/DiffDemo.vue';
-import ChartDemo from '@/pages/ChartDemo.vue';
+//import ChartDemo from '@/pages/ChartDemo.vue';
 import Login from '@/pages/Login.vue';
 import UserListPage from '@/pages/UserListPage.vue';
 import NoPermission from '@/pages/NoPermission.vue';
@@ -75,7 +75,7 @@ export const routes = [
         path: '/manage/tmp',
         name: 'manange tmp',
         meta: { title: 'tmp' },
-        component: ChartDemo
+        component: () => import('@/pages/ChartDemo.vue')
       },
       {
         path: '/manage/service',
@@ -112,6 +112,12 @@ export const routes = [
         name: 'about',
         meta: { title: '关于' },
         component: About
+      },
+      {
+        path: '/manage/appmonitor',
+        name: 'monitor',
+        meta: { title: '系统监控' },
+        component: () => import('@/pages/AppMonitor.vue')
       }
     ]
   }
@@ -175,6 +181,10 @@ export const sideAllMenu = [
       {
         name: '集群信息',
         path: '/manage/cluster'
+      },
+      {
+        name: '系统监控',
+        path: '/manage/appmonitor'
       },
       {
         name: '关于',

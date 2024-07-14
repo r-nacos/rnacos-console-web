@@ -198,6 +198,10 @@ export class ChartViewManager {
     }
   }
 
+  incrementData(data) {
+    console.log('ChartManager incrementData', data);
+  }
+
   resize() {
     for (var item of this.chartList) {
       if (item.obj !== null) {

@@ -32,6 +32,13 @@
                 >
                 </n-select>
               </n-form-item>
+              <n-form-item label="自动刷新">
+                <n-switch
+                  size="small"
+                  v-model:value="autoLoad.enable"
+                  @update:value="updateAutoLoad"
+                />
+              </n-form-item>
             </div>
           </n-form>
           <div class="queryButton">
@@ -57,6 +64,8 @@ import { ref, onMounted, onUnmounted } from 'vue';
 import { splitAndFillGroup, ChartViewManager } from '@/utils/EchartsUtils.js';
 import { metricsApi } from '@/api/metrics';
 import { clusterApi } from '@/api/cluster';
+
+function emptyFunc() {}
 
 const metricKeys = [
   'app_cpu_usage',
@@ -136,9 +145,81 @@ const param = ref({
   timelineGroupName: 'LEAST'
 });
 
+const autoLoad = ref({
+  enable: true,
+  interval: 60000,
+  lastTimestamp: 0,
+  timeoutId: null,
+  running: false,
+  resetting: false
+});
+
 function viewGroupUpdate(e) {
   //console.log("viewGroupUpdate",e,param.value.timelineGroupName);
   queryList();
+}
+
+function updateAutoLoad(v) {
+  console.log('updateAutoLoad', v, autoLoad.value.enable);
+}
+
+function resetAutoLoad() {
+  console.log('resetAutoLoad');
+  autoLoad.value.resetting = true;
+  if (
+    autoLoad.value.enable &&
+    autoLoad.value.running &&
+    autoLoad.value.timeoutId != null
+  ) {
+    console.log('resetAutoLoad clear oldTimeout');
+    clearTimeout(autoLoad.value.timeoutId);
+  }
+  autoLoad.value.resetting = false;
+  tryAutoLoad(true);
+}
+
+function tryAutoLoad(continuous) {
+  if (
+    autoLoad.value.enable &&
+    !autoLoad.value.resetting &&
+    (continuous || !autoLoad.value.running)
+  ) {
+    autoLoad.value.running = true;
+    console.log('tryAutodelayLoad', autoLoad.value.interval);
+    autoLoad.value.timeoutId = setTimeout(
+      incrementLoadData,
+      autoLoad.value.interval
+    );
+  } else {
+    console.log('tryAutodelayLoad stop');
+    autoLoad.value.running = false;
+  }
+}
+
+function incrementLoadData() {
+  autoLoad.value.timeoutId = null;
+  if (!autoLoad.value.enable) {
+    console.log('incrementLoadData stop');
+    autoLoad.value.running = false;
+    return;
+  }
+  console.log('incrementLoadData');
+  doIncrementLoadData().then(emptyFunc);
+  tryAutoLoad(true);
+}
+
+async function doIncrementLoadData() {
+  let paramObj = {
+    keys: metricKeys,
+    startTime: autoLoad.value.lastTimestamp,
+    ...param.value
+  };
+  let resp = await metricsApi.queryTimeLine(paramObj);
+  if (resp.status != 200 || !resp.data.success) {
+    throw new Error('queryTimeLine error');
+  }
+  let data = resp.data.data;
+  chartManager.incrementData(data);
 }
 
 async function loadData() {
@@ -151,6 +232,10 @@ async function loadData() {
     throw new Error('queryTimeLine error');
   }
   let data = resp.data.data;
+  if (data.intervalSecond > 0) {
+    autoLoad.value.interval = data.intervalSecond * 1000;
+    autoLoad.value.lastTimestamp = data.lastTime;
+  }
   chartManager.loadData(data);
 }
 
@@ -179,7 +264,7 @@ async function initNodeData() {
 }
 
 function queryList() {
-  loadData().then(() => {});
+  loadData().then(resetAutoLoad);
 }
 
 function resize() {
@@ -188,11 +273,11 @@ function resize() {
 
 onMounted(() => {
   //console.log('onMounted');
-  initNodeData().then(() => {});
+  initNodeData().then(emptyFunc);
   //initChart();
   chartManager.initChartView();
   inited.value = true;
-  loadData().then(() => {});
+  loadData().then(() => tryAutoLoad(false));
 });
 
 onUnmounted(() => {

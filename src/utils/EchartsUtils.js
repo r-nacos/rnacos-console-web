@@ -27,7 +27,17 @@ export function splitAndFillGroup(sourceList, groupNumber, defaultObj = null) {
 const selectType = 'showTip';
 const unselectType = 'hideTip';
 
-function initOption(title, series_name) {
+function initOption(title, series) {
+  let serieNameList = [];
+  let serieList = [];
+  for (var item of series) {
+    serieNameList.push(item.name);
+    serieList.push({
+      name: item.name,
+      type: 'line',
+      data: []
+    });
+  }
   return {
     title: {
       text: title
@@ -36,7 +46,7 @@ function initOption(title, series_name) {
       trigger: 'axis'
     },
     legend: {
-      data: [series_name],
+      data: serieNameList,
       bottom: 'bottom'
     },
     xAxis: {
@@ -44,13 +54,7 @@ function initOption(title, series_name) {
     },
     yAxis: {},
     //animation: false,
-    series: [
-      {
-        name: series_name,
-        type: 'line',
-        data: []
-      }
-    ]
+    series: serieList
   };
 }
 
@@ -64,15 +68,18 @@ export class ChartViewManager {
   innerInit() {
     let m = {};
     for (var item of this.chartList) {
-      this.initChartData(item);
       m[item.id] = item;
+      if (!item.series) {
+        item.series = [{ name: '', key: null, keyType: null, subType: null }];
+      }
+      this.initChartData(item);
     }
     this.chartMap = m;
   }
 
   initChartData(item) {
     item.obj = null;
-    item.option = initOption(item.title || item.id, item.name || '');
+    item.option = initOption(item.title || item.id, item.series);
   }
 
   initChartView() {
@@ -87,6 +94,20 @@ export class ChartViewManager {
       ele.addEventListener('mouseleave', this.buildEleLeaveHandle(item.id));
     }
     this.isInit = true;
+  }
+
+  getDependKeys(){
+    let keySet = new Set();
+    for (var item of this.chartList) {
+      for(var serie of item.series){
+        keySet.add(serie.key || item.id);
+      }
+    }
+    let keys = []
+    for(var key of keySet){
+      keys.push(key)
+    }
+    return keys
   }
 
   followShow(source, params) {
@@ -178,14 +199,20 @@ export class ChartViewManager {
 
   updateItemData(viewItem, indexList, dataList) {
     viewItem.option.xAxis.data = indexList;
-    viewItem.option.series[0].data = dataList;
+    for (var i in viewItem.option.series) {
+      viewItem.option.series[i].data = dataList[i] || [];
+    }
+    //viewItem.option.series[0].data = dataList;
     viewItem.obj.setOption(viewItem.option);
   }
 
   concatItemData(viewItem, indexList, dataList) {
     viewItem.option.xAxis.data = viewItem.option.xAxis.data.concat(indexList);
-    viewItem.option.series[0].data =
-      viewItem.option.series[0].data.concat(dataList);
+    for (var i in viewItem.option.series) {
+      viewItem.option.series[i].data = viewItem.option.series[i].data.concat(
+        dataList[i] || []
+      );
+    }
     viewItem.obj.setOption(viewItem.option);
   }
 
@@ -197,14 +224,56 @@ export class ChartViewManager {
       //indexList.push(toDatetime(new Date(v)));
       indexList.push(toTime(new Date(v)));
     }
-    for (var key in data.gaugeData) {
-      let viewItem = this.chartMap[key];
-      if (!viewItem) {
-        continue;
-      }
-      let obj = data.gaugeData[key];
-      this.updateItemData(viewItem, indexList, obj);
+    if (indexList.length == 0) {
+      return;
     }
+    for (var viewItem of this.chartList) {
+      var dataList = this.buildItemData(viewItem, data, true);
+      if (dataList) {
+        this.updateItemData(viewItem, indexList, dataList);
+      }
+    }
+  }
+
+  buildItemData(viewItem, data, isAll) {
+    var dataList = [];
+    for (var serie of viewItem.series) {
+      let key = serie.key || viewItem.id;
+      if (serie.keyType == 'summary') {
+        let summaryObj = data.summeryData[key];
+        if (serie.subType == 'average') {
+          dataList.push(summaryObj.averageData || []);
+        } else if (serie.subType == 'rps') {
+          dataList.push(summaryObj.rpsData || []);
+        } else if (serie.subType == 'count') {
+          dataList.push(summaryObj.countData || []);
+        } else {
+          //ALL
+          let serieList = [];
+          for (var subKey of summaryObj.boundKeys) {
+            let subObj = summaryObj.itemsData[subKey];
+            //console.log("buildItemData summary item",subKey,subObj);
+            serieList.push({
+              name: subKey,
+              type: 'line',
+              data: subObj
+            });
+            dataList.push(subObj);
+          }
+          if (isAll || viewItem.option.legend.data.length == 0) {
+            //console.log("buildItemData summary",isAll,serieList);
+            viewItem.option.legend.data = summaryObj.boundKeys;
+            viewItem.option.series = serieList;
+            viewItem.obj.setOption(viewItem.option);
+            return null;
+          }
+        }
+      } else {
+        let obj = data.gaugeData[key] || [];
+        dataList.push(obj);
+      }
+    }
+    return dataList;
   }
 
   incrementData(data) {
@@ -217,13 +286,14 @@ export class ChartViewManager {
     if (indexList.length == 0) {
       return;
     }
-    for (var key in data.gaugeData) {
-      let viewItem = this.chartMap[key];
-      if (!viewItem) {
-        continue;
+    if (indexList.length == 0) {
+      return;
+    }
+    for (var viewItem of this.chartList) {
+      var dataList = this.buildItemData(viewItem, data, false);
+      if (dataList) {
+        this.concatItemData(viewItem, indexList, dataList);
       }
-      let obj = data.gaugeData[key];
-      this.concatItemData(viewItem, indexList, obj);
     }
   }
 

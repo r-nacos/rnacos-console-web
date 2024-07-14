@@ -43,7 +43,7 @@
           </n-form>
           <div class="queryButton">
             <span class="query-button-item">
-              <n-button tertiary @click="queryList">查询</n-button>
+              <n-button tertiary @click="queryList">刷新</n-button>
             </span>
           </div>
         </div>
@@ -67,46 +67,127 @@ import { clusterApi } from '@/api/cluster';
 
 function emptyFunc() {}
 
-const metricKeys = [
-  'app_cpu_usage',
-  'app_memory_usage',
-  'app_rss_memory',
-  'config_data_size',
-  'naming_service_size',
-  'naming_instance_size'
-];
+
 
 const charList = [
   {
     id: 'app_cpu_usage',
     title: 'CPU使用率',
-    name: 'CPU使用率(%)'
+    series: [{ name: 'CPU使用率(%)', key: null, keyType: null, subType: null }]
   },
   {
     id: 'app_memory_usage',
     title: '内存使用率',
-    name: '内存使用率(%)'
+    series: [
+      {
+        name: '内存使用率(%)',
+        key: 'app_memory_usage',
+        keyType: null,
+        subType: null
+      },
+      //{ name: '内存(M)', key: 'app_rss_memory', keyType: null, subType: null }
+    ]
   },
   {
     id: 'app_rss_memory',
     title: '内存',
-    name: '内存(M)'
+    series: [
+      { name: '内存(M)', key: 'app_rss_memory', keyType: null, subType: null }
+    ]
+  },
+
+  {
+    id: 'http_request_rps',
+    title: 'http请求rps',
+    series: [
+      { name: 'http请求rps', key: 'http_request_handle_rt_summary', keyType: 'summary', subType: "rps"},
+    ]
+  },
+  {
+    id: 'http_request_count',
+    title: 'http请求数量',
+    series: [
+      { name: 'http请求数量', key: 'http_request_handle_rt_summary', keyType: 'summary', subType: "count"},
+    ]
+  },
+  {
+    id: 'http_request_rt',
+    title: 'http请求平均处理时长',
+    series: [
+      { name: 'http请求平均处理时长(ms)', key: 'http_request_handle_rt_summary', keyType: 'summary', subType: "average"},
+    ]
+  },
+  {
+    id: 'grpc_request_rps',
+    title: 'grpc请求rps',
+    series: [
+      { name: 'grpc请求rps', key: 'grpc_request_handle_rt_summary', keyType: 'summary', subType: "rps"},
+    ]
+  },
+  {
+    id: 'grpc_request_count',
+    title: 'grpc请求数量',
+    series: [
+      { name: 'grpc请求数量', key: 'grpc_request_handle_rt_summary', keyType: 'summary', subType: "count"},
+    ]
+  },
+  {
+    id: 'grpc_request_rt',
+    title: 'grpc请求平均处理时长',
+    series: [
+      { name: 'grpc请求平均处理时长(ms)', key: 'grpc_request_handle_rt_summary', keyType: 'summary', subType: "average"},
+    ]
   },
   {
     id: 'config_data_size',
     title: '配置数量',
-    name: '配置数量(个)'
+    series: [{ name: '配置数量(个)', key: null, keyType: null, subType: null }]
+  },
+  {
+    id: 'config_listener_client_size',
+    title: 'http监听配置链接数量',
+    series: [{ name: 'http监听配置链接数量(个)', key: null, keyType: null, subType: null }]
+  },
+  {
+    id: 'config_subscriber_client_size',
+    title: 'grpc监听配置链接数量',
+    series: [{ name: 'grpc监听配置链接数量(个)', key: null, keyType: null, subType: null }]
   },
   {
     id: 'naming_service_size',
     title: '服务数量',
-    name: '服务数量(个)'
+    series: [{ name: '服务数量(个)', key: null, keyType: null, subType: null }]
   },
   {
     id: 'naming_instance_size',
     title: '服务实例数量',
-    name: '服务实例数量(个)'
+    series: [
+      { name: '服务实例数量(个)', key: null, keyType: null, subType: null }
+    ]
+  },
+  {
+    id: 'naming_subscriber_client_size',
+    title: 'grpc监听服务链接数量',
+    series: [
+      { name: 'grpc监听服务链接数量(个)', key: null, keyType: null, subType: null }
+    ]
+  },
+  /*
+  {
+    id: 'http_request_handle_rt_summary',
+    title: 'http请求处理时长统计',
+    series: [
+      { name: '请求处理时长统计', key: 'http_request_handle_rt_summary', keyType: 'summary', subType: null }
+    ]
+  },
+  {
+    id: 'grpc_request_handle_rt_summary',
+    title: 'grpc请求处理时长统计',
+    series: [
+      { name: '请求处理时长统计', key: 'grpc_request_handle_rt_summary', keyType: 'summary', subType: null }
+    ]
   }
+  */
 ];
 
 const viewGroup = [
@@ -140,6 +221,8 @@ const charGroup = splitAndFillGroup(charList, 3, { id: null });
 const chartManager = new ChartViewManager(charList);
 const inited = ref(false);
 
+const metricKeys = chartManager.getDependKeys();
+
 const param = ref({
   nodeId: 0,
   timelineGroupName: 'LEAST'
@@ -171,7 +254,7 @@ function resetAutoLoad() {
     autoLoad.value.running &&
     autoLoad.value.timeoutId != null
   ) {
-    //console.log('resetAutoLoad clear oldTimeout');
+    console.log('resetAutoLoad clear oldTimeout');
     clearTimeout(autoLoad.value.timeoutId);
   }
   autoLoad.value.resetting = false;
@@ -185,13 +268,13 @@ function tryAutoLoad(continuous) {
     (continuous || !autoLoad.value.running)
   ) {
     autoLoad.value.running = true;
-    //console.log('tryAutodelayLoad', autoLoad.value.interval);
+    console.log('tryAutodelayLoad', autoLoad.value.interval);
     autoLoad.value.timeoutId = setTimeout(
       incrementLoadData,
       autoLoad.value.interval
     );
   } else {
-    //console.log('tryAutodelayLoad stop');
+    console.log('tryAutodelayLoad stop');
     autoLoad.value.running = false;
   }
 }

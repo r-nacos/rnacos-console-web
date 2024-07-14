@@ -4,6 +4,7 @@ import { IApiResult } from '@/types/base';
 import { TimelineQueryParam, TimelineQueryResponse } from '@/types/metrics';
 let axios = request;
 
+/*
 export const ALL_KEYS = [
   'sys_total_memory',
   'app_rss_memory',
@@ -50,7 +51,6 @@ export const ALL_KEYS = [
 ];
 
 //keys cpu使用率、内存使用量、内存使用率、配置数量、服务数量、实例数量、请求rt百分位、请求qps、请求平均rt
-
 export const DEFAULT_KEYS = [
   'app_cpu_usage',
   'app_memory_usage',
@@ -61,6 +61,7 @@ export const DEFAULT_KEYS = [
   'grpc_request_handle_rt_summary',
   'http_request_handle_rt_summary'
 ];
+*/
 
 class MetricsApi {
   queryTimeLine(

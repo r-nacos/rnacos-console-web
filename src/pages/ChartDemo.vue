@@ -13,7 +13,8 @@
   </div>
 </template>
 <script setup>
-import echarts from '@/utils/echarts';
+import echarts from '@/utils/EchartsWrap.js';
+import { splitAndFillGroup, ChartViewManager } from '@/utils/EchartsUtils.js';
 import { ref, onMounted } from 'vue';
 
 const charList = [
@@ -61,130 +62,11 @@ const charList = [
    */
 ];
 
-const charMap = {};
-
-function getCharGroup(charColumnNumber) {
-  let groupList = [];
-  let group = [];
-  let c = 0;
-
-  for (var item of charList) {
-    charMap[item.id] = item;
-    group.push(item);
-    c += 1;
-    if (c == charColumnNumber) {
-      groupList.push(group);
-      group = [];
-      c = 0;
-    }
-  }
-  if (group.length > 0) {
-    for (var i = group.length; i < charColumnNumber; i++) {
-      group.push({
-        id: null
-      });
-    }
-    groupList.push(group);
-  }
-  return groupList;
-}
-const charGroup = getCharGroup(3);
+const charGroup = splitAndFillGroup(charList, 3, { id: null });
+const chartManager = new ChartViewManager(charList);
 const inited = ref(false);
 
-const selectType = 'showTip';
-const unselectType = 'hideTip';
-
 function updateData() {}
-
-function followShow(source, params) {
-  if (!inited.value) {
-    return;
-  }
-  let dataIndex = null;
-  if (params.batch && params.batch.length > 0) {
-    dataIndex = params.batch[0].dataIndex;
-  } else {
-    return;
-  }
-  for (var item of charList) {
-    if (item.id === source || item.obj == null) {
-      continue;
-    }
-    item.obj.dispatchAction({
-      type: selectType,
-      seriesIndex: 0,
-      dataIndex: dataIndex
-    });
-  }
-}
-
-function unfollowShow(source, params) {
-  if (!inited.value) {
-    return;
-  }
-  let dataIndex = null;
-  if (params.batch && params.batch.length > 0) {
-    dataIndex = params.batch[0].dataIndex;
-  } else {
-    return;
-  }
-  for (var item of charList) {
-    if (item.id === source || item.obj == null) {
-      continue;
-    }
-    item.obj.dispatchAction({
-      type: unselectType,
-      seriesIndex: 0,
-      dataIndex: dataIndex
-    });
-  }
-}
-
-function chartEvent(source, params) {
-  //console.log("chart event",source,params.type);
-  if (params.type == 'highlight') {
-    followShow(source, params);
-  } else if (params.type == 'downplay') {
-    unfollowShow(source, params);
-  }
-}
-
-function buildEventHandle(source) {
-  return function (params) {
-    chartEvent(source, params);
-  };
-}
-
-function entryEvent(source, event) {
-  let item = charMap[source];
-  //console.log("entryEvent",source,item);
-  let eventHandle = buildEventHandle(source);
-  if (item.obj !== null) {
-    item.obj.on('highlight', eventHandle);
-    item.obj.on('downplay', eventHandle);
-  }
-}
-
-function buildEleEntryHandle(source) {
-  return function (event) {
-    entryEvent(source, event);
-  };
-}
-
-function leaveEvent(source, event) {
-  let item = charMap[source];
-  //console.log("leaveEvent",source,item);
-  if (item.obj !== null) {
-    item.obj.off('highlight');
-    item.obj.off('downplay');
-  }
-}
-
-function buildEleLeaveHandle(source) {
-  return function (event) {
-    leaveEvent(source, event);
-  };
-}
 
 function initChart() {
   for (var item of charList) {
@@ -216,8 +98,16 @@ function initChart() {
         }
       ]
     });
-    ele.addEventListener('mouseenter', buildEleEntryHandle(item.id));
-    ele.addEventListener('mouseleave', buildEleLeaveHandle(item.id));
+    //ele.addEventListener('mouseenter', buildEleEntryHandle(item.id));
+    //ele.addEventListener('mouseleave', buildEleLeaveHandle(item.id));
+    ele.addEventListener(
+      'mouseenter',
+      chartManager.buildEleEntryHandle(item.id)
+    );
+    ele.addEventListener(
+      'mouseleave',
+      chartManager.buildEleLeaveHandle(item.id)
+    );
   }
 }
 

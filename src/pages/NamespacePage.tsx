@@ -210,7 +210,7 @@ export default defineComponent({
       data: dataRef,
       model: modelRef,
       pagination: {
-        pageSize: 5
+        pageSize: 20
       },
       loading: loadingRef,
       rules,

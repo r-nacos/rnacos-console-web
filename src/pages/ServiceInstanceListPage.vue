@@ -104,6 +104,13 @@ export default defineComponent({
       pageCount: 1,
       pageSize: 10,
       itemCount: 0,
+      showSizePicker: true,
+      pageSizes: [10, 20, 50, 100],
+      onUpdatePageSize: (pageSize) => {
+        paginationReactive.pageSize = pageSize;
+        paginationReactive.page = 1;
+        doHandlePageChange(1);
+      },
       prefix({ itemCount }) {
         return `总行数: ${itemCount}`;
       }

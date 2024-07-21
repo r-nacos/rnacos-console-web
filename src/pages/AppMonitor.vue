@@ -245,6 +245,10 @@ const viewGroup = [
   {
     label: '分钟',
     value: 'MINUTE'
+  },
+  {
+    label: '小时',
+    value: 'HOUR'
   }
 ];
 
@@ -308,8 +312,20 @@ function resetAutoLoad() {
   tryAutoLoad(true);
 }
 
+function closeAutoLoad() {
+  if (
+    autoLoad.value.enable &&
+    autoLoad.value.running &&
+    autoLoad.value.timeoutId != null
+  ) {
+    //console.log('resetAutoLoad clear oldTimeout');
+    clearTimeout(autoLoad.value.timeoutId);
+  }
+}
+
 function tryAutoLoad(continuous) {
   if (
+    inited.value &&
     autoLoad.value.enable &&
     !autoLoad.value.resetting &&
     (continuous || !autoLoad.value.running)
@@ -416,6 +432,7 @@ onMounted(() => {
 onUnmounted(() => {
   //console.log('onUnmounted');
   chartManager.dispose();
+  closeAutoLoad();
   inited.value = false;
 });
 

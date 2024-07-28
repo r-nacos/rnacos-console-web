@@ -41,3 +41,11 @@ export const toDate = function (date: Date): string {
     d = date.getDate();
   return '' + y + '-' + fnum(M) + '-' + fnum(d);
 };
+
+export const toShortHourTime = function (date: Date): string {
+  var M = date.getMonth() + 1,
+    d = date.getDate(),
+    h = date.getHours(),
+    m = date.getMinutes();
+  return '' + fnum(M) + '-' + fnum(d) + ' ' + fnum(h) + ':' + fnum(m);
+};

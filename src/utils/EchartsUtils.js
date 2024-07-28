@@ -1,5 +1,5 @@
 import echarts from '@/utils/EchartsWrap.js';
-import { toDatetime, toTime } from './date';
+import { toDatetime, toShortHourTime, toTime } from './date';
 
 export function splitAndFillGroup(sourceList, groupNumber, defaultObj = null) {
   let groupList = [];
@@ -56,6 +56,22 @@ function initOption(title, series) {
     //animation: false,
     series: serieList
   };
+}
+
+function getToTimeStrFunc(intervalSecond) {
+  if (typeof intervalSecond != 'number') {
+    return toDatetime;
+  }
+  if (intervalSecond < 3600) {
+    return toTime;
+  } else if (intervalSecond == 3600) {
+    return toShortHourTime;
+  }
+  return toDatetime;
+}
+
+function summaryKeyConvert(v) {
+  return (parseFloat(v) * 100).toString() + '%';
 }
 
 export class ChartViewManager {
@@ -220,9 +236,9 @@ export class ChartViewManager {
     //console.log("ChartManager loadData",data);
     //let indexList = data.timeIndex
     let indexList = [];
+    let toTimeStrFunc = getToTimeStrFunc(data.intervalSecond);
     for (var v of data.timeIndex) {
-      //indexList.push(toDatetime(new Date(v)));
-      indexList.push(toTime(new Date(v)));
+      indexList.push(toTimeStrFunc(new Date(v)));
     }
     if (indexList.length == 0) {
       return;
@@ -250,22 +266,25 @@ export class ChartViewManager {
         } else {
           //ALL
           let serieList = [];
+          let boundKeys = [];
           for (var subKey of summaryObj.boundKeys) {
             let subObj = summaryObj.itemsData[subKey];
+            let name = summaryKeyConvert(subKey);
             //console.log("buildItemData summary item",subKey,subObj);
             serieList.push({
-              name: subKey,
+              name: name,
               type: 'line',
               data: subObj
             });
+            boundKeys.push(name);
             dataList.push(subObj);
           }
           if (isAll || viewItem.option.legend.data.length == 0) {
             //console.log("buildItemData summary",isAll,serieList);
-            viewItem.option.legend.data = summaryObj.boundKeys;
+            viewItem.option.legend.data = boundKeys;
             viewItem.option.series = serieList;
             viewItem.obj.setOption(viewItem.option);
-            return null;
+            //return null;
           }
         }
       } else {
@@ -279,12 +298,9 @@ export class ChartViewManager {
   incrementData(data) {
     //console.log('ChartManager incrementData', data);
     let indexList = [];
+    let toTimeStrFunc = getToTimeStrFunc(data.intervalSecond);
     for (var v of data.timeIndex) {
-      //indexList.push(toDatetime(new Date(v)));
-      indexList.push(toTime(new Date(v)));
-    }
-    if (indexList.length == 0) {
-      return;
+      indexList.push(toTimeStrFunc(new Date(v)));
     }
     if (indexList.length == 0) {
       return;

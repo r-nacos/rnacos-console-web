@@ -71,7 +71,9 @@ const charList = [
   {
     id: 'app_cpu_usage',
     title: 'CPU使用率',
-    series: [{ name: 'CPU使用率(%)', key: null, keyType: null, subType: null }]
+    series: [
+      { name: 'CPU使用率-单核占比(%)', key: null, keyType: null, subType: null }
+    ]
   },
   {
     id: 'app_memory_usage',
@@ -218,23 +220,31 @@ const charList = [
         subType: null
       }
     ]
-  }
-  /*
+  },
   {
     id: 'http_request_handle_rt_summary',
-    title: 'http请求处理时长统计',
+    title: 'http请求处理时长百分位统计(ms)',
     series: [
-      { name: '请求处理时长统计', key: 'http_request_handle_rt_summary', keyType: 'summary', subType: null }
+      {
+        name: '请求处理时长统计',
+        key: 'http_request_handle_rt_summary',
+        keyType: 'summary',
+        subType: null
+      }
     ]
   },
   {
     id: 'grpc_request_handle_rt_summary',
-    title: 'grpc请求处理时长统计',
+    title: 'grpc请求处理时长百分位统计(ms)',
     series: [
-      { name: '请求处理时长统计', key: 'grpc_request_handle_rt_summary', keyType: 'summary', subType: null }
+      {
+        name: '请求处理时长统计',
+        key: 'grpc_request_handle_rt_summary',
+        keyType: 'summary',
+        subType: null
+      }
     ]
   }
-  */
 ];
 
 const viewGroup = [

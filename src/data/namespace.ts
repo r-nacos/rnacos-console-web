@@ -4,6 +4,7 @@ import { INamespace, INamespaceStore } from '@/types/namespace';
 import { ILabelItem } from '@/types/base';
 
 // 前期没有使用 pinia,后继调整时考虑迁移到pinia
+const NAMESPACE_STORAGE_KEY = 'RNACOS_NAMESPACE_KEY';
 
 function createStore(): INamespaceStore {
   const currentRef: Ref<UnwrapRef<INamespace>> = ref({
@@ -25,6 +26,7 @@ function createStore(): INamespaceStore {
   const loadRef = ref(false);
   const setCurrent = function (current: INamespace) {
     currentRef.value = current;
+    localStorage.setItem(NAMESPACE_STORAGE_KEY, JSON.stringify(current));
   };
   const setLastList = function (list: Array<INamespace>) {
     var optionList = [];
@@ -48,6 +50,16 @@ function createStore(): INamespaceStore {
       });
     }
   };
+  //load value from localStorage
+  try {
+    let storageValue = localStorage.getItem(NAMESPACE_STORAGE_KEY);
+    if (storageValue) {
+      let obj = JSON.parse(storageValue);
+      setCurrent(obj);
+    }
+  } catch (err) {
+    console.warn('load value from localStorage error', err);
+  }
   return {
     current: currentRef,
     listList: listListRef,

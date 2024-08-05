@@ -1,16 +1,19 @@
 <template>
-  <n-select
-    class="popselect"
-    v-model:value="value.namespaceId"
-    :options="optionList"
-    size="medium"
-    @update:value="update"
-    scrollable
-  >
-    <n-button style="margin-right: 8px">
-      {{ value.namespaceName || 'public' }}
-    </n-button>
-  </n-select>
+  <div class="wrap">
+    <div class="name">命名空间:</div>
+    <div class="popselect">
+      <n-select
+        class="popselect"
+        v-model:value="value.namespaceId"
+        :options="optionList"
+        size="medium"
+        @update:value="update"
+        scrollable
+      >
+        {{ value.namespaceName || 'public' }}
+      </n-select>
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
@@ -55,6 +58,18 @@ export default defineComponent({
 </script>
 
 <style scoped>
+.wrap {
+  display: inline-flex;
+  flex-direction: row;
+}
+.name {
+  background: #fff;
+  line-height: 34px;
+  /*
+  font-size: 12px;
+  */
+  padding: 0px 5px;
+}
 .popselect {
   width: 200px;
 }

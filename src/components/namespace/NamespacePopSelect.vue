@@ -9,6 +9,7 @@
         size="medium"
         @update:value="update"
         scrollable
+        filterable
       >
         {{ value.namespaceName || 'public' }}
       </n-select>

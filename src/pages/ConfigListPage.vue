@@ -38,7 +38,7 @@
             </span>
             <span class="query-button-item">
               <a ref="download" @click="download"
-                ><n-button type="info">下载</n-button></a
+                ><n-button type="info">导出配置</n-button></a
               >
             </span>
             <span v-if="webResources.canUpdateConfig" class="query-button-item">
@@ -49,7 +49,7 @@
                 @before-upload="doBeforeUpload"
                 @finish="handlerUploadFinish"
               >
-                <n-button type="info">上传文件</n-button>
+                <n-button type="info">导入配置</n-button>
               </n-upload>
             </span>
           </div>
@@ -84,7 +84,7 @@
         title="配置内容比较"
         submitName="确认变更"
         @close="closeDiffForm"
-        @submit="submitDiffForm"
+        @submit="submitData"
       >
         <DiffComponent :src="model.sourceContent" :dst="model.content" />
       </SubContentFullPage>
@@ -210,6 +210,9 @@ export default defineComponent({
         .getConfigV2(config)
         .then((res) => {
           if (res.status == 200 && res.data.success) {
+            if (mode == constant.FORM_MODE_CREATE) {
+              config.dataId = null;
+            }
             modelRef.value = {
               mode: mode,
               showMd5: true,
@@ -231,6 +234,9 @@ export default defineComponent({
     };
     const updateItem = (row) => {
       doShowConfigDetail(row, constant.FORM_MODE_UPDATE);
+    };
+    const cloneItem = (row) => {
+      doShowConfigDetail(row, constant.FORM_MODE_CREATE);
     };
     const detailItem = (row) => {
       doShowConfigDetail(row, constant.FORM_MODE_DETAIL);
@@ -287,6 +293,7 @@ export default defineComponent({
       detailItem,
       showHistory,
       updateItem,
+      cloneItem,
       removeItem,
       webResources
     );
@@ -347,7 +354,7 @@ export default defineComponent({
       //this.useForm = false;
       this.useDiffForm = false;
     },
-    submitDiffForm() {
+    submitData() {
       let config = {
         dataId: this.model.dataId,
         group: this.model.group,
@@ -379,6 +386,10 @@ export default defineComponent({
     submitForm() {
       if (this.model.mode === constant.FORM_MODE_DETAIL) {
         this.useForm = false;
+        return;
+      } else if (this.model.mode === constant.FORM_MODE_CREATE) {
+        this.useForm = false;
+        this.submitData();
         return;
       } else {
         //this.useForm = false;

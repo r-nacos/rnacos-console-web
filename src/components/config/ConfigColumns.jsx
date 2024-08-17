@@ -5,6 +5,7 @@ export const createColumns = function (
   detail,
   showHistory,
   showUpdate,
+  showClone,
   remove,
   webResources
 ) {
@@ -34,6 +35,7 @@ export const createColumns = function (
       render(row) {
         let editButton;
         let removePopconfirm;
+        let cloneButton;
         if (webResources.canUpdateConfig) {
           editButton = (
             <NButton
@@ -43,6 +45,16 @@ export const createColumns = function (
               onClick={() => showUpdate(row)}
             >
               编辑
+            </NButton>
+          );
+          cloneButton = (
+            <NButton
+              size="tiny"
+              quaternary
+              type="info"
+              onClick={() => showClone(row)}
+            >
+              克隆
             </NButton>
           );
           removePopconfirm = (
@@ -78,6 +90,7 @@ export const createColumns = function (
               历史记录
             </NButton>
             {editButton}
+            {cloneButton}
             {removePopconfirm}
           </div>
         );

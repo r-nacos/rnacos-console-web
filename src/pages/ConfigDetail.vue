@@ -3,7 +3,7 @@
     <n-form ref="formRef" :model="model" :rules="rules">
       <n-form-item path="dataId" label="配置ID">
         <n-input
-          :disabled="isReadonly"
+          :disabled="isReadonly || isUpdate"
           placeholder="输入配置ID"
           v-model:value="model.dataId"
           @keydown.enter.prevent
@@ -11,7 +11,7 @@
       </n-form-item>
       <n-form-item path="group" label="配置组">
         <n-input
-          :disabled="isReadonly"
+          :disabled="isReadonly || isUpdate"
           placeholder="输入配置组"
           v-model:value="model.group"
           @keydown.enter.prevent
@@ -90,6 +90,7 @@ import { json } from '@codemirror/lang-json';
 import { xml } from '@codemirror/lang-xml';
 import { html } from '@codemirror/lang-html';
 import { yaml } from '@codemirror/lang-yaml';
+import * as constant from '@/types/constant';
 
 const props = defineProps(['model', 'fromHistory']);
 const extensions = [solarizedDark];
@@ -150,7 +151,10 @@ const doChangeLang = function (v) {
 const focusEvent = function (e) {
   focusValue.value += 1;
 };
-const isReadonly = computed(() => props.model.mode === 'detail');
+const isReadonly = computed(
+  () => props.model.mode === constant.FORM_MODE_DETAIL
+);
+const isUpdate = computed(() => props.model.mode === constant.FORM_MODE_UPDATE);
 const isHistory = computed(() => props.fromHistory);
 const rules = {
   group: [

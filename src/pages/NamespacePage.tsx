@@ -8,7 +8,8 @@ import {
   NSpace,
   NDrawer,
   NDrawerContent,
-  NTag
+  NTag,
+  NPopconfirm
 } from 'naive-ui';
 import { Close } from '@vicons/ionicons5';
 import namespaceApi from '@/api/namespace';
@@ -23,6 +24,16 @@ import type { FormItemRule } from 'naive-ui';
 import type { IColumn, MyWindow } from '@/types/base';
 
 declare var window: MyWindow;
+
+const removeConfirmSlots = {
+  trigger: () => {
+    return (
+      <NButton size="tiny" quaternary type="error">
+        删除
+      </NButton>
+    );
+  }
+};
 
 export const createColumns = function (
   showUpdate: IHandeNamespace,
@@ -61,14 +72,14 @@ export const createColumns = function (
           >
             编辑
           </NButton>
-          <NButton
-            size="tiny"
-            quaternary
-            type="error"
-            onClick={() => remove(row)}
+          <NPopconfirm
+            onPositiveClick={() => remove(row)}
+            v-slots={removeConfirmSlots}
           >
-            删除
-          </NButton>
+            <span>
+              确认要删除{row.namespaceName}(ID: {row.namespaceId})命名空间吗？
+            </span>
+          </NPopconfirm>
         </div>
       );
     }
@@ -133,13 +144,7 @@ export default defineComponent({
     const rules = {
       namespaceId: [
         {
-          required: true,
-          validator(rule: FormItemRule, value: string) {
-            if (!value) {
-              return new Error('需要输入ID');
-            }
-            return true;
-          },
+          required: false,
           trigger: ['input', 'blur']
         }
       ],
@@ -330,7 +335,7 @@ export default defineComponent({
                 columns={this.columns}
                 data={this.data}
                 loading={this.loading}
-                pagination={this.pagination}
+                //pagination={this.pagination}
                 row-key={this.rowKey}
               />
             </div>
@@ -361,6 +366,8 @@ export default defineComponent({
                     <NFormItem path="namespaceId" label="命名空间Id">
                       <NInput
                         value={this.model.namespaceId}
+                        placeholder="命名空间Id不填则自动生成"
+                        disabled={this.model.mode == 'update'}
                         onUpdateValue={(v) => (this.model.namespaceId = v)}
                       />
                     </NFormItem>

@@ -91,6 +91,7 @@ import { xml } from '@codemirror/lang-xml';
 import { html } from '@codemirror/lang-html';
 import { yaml } from '@codemirror/lang-yaml';
 import * as constant from '@/types/constant';
+import { ref, defineExpose } from 'vue';
 
 const props = defineProps(['model', 'fromHistory']);
 const extensions = [solarizedDark];
@@ -187,6 +188,22 @@ const langChange = function (e) {
   let v = e.target.value;
   doChangeLang(v);
 };
+
+const formRef = ref();
+const submitValidate = function (callback) {
+  formRef.value?.validate((errors) => {
+    if (errors) {
+      console.log(errors);
+      window.$message.error('检验不通过:' + errors[0][0].message);
+    } else {
+      callback();
+    }
+  });
+};
+
+defineExpose({
+  submitValidate
+});
 
 watch(
   () => props.model.configType,

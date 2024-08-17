@@ -357,18 +357,18 @@ export default defineComponent({
               default: () => (
                 <div class={styles.subContent}>
                   <NForm model={this.model} rules={this.rules}>
+                    <NFormItem path="namespaceId" label="命名空间ID">
+                      <NInput
+                        value={this.model.namespaceId}
+                        placeholder="命名空间ID,不填则自动生成"
+                        disabled={this.model.mode == 'update'}
+                        onUpdateValue={(v) => (this.model.namespaceId = v)}
+                      />
+                    </NFormItem>
                     <NFormItem path="namespaceName" label="命名空间名称">
                       <NInput
                         value={this.model.namespaceName}
                         onUpdateValue={(v) => (this.model.namespaceName = v)}
-                      />
-                    </NFormItem>
-                    <NFormItem path="namespaceId" label="命名空间Id">
-                      <NInput
-                        value={this.model.namespaceId}
-                        placeholder="命名空间Id不填则自动生成"
-                        disabled={this.model.mode == 'update'}
-                        onUpdateValue={(v) => (this.model.namespaceId = v)}
                       />
                     </NFormItem>
                   </NForm>

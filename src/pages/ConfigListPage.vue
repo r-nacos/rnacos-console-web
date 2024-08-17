@@ -75,7 +75,11 @@
         @close="closeForm"
         @submit="submitForm"
       >
-        <ConfigDetail :model="model" :fromHistory="false" />
+        <ConfigDetail
+          ref="configDetailRef"
+          :model="model"
+          :fromHistory="false"
+        />
       </SubContentFullPage>
     </Transition>
     <Transition name="slide-fade">
@@ -387,14 +391,16 @@ export default defineComponent({
       if (this.model.mode === constant.FORM_MODE_DETAIL) {
         this.useForm = false;
         return;
-      } else if (this.model.mode === constant.FORM_MODE_CREATE) {
-        this.useForm = false;
-        this.submitData();
-        return;
-      } else {
-        //this.useForm = false;
-        this.useDiffForm = true;
       }
+      this.$refs.configDetailRef.submitValidate(() => {
+        if (this.model.mode === constant.FORM_MODE_CREATE) {
+          this.useForm = false;
+          this.submitData();
+        } else {
+          //this.useForm = false;
+          this.useDiffForm = true;
+        }
+      });
     },
     download() {
       this.param.tenant = namespaceStore.current.value.namespaceId;

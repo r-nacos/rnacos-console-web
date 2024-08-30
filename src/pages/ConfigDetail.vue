@@ -85,7 +85,7 @@
 
 <script setup>
 import CodeMirror from '@/components/config/CodeMirror';
-import { solarizedDark } from 'cm6-theme-solarized-dark';
+import { solarizedDark } from '@/components/config/cm6theme';
 import { json } from '@codemirror/lang-json';
 import { xml } from '@codemirror/lang-xml';
 import { html } from '@codemirror/lang-html';

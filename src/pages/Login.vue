@@ -28,6 +28,7 @@
                 type="captcha"
                 v-model:value="model.captcha"
                 @keydown.enter.prevent
+                @keyup.enter="submit"
               />
             </n-form-item>
           </div>

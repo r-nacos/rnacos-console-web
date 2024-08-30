@@ -15,6 +15,8 @@
                   v-model:value="param.username"
                   placeholder="输入用户名"
                   clearable
+                  @keydown.enter.prevent
+                  @keyup.enter="queryList"
                 />
               </n-form-item>
             </div>

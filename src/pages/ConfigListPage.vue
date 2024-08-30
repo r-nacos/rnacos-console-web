@@ -18,6 +18,8 @@
                   v-model:value="param.dataParam"
                   placeholder="输入配置ID"
                   clearable
+                  @keydown.enter.prevent
+                  @keyup.enter="queryList"
                 />
               </n-form-item>
               <n-form-item label="配置组" path="param.groupParam">
@@ -25,6 +27,8 @@
                   v-model:value="param.groupParam"
                   placeholder="输入配置组"
                   clearable
+                  @keydown.enter.prevent
+                  @keyup.enter="queryList"
                 />
               </n-form-item>
             </div>

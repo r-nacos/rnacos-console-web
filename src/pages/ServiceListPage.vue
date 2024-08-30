@@ -18,6 +18,8 @@
                   v-model:value="param.serviceParam"
                   placeholder="输入服务名"
                   clearable
+                  @keydown.enter.prevent
+                  @keyup.enter="queryList"
                 />
               </n-form-item>
               <n-form-item label="服务组" path="param.groupParam">
@@ -25,6 +27,8 @@
                   v-model:value="param.groupParam"
                   placeholder="输入服务组"
                   clearable
+                  @keydown.enter.prevent
+                  @keyup.enter="queryList"
                 />
               </n-form-item>
             </div>

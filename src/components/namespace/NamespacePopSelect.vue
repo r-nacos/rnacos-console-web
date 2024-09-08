@@ -6,6 +6,7 @@
         class="popselect"
         v-model:value="value.namespaceId"
         :options="optionList"
+        :consistent-menu-width="false"
         size="medium"
         @update:value="update"
         scrollable
@@ -72,6 +73,6 @@ export default defineComponent({
   padding: 0px 5px;
 }
 .popselect {
-  width: 200px;
+  width: 260px;
 }
 </style>

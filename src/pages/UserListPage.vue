@@ -206,6 +206,24 @@ export default defineComponent({
       }
     };
 
+    let handleApiResult = function (res) {
+      if (res.status == 200) {
+        if (res.data.success) {
+          window.$message.info('操作成功!');
+          useFormRef.value = false;
+          doHandlePageChange(1);
+        } else {
+          if (res.data.code === 'USER_ROLE_IS_EMPTY') {
+            window.$message.error('用户角色不能为空');
+          } else {
+            window.$message.error('操作失败,未知错误,' + res.data.message);
+          }
+        }
+        return;
+      }
+      window.$message.error('操作失败，response code' + res.status);
+    };
+
     let columns = createColumns(showDetail, showUpdate, removeItem);
     //doHandlePageChange(1);
     return {
@@ -245,13 +263,7 @@ export default defineComponent({
           userApi
             .addUser(userinfo)
             .then((res) => {
-              if (res.status == 200) {
-                window.$message.info('操作成功!');
-                useFormRef.value = false;
-                doHandlePageChange(1);
-                return;
-              }
-              window.$message.error('操作失败，response code' + res.status);
+              handleApiResult(res);
             })
             .catch((err) => {
               window.$message.error('操作失败' + err.message);
@@ -260,13 +272,7 @@ export default defineComponent({
           userApi
             .updateUser(userinfo)
             .then((res) => {
-              if (res.status == 200) {
-                window.$message.info('操作成功!');
-                useFormRef.value = false;
-                doHandlePageChange(1);
-                return;
-              }
-              window.$message.error('操作失败，response code' + res.status);
+              handleApiResult(res);
             })
             .catch((err) => {
               window.$message.error('操作失败' + err.message);

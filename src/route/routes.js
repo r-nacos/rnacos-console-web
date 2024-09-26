@@ -15,6 +15,7 @@ import Login from '@/pages/Login.vue';
 import UserListPage from '@/pages/UserListPage.vue';
 import NoPermission from '@/pages/NoPermission.vue';
 import About from '@/pages/About.vue';
+import Transfer from '@/pages/Transfer.vue';
 import { ServerOutline, CubeOutline, AppsSharp } from '@vicons/ionicons5';
 
 export const routes = [
@@ -94,6 +95,12 @@ export const routes = [
         name: 'namespace',
         meta: { title: '命名空间管理' },
         component: NamespacePage
+      },
+      {
+        path: '/manage/transfer',
+        name: 'transfer',
+        meta: { title: '数据迁移管理' },
+        component: Transfer
       },
       {
         path: '/manage/user',
@@ -177,6 +184,10 @@ export const sideAllMenu = [
       {
         name: '命名空间',
         path: '/manage/namespace'
+      },
+      {
+        name: '数据迁移',
+        path: '/manage/transfer'
       },
       {
         name: '集群信息',

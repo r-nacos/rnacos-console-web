@@ -6,39 +6,22 @@
       </div>
       <n-form class="login_form" ref="formRef" :model="model" :rules="rules">
         <n-form-item path="username" label="用户名">
-          <n-input
-            placeholder="用户名"
-            v-model:value="model.username"
-            @keydown.enter.prevent
-          />
+          <n-input placeholder="用户名" v-model:value="model.username" @keydown.enter.prevent />
         </n-form-item>
         <n-form-item path="password" label="密码">
-          <n-input
-            placeholder="密码"
-            type="password"
-            v-model:value="model.password"
-            @keydown.enter.prevent
-          />
+          <n-input placeholder="密码" type="password" v-model:value="model.password"
+            @keydown.enter="captcha_visible ? $event.preventDefault() : null"
+            @keyup.enter="!captcha_visible ? submit() : null" />
         </n-form-item>
-        <div class="captcha" style="display: inline-flex; flex-direction: row">
+        <div v-if="captcha_visible" class="captcha" style="display: inline-flex; flex-direction: row">
           <div class="captcha_code">
             <n-form-item path="captcha" label="验证码">
-              <n-input
-                placeholder="验证码"
-                type="captcha"
-                v-model:value="model.captcha"
-                @keydown.enter.prevent
-                @keyup.enter="submit"
-              />
+              <n-input placeholder="验证码" type="captcha" v-model:value="model.captcha" @keydown.enter.prevent
+                @keyup.enter="submit" />
             </n-form-item>
           </div>
           <div class="captcha_img">
-            <img
-              :src="captcha_img"
-              height="60"
-              style="margin: 0; padding: 0"
-              @click="gen_captcha"
-            />
+            <img :src="captcha_img" height="60" style="margin: 0; padding: 0" @click="gen_captcha" />
           </div>
         </div>
         <div>
@@ -66,6 +49,8 @@ export default defineComponent({
     let query = route.query;
     let redirect_url = query.redirect_url || '/';
     let captcha_img = ref('');
+    let captcha_visible = ref(false);
+
     var modelRef = reactive({
       username: null,
       password: null,
@@ -115,6 +100,7 @@ export default defineComponent({
       userApi.genCaptcha().then((res) => {
         if (res.status == 200 && res.data && res.data.success) {
           captcha_img.value = 'data:image/png;base64,' + res.data.data;
+          captcha_visible.value = res.data.data != null;
           let token =
             res.headers['Captcha-Token'] || res.headers['captcha-token'] || '';
           modelRef.token = token;
@@ -166,7 +152,7 @@ export default defineComponent({
               } else if (res.data.code === 'LOGIN_LIMITE_ERROR') {
                 window.$message.error('登录校验太频繁，稍后再试!');
               } else {
-                window.$message.error('登录失败,未知错误');
+                window.$message.error('登录失败，未知错误');
               }
             }
           } else {
@@ -176,16 +162,17 @@ export default defineComponent({
         })
         .catch((err) => {
           gen_captcha();
-          window.$message.error('请求失败,' + err.message);
+          window.$message.error('请求失败，' + err.message);
         });
     };
     gen_captcha();
     return {
       model: modelRef,
       captcha_img,
-      rules: rules,
+      rules,
       gen_captcha,
-      submit: submit
+      submit,
+      captcha_visible
     };
   }
 });
@@ -220,6 +207,7 @@ export default defineComponent({
   background: #fff;
   border-radius: 0 0 10px 10px;
 }
+
 .login_btn {
   height: 34px;
   width: 100%;
@@ -231,12 +219,15 @@ export default defineComponent({
   border-radius: 3px;
   cursor: pointer;
 }
+
 .captcha {
   width: 100%;
 }
+
 .captcha_code {
   flex: 1;
 }
+
 .captcha_img {
   flex: 0;
   padding-left: 2px;

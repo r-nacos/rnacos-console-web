@@ -11,13 +11,8 @@
           <n-form label-placement="left" label-width="auto">
             <div class="paramWrap">
               <n-form-item label="用户名" path="param.username">
-                <n-input
-                  v-model:value="param.username"
-                  placeholder="输入用户名"
-                  clearable
-                  @keydown.enter.prevent
-                  @keyup.enter="queryList"
-                />
+                <n-input v-model:value="param.username" placeholder="输入用户名" clearable @keydown.enter.prevent
+                  @keyup.enter="queryList" />
               </n-form-item>
             </div>
           </n-form>
@@ -30,28 +25,12 @@
             </span>
           </div>
         </div>
-        <n-data-table
-          remote
-          ref="table"
-          :scroll-x="600"
-          :bordered="false"
-          :columns="columns"
-          :data="data"
-          :loading="loading"
-          :pagination="pagination"
-          :row-key="rowKey"
-          @update:page="handlePageChange"
-        />
+        <n-data-table remote ref="table" :scroll-x="600" :bordered="false" :columns="columns" :data="data"
+          :loading="loading" :pagination="pagination" :row-key="rowKey" @update:page="handlePageChange" />
       </div>
     </div>
-    <n-drawer
-      to="#main_content"
-      :block-scroll="false"
-      :trap-focus="false"
-      v-model:show="useForm"
-      default-width="600"
-      resizable
-    >
+    <n-drawer to="#main_content" :block-scroll="false" :trap-focus="false" v-model:show="useForm" default-width="600"
+      resizable>
       <n-drawer-content :title="getDetailTitle" closable>
         <UserDetail :model="model" />
         <template #footer>
@@ -143,16 +122,20 @@ export default defineComponent({
       userApi
         .removeUser({ username: row.username })
         .then((res) => {
-          if (res.status == 200) {
-            window.$message.info('删除成功!');
-            useFormRef.value = false;
-            doHandlePageChange(1);
-            return;
+          if (res.status === 200) {
+            if (res.data.success) {
+              window.$message.info('删除成功!');
+              useFormRef.value = false;
+              doHandlePageChange(1);
+            } else {
+              window.$message.error('操作失败: ' + res.data.message);
+            }
+          } else {
+            window.$message.error('操作失败，response code: ' + res.status);
           }
-          window.$message.error('操作失败，response code' + res.status);
         })
         .catch((err) => {
-          window.$message.error('操作失败' + err.message);
+          window.$message.error('操作失败: ' + err.message);
         });
     };
     const showCreate = () => {

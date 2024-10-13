@@ -11,8 +11,13 @@
           <n-form label-placement="left" label-width="auto">
             <div class="paramWrap">
               <n-form-item label="用户名" path="param.username">
-                <n-input v-model:value="param.username" placeholder="输入用户名" clearable @keydown.enter.prevent
-                  @keyup.enter="queryList" />
+                <n-input
+                  v-model:value="param.username"
+                  placeholder="输入用户名"
+                  clearable
+                  @keydown.enter.prevent
+                  @keyup.enter="queryList"
+                />
               </n-form-item>
             </div>
           </n-form>
@@ -25,12 +30,28 @@
             </span>
           </div>
         </div>
-        <n-data-table remote ref="table" :scroll-x="600" :bordered="false" :columns="columns" :data="data"
-          :loading="loading" :pagination="pagination" :row-key="rowKey" @update:page="handlePageChange" />
+        <n-data-table
+          remote
+          ref="table"
+          :scroll-x="600"
+          :bordered="false"
+          :columns="columns"
+          :data="data"
+          :loading="loading"
+          :pagination="pagination"
+          :row-key="rowKey"
+          @update:page="handlePageChange"
+        />
       </div>
     </div>
-    <n-drawer to="#main_content" :block-scroll="false" :trap-focus="false" v-model:show="useForm" default-width="600"
-      resizable>
+    <n-drawer
+      to="#main_content"
+      :block-scroll="false"
+      :trap-focus="false"
+      v-model:show="useForm"
+      default-width="600"
+      resizable
+    >
       <n-drawer-content :title="getDetailTitle" closable>
         <UserDetail :model="model" />
         <template #footer>

@@ -193,14 +193,14 @@ export default defineComponent({
             if (res.data.code == 200) {
               doLoadNamespace();
             } else {
-              window.$message.error(res.data.message);
+              window.$message.error('操作失败: ' + res.data.message);
             }
           } else {
-            window.$message.error('request err,status code:' + res.status);
+            window.$message.error('操作失败，response code: ' + res.status);
           }
         })
         .catch((err) => {
-          window.$message.error(err.message);
+          window.$message.error('操作失败: ' + err.message);
         });
     };
     const columns: IColumn[] = createColumns(

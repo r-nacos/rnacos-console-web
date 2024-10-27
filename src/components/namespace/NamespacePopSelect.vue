@@ -28,7 +28,7 @@
   </div>
 </template>
 
-<script lang="ts">
+<script>
 import { defineComponent } from 'vue';
 import { Copy, CopyOutline } from '@vicons/ionicons5';
 
@@ -54,7 +54,7 @@ export default defineComponent({
     };
   },
   methods: {
-    update(v: string) {
+    update(v) {
       for (var item of this.optionList) {
         if (item.value === v) {
           let obj = {

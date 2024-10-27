@@ -1,5 +1,15 @@
 <template>
   <div class="wrap">
+    <div class="namespace_id" v-if="value.namespaceId != ''">
+      <div class="namespace_text">
+        <span>{{ value.namespaceId }}</span>
+      </div>
+      <div class="copy_icon" @click="copyId">
+        <n-icon size="16" color="#2f6cf7">
+          <CopyOutline />
+        </n-icon>
+      </div>
+    </div>
     <div class="name">命名空间:</div>
     <div class="popselect">
       <n-select
@@ -20,11 +30,16 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { Copy, CopyOutline } from '@vicons/ionicons5';
 
 import { namespaceStore } from '../../data/namespace';
+import { copyText } from '@/utils/utils';
 
 export default defineComponent({
   emits: ['change'],
+  components: {
+    CopyOutline
+  },
   setup() {},
   data() {
     /*
@@ -51,6 +66,11 @@ export default defineComponent({
           this.$emit('change');
         }
       }
+    },
+    copyId() {
+      let namespaceId = this.value.namespaceId;
+      copyText(namespaceId);
+      window.$message.info('已复制命名空间id!');
     }
   },
   created() {
@@ -64,6 +84,29 @@ export default defineComponent({
   display: inline-flex;
   flex-direction: row;
 }
+
+.namespace_id {
+  display: inline-flex;
+  flex-direction: row;
+  padding-right: 15px;
+  background: #fff;
+}
+
+.namespace_text {
+  background: #f0f0f0;
+  color: #333;
+  line-height: 34px;
+  font-size: 12px;
+  padding: 0px 5px;
+}
+
+.copy_icon {
+  background: #f0f0f0;
+  padding-top: 8px;
+  padding-right: 5px;
+  cursor: pointer;
+}
+
 .name {
   background: #fff;
   line-height: 34px;

@@ -1,7 +1,9 @@
 <template>
   <div class="detailWrap">
     <n-form ref="formRef" :model="model" :rules="rules">
-      <n-form-item path="dataId" label="配置ID">
+      <n-grid :cols="3" :x-gap="12">
+        <n-gi>
+          <n-form-item path="dataId" label="配置ID">
         <n-input
           :disabled="isReadonly || isUpdate"
           placeholder="输入配置ID"
@@ -9,7 +11,9 @@
           @keydown.enter.prevent
         />
       </n-form-item>
-      <n-form-item path="group" label="配置组">
+        </n-gi>
+        <n-gi>
+          <n-form-item path="group" label="配置组">
         <n-input
           :disabled="isReadonly || isUpdate"
           placeholder="输入配置组"
@@ -17,7 +21,9 @@
           @keydown.enter.prevent
         />
       </n-form-item>
-      <n-form-item v-show="!isHistory" path="md5" label="MD5">
+        </n-gi>
+        <n-gi>
+          <n-form-item v-show="!isHistory" path="md5" label="MD5">
         <n-input
           :disabled="true"
           placeholder=""
@@ -25,6 +31,8 @@
           @keydown.enter.prevent
         />
       </n-form-item>
+        </n-gi>
+      </n-grid>
       <n-form-item v-show="!isHistory" path="desc" label="描述">
         <n-input
           :disabled="isReadonly"
@@ -91,7 +99,7 @@ import { xml } from '@codemirror/lang-xml';
 import { html } from '@codemirror/lang-html';
 import { yaml } from '@codemirror/lang-yaml';
 import * as constant from '@/types/constant';
-import { ref, defineExpose } from 'vue';
+import { ref, defineExpose, onMounted, onBeforeUnmount } from 'vue';
 
 const props = defineProps(['model', 'fromHistory']);
 const extensions = [solarizedDark];
@@ -211,6 +219,22 @@ watch(
     doChangeLang(props.model.configType);
   }
 );
+
+const adjustCodeContainerHeight = () => {
+  const codeContainer = document.querySelector('.code-container');
+  if (codeContainer) {
+    codeContainer.style.height = `${window.innerHeight - 480}px`;
+  }
+};
+
+onMounted(() => {
+  adjustCodeContainerHeight();
+  window.addEventListener('resize', adjustCodeContainerHeight);
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', adjustCodeContainerHeight);
+});
 </script>
 
 <style scoped>
@@ -228,5 +252,9 @@ watch(
   position: relative;
   overflow: scroll;
   background-color: #002b36;
+  resize: both;
+  /* 添加此行 */
+  overflow: auto;
+  /* 确保内容溢出时可以滚动 */
 }
 </style>

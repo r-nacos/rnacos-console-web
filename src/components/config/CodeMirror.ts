@@ -474,7 +474,9 @@ export default defineComponent({
           // Do not commit CodeMirror's store.
           return;
         }
-        view.value.focus();
+        if (!view.value.hasFocus) {
+          view.value.focus();
+        }
       },
       { immediate: true }
     );

@@ -76,15 +76,17 @@
         />
         -->
         <div class="code-container" @click="focusEvent">
-          <code-mirror
-            :disabled="isReadonly"
-            v-model="model.content"
-            :foucsValue="focusValue"
-            :lang="lang"
-            :basic="true"
-            :tab="true"
-            :extensions="extensions"
-          />
+          <div @click="stopPropagation">
+            <code-mirror
+              :disabled="isReadonly"
+              v-model="model.content"
+              :foucsValue="focusValue"
+              :lang="lang"
+              :basic="true"
+              :tab="true"
+              :extensions="extensions"
+            />
+          </div>
         </div>
       </n-form-item>
     </n-form>
@@ -157,8 +159,20 @@ const doChangeLang = function (v) {
     props.model.configType = v;
   }
 };
+/**
+ * 点击编辑器父容器时，直接focus到编辑器
+ * @param {*} e
+ */
 const focusEvent = function (e) {
   focusValue.value += 1;
+};
+/**
+ * 如果点击编辑器内容则阻止事件冒泡，避免被父容器收到事件后重新focus到编辑器
+ * @param {*} e
+ */
+const stopPropagation = function (e) {
+  e.stopPropagation();
+  return false;
 };
 const isReadonly = computed(
   () => props.model.mode === constant.FORM_MODE_DETAIL
@@ -223,7 +237,7 @@ watch(
 const adjustCodeContainerHeight = () => {
   const codeContainer = document.querySelector('.code-container');
   if (codeContainer) {
-    codeContainer.style.height = `${window.innerHeight - 480}px`;
+    codeContainer.style.height = `${window.innerHeight - 490}px`;
   }
 };
 
@@ -253,8 +267,5 @@ onBeforeUnmount(() => {
   overflow: scroll;
   background-color: #002b36;
   resize: both;
-  /* 添加此行 */
-  overflow: auto;
-  /* 确保内容溢出时可以滚动 */
 }
 </style>

@@ -4,33 +4,33 @@
       <n-grid :cols="3" :x-gap="12">
         <n-gi>
           <n-form-item path="dataId" label="配置ID">
-        <n-input
-          :disabled="isReadonly || isUpdate"
-          placeholder="输入配置ID"
-          v-model:value="model.dataId"
-          @keydown.enter.prevent
-        />
-      </n-form-item>
+            <n-input
+              :disabled="isReadonly || isUpdate"
+              placeholder="输入配置ID"
+              v-model:value="model.dataId"
+              @keydown.enter.prevent
+            />
+          </n-form-item>
         </n-gi>
         <n-gi>
           <n-form-item path="group" label="配置组">
-        <n-input
-          :disabled="isReadonly || isUpdate"
-          placeholder="输入配置组"
-          v-model:value="model.group"
-          @keydown.enter.prevent
-        />
-      </n-form-item>
+            <n-input
+              :disabled="isReadonly || isUpdate"
+              placeholder="输入配置组"
+              v-model:value="model.group"
+              @keydown.enter.prevent
+            />
+          </n-form-item>
         </n-gi>
         <n-gi>
           <n-form-item v-show="!isHistory" path="md5" label="MD5">
-        <n-input
-          :disabled="true"
-          placeholder=""
-          v-model:value="model.md5"
-          @keydown.enter.prevent
-        />
-      </n-form-item>
+            <n-input
+              :disabled="true"
+              placeholder=""
+              v-model:value="model.md5"
+              @keydown.enter.prevent
+            />
+          </n-form-item>
         </n-gi>
       </n-grid>
       <n-form-item v-show="!isHistory" path="desc" label="描述">

@@ -75,17 +75,24 @@
           v-model:value="model.content"
         />
         -->
-        <div class="code-container" @click="focusEvent">
-          <div @click="stopPropagation">
-            <code-mirror
-              :disabled="isReadonly"
-              v-model="model.content"
-              :foucsValue="focusValue"
-              :lang="lang"
-              :basic="true"
-              :tab="true"
-              :extensions="extensions"
-            />
+        <div class="code-container" ref="editorMainRef">
+          <div class="size_icon" @click="toggleFullScreen">
+            <n-icon size="20" color="#fff">
+              <Resize />
+            </n-icon>
+          </div>
+          <div class="code_warp" ref="editorRef" @click="focusEvent">
+            <div @click="stopPropagation">
+              <code-mirror
+                :disabled="isReadonly"
+                v-model="model.content"
+                :foucsValue="focusValue"
+                :lang="lang"
+                :basic="true"
+                :tab="true"
+                :extensions="extensions"
+              />
+            </div>
           </div>
         </div>
       </n-form-item>
@@ -95,6 +102,7 @@
 
 <script setup>
 import CodeMirror from '@/components/config/CodeMirror';
+import { Resize } from '@vicons/ionicons5';
 import { solarizedDark } from '@/components/config/cm6theme';
 import { json } from '@codemirror/lang-json';
 import { xml } from '@codemirror/lang-xml';
@@ -223,6 +231,29 @@ const submitValidate = function (callback) {
   });
 };
 
+const editorMainRef = ref();
+const editorRef = ref();
+
+const fullStatue = ref(false);
+
+const toggleFullScreen = function () {
+  const codeContainer = editorMainRef.value;
+  const editor = editorRef.value;
+  if (codeContainer && editor) {
+    codeContainer.classList.toggle('fullscreen');
+    if (codeContainer.classList.contains('fullscreen')) {
+      fullStatue.value = true;
+      editor.style.height = '100%';
+
+      /* empty */
+    } else {
+      fullStatue.value = false;
+      codeContainer.style.height = '';
+      editor.style.height = `${window.innerHeight - 490}px`;
+    }
+  }
+};
+
 defineExpose({
   submitValidate
 });
@@ -235,7 +266,11 @@ watch(
 );
 
 const adjustCodeContainerHeight = () => {
-  const codeContainer = document.querySelector('.code-container');
+  if (fullStatue.value) {
+    return;
+  }
+  //const codeContainer = document.querySelector('.code_warp');
+  const codeContainer = editorRef.value;
   if (codeContainer) {
     codeContainer.style.height = `${window.innerHeight - 490}px`;
   }
@@ -260,12 +295,41 @@ onBeforeUnmount(() => {
 }
 
 .code-container {
-  height: 300px;
-  width: 100%;
   border: 1px solid #ccc;
+  width: 100%;
+  position: relative;
+  background-color: #002b36;
+  resize: both;
+}
+
+.code_warp {
+  width: 100%;
   position: relative;
   overflow: scroll;
   background-color: #002b36;
   resize: both;
+}
+
+.size_icon {
+  height: 40px;
+  width: 40x;
+  position: absolute;
+  right: 0;
+  background: #103b46;
+  opacity: 0.7;
+  z-index: 10;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 100vh !important;
+  overflow: hidden;
+  z-index: 9999;
 }
 </style>

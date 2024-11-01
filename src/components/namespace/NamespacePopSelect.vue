@@ -30,7 +30,7 @@
 
 <script>
 import { defineComponent } from 'vue';
-import { Copy, CopyOutline } from '@vicons/ionicons5';
+import { CopyOutline } from '@vicons/ionicons5';
 
 import { namespaceStore } from '../../data/namespace';
 import { copyText } from '@/utils/utils';

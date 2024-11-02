@@ -1,7 +1,7 @@
 <template>
   <div class="detailWrap">
     <n-form ref="formRef" :model="model" :rules="rules">
-      <n-grid :cols="3" :x-gap="12">
+      <n-grid :cols="isHistory ? 2 : 3" :x-gap="12">
         <n-gi>
           <n-form-item path="dataId" label="配置ID">
             <n-input
@@ -84,7 +84,7 @@
           <div class="code_warp" ref="editorRef" @click="focusEvent">
             <div @click="stopPropagation">
               <code-mirror
-                :disabled="isReadonly"
+                :readonly="isReadonly"
                 v-model="model.content"
                 :foucsValue="focusValue"
                 :lang="lang"
@@ -235,21 +235,22 @@ const editorMainRef = ref();
 const editorRef = ref();
 
 const fullStatue = ref(false);
+const editorHeight = ref(Math.max(300, window.innerHeight - 490));
 
 const toggleFullScreen = function () {
-  const codeContainer = editorMainRef.value;
+  const editorMain = editorMainRef.value;
   const editor = editorRef.value;
-  if (codeContainer && editor) {
-    codeContainer.classList.toggle('fullscreen');
-    if (codeContainer.classList.contains('fullscreen')) {
+  if (editorMain && editor) {
+    editorMain.classList.toggle('fullscreen');
+    if (editorMain.classList.contains('fullscreen')) {
       fullStatue.value = true;
       editor.style.height = '100%';
 
       /* empty */
     } else {
       fullStatue.value = false;
-      codeContainer.style.height = '';
-      editor.style.height = `${window.innerHeight - 490}px`;
+      editorMain.style.height = '';
+      editor.style.height = `${editorHeight.value}px`;
     }
   }
 };
@@ -266,13 +267,17 @@ watch(
 );
 
 const adjustCodeContainerHeight = () => {
-  if (fullStatue.value) {
-    return;
+  if (props.fromHistory) {
+    editorHeight.value = Math.max(300, window.innerHeight - 315);
+  } else {
+    editorHeight.value = Math.max(300, window.innerHeight - 490);
   }
-  //const codeContainer = document.querySelector('.code_warp');
-  const codeContainer = editorRef.value;
-  if (codeContainer) {
-    codeContainer.style.height = `${window.innerHeight - 490}px`;
+  const editor = editorRef.value;
+  if (editor) {
+    if (fullStatue.value) {
+      return;
+    }
+    editor.style.height = `${editorHeight.value}px`;
   }
 };
 

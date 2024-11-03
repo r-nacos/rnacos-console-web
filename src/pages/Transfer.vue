@@ -8,14 +8,14 @@
     <div class="content-wrap">
       <n-space vertical class="inner_wrap">
         <n-card title="导出" size="medium">
-          <p>从r-nacos导出配置、命名空间、用户数据到文件</p>
+          <p>从r-nacos导出配置、命名空间、用户数据到文件。</p>
           <br />
           <a ref="downloadEle" @click="download"
             ><n-button type="info">导出数据</n-button></a
           >
         </n-card>
         <n-card title="导入" size="medium">
-          <p>将迁移文件中的数据导入到r-nacos系统</p>
+          <p>将迁移文件中的数据导入到r-nacos系统。</p>
           <br />
           <n-upload
             action="/rnacos/api/console/transfer/import"
@@ -26,6 +26,35 @@
           >
             <n-button type="info">导入数据</n-button>
           </n-upload>
+        </n-card>
+
+        <n-card title="数据管理" size="medium">
+          <p>从r-nacos导出数据文件支持与sqlite相互转化。</p>
+          <br />
+          <p>
+            可以使用命令 `rnacos data-to-sqlite export.data sqlite.db`
+            把导出的中间数据转化成sqlite数据库文件，方便对数据做进一步处理。
+          </p>
+          <br />
+          <p>
+            可以使用命令 `rnacos sqlite-to-data sqlite.db export.data`
+            把处理后的sqlite数据转化成迁移格式数据文件，之后即可再把数据导入到r-nacos系统。
+          </p>
+        </n-card>
+
+        <n-card title="从nacos迁移数据" size="medium">
+          <p>
+            为了方便用户从nacos迁移，v0.6.3后r-nacos支持把nacos数据导出到r-nacos迁移格式数据文件。
+          </p>
+          <br />
+          <p>
+            使用命令 `rnacos openapi-to-data -u nacos -p nacos 127.0.0.1:8848
+            export.data`
+            通过openapi把nacos配置数据转化成迁移格式数据文件，之后即可在本页面把数据导入到r-nacos系统。
+          </p>
+          <p>
+            （把127.0.0.1:8848信息换成实际nacos地址；如果nacos没有开启鉴权，则用户与密码参数可以不设置。）
+          </p>
         </n-card>
       </n-space>
     </div>

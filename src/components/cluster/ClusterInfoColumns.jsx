@@ -24,7 +24,7 @@ export const createColumns = function () {
       key: 'addr'
     },
     {
-      title: 'raft主角点',
+      title: 'raft主节点',
       key: 'raftLeader',
       render(row) {
         if (row.raftLeader) {

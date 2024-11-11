@@ -55,6 +55,11 @@
           <p>
             （把127.0.0.1:8848信息换成实际nacos地址；如果nacos没有开启鉴权，则用户与密码参数可以不设置。）
           </p>
+          <br />
+          <p>
+            使用命令 `rnacos mysql-to-data mysql://$user:$password@127.0.0.1:3306/nacos export.data`
+            把nacos mysql数据转化成迁移格式数据文件，之后即可在本页面把数据导入到r-nacos系统。
+          </p>
         </n-card>
       </n-space>
     </div>

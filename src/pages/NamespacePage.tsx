@@ -22,14 +22,16 @@ import styles from './NamespacePage.module.css';
 
 import type { FormItemRule } from 'naive-ui';
 import type { IColumn, MyWindow } from '@/types/base';
+import { useI18n } from 'vue-i18n'
 
 declare var window: MyWindow;
 
 const removeConfirmSlots = {
   trigger: () => {
+    const { t } = useI18n()
     return (
       <NButton size="tiny" quaternary type="error">
-        删除
+        {t("common.delete")}
       </NButton>
     );
   }
@@ -40,21 +42,23 @@ export const createColumns = function (
   remove: IHandeNamespace,
   webResources: { canUpdateNamespace: boolean }
 ): IColumn[] {
+  const { t } = useI18n()
   const columns = [
     {
-      title: '命名空间名称',
+      title: t("namespace.namespaceName"),
       key: 'namespaceName'
     },
     {
-      title: '命名空间ID',
+      title: t("namespace.namespaceId"),
       key: 'namespaceId'
     }
   ];
   let optColumn = {
-    title: '操作',
+    title: t("common.operation"),
     key: 'type',
     fixed: 'right',
     render(row: INamespace) {
+      const { t } = useI18n()
       if (row.namespaceId === '') {
         return (
           <NTag size="small" type="info">
@@ -70,7 +74,7 @@ export const createColumns = function (
             type="info"
             onClick={() => showUpdate(row)}
           >
-            编辑
+            {t("common.edit")}
           </NButton>
           <NPopconfirm
             onPositiveClick={() => remove(row)}
@@ -293,6 +297,7 @@ export default defineComponent({
     this.loadNamespace();
   },
   render() {
+    const { t } = useI18n()
     let createButton;
     if (this.webResources.canUpdateNamespace) {
       createButton = (
@@ -301,7 +306,7 @@ export default defineComponent({
             this.showCreate();
           }}
         >
-          创建命名空间
+          {t("namespace.new_namespace")}
         </NButton>
       );
     } else {
@@ -311,7 +316,7 @@ export default defineComponent({
       <div id="wrap" class="wrap">
         <div class={styles.ops}>
           <div class={styles.opsTitle}>
-            <span>命名空间</span>
+            <span>{t("namespace.namespace")}</span>
           </div>
           <NSpace class={styles.opsButton} size={3}>
             {createButton}
@@ -320,7 +325,7 @@ export default defineComponent({
                 this.loadNamespace();
               }}
             >
-              刷新
+              {t("common.refresh")}
             </NButton>
           </NSpace>
         </div>
@@ -350,22 +355,22 @@ export default defineComponent({
           resizable
         >
           <NDrawerContent
-            title={this.model.mode == 'add' ? '新增命名空间' : '修改命名空间'}
+            title={this.model.mode == 'add' ? t("namespace.add_namespace") : t("namespace.edit_namespace")}
             closable
           >
             {{
               default: () => (
                 <div class={styles.subContent}>
                   <NForm model={this.model} rules={this.rules}>
-                    <NFormItem path="namespaceId" label="命名空间ID">
+                    <NFormItem path="namespaceId" label={t('namespace.namespaceId')}>
                       <NInput
                         value={this.model.namespaceId}
-                        placeholder="命名空间ID,不填则自动生成"
+                        placeholder={t('namespace.namespaceId_or')}
                         disabled={this.model.mode == 'update'}
                         onUpdateValue={(v) => (this.model.namespaceId = v)}
                       />
                     </NFormItem>
-                    <NFormItem path="namespaceName" label="命名空间名称">
+                    <NFormItem path="namespaceName" label={t('namespace.namespaceName')}>
                       <NInput
                         value={this.model.namespaceName}
                         onUpdateValue={(v) => (this.model.namespaceName = v)}
@@ -377,10 +382,10 @@ export default defineComponent({
               footer: () => (
                 <NSpace align="baseline">
                   <NButton text onClick={() => this.closeForm()}>
-                    返回
+                    {t("common.return")}
                   </NButton>
                   <NButton type="primary" onClick={() => this.submit()}>
-                    确认
+                    {t("common.confirm")}
                   </NButton>
                 </NSpace>
               )

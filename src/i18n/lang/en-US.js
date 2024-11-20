@@ -40,6 +40,12 @@ const message = {
      namespace:{
         namespace: "Namespace",
 		the_namespace_id_has_been_copied:"The namespace id has been copied!",
+		namespaceName: "Namespace Name",
+		namespaceId: "Namespace Id",
+		new_namespace:"New Namespace",
+		add_namespace:"Add Namespace",
+		edit_namespace:"Edit Namespace",
+		namespaceId_or:"Namespace Id,null then auto create",
      },
 	 instance:{
 	     port: "Port",	 
@@ -153,6 +159,19 @@ const message = {
 		"MINUTE":"MINUTE",
 		"HOUR":"HOUR",
 		"DIRECT_NODE":"DIRECT NODE",
+	 },
+	 login:{
+		 "password":"Password",
+		 "captcha":"captcha",
+		 "login":"Login",
+		 "need_username":"Need Username",
+		 "need_password":"Need Password",
+		 "need_captcha":"Need captcha",
+		 "get_captcha_fail":"Get captcha fail",
+		 USER_CHECK_ERROR:"User or Password Error",
+		 CAPTCHA_CHECK_ERROR:"captcha error",
+		 LOGIN_LIMITE_ERROR:"login error too more times",
+		 LOGIN_UNKNOWN_ERROR:"login fail unknown error",
 	 }
 }
 export default {

@@ -40,6 +40,12 @@ const message = {
      namespace:{
 		 namespace: "命名空间",
 		 the_namespace_id_has_been_copied:"已复制命名空间id!",
+		 namespaceName: "命名空间名称",
+		 namespaceId: "命名空间Id",
+		 new_namespace:"创建命名空间",
+		 add_namespace:"新增命名空间",
+		 edit_namespace:"修改命名空间",
+		 namespaceId_or:"命名空间ID,不填则自动生成",
      },
 	 instance:{
 	     port: "端口",
@@ -153,6 +159,19 @@ const message = {
 		"MINUTE":"分钟",
 		"HOUR":"小时",
 		"DIRECT_NODE":"直连节点",
+	 },
+	 login:{
+		 "password":"密码",
+		 "captcha":"验证码",
+		 "login":"登录",
+		 "need_username":"需要输入用户名",
+		 "need_password":"需要输入密码",
+		 "need_captcha":"需要输入验证码",
+		 "get_captcha_fail":"获取验证码失败",
+		 USER_CHECK_ERROR:"登录失败，用户名或密码错误!",
+		 CAPTCHA_CHECK_ERROR:"验证码校验不通过!",
+		 LOGIN_LIMITE_ERROR:"登录校验太频繁，稍后再试!",
+		 LOGIN_UNKNOWN_ERROR:"登录失败，未知错误",
 	 }
 }
 export default {

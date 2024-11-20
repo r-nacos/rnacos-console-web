@@ -1,5 +1,7 @@
 import { NButton, NPopconfirm } from 'naive-ui';
 import { toDatetime } from '@/utils/date';
+import { useI18n } from 'vue-i18n'
+import template from 'template_js';
 
 export const createColumns = function (
   detail,
@@ -9,11 +11,12 @@ export const createColumns = function (
   remove,
   webResources
 ) {
+  const { t } = useI18n()
   const removeConfirmSlots = {
     trigger: () => {
       return (
         <NButton size="tiny" quaternary type="error">
-          删除
+          {t('common.delete')}
         </NButton>
       );
     }
@@ -21,15 +24,15 @@ export const createColumns = function (
 
   const columns = [
     {
-      title: '配置ID',
+      title: t('config.config')+' ID',
       key: 'dataId'
     },
     {
-      title: '配置组',
+      title: t('config.config_group'),
       key: 'group'
     },
     {
-      title: '操作',
+      title: t('common.operation'),
       key: 'type',
       fixed: 'right',
       render(row) {
@@ -44,7 +47,7 @@ export const createColumns = function (
               type="info"
               onClick={() => showUpdate(row)}
             >
-              编辑
+              {t('common.edit')}
             </NButton>
           );
           cloneButton = (
@@ -54,7 +57,7 @@ export const createColumns = function (
               type="info"
               onClick={() => showClone(row)}
             >
-              克隆
+              {t('common.clone')}
             </NButton>
           );
           removePopconfirm = (
@@ -63,7 +66,7 @@ export const createColumns = function (
               v-slots={removeConfirmSlots}
             >
               <span>
-                确认要删配置组为:{row.group},ID为:{row.dataId}的配置吗？
+                {template(t("config.confirm_delete_config_action"),{group:row.group,dataId:row.dataId})}
               </span>
             </NPopconfirm>
           );
@@ -79,7 +82,7 @@ export const createColumns = function (
               type="info"
               onClick={() => detail(row)}
             >
-              详情
+              {t('common.detail')}
             </NButton>
             <NButton
               size="tiny"
@@ -87,7 +90,7 @@ export const createColumns = function (
               type="info"
               onClick={() => showHistory(row)}
             >
-              历史记录
+              {t('common.history')}
             </NButton>
             {editButton}
             {cloneButton}
@@ -101,9 +104,10 @@ export const createColumns = function (
 };
 
 export const createHistoryColumns = function (detail, rollback, webResources) {
+  const { t } = useI18n()
   const rollbackConfirmSlots = {
     trigger: () => {
-      return <NButton size="tiny">恢复</NButton>;
+	return <NButton size="tiny">{t('common.recover')}</NButton>;
     }
   };
 
@@ -113,15 +117,15 @@ export const createHistoryColumns = function (detail, rollback, webResources) {
       key: 'id'
     },
     {
-      title: '配置ID',
+      title: t('config.config')+' ID',
       key: 'dataId'
     },
     {
-      title: '配置组',
+      title: t('config.config_group'),
       key: 'group'
     },
     {
-      title: '更新时间',
+      title: t('common.updatedtime'),
       key: 'modifiedTime',
       render(row) {
         var value = '';
@@ -133,12 +137,12 @@ export const createHistoryColumns = function (detail, rollback, webResources) {
       }
     },
     {
-      title: '操作',
+      title: t('common.operation'),
       key: 'type',
       fixed: 'right',
       /*
                   <NPopconfirm onPositiveClick={()=>rollback(row)} v-slots={rollbackConfirmSlots} >
-                      <span>确认要恢复ID为 <b>{row.id}</b> 的历史配置内容吗？</span>
+                      <span>{template(t("config.confirm_recover_config_action"),{id:row.id})}</span>
                   </NPopconfirm>
       */
       render(row) {
@@ -151,7 +155,7 @@ export const createHistoryColumns = function (detail, rollback, webResources) {
               type="primary"
               onClick={() => rollback(row)}
             >
-              恢复
+              {t('common.recover')}
             </NButton>
           );
         } else {
@@ -165,7 +169,7 @@ export const createHistoryColumns = function (detail, rollback, webResources) {
               type="info"
               onClick={() => detail(row)}
             >
-              详情
+              {t('common.detail')}
             </NButton>
             {rollbackButton}
           </div>

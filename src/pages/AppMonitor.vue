@@ -2,7 +2,7 @@
   <div class="wrap">
     <div class="header">
       <div class="title">
-        <span> 系统监控 </span>
+        <span> {{$t("monitor.system_monitor")}} </span>
       </div>
     </div>
     <div class="content-wrap">
@@ -10,7 +10,7 @@
         <div class="query-params">
           <n-form label-placement="left" label-width="auto">
             <div class="paramWrap">
-              <n-form-item label="服务节点" path="param.nodeId">
+              <n-form-item :label="this.$t('monitor.service_node')" path="param.nodeId">
                 <n-select
                   class="paramselect"
                   v-model:value="param.nodeId"
@@ -21,7 +21,7 @@
                 >
                 </n-select>
               </n-form-item>
-              <n-form-item label="视图间隔类型">
+              <n-form-item :label="this.$t('monitor.interval_type')">
                 <n-select
                   class="paramselect"
                   v-model:value="param.timelineGroupName"
@@ -32,7 +32,7 @@
                 >
                 </n-select>
               </n-form-item>
-              <n-form-item label="自动刷新">
+              <n-form-item :label="this.$t('monitor.auto_refresh')">
                 <n-switch
                   size="small"
                   v-model:value="autoLoad.enable"
@@ -43,7 +43,7 @@
           </n-form>
           <div class="queryButton">
             <span class="query-button-item">
-              <n-button tertiary @click="queryList">刷新</n-button>
+              <n-button tertiary @click="queryList">{{$t('common.refresh')}}</n-button>
             </span>
           </div>
         </div>
@@ -64,23 +64,25 @@ import { ref, onMounted, onUnmounted } from 'vue';
 import { splitAndFillGroup, ChartViewManager } from '@/utils/EchartsUtils.js';
 import { metricsApi } from '@/api/metrics';
 import { clusterApi } from '@/api/cluster';
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
 
 function emptyFunc() {}
 
 const charList = [
   {
     id: 'app_cpu_usage',
-    title: 'CPU使用率',
+    title: t("monitor.app_cpu_usage"),
     series: [
-      { name: 'CPU使用率-单核占比(%)', key: null, keyType: null, subType: null }
+      { name: t("monitor.app_cpu_usage_percent"), key: null, keyType: null, subType: null }
     ]
   },
   {
     id: 'app_memory_usage',
-    title: '内存使用率',
+    title: t("monitor.app_memory_usage"),
     series: [
       {
-        name: '内存使用率(%)',
+        name: t("monitor.app_memory_usage_percent"),
         key: 'app_memory_usage',
         keyType: null,
         subType: null
@@ -90,18 +92,18 @@ const charList = [
   },
   {
     id: 'app_rss_memory',
-    title: '内存',
+    title: t("monitor.app_rss_memory"),
     series: [
-      { name: '内存(M)', key: 'app_rss_memory', keyType: null, subType: null }
+      { name: t("monitor.app_rss_memory_m"), key: 'app_rss_memory', keyType: null, subType: null }
     ]
   },
 
   {
     id: 'http_request_rps',
-    title: 'http请求rps',
+    title: t("monitor.http_request_rps"),
     series: [
       {
-        name: 'http请求rps',
+        name: t("monitor.http_request_rps"),
         key: 'http_request_handle_rt_summary',
         keyType: 'summary',
         subType: 'rps'
@@ -110,10 +112,10 @@ const charList = [
   },
   {
     id: 'http_request_count',
-    title: 'http请求数量',
+    title: t("monitor.http_request_count"),
     series: [
       {
-        name: 'http请求数量',
+        name: t("monitor.http_request_count"),
         key: 'http_request_handle_rt_summary',
         keyType: 'summary',
         subType: 'count'
@@ -122,10 +124,10 @@ const charList = [
   },
   {
     id: 'http_request_rt',
-    title: 'http请求平均处理时长',
+    title: t("monitor.http_request_rt"),
     series: [
       {
-        name: 'http请求平均处理时长(ms)',
+        name: t("monitor.http_request_rt_ms"),
         key: 'http_request_handle_rt_summary',
         keyType: 'summary',
         subType: 'average'
@@ -134,10 +136,10 @@ const charList = [
   },
   {
     id: 'grpc_request_rps',
-    title: 'grpc请求rps',
+    title: t("monitor.grpc_request_rps"),
     series: [
       {
-        name: 'grpc请求rps',
+        name: t("monitor.grpc_request_rps"),
         key: 'grpc_request_handle_rt_summary',
         keyType: 'summary',
         subType: 'rps'
@@ -146,10 +148,10 @@ const charList = [
   },
   {
     id: 'grpc_request_count',
-    title: 'grpc请求数量',
+    title: t("monitor.grpc_request_count"),
     series: [
       {
-        name: 'grpc请求数量',
+        name: t("monitor.grpc_request_count"),
         key: 'grpc_request_handle_rt_summary',
         keyType: 'summary',
         subType: 'count'
@@ -158,10 +160,10 @@ const charList = [
   },
   {
     id: 'grpc_request_rt',
-    title: 'grpc请求平均处理时长',
+    title: t("monitor.grpc_request_rt"),
     series: [
       {
-        name: 'grpc请求平均处理时长(ms)',
+        name: t("monitor.grpc_request_rt_ms"),
         key: 'grpc_request_handle_rt_summary',
         keyType: 'summary',
         subType: 'average'
@@ -170,15 +172,15 @@ const charList = [
   },
   {
     id: 'config_data_size',
-    title: '配置数量',
-    series: [{ name: '配置数量(个)', key: null, keyType: null, subType: null }]
+    title: t("monitor.config_data_size"),
+    series: [{ name: t("monitor.config_data_size_n"), key: null, keyType: null, subType: null }]
   },
   {
     id: 'config_listener_client_size',
-    title: 'http监听配置链接数量',
+    title: t("monitor.config_listener_client_size"),
     series: [
       {
-        name: 'http监听配置链接数量(个)',
+        name: t("monitor.config_listener_client_size_n"),
         key: null,
         keyType: null,
         subType: null
@@ -187,10 +189,10 @@ const charList = [
   },
   {
     id: 'config_subscriber_client_size',
-    title: 'grpc监听配置链接数量',
+    title: t("monitor.config_subscriber_client_size"),
     series: [
       {
-        name: 'grpc监听配置链接数量(个)',
+        name: t("monitor.config_subscriber_client_size_n"),
         key: null,
         keyType: null,
         subType: null
@@ -199,22 +201,22 @@ const charList = [
   },
   {
     id: 'naming_service_size',
-    title: '服务数量',
-    series: [{ name: '服务数量(个)', key: null, keyType: null, subType: null }]
+    title: t("monitor.naming_service_size"),
+    series: [{ name: t("monitor.naming_service_size_n"), key: null, keyType: null, subType: null }]
   },
   {
     id: 'naming_instance_size',
-    title: '服务实例数量',
+    title: t("monitor.naming_instance_size"),
     series: [
-      { name: '服务实例数量(个)', key: null, keyType: null, subType: null }
+      { name: t("monitor.naming_instance_size_n"), key: null, keyType: null, subType: null }
     ]
   },
   {
     id: 'naming_subscriber_client_size',
-    title: 'grpc监听服务链接数量',
+    title: t("monitor.naming_subscriber_client_size"),
     series: [
       {
-        name: 'grpc监听服务链接数量(个)',
+        name: t("monitor.naming_subscriber_client_size_n"),
         key: null,
         keyType: null,
         subType: null

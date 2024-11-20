@@ -4,7 +4,7 @@ import styles from './SubContentPage.module.css';
 import { NIcon, NButton, NPopconfirm } from 'naive-ui';
 import { Close } from '@vicons/ionicons5';
 import { useLayoutSize } from '@/data/appdata';
-
+import { useI18n } from 'vue-i18n'
 export default defineComponent({
   name: 'SubContentFullPage',
   props: ['title', 'closeName', 'submitName', 'usePopSubmit', 'submitPopTitle'],
@@ -23,13 +23,14 @@ export default defineComponent({
   },
   methods: {},
   render() {
+    const { t } = useI18n()
     const submitView = () => {
       if (this.$props['usePopSubmit']) {
         const submitSlot = {
           trigger: () => {
             return (
               <NButton type="primary">
-                {this.$props['submitName'] || '确认'}
+                {this.$props['submitName'] || t('common.confirm')}
               </NButton>
             );
           }
@@ -39,13 +40,13 @@ export default defineComponent({
             onPositiveClick={() => this.$emit('submit')}
             v-slots={submitSlot}
           >
-            <span>{this.$props['submitPopTitle'] || '是否确认操作?'}</span>
+            <span>{this.$props['submitPopTitle'] || t('common.confirm_action')}</span>
           </NPopconfirm>
         );
       } else {
         return (
           <NButton type="primary" onClick={() => this.$emit('submit')}>
-            {this.$props['submitName'] || '确认'}
+            {this.$props['submitName'] || t('common.confirm')}
           </NButton>
         );
       }
@@ -64,7 +65,7 @@ export default defineComponent({
         >
           <div className={styles.fullHeader}>
             <div className={styles.title}>
-              <span>{this.$props['title'] || '标题'}</span>
+              <span>{this.$props['title'] || t('common.title')}</span>
             </div>
             <NButton quaternary circle onClick={() => this.$emit('close')}>
               <NIcon size="22">
@@ -76,7 +77,7 @@ export default defineComponent({
           <div className={styles.footer}>
             <div style="display: flex; gap: 16px; justify-content: flex-end">
               <NButton text onClick={() => this.$emit('close')}>
-                {this.$props['closeName'] || '返回'}
+                {this.$props['closeName'] || t('common.return')}
               </NButton>
               {submitView()}
             </div>

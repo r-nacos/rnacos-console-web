@@ -1,5 +1,5 @@
 import { NButton, NSwitch } from 'naive-ui';
-
+import { useI18n } from 'vue-i18n'
 /*
 let slots ={
   "checked":()=> {
@@ -17,35 +17,36 @@ export const createColumns = function (
   offLine,
   webResources
 ) {
+  const { t } = useI18n()
   const columns = [
     {
       title: 'IP',
       key: 'ip'
     },
     {
-      title: '端口',
+      title: t("instance.port"),
       key: 'port'
     },
     {
-      title: '是否临时实例',
+      title: t("instance.ephemeral"),
       key: 'ephemeral',
       render(row) {
         return <span>{row.ephemeral.toString()}</span>;
       }
     },
     {
-      title: '权重',
+      title: t("instance.weight"),
       key: 'weight'
     },
     {
-      title: '建康状态',
+      title: t("instance.healthy"),
       key: 'healthy',
       render(row) {
         return <span>{row.healthy.toString()}</span>;
       }
     },
     {
-      title: '元数据',
+      title: t("instance.metadata"),
       key: 'metadata',
       width: 200,
       render(row) {
@@ -54,7 +55,7 @@ export const createColumns = function (
     }
   ];
   let optColumn = {
-    title: '操作',
+    title: t("common.operation"),
     key: '_type',
     fixed: 'right',
     render(row) {
@@ -87,7 +88,7 @@ export const createColumns = function (
             quaternary
             onClick={() => showUpdate(row)}
           >
-            编辑
+            {t("common.edit")}
           </NButton>
         </div>
       );

@@ -2,28 +2,30 @@ import { NButton, NSwitch, NTag, NPopconfirm } from 'naive-ui';
 
 import { toDatetime } from '@/utils/date';
 import { getRoleNameByCode } from '@/data/role';
-
+import { useI18n } from 'vue-i18n'
+import template from 'template_js';
 export const createColumns = function (showDetail, showUpdate, remove) {
+  const { t } = useI18n()
   const removeConfirmSlots = {
     trigger: () => {
       return (
         <NButton size="tiny" quaternary type="error">
-          删除
+          {t('common.delete')}
         </NButton>
       );
     }
   };
   const columns = [
     {
-      title: '用户',
+      title: t('user.username'),
       key: 'username'
     },
     {
-      title: '用户昵称',
+      title: t('user.nickname'),
       key: 'nickname'
     },
     {
-      title: '创建时间',
+      title: t('user.gmtCreate'),
       key: 'gmtCreate',
       render(row) {
         var value = '';
@@ -35,7 +37,7 @@ export const createColumns = function (showDetail, showUpdate, remove) {
       }
     },
     {
-      title: '更新时间',
+      title: t('user.gmtModified'),
       key: 'gmtModified',
       render(row) {
         var value = '';
@@ -47,7 +49,7 @@ export const createColumns = function (showDetail, showUpdate, remove) {
       }
     },
     {
-      title: '角色',
+      title: t('user.roles'),
       key: 'roles',
       render(row) {
         const roleItems = row.roles.map((item) => (
@@ -57,18 +59,18 @@ export const createColumns = function (showDetail, showUpdate, remove) {
       }
     },
     {
-      title: '是否启用',
+      title: t('user.enable'),
       key: 'enable',
       render(row) {
-        var v = '是';
+        var v = t("common.yes");
         if (!row.enable) {
-          v = '否';
+          v = t("common.no");
         }
         return <span>{v}</span>;
       }
     },
     {
-      title: '操作',
+      title: t('common.operation'),
       key: 'actions',
       render(row) {
         /*
@@ -78,7 +80,7 @@ export const createColumns = function (showDetail, showUpdate, remove) {
               type="info"
               onClick={() => showDetail(row)}
             >
-              详情
+              {t('common.detail')}
             </NButton>
         */
         return (
@@ -89,13 +91,13 @@ export const createColumns = function (showDetail, showUpdate, remove) {
               type="info"
               onClick={() => showUpdate(row)}
             >
-              编辑
+              {t('common.edit')}
             </NButton>
             <NPopconfirm
               onPositiveClick={() => remove(row)}
               v-slots={removeConfirmSlots}
             >
-              <span>确认要删服务名称为:{row.username} 的用户吗？</span>
+              <span>{template(t("user.confirm_delete_user_action"),{username:row.username})}</span>
             </NPopconfirm>
           </>
         );

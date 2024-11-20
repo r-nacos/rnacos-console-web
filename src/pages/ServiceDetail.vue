@@ -1,7 +1,7 @@
 <template>
   <div class="detailWrap">
     <n-form ref="formRef" :model="model" :rules="rules">
-      <n-form-item path="serviceName" label="服务名称">
+      <n-form-item path="serviceName" :label="$t('service.name')">
         <n-input
           :disabled="isKeyReadonly"
           placeholder="输入服务名称"
@@ -9,7 +9,7 @@
           @keydown.enter.prevent
         />
       </n-form-item>
-      <n-form-item path="groupName" label="服务组">
+      <n-form-item path="groupName" :label="$t('service.groupName')">
         <n-input
           :disabled="isKeyReadonly"
           placeholder="输入服务组"

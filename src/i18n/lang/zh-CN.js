@@ -119,6 +119,7 @@ const message = {
 		refresh: "刷新",
 		total: "总行数",
 		add: "新建",
+		home: "首页",
      },
 	 "monitor":{
 		"system_monitor":"系统监控"  ,

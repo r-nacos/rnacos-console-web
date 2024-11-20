@@ -118,7 +118,7 @@ const message = {
 		refresh: "Refresh",
 		total: "Total",
 		add: "Add",
-
+		home: "Home",
      },
 	 "monitor":{
 		"system_monitor":"System Monitor"  ,

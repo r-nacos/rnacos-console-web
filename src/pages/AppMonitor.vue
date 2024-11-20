@@ -225,10 +225,10 @@ const charList = [
   },
   {
     id: 'http_request_handle_rt_summary',
-    title: 'http请求处理时长百分位统计(ms)',
+    title: t("monitor.http_request_handle_rt_summary_percent_ms"),
     series: [
       {
-        name: '请求处理时长统计',
+        name: t("monitor.http_request_handle_rt_summary"),
         key: 'http_request_handle_rt_summary',
         keyType: 'summary',
         subType: null
@@ -237,10 +237,10 @@ const charList = [
   },
   {
     id: 'grpc_request_handle_rt_summary',
-    title: 'grpc请求处理时长百分位统计(ms)',
+    title: t("monitor.grpc_request_handle_rt_summary_percent_ms"),
     series: [
       {
-        name: '请求处理时长统计',
+        name: t("monitor.grpc_request_handle_rt_summary"),
         key: 'grpc_request_handle_rt_summary',
         keyType: 'summary',
         subType: null
@@ -251,22 +251,22 @@ const charList = [
 
 const viewGroup = [
   {
-    label: '最小间隔',
+    label: t("monitor.LEAST"),
     value: 'LEAST'
   },
   {
-    label: '分钟',
+    label: t("monitor.MINUTE"),
     value: 'MINUTE'
   },
   {
-    label: '小时',
+    label: t("monitor.HOUR"),
     value: 'HOUR'
   }
 ];
 
 const nodeList = ref([
   {
-    label: '直连节点',
+    label:  t("monitor.DIRECT_NODE"),
     value: 0
   }
 ]);
@@ -410,7 +410,7 @@ async function initNodeData() {
   if (data.length > 0) {
     let list = [
       {
-        label: '直连节点',
+        label:  t("monitor.DIRECT_NODE"),
         value: 0
       }
     ];

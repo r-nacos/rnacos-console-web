@@ -2,7 +2,7 @@
   <div class="wrap">
     <div class="header">
       <div class="title">
-        <span> 集群信息</span>
+        <span> {{$t("cluster.cluster_info")}}</span>
       </div>
     </div>
     <div class="content-wrap">

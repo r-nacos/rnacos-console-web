@@ -2,7 +2,7 @@
   <div class="container">
     <div class="wrap">
       <div class="header">
-        <span>R-NACOS {{$t("login.login")}}</span>
+        <span>R-NACOS {{ $t('login.login') }}</span>
       </div>
       <n-form class="login_form" ref="formRef" :model="model" :rules="rules">
         <n-form-item path="username" :label="$t('user.username')">
@@ -47,7 +47,9 @@
           </div>
         </div>
         <div>
-          <button class="login_btn" @click="submit">{{$t('login.login')}}</button>
+          <button class="login_btn" @click="submit">
+            {{ $t('login.login') }}
+          </button>
         </div>
       </n-form>
     </div>
@@ -62,10 +64,10 @@ import { userApi } from '@/api/user';
 import { useRoute } from 'vue-router';
 import { encryptAes } from '@/utils/CryptoUtils';
 import router from '@/route/router.js';
-import { useI18n } from 'vue-i18n'
+import { useI18n } from 'vue-i18n';
 export default defineComponent({
   setup() {
-    const { t } = useI18n()
+    const { t } = useI18n();
     const webResources = useWebResources();
     window.$message = useMessage();
     let route = useRoute();
@@ -86,7 +88,7 @@ export default defineComponent({
           required: true,
           validator(rule, value) {
             if (!value) {
-              return new Error(t("login.need_username"));
+              return new Error(t('login.need_username'));
             }
             return true;
           },
@@ -99,7 +101,7 @@ export default defineComponent({
           required: true,
           validator(rule, value) {
             if (!value) {
-              return new Error(t("login.need_password"));
+              return new Error(t('login.need_password'));
             }
             return true;
           },
@@ -111,7 +113,7 @@ export default defineComponent({
           required: true,
           validator(rule, value) {
             if (!value) {
-              return new Error(t("login.need_captcha"));
+              return new Error(t('login.need_captcha'));
             }
             return true;
           },
@@ -129,7 +131,7 @@ export default defineComponent({
           modelRef.token = token;
           return;
         }
-        window.$message.error(t("login.get_captcha_fail"));
+        window.$message.error(t('login.get_captcha_fail'));
       });
     };
     var submit = function () {
@@ -169,23 +171,25 @@ export default defineComponent({
               gen_captcha();
               //console.log(res.data);
               if (res.data.code === 'USER_CHECK_ERROR') {
-                window.$message.error(t("login.USER_CHECK_ERROR"));
+                window.$message.error(t('login.USER_CHECK_ERROR'));
               } else if (res.data.code === 'CAPTCHA_CHECK_ERROR') {
-                window.$message.error(t("login.CAPTCHA_CHECK_ERROR"));
+                window.$message.error(t('login.CAPTCHA_CHECK_ERROR'));
               } else if (res.data.code === 'LOGIN_LIMITE_ERROR') {
-                window.$message.error(t("login.LOGIN_LIMITE_ERROR"));
+                window.$message.error(t('login.LOGIN_LIMITE_ERROR'));
               } else {
-                window.$message.error(t("login.LOGIN_UNKNOWN_ERROR"));
+                window.$message.error(t('login.LOGIN_UNKNOWN_ERROR'));
               }
             }
           } else {
             gen_captcha();
-            window.$message.error(t("common.request_fail")+'，response code' + res.status);
+            window.$message.error(
+              t('common.request_fail') + '，response code' + res.status
+            );
           }
         })
         .catch((err) => {
           gen_captcha();
-          window.$message.error(t("common.request_fail")+'，' + err.message);
+          window.$message.error(t('common.request_fail') + '，' + err.message);
         });
     };
     gen_captcha();

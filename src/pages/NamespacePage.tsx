@@ -22,16 +22,16 @@ import styles from './NamespacePage.module.css';
 
 import type { FormItemRule } from 'naive-ui';
 import type { IColumn, MyWindow } from '@/types/base';
-import { useI18n } from 'vue-i18n'
+import { useI18n } from 'vue-i18n';
 
 declare var window: MyWindow;
 
 const removeConfirmSlots = {
   trigger: () => {
-    const { t } = useI18n()
+    const { t } = useI18n();
     return (
       <NButton size="tiny" quaternary type="error">
-        {t("common.delete")}
+        {t('common.delete')}
       </NButton>
     );
   }
@@ -42,23 +42,23 @@ export const createColumns = function (
   remove: IHandeNamespace,
   webResources: { canUpdateNamespace: boolean }
 ): IColumn[] {
-  const { t } = useI18n()
+  const { t } = useI18n();
   const columns = [
     {
-      title: t("namespace.namespaceName"),
+      title: t('namespace.namespaceName'),
       key: 'namespaceName'
     },
     {
-      title: t("namespace.namespaceId"),
+      title: t('namespace.namespaceId'),
       key: 'namespaceId'
     }
   ];
   let optColumn = {
-    title: t("common.operation"),
+    title: t('common.operation'),
     key: 'type',
     fixed: 'right',
     render(row: INamespace) {
-      const { t } = useI18n()
+      const { t } = useI18n();
       if (row.namespaceId === '') {
         return (
           <NTag size="small" type="info">
@@ -74,7 +74,7 @@ export const createColumns = function (
             type="info"
             onClick={() => showUpdate(row)}
           >
-            {t("common.edit")}
+            {t('common.edit')}
           </NButton>
           <NPopconfirm
             onPositiveClick={() => remove(row)}
@@ -297,7 +297,7 @@ export default defineComponent({
     this.loadNamespace();
   },
   render() {
-    const { t } = useI18n()
+    const { t } = useI18n();
     let createButton;
     if (this.webResources.canUpdateNamespace) {
       createButton = (
@@ -306,7 +306,7 @@ export default defineComponent({
             this.showCreate();
           }}
         >
-          {t("namespace.new_namespace")}
+          {t('namespace.new_namespace')}
         </NButton>
       );
     } else {
@@ -316,7 +316,7 @@ export default defineComponent({
       <div id="wrap" class="wrap">
         <div class={styles.ops}>
           <div class={styles.opsTitle}>
-            <span>{t("namespace.namespace")}</span>
+            <span>{t('namespace.namespace')}</span>
           </div>
           <NSpace class={styles.opsButton} size={3}>
             {createButton}
@@ -325,7 +325,7 @@ export default defineComponent({
                 this.loadNamespace();
               }}
             >
-              {t("common.refresh")}
+              {t('common.refresh')}
             </NButton>
           </NSpace>
         </div>
@@ -355,14 +355,21 @@ export default defineComponent({
           resizable
         >
           <NDrawerContent
-            title={this.model.mode == 'add' ? t("namespace.add_namespace") : t("namespace.edit_namespace")}
+            title={
+              this.model.mode == 'add'
+                ? t('namespace.add_namespace')
+                : t('namespace.edit_namespace')
+            }
             closable
           >
             {{
               default: () => (
                 <div class={styles.subContent}>
                   <NForm model={this.model} rules={this.rules}>
-                    <NFormItem path="namespaceId" label={t('namespace.namespaceId')}>
+                    <NFormItem
+                      path="namespaceId"
+                      label={t('namespace.namespaceId')}
+                    >
                       <NInput
                         value={this.model.namespaceId}
                         placeholder={t('namespace.namespaceId_or')}
@@ -370,7 +377,10 @@ export default defineComponent({
                         onUpdateValue={(v) => (this.model.namespaceId = v)}
                       />
                     </NFormItem>
-                    <NFormItem path="namespaceName" label={t('namespace.namespaceName')}>
+                    <NFormItem
+                      path="namespaceName"
+                      label={t('namespace.namespaceName')}
+                    >
                       <NInput
                         value={this.model.namespaceName}
                         onUpdateValue={(v) => (this.model.namespaceName = v)}
@@ -382,10 +392,10 @@ export default defineComponent({
               footer: () => (
                 <NSpace align="baseline">
                   <NButton text onClick={() => this.closeForm()}>
-                    {t("common.return")}
+                    {t('common.return')}
                   </NButton>
                   <NButton type="primary" onClick={() => this.submit()}>
-                    {t("common.confirm")}
+                    {t('common.confirm')}
                   </NButton>
                 </NSpace>
               )

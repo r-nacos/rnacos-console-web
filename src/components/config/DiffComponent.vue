@@ -5,8 +5,12 @@
     -->
     <div class="result-wrap">
       <div class="inner-wrap">
-        <div class="result-title">{{ $t('config.current_configuration')}}:</div>
-        <div class="result-title">{{ $t('config.new_configurations_to_be_submitted')}}:</div>
+        <div class="result-title">
+          {{ $t('config.current_configuration') }}:
+        </div>
+        <div class="result-title">
+          {{ $t('config.new_configurations_to_be_submitted') }}:
+        </div>
       </div>
       <div class="inner-wrap">
         <div class="diff-result">

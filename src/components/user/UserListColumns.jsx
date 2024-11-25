@@ -2,10 +2,10 @@ import { NButton, NSwitch, NTag, NPopconfirm } from 'naive-ui';
 
 import { toDatetime } from '@/utils/date';
 import { getRoleNameByCode } from '@/data/role';
-import { useI18n } from 'vue-i18n'
+import { useI18n } from 'vue-i18n';
 import template from 'template_js';
 export const createColumns = function (showDetail, showUpdate, remove) {
-  const { t } = useI18n()
+  const { t } = useI18n();
   const removeConfirmSlots = {
     trigger: () => {
       return (
@@ -62,9 +62,9 @@ export const createColumns = function (showDetail, showUpdate, remove) {
       title: t('user.enable'),
       key: 'enable',
       render(row) {
-        var v = t("common.yes");
+        var v = t('common.yes');
         if (!row.enable) {
-          v = t("common.no");
+          v = t('common.no');
         }
         return <span>{v}</span>;
       }
@@ -97,7 +97,11 @@ export const createColumns = function (showDetail, showUpdate, remove) {
               onPositiveClick={() => remove(row)}
               v-slots={removeConfirmSlots}
             >
-              <span>{template(t("user.confirm_delete_user_action"),{username:row.username})}</span>
+              <span>
+                {template(t('user.confirm_delete_user_action'), {
+                  username: row.username
+                })}
+              </span>
             </NPopconfirm>
           </>
         );

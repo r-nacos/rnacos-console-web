@@ -33,7 +33,11 @@
           </n-form-item>
         </n-gi>
       </n-grid>
-      <n-form-item v-show="!isHistory" path="desc" :label="this.$t('config.desc')">
+      <n-form-item
+        v-show="!isHistory"
+        path="desc"
+        :label="this.$t('config.desc')"
+      >
         <n-input
           :disabled="isReadonly"
           :placeholder="this.$t('config.input_desc')"
@@ -43,7 +47,11 @@
           @keydown.enter.prevent
         />
       </n-form-item>
-      <n-form-item v-show="!isHistory" path="configType" :label="this.$t('config.configType')">
+      <n-form-item
+        v-show="!isHistory"
+        path="configType"
+        :label="this.$t('config.configType')"
+      >
         <!--
         <n-radio-group v-model:value="langType"  name="configType">
         -->
@@ -110,8 +118,8 @@ import { html } from '@codemirror/lang-html';
 import { yaml } from '@codemirror/lang-yaml';
 import * as constant from '@/types/constant';
 import { ref, defineExpose, onMounted, onBeforeUnmount } from 'vue';
-import { useI18n } from 'vue-i18n'
-const { t } = useI18n()
+import { useI18n } from 'vue-i18n';
+const { t } = useI18n();
 const props = defineProps(['model', 'fromHistory']);
 const extensions = [solarizedDark];
 
@@ -207,7 +215,7 @@ const rules = {
       required: true,
       validator(rule, value) {
         if (!value) {
-          return new Error(t("config.need_input_dataId"));
+          return new Error(t('config.need_input_dataId'));
         }
         return true;
       },
@@ -225,7 +233,9 @@ const submitValidate = function (callback) {
   formRef.value?.validate((errors) => {
     if (errors) {
       console.log(errors);
-      window.$message.error(t("config.check_fail")+':' + errors[0][0].message);
+      window.$message.error(
+        t('config.check_fail') + ':' + errors[0][0].message
+      );
     } else {
       callback();
     }

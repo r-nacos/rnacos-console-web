@@ -10,7 +10,9 @@
       <div class="notFound">
         <p class="title">404</p>
         <p>{{ path }}</p>
-        <router-link class="link" :to="{ path: '/' }">{{$t("common.home")}}</router-link>
+        <router-link class="link" :to="{ path: '/' }">{{
+          $t('common.home')
+        }}</router-link>
       </div>
     </div>
   </div>

@@ -7,7 +7,7 @@ import {
   IConfigQueryParam
 } from '@/api/config';
 import { AxiosError } from 'axios';
-import { useI18n } from 'vue-i18n'
+import { useI18n } from 'vue-i18n';
 export default defineComponent({
   name: 'Config',
   data() {
@@ -61,7 +61,7 @@ export default defineComponent({
     }
   },
   render() {
-    const { t } = useI18n()
+    const { t } = useI18n();
     return (
       <div>
         <div>
@@ -107,8 +107,8 @@ export default defineComponent({
             />
           </div>
           <div>
-            <button onClick={() => this.setConfig()}> {t("config.set")}</button>
-            <button onClick={() => this.getConfig()}> {t("config.get")}</button>
+            <button onClick={() => this.setConfig()}> {t('config.set')}</button>
+            <button onClick={() => this.getConfig()}> {t('config.get')}</button>
           </div>
         </div>
       </div>

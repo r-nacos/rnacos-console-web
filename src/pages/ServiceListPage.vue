@@ -2,7 +2,7 @@
   <div class="wrap">
     <div class="header">
       <div class="title">
-         <span> 服务列表 </span>
+        <span> 服务列表 </span>
       </div>
       <div class="namespace">
         <NamespacePopSelect @change="queryList" />

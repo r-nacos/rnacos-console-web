@@ -17,14 +17,18 @@
       <n-drawer-content header-style="height: 52px;" closable>
         <template #header>
           <div>
-            <h3>{{$t("passwordpanel.reset_password")}}</h3>
+            <h3>{{ $t('passwordpanel.reset_password') }}</h3>
           </div>
         </template>
         <ResetPassword :model="resetModel" />
         <template #footer>
           <n-space align="baseline">
-            <n-button text @click="closeForm">{{$t("common.return")}}</n-button>
-            <n-button type="primary" @click="submitForm">{{$t("common.confirm")}}</n-button>
+            <n-button text @click="closeForm">{{
+              $t('common.return')
+            }}</n-button>
+            <n-button type="primary" @click="submitForm">{{
+              $t('common.confirm')
+            }}</n-button>
           </n-space>
         </template>
       </n-drawer-content>
@@ -43,7 +47,7 @@ import { userApi } from '@/api/user';
 import ResetPassword from './user/ResetPassword.vue';
 import { useWebResources } from '@/data/resources';
 import router from '@/route/router.js';
-import { useI18n } from 'vue-i18n'
+import { useI18n } from 'vue-i18n';
 const renderIcon = (icon) => {
   return () => {
     return h(NIcon, null, {
@@ -70,17 +74,17 @@ export default defineComponent({
       resetModel.newPassword = null;
       resetModel.newPasswordRepeated = null;
     };
-	const { t } = useI18n()
+    const { t } = useI18n();
     return {
       webResources,
       options: [
         {
-          label: t("passwordpanel.reset_password"),
+          label: t('passwordpanel.reset_password'),
           key: 'reset_password',
           icon: renderIcon(EditIcon)
         },
         {
-          label: t("passwordpanel.logout"),
+          label: t('passwordpanel.logout'),
           key: 'logout',
           icon: renderIcon(LogOutOutline)
         }
@@ -90,7 +94,7 @@ export default defineComponent({
         if (key === 'logout') {
           userApi.logout().then((res) => {
             if (res.status == 200) {
-              window.$message.info(t("passwordpanel.logout_success"));
+              window.$message.info(t('passwordpanel.logout_success'));
               setTimeout(() => {
                 router.push('/p/login');
               }, 500);
@@ -109,11 +113,17 @@ export default defineComponent({
       },
       submitForm() {
         if (!resetModel.oldPassword || !resetModel.newPassword) {
-          window.$message.error(this.$t("passwordpanel.the_input_cannot_be_empty"));
+          window.$message.error(
+            this.$t('passwordpanel.the_input_cannot_be_empty')
+          );
           return;
         }
         if (resetModel.newPassword !== resetModel.newPasswordRepeated) {
-          window.$message.error(this.$t("passwordpanel.confirm_that_the_content_does_not_match_the_new_password"));
+          window.$message.error(
+            this.$t(
+              'passwordpanel.confirm_that_the_content_does_not_match_the_new_password'
+            )
+          );
           return;
         }
         useFormRef.value = false;
@@ -124,15 +134,19 @@ export default defineComponent({
           })
           .then((res) => {
             if (res.status == 200 && res.data != null && res.data.success) {
-              window.$message.info(t("passwordpanel.reset_password_success"));
+              window.$message.info(t('passwordpanel.reset_password_success'));
               useFormRef.value = false;
               clearResetModel();
               return;
             }
-            window.$message.error(this.$t("common.request_fail")+'，response code' + res.status);
+            window.$message.error(
+              this.$t('common.request_fail') + '，response code' + res.status
+            );
           })
           .catch((err) => {
-            window.$message.error(this.$t("common.request_fail")+'，' + err.message);
+            window.$message.error(
+              this.$t('common.request_fail') + '，' + err.message
+            );
           });
       }
     };

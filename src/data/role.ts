@@ -1,5 +1,5 @@
-import i18n from '@/i18n/index' //我本地的i18n实例
-let _t: any = i18n.global
+import i18n from '@/i18n/index'; //我本地的i18n实例
+let _t: any = i18n.global;
 
 export interface Item {
   value: string;
@@ -8,15 +8,15 @@ export interface Item {
 export const roleOptions: Array<Item> = [
   {
     value: '0',
-    label: _t.t("role.admin")
+    label: _t.t('role.admin')
   },
   {
     value: '1',
-    label: _t.t("role.developer")
+    label: _t.t('role.developer')
   },
   {
     value: '2',
-    label: _t.t("role.guest")
+    label: _t.t('role.guest')
   }
 ];
 

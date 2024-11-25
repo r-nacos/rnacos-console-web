@@ -2,7 +2,7 @@
   <div class="wrap">
     <div class="header">
       <div class="title">
-        <span> {{$t("monitor.system_monitor")}} </span>
+        <span> {{ $t('monitor.system_monitor') }} </span>
       </div>
     </div>
     <div class="content-wrap">
@@ -10,7 +10,10 @@
         <div class="query-params">
           <n-form label-placement="left" label-width="auto">
             <div class="paramWrap">
-              <n-form-item :label="this.$t('monitor.service_node')" path="param.nodeId">
+              <n-form-item
+                :label="this.$t('monitor.service_node')"
+                path="param.nodeId"
+              >
                 <n-select
                   class="paramselect"
                   v-model:value="param.nodeId"
@@ -43,7 +46,9 @@
           </n-form>
           <div class="queryButton">
             <span class="query-button-item">
-              <n-button tertiary @click="queryList">{{$t('common.refresh')}}</n-button>
+              <n-button tertiary @click="queryList">{{
+                $t('common.refresh')
+              }}</n-button>
             </span>
           </div>
         </div>
@@ -64,25 +69,30 @@ import { ref, onMounted, onUnmounted } from 'vue';
 import { splitAndFillGroup, ChartViewManager } from '@/utils/EchartsUtils.js';
 import { metricsApi } from '@/api/metrics';
 import { clusterApi } from '@/api/cluster';
-import { useI18n } from 'vue-i18n'
-const { t } = useI18n()
+import { useI18n } from 'vue-i18n';
+const { t } = useI18n();
 
 function emptyFunc() {}
 
 const charList = [
   {
     id: 'app_cpu_usage',
-    title: t("monitor.app_cpu_usage"),
+    title: t('monitor.app_cpu_usage'),
     series: [
-      { name: t("monitor.app_cpu_usage_percent"), key: null, keyType: null, subType: null }
+      {
+        name: t('monitor.app_cpu_usage_percent'),
+        key: null,
+        keyType: null,
+        subType: null
+      }
     ]
   },
   {
     id: 'app_memory_usage',
-    title: t("monitor.app_memory_usage"),
+    title: t('monitor.app_memory_usage'),
     series: [
       {
-        name: t("monitor.app_memory_usage_percent"),
+        name: t('monitor.app_memory_usage_percent'),
         key: 'app_memory_usage',
         keyType: null,
         subType: null
@@ -92,18 +102,23 @@ const charList = [
   },
   {
     id: 'app_rss_memory',
-    title: t("monitor.app_rss_memory"),
+    title: t('monitor.app_rss_memory'),
     series: [
-      { name: t("monitor.app_rss_memory_m"), key: 'app_rss_memory', keyType: null, subType: null }
+      {
+        name: t('monitor.app_rss_memory_m'),
+        key: 'app_rss_memory',
+        keyType: null,
+        subType: null
+      }
     ]
   },
 
   {
     id: 'http_request_rps',
-    title: t("monitor.http_request_rps"),
+    title: t('monitor.http_request_rps'),
     series: [
       {
-        name: t("monitor.http_request_rps"),
+        name: t('monitor.http_request_rps'),
         key: 'http_request_handle_rt_summary',
         keyType: 'summary',
         subType: 'rps'
@@ -112,10 +127,10 @@ const charList = [
   },
   {
     id: 'http_request_count',
-    title: t("monitor.http_request_count"),
+    title: t('monitor.http_request_count'),
     series: [
       {
-        name: t("monitor.http_request_count"),
+        name: t('monitor.http_request_count'),
         key: 'http_request_handle_rt_summary',
         keyType: 'summary',
         subType: 'count'
@@ -124,10 +139,10 @@ const charList = [
   },
   {
     id: 'http_request_rt',
-    title: t("monitor.http_request_rt"),
+    title: t('monitor.http_request_rt'),
     series: [
       {
-        name: t("monitor.http_request_rt_ms"),
+        name: t('monitor.http_request_rt_ms'),
         key: 'http_request_handle_rt_summary',
         keyType: 'summary',
         subType: 'average'
@@ -136,10 +151,10 @@ const charList = [
   },
   {
     id: 'grpc_request_rps',
-    title: t("monitor.grpc_request_rps"),
+    title: t('monitor.grpc_request_rps'),
     series: [
       {
-        name: t("monitor.grpc_request_rps"),
+        name: t('monitor.grpc_request_rps'),
         key: 'grpc_request_handle_rt_summary',
         keyType: 'summary',
         subType: 'rps'
@@ -148,10 +163,10 @@ const charList = [
   },
   {
     id: 'grpc_request_count',
-    title: t("monitor.grpc_request_count"),
+    title: t('monitor.grpc_request_count'),
     series: [
       {
-        name: t("monitor.grpc_request_count"),
+        name: t('monitor.grpc_request_count'),
         key: 'grpc_request_handle_rt_summary',
         keyType: 'summary',
         subType: 'count'
@@ -160,10 +175,10 @@ const charList = [
   },
   {
     id: 'grpc_request_rt',
-    title: t("monitor.grpc_request_rt"),
+    title: t('monitor.grpc_request_rt'),
     series: [
       {
-        name: t("monitor.grpc_request_rt_ms"),
+        name: t('monitor.grpc_request_rt_ms'),
         key: 'grpc_request_handle_rt_summary',
         keyType: 'summary',
         subType: 'average'
@@ -172,15 +187,22 @@ const charList = [
   },
   {
     id: 'config_data_size',
-    title: t("monitor.config_data_size"),
-    series: [{ name: t("monitor.config_data_size_n"), key: null, keyType: null, subType: null }]
+    title: t('monitor.config_data_size'),
+    series: [
+      {
+        name: t('monitor.config_data_size_n'),
+        key: null,
+        keyType: null,
+        subType: null
+      }
+    ]
   },
   {
     id: 'config_listener_client_size',
-    title: t("monitor.config_listener_client_size"),
+    title: t('monitor.config_listener_client_size'),
     series: [
       {
-        name: t("monitor.config_listener_client_size_n"),
+        name: t('monitor.config_listener_client_size_n'),
         key: null,
         keyType: null,
         subType: null
@@ -189,10 +211,10 @@ const charList = [
   },
   {
     id: 'config_subscriber_client_size',
-    title: t("monitor.config_subscriber_client_size"),
+    title: t('monitor.config_subscriber_client_size'),
     series: [
       {
-        name: t("monitor.config_subscriber_client_size_n"),
+        name: t('monitor.config_subscriber_client_size_n'),
         key: null,
         keyType: null,
         subType: null
@@ -201,22 +223,34 @@ const charList = [
   },
   {
     id: 'naming_service_size',
-    title: t("monitor.naming_service_size"),
-    series: [{ name: t("monitor.naming_service_size_n"), key: null, keyType: null, subType: null }]
+    title: t('monitor.naming_service_size'),
+    series: [
+      {
+        name: t('monitor.naming_service_size_n'),
+        key: null,
+        keyType: null,
+        subType: null
+      }
+    ]
   },
   {
     id: 'naming_instance_size',
-    title: t("monitor.naming_instance_size"),
+    title: t('monitor.naming_instance_size'),
     series: [
-      { name: t("monitor.naming_instance_size_n"), key: null, keyType: null, subType: null }
+      {
+        name: t('monitor.naming_instance_size_n'),
+        key: null,
+        keyType: null,
+        subType: null
+      }
     ]
   },
   {
     id: 'naming_subscriber_client_size',
-    title: t("monitor.naming_subscriber_client_size"),
+    title: t('monitor.naming_subscriber_client_size'),
     series: [
       {
-        name: t("monitor.naming_subscriber_client_size_n"),
+        name: t('monitor.naming_subscriber_client_size_n'),
         key: null,
         keyType: null,
         subType: null
@@ -225,10 +259,10 @@ const charList = [
   },
   {
     id: 'http_request_handle_rt_summary',
-    title: t("monitor.http_request_handle_rt_summary_percent_ms"),
+    title: t('monitor.http_request_handle_rt_summary_percent_ms'),
     series: [
       {
-        name: t("monitor.http_request_handle_rt_summary"),
+        name: t('monitor.http_request_handle_rt_summary'),
         key: 'http_request_handle_rt_summary',
         keyType: 'summary',
         subType: null
@@ -237,10 +271,10 @@ const charList = [
   },
   {
     id: 'grpc_request_handle_rt_summary',
-    title: t("monitor.grpc_request_handle_rt_summary_percent_ms"),
+    title: t('monitor.grpc_request_handle_rt_summary_percent_ms'),
     series: [
       {
-        name: t("monitor.grpc_request_handle_rt_summary"),
+        name: t('monitor.grpc_request_handle_rt_summary'),
         key: 'grpc_request_handle_rt_summary',
         keyType: 'summary',
         subType: null
@@ -251,22 +285,22 @@ const charList = [
 
 const viewGroup = [
   {
-    label: t("monitor.LEAST"),
+    label: t('monitor.LEAST'),
     value: 'LEAST'
   },
   {
-    label: t("monitor.MINUTE"),
+    label: t('monitor.MINUTE'),
     value: 'MINUTE'
   },
   {
-    label: t("monitor.HOUR"),
+    label: t('monitor.HOUR'),
     value: 'HOUR'
   }
 ];
 
 const nodeList = ref([
   {
-    label:  t("monitor.DIRECT_NODE"),
+    label: t('monitor.DIRECT_NODE'),
     value: 0
   }
 ]);
@@ -410,7 +444,7 @@ async function initNodeData() {
   if (data.length > 0) {
     let list = [
       {
-        label:  t("monitor.DIRECT_NODE"),
+        label: t('monitor.DIRECT_NODE'),
         value: 0
       }
     ];

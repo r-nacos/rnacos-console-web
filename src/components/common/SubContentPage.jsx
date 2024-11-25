@@ -3,7 +3,7 @@ import { defineComponent } from 'vue';
 import styles from './SubContentPage.module.css';
 import { NIcon, NButton, NPopconfirm } from 'naive-ui';
 import { Close } from '@vicons/ionicons5';
-import { useI18n } from 'vue-i18n'
+import { useI18n } from 'vue-i18n';
 export default defineComponent({
   props: ['title', 'closeName', 'submitName', 'usePopSubmit', 'submitPopTitle'],
   emits: ['close', 'submit'],
@@ -15,7 +15,7 @@ export default defineComponent({
   },
   methods: {},
   render() {
-    const { t } = useI18n()
+    const { t } = useI18n();
     const submitView = () => {
       if (this.$props['usePopSubmit']) {
         const submitSlot = {
@@ -32,7 +32,9 @@ export default defineComponent({
             onPositiveClick={() => this.$emit('submit')}
             v-slots={submitSlot}
           >
-            <span>{this.$props['submitPopTitle'] || t('common.confirm_action')}</span>
+            <span>
+              {this.$props['submitPopTitle'] || t('common.confirm_action')}
+            </span>
           </NPopconfirm>
         );
       } else {

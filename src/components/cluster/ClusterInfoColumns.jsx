@@ -1,11 +1,11 @@
 import { NButton } from 'naive-ui';
-import { useI18n } from 'vue-i18n'
+import { useI18n } from 'vue-i18n';
 
 export const createColumns = function () {
-  const { t } = useI18n()
+  const { t } = useI18n();
   const columns = [
     {
-      title: t('cluster.node')+'Id',
+      title: t('cluster.node') + 'Id',
       key: 'nodeId',
       render(row) {
         if (row.currentNode) {
@@ -22,11 +22,11 @@ export const createColumns = function () {
       }
     },
     {
-      title: t('cluster.node')+' '+t('cluster.address')+'(grpc)',
+      title: t('cluster.node') + ' ' + t('cluster.address') + '(grpc)',
       key: 'addr'
     },
     {
-      title: 'raft'+t('cluster.masternode'),
+      title: 'raft' + t('cluster.masternode'),
       key: 'raftLeader',
       render(row) {
         if (row.raftLeader) {
@@ -45,7 +45,7 @@ export const createColumns = function () {
       }
     },
     {
-      title: t('cluster.node')+' '+t('common.status'),
+      title: t('cluster.node') + ' ' + t('common.status'),
       key: 'distroValid',
       render(row) {
         if (row.distroValid) {

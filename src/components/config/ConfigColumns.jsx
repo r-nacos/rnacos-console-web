@@ -1,6 +1,6 @@
 import { NButton, NPopconfirm } from 'naive-ui';
 import { toDatetime } from '@/utils/date';
-import { useI18n } from 'vue-i18n'
+import { useI18n } from 'vue-i18n';
 import template from 'template_js';
 
 export const createColumns = function (
@@ -11,7 +11,7 @@ export const createColumns = function (
   remove,
   webResources
 ) {
-  const { t } = useI18n()
+  const { t } = useI18n();
   const removeConfirmSlots = {
     trigger: () => {
       return (
@@ -24,7 +24,7 @@ export const createColumns = function (
 
   const columns = [
     {
-      title: t('config.config')+' ID',
+      title: t('config.config') + ' ID',
       key: 'dataId'
     },
     {
@@ -66,7 +66,10 @@ export const createColumns = function (
               v-slots={removeConfirmSlots}
             >
               <span>
-                {template(t("config.confirm_delete_config_action"),{group:row.group,dataId:row.dataId})}
+                {template(t('config.confirm_delete_config_action'), {
+                  group: row.group,
+                  dataId: row.dataId
+                })}
               </span>
             </NPopconfirm>
           );
@@ -104,10 +107,10 @@ export const createColumns = function (
 };
 
 export const createHistoryColumns = function (detail, rollback, webResources) {
-  const { t } = useI18n()
+  const { t } = useI18n();
   const rollbackConfirmSlots = {
     trigger: () => {
-	return <NButton size="tiny">{t('common.recover')}</NButton>;
+      return <NButton size="tiny">{t('common.recover')}</NButton>;
     }
   };
 
@@ -117,7 +120,7 @@ export const createHistoryColumns = function (detail, rollback, webResources) {
       key: 'id'
     },
     {
-      title: t('config.config')+' ID',
+      title: t('config.config') + ' ID',
       key: 'dataId'
     },
     {

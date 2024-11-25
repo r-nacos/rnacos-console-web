@@ -1,5 +1,5 @@
 import { NButton, NPopconfirm } from 'naive-ui';
-import { useI18n } from 'vue-i18n'
+import { useI18n } from 'vue-i18n';
 import template from 'template_js';
 export const createColumns = function (
   showInstances,
@@ -8,7 +8,7 @@ export const createColumns = function (
   remove,
   webResources
 ) {
-  const { t } = useI18n()
+  const { t } = useI18n();
   const removeConfirmSlots = {
     trigger: () => {
       return (
@@ -59,7 +59,10 @@ export const createColumns = function (
               v-slots={removeConfirmSlots}
             >
               <span>
-				{template(t("service.confirm_delete_service_action"),{name:row.name,groupName:row.groupName})}
+                {template(t('service.confirm_delete_service_action'), {
+                  name: row.name,
+                  groupName: row.groupName
+                })}
               </span>
             </NPopconfirm>
           );

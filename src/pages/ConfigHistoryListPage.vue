@@ -2,10 +2,14 @@
   <div class="wrap">
     <div class="header">
       <div class="title">
-        <span>{{$t("config.config_history")}}</span>
+        <span>{{ $t('config.config_history') }}</span>
       </div>
       <div class="header-button">
-        <span><n-button @click="routerBack">{{$t("common.return")}}</n-button></span>
+        <span
+          ><n-button @click="routerBack">{{
+            $t('common.return')
+          }}</n-button></span
+        >
       </div>
       <div class="namespace"></div>
     </div>
@@ -21,7 +25,10 @@
                   placeholder=""
                 />
               </n-form-item>
-              <n-form-item :label="$t('config.config_group')" path="param.group">
+              <n-form-item
+                :label="$t('config.config_group')"
+                path="param.group"
+              >
                 <n-input
                   :disabled="true"
                   v-model:value="param.group"
@@ -32,7 +39,9 @@
           </n-form>
           <div class="queryButton">
             <span class="query-button-item">
-              <n-button tertiary @click="queryList">{{$t("common.refresh")}}</n-button>
+              <n-button tertiary @click="queryList">{{
+                $t('common.refresh')
+              }}</n-button>
             </span>
           </div>
         </div>
@@ -62,7 +71,9 @@
         <ConfigDetail :model="model" :fromHistory="true" />
         <template #footer>
           <n-space align="baseline">
-            <n-button text @click="closeForm">{{$t("common.return")}}</n-button>
+            <n-button text @click="closeForm">{{
+              $t('common.return')
+            }}</n-button>
             <n-button
               v-if="webResources.canUpdateConfig"
               type="primary"
@@ -97,7 +108,7 @@ import DiffComponent from '@/components/config/DiffComponent.vue';
 import ConfigDetail from './ConfigDetail.vue';
 import * as constant from '@/types/constant';
 import { useRoute } from 'vue-router';
-import { useI18n } from 'vue-i18n'
+import { useI18n } from 'vue-i18n';
 export default defineComponent({
   components: {
     SubContentFullPage,
@@ -105,7 +116,7 @@ export default defineComponent({
     DiffComponent
   },
   setup() {
-    const { t } = useI18n()
+    const { t } = useI18n();
     let route = useRoute();
     let webResources = useWebResources();
     let query = route.query;
@@ -130,7 +141,7 @@ export default defineComponent({
         doHandlePageChange(1);
       },
       prefix({ itemCount }) {
-        return t("common.total")+`: ${itemCount}`;
+        return t('common.total') + `: ${itemCount}`;
       }
     });
     const useFormRef = ref(false);
@@ -220,14 +231,18 @@ export default defineComponent({
               useDiffFormRef.value = false;
               doHandlePageChange(1);
             } else {
-              window.$message.error(t("config.recover_fail")+'，' + res.data.message);
+              window.$message.error(
+                t('config.recover_fail') + '，' + res.data.message
+              );
             }
             return;
           }
-          window.$message.error(t("config.recover_fail")+'，response code' + res.status);
+          window.$message.error(
+            t('config.recover_fail') + '，response code' + res.status
+          );
         })
         .catch((err) => {
-          window.$message.error(t("config.recover_fail")+'，' + err.message);
+          window.$message.error(t('config.recover_fail') + '，' + err.message);
         });
     };
     const rollback = (row) => {
@@ -256,10 +271,10 @@ export default defineComponent({
   },
   computed: {
     getDetailTitle() {
-      return this.$t("config.history_record_content");
+      return this.$t('config.history_record_content');
     },
     getSubmitName() {
-      return this.$t("config.recover_history");
+      return this.$t('config.recover_history');
     }
   },
   data() {

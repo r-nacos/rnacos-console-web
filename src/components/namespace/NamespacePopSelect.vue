@@ -10,7 +10,7 @@
         </n-icon>
       </div>
     </div>
-    <div class="name">{{ $t('namespace.namespace')}}:</div>
+    <div class="name">{{ $t('namespace.namespace') }}:</div>
     <div class="popselect">
       <n-select
         class="popselect"
@@ -70,7 +70,9 @@ export default defineComponent({
     copyId() {
       let namespaceId = this.value.namespaceId;
       copyText(namespaceId);
-      window.$message.info(this.$t('namespace.the_namespace_id_has_been_copied'));
+      window.$message.info(
+        this.$t('namespace.the_namespace_id_has_been_copied')
+      );
     }
   },
   created() {

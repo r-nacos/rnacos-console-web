@@ -2,7 +2,7 @@
   <div class="wrap">
     <div class="header">
       <div class="title">
-        <span> {{$t("config.config_list")}} </span>
+        <span> {{ $t('config.config_list') }} </span>
       </div>
       <div class="namespace">
         <NamespacePopSelect @change="queryList" />
@@ -13,7 +13,10 @@
         <div class="query-params">
           <n-form label-placement="left" label-width="auto">
             <div class="paramWrap">
-              <n-form-item :label="this.$t('config.config')" path="param.dataParam">
+              <n-form-item
+                :label="this.$t('config.config')"
+                path="param.dataParam"
+              >
                 <n-input
                   v-model:value="param.dataParam"
                   :placeholder="this.$t('config.input_dataId')"
@@ -22,7 +25,10 @@
                   @keyup.enter="queryList"
                 />
               </n-form-item>
-              <n-form-item :label="this.$t('config.config_group')" path="param.groupParam">
+              <n-form-item
+                :label="this.$t('config.config_group')"
+                path="param.groupParam"
+              >
                 <n-input
                   v-model:value="param.groupParam"
                   :placeholder="this.$t('config.input_config_group')"
@@ -35,14 +41,20 @@
           </n-form>
           <div class="queryButton">
             <span class="query-button-item">
-              <n-button tertiary @click="queryList">{{$t("common.query")}}</n-button>
+              <n-button tertiary @click="queryList">{{
+                $t('common.query')
+              }}</n-button>
             </span>
             <span v-if="webResources.canUpdateConfig" class="query-button-item">
-              <n-button type="info" @click="showCreate">{{$t("common.add")}}</n-button>
+              <n-button type="info" @click="showCreate">{{
+                $t('common.add')
+              }}</n-button>
             </span>
             <span class="query-button-item">
               <a ref="download" @click="download"
-                ><n-button type="info">{{$t("config.export_config")}}</n-button></a
+                ><n-button type="info">{{
+                  $t('config.export_config')
+                }}</n-button></a
               >
             </span>
             <span v-if="webResources.canUpdateConfig" class="query-button-item">
@@ -53,7 +65,9 @@
                 @before-upload="doBeforeUpload"
                 @finish="handlerUploadFinish"
               >
-                <n-button type="info">{{$t("config.import_config")}}</n-button>
+                <n-button type="info">{{
+                  $t('config.import_config')
+                }}</n-button>
               </n-upload>
             </span>
           </div>
@@ -114,7 +128,7 @@ import { useRouter } from 'vue-router';
 import { Close } from '@vicons/ionicons5';
 import * as constant from '@/types/constant';
 import qs from 'qs';
-import { useI18n } from 'vue-i18n'
+import { useI18n } from 'vue-i18n';
 export default defineComponent({
   components: {
     NamespacePopSelect,
@@ -124,7 +138,7 @@ export default defineComponent({
     DiffComponent
   },
   setup(self) {
-    const { t } = useI18n()
+    const { t } = useI18n();
     //window.$message = useMessage();
     let router = useRouter();
     let webResources = useWebResources();
@@ -165,7 +179,7 @@ export default defineComponent({
         doHandlePageChange(1);
       },
       prefix({ itemCount }) {
-        return t("common.total")+`: ${itemCount}`;
+        return t('common.total') + `: ${itemCount}`;
       }
     });
     const doBeforeUpload = () => {

@@ -1,5 +1,6 @@
 import { NButton, NPopconfirm } from 'naive-ui';
-
+import { useI18n } from 'vue-i18n'
+import template from 'template_js';
 export const createColumns = function (
   showInstances,
   detail,
@@ -7,11 +8,12 @@ export const createColumns = function (
   remove,
   webResources
 ) {
+  const { t } = useI18n()
   const removeConfirmSlots = {
     trigger: () => {
       return (
         <NButton size="tiny" quaternary type="error">
-          删除
+          {t('common.delete')}
         </NButton>
       );
     }
@@ -19,23 +21,23 @@ export const createColumns = function (
 
   const columns = [
     {
-      title: '服务名称',
+      title: t('service.name'),
       key: 'name'
     },
     {
-      title: '服务组',
+      title: t('service.groupName'),
       key: 'groupName'
     },
     {
-      title: '实例数',
+      title: t('service.ipCount'),
       key: 'ipCount'
     },
     {
-      title: '健康实例数',
+      title: t('service.healthyInstanceCount'),
       key: 'healthyInstanceCount'
     },
     {
-      title: '操作',
+      title: t('common.operation'),
       key: 'type',
       render(row) {
         let editButton;
@@ -48,7 +50,7 @@ export const createColumns = function (
               type="info"
               onClick={() => showUpdate(row)}
             >
-              编辑
+              {t('common.edit')}
             </NButton>
           );
           removePopconfirm = (
@@ -57,8 +59,7 @@ export const createColumns = function (
               v-slots={removeConfirmSlots}
             >
               <span>
-                确认要删服务名称为:{row.name},服务组为:{row.groupName}
-                ,的配置吗？
+				{template(t("service.confirm_delete_service_action"),{name:row.name,groupName:row.groupName})}
               </span>
             </NPopconfirm>
           );
@@ -74,7 +75,7 @@ export const createColumns = function (
               type="info"
               onClick={() => showInstances(row)}
             >
-              服务实例
+              {t('service.instance')}
             </NButton>
             <NButton
               size="tiny"
@@ -82,7 +83,7 @@ export const createColumns = function (
               type="info"
               onClick={() => detail(row)}
             >
-              详情
+              {t('common.detail')}
             </NButton>
             {editButton}
             {removePopconfirm}

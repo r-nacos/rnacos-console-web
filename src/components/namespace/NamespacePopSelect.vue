@@ -10,7 +10,7 @@
         </n-icon>
       </div>
     </div>
-    <div class="name">命名空间:</div>
+    <div class="name">{{ $t('namespace.namespace')}}:</div>
     <div class="popselect">
       <n-select
         class="popselect"
@@ -70,7 +70,7 @@ export default defineComponent({
     copyId() {
       let namespaceId = this.value.namespaceId;
       copyText(namespaceId);
-      window.$message.info('已复制命名空间id!');
+      window.$message.info(this.$t('namespace.the_namespace_id_has_been_copied'));
     }
   },
   created() {

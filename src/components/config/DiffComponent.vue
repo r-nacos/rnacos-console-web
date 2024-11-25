@@ -1,12 +1,12 @@
 <template>
   <div>
     <!-- 
-    <div><span>配置变更比较</span></div>
+    <div><span>{{ $t('config.comparison_of_configuration_changes')}}</span></div>
     -->
     <div class="result-wrap">
       <div class="inner-wrap">
-        <div class="result-title">当前配置:</div>
-        <div class="result-title">待提交的新配置:</div>
+        <div class="result-title">{{ $t('config.current_configuration')}}:</div>
+        <div class="result-title">{{ $t('config.new_configurations_to_be_submitted')}}:</div>
       </div>
       <div class="inner-wrap">
         <div class="diff-result">

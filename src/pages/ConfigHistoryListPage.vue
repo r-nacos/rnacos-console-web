@@ -2,10 +2,10 @@
   <div class="wrap">
     <div class="header">
       <div class="title">
-        <span>配置历史记录列表</span>
+        <span>{{$t("config.config_history")}}</span>
       </div>
       <div class="header-button">
-        <span><n-button @click="routerBack">返回</n-button></span>
+        <span><n-button @click="routerBack">{{$t("common.return")}}</n-button></span>
       </div>
       <div class="namespace"></div>
     </div>
@@ -14,14 +14,14 @@
         <div class="query-params">
           <n-form label-placement="left" label-width="auto">
             <div class="paramWrap">
-              <n-form-item label="配置ID" path="param.dataId">
+              <n-form-item :label="$t('config.dataId')" path="param.dataId">
                 <n-input
                   :disabled="true"
                   v-model:value="param.dataId"
                   placeholder=""
                 />
               </n-form-item>
-              <n-form-item label="配置组" path="param.group">
+              <n-form-item :label="$t('config.config_group')" path="param.group">
                 <n-input
                   :disabled="true"
                   v-model:value="param.group"
@@ -32,7 +32,7 @@
           </n-form>
           <div class="queryButton">
             <span class="query-button-item">
-              <n-button tertiary @click="queryList">刷新</n-button>
+              <n-button tertiary @click="queryList">{{$t("common.refresh")}}</n-button>
             </span>
           </div>
         </div>
@@ -62,7 +62,7 @@
         <ConfigDetail :model="model" :fromHistory="true" />
         <template #footer>
           <n-space align="baseline">
-            <n-button text @click="closeForm">返回</n-button>
+            <n-button text @click="closeForm">{{$t("common.return")}}</n-button>
             <n-button
               v-if="webResources.canUpdateConfig"
               type="primary"
@@ -76,8 +76,8 @@
     <Transition name="slide-fade">
       <SubContentFullPage
         v-if="useDiffForm"
-        title="配置内容比较"
-        submitName="确认变更"
+        :title="$t('config.diff_content')"
+        :submitName="$t('config.confirm_change')"
         @close="closeDiffForm"
         @submit="submitDiffForm"
       >
@@ -97,7 +97,7 @@ import DiffComponent from '@/components/config/DiffComponent.vue';
 import ConfigDetail from './ConfigDetail.vue';
 import * as constant from '@/types/constant';
 import { useRoute } from 'vue-router';
-
+import { useI18n } from 'vue-i18n'
 export default defineComponent({
   components: {
     SubContentFullPage,
@@ -105,6 +105,7 @@ export default defineComponent({
     DiffComponent
   },
   setup() {
+    const { t } = useI18n()
     let route = useRoute();
     let webResources = useWebResources();
     let query = route.query;
@@ -129,7 +130,7 @@ export default defineComponent({
         doHandlePageChange(1);
       },
       prefix({ itemCount }) {
-        return `总行数: ${itemCount}`;
+        return t("common.total")+`: ${itemCount}`;
       }
     });
     const useFormRef = ref(false);
@@ -219,14 +220,14 @@ export default defineComponent({
               useDiffFormRef.value = false;
               doHandlePageChange(1);
             } else {
-              window.$message.error('恢复失败，' + res.data.message);
+              window.$message.error(t("config.recover_fail")+'，' + res.data.message);
             }
             return;
           }
-          window.$message.error('恢复失败，response code' + res.status);
+          window.$message.error(t("config.recover_fail")+'，response code' + res.status);
         })
         .catch((err) => {
-          window.$message.error('恢复失败，' + err.message);
+          window.$message.error(t("config.recover_fail")+'，' + err.message);
         });
     };
     const rollback = (row) => {
@@ -255,10 +256,10 @@ export default defineComponent({
   },
   computed: {
     getDetailTitle() {
-      return '历史记录内容';
+      return this.$t("config.history_record_content");
     },
     getSubmitName() {
-      return '恢复历史记录';
+      return this.$t("config.recover_history");
     }
   },
   data() {

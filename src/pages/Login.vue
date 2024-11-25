@@ -2,19 +2,19 @@
   <div class="container">
     <div class="wrap">
       <div class="header">
-        <span>R-NACOS 登录</span>
+        <span>R-NACOS {{$t("login.login")}}</span>
       </div>
       <n-form class="login_form" ref="formRef" :model="model" :rules="rules">
-        <n-form-item path="username" label="用户名">
+        <n-form-item path="username" :label="$t('user.username')">
           <n-input
-            placeholder="用户名"
+            :placeholder="$t('user.username')"
             v-model:value="model.username"
             @keydown.enter.prevent
           />
         </n-form-item>
-        <n-form-item path="password" label="密码">
+        <n-form-item path="password" :label="$t('login.password')">
           <n-input
-            placeholder="密码"
+            :placeholder="$t('login.password')"
             type="password"
             v-model:value="model.password"
             @keydown.enter="captcha_visible ? $event.preventDefault() : null"
@@ -27,9 +27,9 @@
           style="display: inline-flex; flex-direction: row"
         >
           <div class="captcha_code">
-            <n-form-item path="captcha" label="验证码">
+            <n-form-item path="captcha" :label="$t('login.captcha')">
               <n-input
-                placeholder="验证码"
+                :placeholder="$t('login.captcha')"
                 type="captcha"
                 v-model:value="model.captcha"
                 @keydown.enter.prevent
@@ -47,7 +47,7 @@
           </div>
         </div>
         <div>
-          <button class="login_btn" @click="submit">登录</button>
+          <button class="login_btn" @click="submit">{{$t('login.login')}}</button>
         </div>
       </n-form>
     </div>
@@ -62,9 +62,10 @@ import { userApi } from '@/api/user';
 import { useRoute } from 'vue-router';
 import { encryptAes } from '@/utils/CryptoUtils';
 import router from '@/route/router.js';
-
+import { useI18n } from 'vue-i18n'
 export default defineComponent({
   setup() {
+    const { t } = useI18n()
     const webResources = useWebResources();
     window.$message = useMessage();
     let route = useRoute();
@@ -85,7 +86,7 @@ export default defineComponent({
           required: true,
           validator(rule, value) {
             if (!value) {
-              return new Error('需要输入用户名');
+              return new Error(t("login.need_username"));
             }
             return true;
           },
@@ -98,7 +99,7 @@ export default defineComponent({
           required: true,
           validator(rule, value) {
             if (!value) {
-              return new Error('需要输入密码');
+              return new Error(t("login.need_password"));
             }
             return true;
           },
@@ -110,7 +111,7 @@ export default defineComponent({
           required: true,
           validator(rule, value) {
             if (!value) {
-              return new Error('需要输入验证码');
+              return new Error(t("login.need_captcha"));
             }
             return true;
           },
@@ -128,7 +129,7 @@ export default defineComponent({
           modelRef.token = token;
           return;
         }
-        window.$message.error('获取验证码失败');
+        window.$message.error(t("login.get_captcha_fail"));
       });
     };
     var submit = function () {
@@ -168,23 +169,23 @@ export default defineComponent({
               gen_captcha();
               //console.log(res.data);
               if (res.data.code === 'USER_CHECK_ERROR') {
-                window.$message.error('登录失败，用户名或密码错误!');
+                window.$message.error(t("login.USER_CHECK_ERROR"));
               } else if (res.data.code === 'CAPTCHA_CHECK_ERROR') {
-                window.$message.error('验证码校验不通过!');
+                window.$message.error(t("login.CAPTCHA_CHECK_ERROR"));
               } else if (res.data.code === 'LOGIN_LIMITE_ERROR') {
-                window.$message.error('登录校验太频繁，稍后再试!');
+                window.$message.error(t("login.LOGIN_LIMITE_ERROR"));
               } else {
-                window.$message.error('登录失败，未知错误');
+                window.$message.error(t("login.LOGIN_UNKNOWN_ERROR"));
               }
             }
           } else {
             gen_captcha();
-            window.$message.error('请求失败，response code' + res.status);
+            window.$message.error(t("common.request_fail")+'，response code' + res.status);
           }
         })
         .catch((err) => {
           gen_captcha();
-          window.$message.error('请求失败，' + err.message);
+          window.$message.error(t("common.request_fail")+'，' + err.message);
         });
     };
     gen_captcha();

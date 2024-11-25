@@ -1,9 +1,11 @@
 import { NButton } from 'naive-ui';
+import { useI18n } from 'vue-i18n'
 
 export const createColumns = function () {
+  const { t } = useI18n()
   const columns = [
     {
-      title: '节点Id',
+      title: t('cluster.node')+'Id',
       key: 'nodeId',
       render(row) {
         if (row.currentNode) {
@@ -11,7 +13,7 @@ export const createColumns = function () {
             <span>
               <span style="padding:0 10px 0 0;">{row.nodeId}</span>
               <NButton size="tiny" strong secondary type="primary">
-                【查询节点】
+                【{t('common.query')} {t('cluster.node')}】
               </NButton>
             </span>
           );
@@ -20,42 +22,42 @@ export const createColumns = function () {
       }
     },
     {
-      title: '节点地址(grpc)',
+      title: t('cluster.node')+' '+t('cluster.address')+'(grpc)',
       key: 'addr'
     },
     {
-      title: 'raft主节点',
+      title: 'raft'+t('cluster.masternode'),
       key: 'raftLeader',
       render(row) {
         if (row.raftLeader) {
           return (
             <NButton size="tiny" strong secondary type="primary">
-              是
+              {t('common.yes')}
             </NButton>
           );
         } else {
           return (
             <NButton size="tiny" strong secondary>
-              否
+              {t('common.no')}
             </NButton>
           );
         }
       }
     },
     {
-      title: '节点状态',
+      title: t('cluster.node')+' '+t('common.status'),
       key: 'distroValid',
       render(row) {
         if (row.distroValid) {
           return (
             <NButton size="tiny" strong secondary type="success">
-              正常
+              {t('common.enabled')}
             </NButton>
           );
         } else {
           return (
             <NButton size="tiny" strong secondary type="warning">
-              失效
+              {t('common.disabled')}
             </NButton>
           );
         }

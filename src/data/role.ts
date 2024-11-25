@@ -1,20 +1,22 @@
+import i18n from '@/i18n/index' //我本地的i18n实例
+let _t: any = i18n.global
+
 export interface Item {
   value: string;
   label: string;
 }
-
 export const roleOptions: Array<Item> = [
   {
     value: '0',
-    label: '管理员'
+    label: _t.t("role.admin")
   },
   {
     value: '1',
-    label: '开发者'
+    label: _t.t("role.developer")
   },
   {
     value: '2',
-    label: '访客'
+    label: _t.t("role.guest")
   }
 ];
 

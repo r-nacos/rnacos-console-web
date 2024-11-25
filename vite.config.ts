@@ -44,6 +44,7 @@ export default defineConfig({
   build: {
     cssMinify: 'lightningcss',
     assetsDir: 'rnacos/assets',
+    outDir: 'dist-wrap/src/dist',
   },
   server: {
     host: '0.0.0.0',

@@ -6,7 +6,6 @@ const LANG_STORAGE_KEY = 'lang';
 
 function createStore(): ILangStore {
   const currentRef: Ref<UnwrapRef<string>> = ref('en');
-  const loadRef = ref(false);
   const setCurrent = function (current: string) {
     currentRef.value = current;
     localStorage.setItem(LANG_STORAGE_KEY, current);

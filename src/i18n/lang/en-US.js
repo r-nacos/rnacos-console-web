@@ -178,6 +178,21 @@ const message = {
     CAPTCHA_CHECK_ERROR: 'captcha error',
     LOGIN_LIMITE_ERROR: 'login error too more times',
     LOGIN_UNKNOWN_ERROR: 'login fail unknown error'
+  },
+  menu: {
+    config_management: 'ConfigManagement',
+    config_list: 'Config list',
+    config_history: 'Config histories',
+    service_management: 'ServiceManagement',
+    service_list: 'Service list',
+    service_instance_list: 'Service instance list',
+    system_management: 'System',
+    user_management: 'UserManagement',
+    namespace: 'Namespace',
+    data_transfer: 'Data migration',
+    cluster_info: 'Cluster info',
+    system_monitor: 'Monitor',
+    about: 'About'
   }
 };
 export default {

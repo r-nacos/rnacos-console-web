@@ -17,6 +17,7 @@ import NoPermission from '@/pages/NoPermission.vue';
 import About from '@/pages/About.vue';
 import Transfer from '@/pages/Transfer.vue';
 import { ServerOutline, CubeOutline, AppsSharp } from '@vicons/ionicons5';
+import { getMessage as t } from '@/i18n';
 
 export const routes = [
   {
@@ -55,13 +56,13 @@ export const routes = [
       {
         path: '/manage/configs',
         name: 'manange configs',
-        meta: { title: '配置列表' },
+        meta: { title: t('menu.config_list') },
         component: () => import('@/pages/ConfigListPage.vue')
       },
       {
         path: '/manage/config/history',
         name: 'manange configs history',
-        meta: { title: '配置历史记录' },
+        meta: { title: t('menu.config_history') },
         component: () => import('@/pages/ConfigHistoryListPage.vue')
       },
       /*
@@ -81,49 +82,49 @@ export const routes = [
       {
         path: '/manage/service',
         name: 'manange service',
-        meta: { title: '服务列表' },
+        meta: { title: t('menu.service_list') },
         component: ServiceListPage
       },
       {
         path: '/manage/service/instance',
         name: 'manange instance',
-        meta: { title: '服务实例列表' },
+        meta: { title: t('menu.service_instance_list') },
         component: ServiceInstanceListPage
       },
       {
         path: '/manage/namespace',
         name: 'namespace',
-        meta: { title: '命名空间管理' },
+        meta: { title: t('menu.namespace') },
         component: NamespacePage
       },
       {
         path: '/manage/transfer',
         name: 'transfer',
-        meta: { title: '数据迁移管理' },
+        meta: { title: t('menu.data_transfer') },
         component: Transfer
       },
       {
         path: '/manage/user',
         name: 'user',
-        meta: { title: '用户管理' },
+        meta: { title: t('menu.user_management') },
         component: UserListPage
       },
       {
         path: '/manage/cluster',
         name: 'cluster',
-        meta: { title: '集群信息' },
+        meta: { title: t('menu.cluster_info') },
         component: ClusterPageVue
       },
       {
         path: '/manage/about',
         name: 'about',
-        meta: { title: '关于' },
+        meta: { title: t('menu.about') },
         component: About
       },
       {
         path: '/manage/appmonitor',
         name: 'monitor',
-        meta: { title: '系统监控' },
+        meta: { title: t('menu.system_monitor') },
         component: () => import('@/pages/AppMonitor.vue')
       }
     ]
@@ -148,11 +149,11 @@ export const manageMenu = buildManageMenu(routes);
 
 export const sideAllMenu = [
   {
-    name: '配置管理',
+    name: t('menu.config_management'),
     icon: markRaw(CubeOutline),
     children: [
       {
-        name: '配置列表',
+        name: t('menu.config_list'),
         path: '/manage/configs'
       }
       /*
@@ -164,41 +165,41 @@ export const sideAllMenu = [
     ]
   },
   {
-    name: '服务管理',
+    name: t('menu.service_management'),
     icon: markRaw(ServerOutline),
     children: [
       {
-        name: '服务列表',
+        name: t('menu.service_list'),
         path: '/manage/service'
       }
     ]
   },
   {
-    name: '系统管理',
+    name: t('menu.system_management'),
     icon: markRaw(AppsSharp),
     children: [
       {
-        name: '用户管理',
+        name: t('menu.user_management'),
         path: '/manage/user'
       },
       {
-        name: '命名空间',
+        name: t('menu.namespace'),
         path: '/manage/namespace'
       },
       {
-        name: '数据迁移',
+        name: t('menu.data_transfer'),
         path: '/manage/transfer'
       },
       {
-        name: '集群信息',
+        name: t('menu.cluster_info'),
         path: '/manage/cluster'
       },
       {
-        name: '系统监控',
+        name: t('menu.system_monitor'),
         path: '/manage/appmonitor'
       },
       {
-        name: '关于',
+        name: t('menu.about'),
         path: '/manage/about'
       }
     ]

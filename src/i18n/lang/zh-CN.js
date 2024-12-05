@@ -175,6 +175,21 @@ const message = {
     CAPTCHA_CHECK_ERROR: '验证码校验不通过!',
     LOGIN_LIMITE_ERROR: '登录校验太频繁，稍后再试!',
     LOGIN_UNKNOWN_ERROR: '登录失败，未知错误'
+  },
+  menu: {
+    config_management: '配置管理',
+    config_list: '配置列表',
+    config_history: '配置历史记录',
+    service_management: '服务管理',
+    service_list: '服务列表',
+    service_instance_list: '服务实例列表',
+    system_management: '系统管理',
+    user_management: '用户管理',
+    namespace: '命名空间',
+    data_transfer: '数据迁移',
+    cluster_info: '集群信息',
+    system_monitor: '系统监控',
+    about: '关于'
   }
 };
 export default {

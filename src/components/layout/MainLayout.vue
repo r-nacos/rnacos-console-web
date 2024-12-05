@@ -7,6 +7,7 @@
       <div class="sider-header">R-NACOS</div>
       <div class="header">
         <MoreSetting class="more" />
+        <LangSwitch />
       </div>
     </header>
     <section class="content_wrap">
@@ -36,6 +37,7 @@
 <script>
 import SideMenu from '../SideMenu.vue';
 import MoreSetting from '../MoreSetting.vue';
+import LangSwitch from '@/components/LangSwitch.vue';
 import { useMessage } from 'naive-ui';
 import { defineComponent } from 'vue';
 import { useLayoutSize } from '@/data/appdata';
@@ -43,7 +45,8 @@ import { useLayoutSize } from '@/data/appdata';
 export default defineComponent({
   components: {
     SideMenu,
-    MoreSetting
+    MoreSetting,
+    LangSwitch
   },
   setup() {
     window.$message = useMessage();

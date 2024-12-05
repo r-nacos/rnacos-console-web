@@ -1,3 +1,5 @@
+import { INamespace } from '@/types/namespace';
+
 export interface ILabelItem {
   label: string;
   value: string;
@@ -52,4 +54,9 @@ export interface WebResource {
   version: string;
   username: ?string;
   resources: Array<string>;
+}
+
+export interface ILangStore {
+  current: Ref<UnwrapRef<string>>;
+  setCurrent: (arg: string) => any;
 }

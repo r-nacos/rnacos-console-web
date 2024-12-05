@@ -9,6 +9,7 @@ declare module 'vue' {
   export interface GlobalComponents {
     DiffComponent: typeof import('./src/components/config/DiffComponent.vue')['default']
     Foo: typeof import('./src/components/Foo.vue')['default']
+    LangSwitch: typeof import('./src/components/LangSwitch.vue')['default']
     MainLayout: typeof import('./src/components/layout/MainLayout.vue')['default']
     MoreSetting: typeof import('./src/components/MoreSetting.vue')['default']
     NamespacePopSelect: typeof import('./src/components/namespace/NamespacePopSelect.vue')['default']

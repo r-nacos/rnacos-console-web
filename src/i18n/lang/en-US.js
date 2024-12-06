@@ -8,6 +8,7 @@ const message = {
   },
   config: {
     config: 'Config',
+    config_id: 'Config ID',
     config_group: 'Config Group',
     confirm_delete_config_action:
       'Are You Sure to Delete the Config in Group:<%:=group%>,dataID:<%:=dataId%>？',
@@ -34,7 +35,7 @@ const message = {
     recover_fail: 'Recover Fail',
     recover_success: 'Recover Success',
     history_record_content: 'history reord content',
-    recover_history: 'recover_history',
+    recover_history: 'Recover history',
     config_list: 'Config List',
     export_config: 'Export Config',
     import_config: 'Import Config'
@@ -50,18 +51,28 @@ const message = {
     namespaceId_or: 'Namespace Id,null then auto create'
   },
   instance: {
+    list: 'Service instance list',
     port: 'Port',
     ephemeral: 'Ephemeral',
     weight: 'Weight',
     healthy: 'Healthy',
+    online: 'Enable',
+    editTitle: 'Edit instance',
     metadata: 'Metadata'
   },
   service: {
-    name: 'Name',
+    name: 'Service Name',
+    inputName: 'input service name',
     groupName: 'Group Name',
+    inputGroupName: 'input group name',
+    protectThreshold: 'Protect threshold',
+    metadata: 'Metadata',
     ipCount: 'Instance Count',
     healthyInstanceCount: 'Healthy Instance Count',
     instance: 'Service Instance',
+    editTitle: 'Edit Service',
+    addTitle: 'New Service',
+    detailTitle: 'Service detail',
     confirm_delete_service_action:
       'Are You Sure to Delete the Service :<%:=name%>,in Group:<%:=groupName%>？'
   },
@@ -100,7 +111,6 @@ const message = {
   },
   common: {
     query: 'Query',
-
     status: 'Status',
     yes: 'Yes',
     no: 'No',
@@ -109,6 +119,7 @@ const message = {
     confirm: 'Confirm',
     title: 'Title',
     return: 'Return',
+    back: 'Back',
     confirm_action: 'Do you want to confirm the action?',
     delete: 'Delete',
     edit: 'Edit',

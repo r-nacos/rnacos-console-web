@@ -2,10 +2,14 @@
   <div class="wrap">
     <div class="header">
       <div class="title">
-        <span>服务实例列表</span>
+        <span> {{ $t('instance.list') }} </span>
       </div>
       <div class="header-button">
-        <span><n-button @click="routerBack">返回</n-button></span>
+        <span
+          ><n-button @click="routerBack">{{
+            $t('common.back')
+          }}</n-button></span
+        >
       </div>
       <div class="namespace"></div>
     </div>
@@ -14,25 +18,25 @@
         <div class="query-params">
           <n-form label-placement="left" label-width="auto">
             <div class="paramWrap">
-              <n-form-item label="服务名称" path="param.serviceParam">
-                <n-input
-                  :disabled="true"
-                  v-model:value="param.serviceName"
-                  placeholder="输入服务名称"
-                />
+              <n-form-item
+                :label="this.$t('service.name')"
+                path="param.serviceParam"
+              >
+                <n-input :disabled="true" v-model:value="param.serviceName" />
               </n-form-item>
-              <n-form-item label="服务组" path="param.groupParam">
-                <n-input
-                  :disabled="true"
-                  v-model:value="param.groupName"
-                  placeholder=""
-                />
+              <n-form-item
+                :label="this.$t('service.groupName')"
+                path="param.groupParam"
+              >
+                <n-input :disabled="true" v-model:value="param.groupName" />
               </n-form-item>
             </div>
           </n-form>
           <div class="queryButton">
             <span class="query-button-item">
-              <n-button tertiary @click="reloadData">刷新</n-button>
+              <n-button tertiary @click="reloadData">{{
+                $t('common.refresh')
+              }}</n-button>
             </span>
           </div>
         </div>
@@ -62,8 +66,12 @@
         <ServiceInstanceDetail :model="model" />
         <template #footer>
           <n-space align="baseline">
-            <n-button text @click="closeForm">返回</n-button>
-            <n-button type="primary" @click="submitForm">确认</n-button>
+            <n-button text @click="closeForm">{{
+              $t('common.return')
+            }}</n-button>
+            <n-button type="primary" @click="submitForm">{{
+              $t('common.confirm')
+            }}</n-button>
           </n-space>
         </template>
       </n-drawer-content>
@@ -74,6 +82,7 @@
 <script>
 import { defineComponent } from 'vue';
 import { namingApi } from '@/api/naming';
+import { useI18n } from 'vue-i18n';
 //import { namespaceStore } from "@/data/namespace";
 import { useWebResources } from '@/data/resources';
 import { createColumns } from '@/components/naming/InstanceListColumns';
@@ -86,6 +95,7 @@ export default defineComponent({
     ServiceInstanceDetail
   },
   setup() {
+    let { t } = useI18n();
     let route = useRoute();
     let webResources = useWebResources();
     let query = route.query;
@@ -112,7 +122,7 @@ export default defineComponent({
         doHandlePageChange(1);
       },
       prefix({ itemCount }) {
-        return `总行数: ${itemCount}`;
+        return t('common.total') + `: ${itemCount}`;
       }
     });
     const useFormRef = ref(false);
@@ -257,7 +267,7 @@ export default defineComponent({
   },
   computed: {
     getDetailTitle() {
-      return '编辑实例';
+      return this.$t('instance.editTitle');
     }
   },
   data() {

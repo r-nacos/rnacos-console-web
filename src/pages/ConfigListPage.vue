@@ -14,7 +14,7 @@
           <n-form label-placement="left" label-width="auto">
             <div class="paramWrap">
               <n-form-item
-                :label="this.$t('config.config')"
+                :label="this.$t('config.config_id')"
                 path="param.dataParam"
               >
                 <n-input

@@ -9,7 +9,7 @@
           @keydown.enter.prevent
         />
       </n-form-item>
-      <n-form-item path="port" label="端口">
+      <n-form-item path="port" :label="$t('instance.port')">
         <n-input
           :disabled="true"
           placeholder=""
@@ -17,10 +17,10 @@
           @keydown.enter.prevent
         />
       </n-form-item>
-      <n-form-item path="enabled" label="是否上线">
+      <n-form-item path="enabled" :label="$t('instance.online')">
         <n-switch v-model:value="model.enabled" />
       </n-form-item>
-      <n-form-item path="weight" label="权重">
+      <n-form-item path="weight" :label="$t('instance.weight')">
         <n-input
           :disabled="isReadonly"
           placeholder=""
@@ -28,7 +28,7 @@
           @keydown.enter.prevent
         />
       </n-form-item>
-      <n-form-item path="metadata" label="元数据">
+      <n-form-item path="metadata" :label="$t('instance.metadata')">
         <n-input
           :disabled="isReadonly"
           type="textarea"

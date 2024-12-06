@@ -2,7 +2,7 @@
   <div class="wrap">
     <div class="header">
       <div class="title">
-        <span> 服务列表 </span>
+        <span> {{ $t('menu.service_list') }} </span>
       </div>
       <div class="namespace">
         <NamespacePopSelect @change="queryList" />
@@ -13,19 +13,25 @@
         <div class="query-params">
           <n-form label-placement="left" label-width="auto">
             <div class="paramWrap">
-              <n-form-item label="服务名称" path="param.serviceParam">
+              <n-form-item
+                :label="this.$t('service.name')"
+                path="param.serviceParam"
+              >
                 <n-input
                   v-model:value="param.serviceParam"
-                  placeholder="输入服务名"
+                  :placeholder="this.$t('service.inputName')"
                   clearable
                   @keydown.enter.prevent
                   @keyup.enter="queryList"
                 />
               </n-form-item>
-              <n-form-item label="服务组" path="param.groupParam">
+              <n-form-item
+                :label="this.$t('service.groupName')"
+                path="param.groupParam"
+              >
                 <n-input
                   v-model:value="param.groupParam"
-                  placeholder="输入服务组"
+                  :placeholder="this.$t('service.inputGroupName')"
                   clearable
                   @keydown.enter.prevent
                   @keyup.enter="queryList"
@@ -35,13 +41,17 @@
           </n-form>
           <div class="queryButton">
             <span class="query-button-item">
-              <n-button tertiary @click="queryList">查询</n-button>
+              <n-button tertiary @click="queryList">{{
+                $t('common.query')
+              }}</n-button>
             </span>
             <span
               v-if="webResources.canUpdateService"
               class="query-button-item"
             >
-              <n-button type="info" @click="showCreate">新建</n-button>
+              <n-button type="info" @click="showCreate">{{
+                $t('common.add')
+              }}</n-button>
             </span>
           </div>
         </div>
@@ -71,8 +81,12 @@
         <ServiceDetail :model="model" />
         <template #footer>
           <n-space align="baseline">
-            <n-button text @click="closeForm">返回</n-button>
-            <n-button type="primary" @click="submitForm">确认</n-button>
+            <n-button text @click="closeForm">{{
+              this.$t('common.return')
+            }}</n-button>
+            <n-button type="primary" @click="submitForm">{{
+              this.$t('common.confirm')
+            }}</n-button>
           </n-space>
         </template>
       </n-drawer-content>
@@ -90,6 +104,7 @@ import NamespacePopSelect from '@/components/namespace/NamespacePopSelect.vue';
 import ServiceDetail from './ServiceDetail.vue';
 import * as constant from '@/types/constant';
 import { useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 
 export default defineComponent({
   components: {
@@ -97,6 +112,7 @@ export default defineComponent({
     ServiceDetail
   },
   setup() {
+    const { t } = useI18n();
     let router = useRouter();
     let webResources = useWebResources();
     const dataRef = ref([]);
@@ -121,7 +137,7 @@ export default defineComponent({
         doHandlePageChange(1);
       },
       prefix({ itemCount }) {
-        return `总行数: ${itemCount}`;
+        return t('common.total') + `: ${itemCount}`;
       }
     });
     const useFormRef = ref(false);
@@ -275,11 +291,11 @@ export default defineComponent({
     },
     getDetailTitle() {
       if (this.model.mode === constant.FORM_MODE_UPDATE) {
-        return '编辑服务';
+        return this.$t('service.editTitle');
       } else if (this.model.mode === constant.FORM_MODE_CREATE) {
-        return '新增服务';
+        return this.$t('service.addTitle');
       }
-      return '服务详情';
+      return this.$t('service.detailTitle');
     }
   },
   methods: {

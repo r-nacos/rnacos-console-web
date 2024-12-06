@@ -8,6 +8,7 @@ const message = {
   },
   config: {
     config: '配置',
+    config_id: '配置ID',
     config_group: '配置组',
     confirm_delete_config_action:
       '确认要删配置组为:<%:=group%>,ID为:<%:=dataId%>的配置吗？',
@@ -49,18 +50,28 @@ const message = {
     namespaceId_or: '命名空间ID,不填则自动生成'
   },
   instance: {
+    list: '服务实例列表',
     port: '端口',
     ephemeral: '是否临时实例',
     weight: '权重',
     healthy: '健康状态',
+    online: '是否上线',
+    editTitle: '编辑实例',
     metadata: '元数据'
   },
   service: {
     name: '服务名称',
+    inputName: '输入服务名称',
     groupName: '服务组',
+    inputGroupName: '输入服务组',
+    protectThreshold: '保护阀值',
+    metadata: '元数据',
     ipCount: '实例数',
     healthyInstanceCount: '健康实例数',
     instance: '服务实例',
+    editTitle: '编辑服务',
+    addTitle: '新增服务',
+    detailTitle: '服务详情',
     confirm_delete_service_action:
       '确认要删服务名称为:<%:=name%>,服务组为:<%:=groupName%>,的配置吗？'
   },
@@ -99,7 +110,6 @@ const message = {
   },
   common: {
     query: '查询',
-
     status: '状态',
     yes: '是',
     no: '否',
@@ -108,6 +118,7 @@ const message = {
     confirm: '确认',
     title: '标题',
     return: '返回',
+    back: '返回',
     confirm_action: '是否确认操作?',
     delete: '删除',
     edit: '编辑',

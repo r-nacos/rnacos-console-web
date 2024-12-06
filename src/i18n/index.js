@@ -21,12 +21,12 @@ const i18n = createI18n({
  * @returns {*|string}
  */
 export const getMessage = function (key) {
-  var obj = messages[locale];
+  var obj = messages[locale] || en;
   var items = key.split('.');
   for (var subKey of items) {
     obj = obj[subKey];
   }
-  return obj;
+  return obj || key;
 };
 
 export default i18n;

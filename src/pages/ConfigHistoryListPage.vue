@@ -7,7 +7,7 @@
       <div class="header-button">
         <span
           ><n-button @click="routerBack">{{
-            $t('common.return')
+            $t('common.back')
           }}</n-button></span
         >
       </div>

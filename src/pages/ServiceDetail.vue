@@ -4,7 +4,7 @@
       <n-form-item path="serviceName" :label="$t('service.name')">
         <n-input
           :disabled="isKeyReadonly"
-          placeholder="输入服务名称"
+          placeholder="service name"
           v-model:value="model.serviceName"
           @keydown.enter.prevent
         />
@@ -12,28 +12,32 @@
       <n-form-item path="groupName" :label="$t('service.groupName')">
         <n-input
           :disabled="isKeyReadonly"
-          placeholder="输入服务组"
+          placeholder="group name"
           v-model:value="model.groupName"
           @keydown.enter.prevent
         />
       </n-form-item>
-      <n-form-item path="protectThreshold" label="保护阀值">
+      <n-form-item
+        path="protectThreshold"
+        :label="$t('service.protectThreshold')"
+      >
         <n-input
           :disabled="isReadonly"
-          placeholder="输入保护阀值"
+          placeholder="protect threshold"
           v-model:value="model.protectThreshold"
           @keydown.enter.prevent
         />
       </n-form-item>
-      <n-form-item path="metadata" label="元数据">
+      <n-form-item path="metadata" :label="$t('service.metadata')">
         <n-input
           :disabled="isReadonly"
           type="textarea"
-          placeholder="输入元数据"
+          placeholder="metadata"
           :autosize="{ minRows: 3 }"
           v-model:value="model.metadata"
         />
       </n-form-item>
+      <!--
       <n-form-item path="selector" label="服务路由类型">
         <n-input
           :disabled="true"
@@ -42,6 +46,7 @@
           @keydown.enter.prevent
         />
       </n-form-item>
+      -->
     </n-form>
   </div>
 </template>

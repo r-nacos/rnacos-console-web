@@ -47,6 +47,8 @@ const message = {
     new_namespace: '创建命名空间',
     add_namespace: '新增命名空间',
     edit_namespace: '修改命名空间',
+    retain_space: '保留空间',
+    confirm_delete_info: "确认要删除 '<%:=name%>'(ID: <%:=id%>) 命名空间吗？",
     namespaceId_or: '命名空间ID,不填则自动生成'
   },
   instance: {

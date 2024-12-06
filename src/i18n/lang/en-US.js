@@ -48,6 +48,9 @@ const message = {
     new_namespace: 'New Namespace',
     add_namespace: 'Add Namespace',
     edit_namespace: 'Edit Namespace',
+    retain_space: 'Retain Namespace',
+    confirm_delete_info:
+      "Are you sure you want to delete the '<%:=name%>'(ID: <%:=id%>) namespace?",
     namespaceId_or: 'Namespace Id,null then auto create'
   },
   instance: {

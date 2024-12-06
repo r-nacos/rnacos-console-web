@@ -19,6 +19,7 @@ import { useWebResources } from '@/data/resources';
 import { namespaceStore } from '../data/namespace';
 import { IHandeNamespace, INamespace } from '@/types/namespace';
 import styles from './NamespacePage.module.css';
+import template from 'template_js';
 
 import type { FormItemRule } from 'naive-ui';
 import type { IColumn, MyWindow } from '@/types/base';
@@ -62,7 +63,7 @@ export const createColumns = function (
       if (row.namespaceId === '') {
         return (
           <NTag size="small" type="info">
-            保留空间
+            {t('namespace.retain_space')}
           </NTag>
         );
       }
@@ -81,7 +82,10 @@ export const createColumns = function (
             v-slots={removeConfirmSlots}
           >
             <span>
-              确认要删除{row.namespaceName}(ID: {row.namespaceId})命名空间吗？
+              {template(t('namespace.confirm_delete_info'), {
+                name: row.namespaceName,
+                id: row.namespaceId
+              })}
             </span>
           </NPopconfirm>
         </div>

@@ -1,26 +1,30 @@
 <template>
   <div class="detailWrap">
     <n-form ref="formRef" :model="model" :rules="rules">
-      <n-form-item path="username" label="用户名">
+      <n-form-item path="username" :label="this.$t('user.username')">
         <n-input
           :disabled="isKeyReadonly"
-          placeholder="输入用户名"
+          :placeholder="this.$t('common.preInput') + this.$t('user.username')"
           v-model:value="model.username"
           @keydown.enter.prevent
         />
       </n-form-item>
-      <n-form-item path="nickname" label="用户昵称">
+      <n-form-item path="nickname" :label="this.$t('user.nickname')">
         <n-input
           :disabled="isReadonly"
-          placeholder="输入用户昵称"
+          :placeholder="this.$t('common.preInput') + this.$t('user.nickname')"
           v-model:value="model.nickname"
           @keydown.enter.prevent
         />
       </n-form-item>
-      <n-form-item v-if="!isKeyReadonly" path="password" label="密码">
+      <n-form-item
+        v-if="!isKeyReadonly"
+        path="password"
+        :label="this.$t('user.password')"
+      >
         <n-input
           type="password"
-          placeholder="输入用户密码"
+          :placeholder="this.$t('common.preInput') + this.$t('user.password')"
           v-model:value="model.password"
           @keydown.enter.prevent
         />
@@ -28,17 +32,17 @@
       <n-form-item
         v-if="isKeyReadonly"
         path="updatePassword"
-        label="重置密码(空则不调整)"
+        :label="this.$t('user.resetPassword')"
       >
         <n-input
           type="password"
           :disabled="isReadonly"
-          placeholder="输入用户密码"
+          :placeholder="this.$t('common.preInput') + this.$t('user.password')"
           v-model:value="model.password"
           @keydown.enter.prevent
         />
       </n-form-item>
-      <n-form-item path="protectThreshold" label="角色">
+      <n-form-item path="protectThreshold" :label="this.$t('user.roles')">
         <n-select
           v-model:value="model.roles"
           :disabled="isReadonly"
@@ -46,7 +50,7 @@
           :options="model.roleOptions"
         />
       </n-form-item>
-      <n-form-item path="enabled" label="是否启用">
+      <n-form-item path="enabled" :label="this.$t('user.enable')">
         <n-switch :disabled="isReadonly" v-model:value="model.enable" />
       </n-form-item>
     </n-form>

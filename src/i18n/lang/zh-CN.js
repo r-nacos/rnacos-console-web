@@ -95,8 +95,12 @@ const message = {
     the_input_cannot_be_empty: '输入内容不能为空'
   },
   user: {
-    username: '用户',
+    name: '用户',
+    username: '用户名',
     nickname: '用户昵称',
+    password: '密码',
+    resetPassword: '重置密码(空则不调整)',
+    list: '用户列表',
     gmtCreate: '创建时间',
     gmtModified: '更新时间',
     roles: '角色',
@@ -132,6 +136,7 @@ const message = {
     refresh: '刷新',
     total: '总行数',
     add: '新建',
+    preInput: '输入',
     home: '首页'
   },
   monitor: {

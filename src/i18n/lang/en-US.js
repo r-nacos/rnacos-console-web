@@ -36,7 +36,7 @@ const message = {
     recover_success: 'Recover Success',
     history_record_content: 'history reord content',
     recover_history: 'Recover history',
-    config_list: 'Config List',
+    config_list: 'Config list',
     export_config: 'Export Config',
     import_config: 'Import Config'
   },
@@ -96,12 +96,16 @@ const message = {
     the_input_cannot_be_empty: 'The input cannot be empty'
   },
   user: {
-    username: 'username',
-    nickname: 'nickname',
-    gmtCreate: 'gmtCreate',
-    gmtModified: 'gmtModified',
-    roles: 'roles',
-    enable: 'enable',
+    name: 'User',
+    username: 'Username',
+    nickname: 'Nickname',
+    password: 'Password',
+    resetPassword: 'Reset password',
+    list: 'User list',
+    gmtCreate: 'CreateTime',
+    gmtModified: 'ModifiedTime',
+    roles: 'Roles',
+    enable: 'Enable',
     confirm_delete_user_action: 'Are you sure to delete user:<%:=username%> ？'
   },
   role: {
@@ -133,6 +137,7 @@ const message = {
     refresh: 'Refresh',
     total: 'Total',
     add: 'Add',
+    preInput: 'Input ',
     home: 'Home'
   },
   monitor: {
@@ -198,7 +203,7 @@ const message = {
     service_list: 'Service list',
     service_instance_list: 'Service instance list',
     system_management: 'System',
-    user_management: 'UserManagement',
+    user_management: 'User list',
     namespace: 'Namespace',
     data_transfer: 'Data migration',
     cluster_info: 'Cluster info',

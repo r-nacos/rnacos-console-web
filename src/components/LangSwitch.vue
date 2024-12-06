@@ -12,7 +12,7 @@
 </template>
 <script setup>
 //import type { CSSProperties } from 'vue';
-import { langStore } from '@/data/lang.ts';
+import { langStore } from '@/data/lang';
 import { useI18n } from 'vue-i18n';
 
 const active = ref(langStore.current.value == 'zh');

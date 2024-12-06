@@ -2,7 +2,7 @@
   <div class="wrap">
     <div class="header">
       <div class="title">
-        <span>用户列表</span>
+        <span>{{ this.$t('user.list') }}</span>
       </div>
     </div>
     <div class="content-wrap">
@@ -10,10 +10,15 @@
         <div class="query-params">
           <n-form label-placement="left" label-width="auto">
             <div class="paramWrap">
-              <n-form-item label="用户名" path="param.username">
+              <n-form-item
+                :label="this.$t('user.username')"
+                path="param.username"
+              >
                 <n-input
                   v-model:value="param.username"
-                  placeholder="输入用户名"
+                  :placeholder="
+                    this.$t('common.preInput') + this.$t('user.username')
+                  "
                   clearable
                   @keydown.enter.prevent
                   @keyup.enter="queryList"
@@ -23,10 +28,14 @@
           </n-form>
           <div class="queryButton">
             <span class="query-button-item">
-              <n-button tertiary @click="queryList">查询</n-button>
+              <n-button tertiary @click="queryList">{{
+                this.$t('common.query')
+              }}</n-button>
             </span>
             <span class="query-button-item">
-              <n-button type="info" @click="showCreate">新建</n-button>
+              <n-button type="info" @click="showCreate">{{
+                this.$t('common.add')
+              }}</n-button>
             </span>
           </div>
         </div>
@@ -56,8 +65,12 @@
         <UserDetail :model="model" />
         <template #footer>
           <n-space align="baseline">
-            <n-button text @click="closeForm">返回</n-button>
-            <n-button type="primary" @click="submitForm">确认</n-button>
+            <n-button text @click="closeForm">{{
+              this.$t('common.return')
+            }}</n-button>
+            <n-button type="primary" @click="submitForm">{{
+              this.$t('common.confirm')
+            }}</n-button>
           </n-space>
         </template>
       </n-drawer-content>
@@ -73,12 +86,14 @@ import { NButton } from 'naive-ui';
 import { createColumns } from '@/components/user/UserListColumns';
 import UserDetail from '@/pages/UserDetail.vue';
 import { getRoleNameByCode, roleOptions } from '@/data/role';
+import { useI18n } from 'vue-i18n';
 
 export default defineComponent({
   components: {
     UserDetail
   },
   setup() {
+    const { t } = useI18n();
     const dataRef = ref([]);
     const loadingRef = ref(false);
     const paramRef = ref({
@@ -99,7 +114,7 @@ export default defineComponent({
         doHandlePageChange(1);
       },
       prefix({ itemCount }) {
-        return `总行数: ${itemCount}`;
+        return t('common.total') + `: ${itemCount}`;
       }
     });
     const useFormRef = ref(false);
@@ -289,11 +304,11 @@ export default defineComponent({
   computed: {
     getDetailTitle() {
       if (this.model.mode === constant.FORM_MODE_UPDATE) {
-        return '编辑用户';
+        return this.$t('common.edit') + this.$t('user.name');
       } else if (this.model.mode === constant.FORM_MODE_CREATE) {
-        return '新增用户';
+        return this.$t('common.add') + this.$t('user.name');
       }
-      return '用户详情';
+      return this.$t('user.name');
     }
   },
   mounted() {

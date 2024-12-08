@@ -209,6 +209,30 @@ const message = {
     version_title: 'System version',
     user_title: 'Current user'
   },
+  transfer: {
+    export_title: 'Export',
+    export_button: 'Export data',
+    export_p01:
+      'Export configuration, namespace and user data to files from r-nacos.',
+    import_title: 'Import',
+    import_button: 'Import data',
+    import_p01:
+      'Import the data from the migration file into the r-nacos system.',
+    data_manage_title: 'Data management',
+    data_manage_p01:
+      'Exporting data files from r-nacos supports interconversion with sqlite.',
+    data_manage_p02:
+      'You can use the command `rnacos data-to-sqlite export.data sqlite.db` to convert the exported intermediate data into a sqlite database file for further data processing.',
+    data_manage_p03:
+      'The processed sqlite data can be converted into a data file in migration format using the command `rnacos sqlite-to-data sqlite.db export.data`, after which the data can be imported into the r-nacos system.',
+    from_nacos_title: 'Data migration from nacos',
+    from_nacos_p01:
+      'To facilitate migration from nacos, r-nacos supports the export of nacos data to r-nacos migration format data files after v0.6.3.',
+    from_nacos_p02:
+      'Use the command `rnacos openapi-to-data -u nacos -p nacos 127.0.0.1:8848 export.data` to convert the nacos configuration data via openapi into a migration format data file. You can then import the data into the r-nacos system from this page. \n (Replace the 127.0.0.1:8848 information with the actual nacos address; if nacos does not have authentication enabled, the user and password parameters can be left unconfigured.)',
+    from_nacos_p03:
+      'Use the command `rnacos mysql-to-data mysql://$user:$password@127.0.0.1:3306/nacos export.data` to convert the nacos mysql data into a data file in the migration format. You can then import the data into the r-nacos system on this page.'
+  },
   menu: {
     config_management: 'ConfigManagement',
     config_list: 'Config list',

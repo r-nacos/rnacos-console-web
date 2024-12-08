@@ -51,16 +51,6 @@ const message = {
     confirm_delete_info: "确认要删除 '<%:=name%>'(ID: <%:=id%>) 命名空间吗？",
     namespaceId_or: '命名空间ID,不填则自动生成'
   },
-  about: {
-    intro_title: '系统简介',
-    intro_p01:
-      'r-nacos是一个用rust实现的nacos服务。相较于java nacos来说，是一个提供相同功能，启动更快、占用系统资源更小（初始内存小于10M）、性能更高、运行更稳定的服务。',
-    intro_p02:
-      'r-nacos设计上完全兼容最新版本nacos面向client sdk 的协议（包含1.x的http OpenApi，和2.x的grpc协议）,支持使用nacos服务的应用平迁到 r-nacos。',
-    intro_p03: '使用过程有什么问题可以到 github提issue。',
-    version_title: '系统版本号',
-    user_title: '当前用户'
-  },
   instance: {
     list: '服务实例列表',
     port: '端口',
@@ -203,6 +193,37 @@ const message = {
     CAPTCHA_CHECK_ERROR: '验证码校验不通过!',
     LOGIN_LIMITE_ERROR: '登录校验太频繁，稍后再试!',
     LOGIN_UNKNOWN_ERROR: '登录失败，未知错误'
+  },
+  about: {
+    intro_title: '系统简介',
+    intro_p01:
+      'r-nacos是一个用rust实现的nacos服务。相较于java nacos来说，是一个提供相同功能，启动更快、占用系统资源更小（初始内存小于10M）、性能更高、运行更稳定的服务。',
+    intro_p02:
+      'r-nacos设计上完全兼容最新版本nacos面向client sdk 的协议（包含1.x的http OpenApi，和2.x的grpc协议）,支持使用nacos服务的应用平迁到 r-nacos。',
+    intro_p03: '使用过程有什么问题可以到 github提issue。',
+    version_title: '系统版本号',
+    user_title: '当前用户'
+  },
+  transfer: {
+    export_title: '导出',
+    export_button: '导出数据',
+    export_p01: '从r-nacos导出配置、命名空间、用户数据到文件。',
+    import_title: '导入',
+    import_button: '导入数据',
+    import_p01: '将迁移文件中的数据导入到r-nacos系统。',
+    data_manage_title: '数据管理',
+    data_manage_p01: '从r-nacos导出数据文件支持与sqlite相互转化。',
+    data_manage_p02:
+      '可以使用命令 `rnacos data-to-sqlite export.data sqlite.db` 把导出的中间数据转化成sqlite数据库文件，方便对数据做进一步处理。',
+    data_manage_p03:
+      '可以使用命令 `rnacos sqlite-to-data sqlite.db export.data` 把处理后的sqlite数据转化成迁移格式数据文件，之后即可再把数据导入到r-nacos系统。',
+    from_nacos_title: '从nacos迁移数据',
+    from_nacos_p01:
+      '为了方便用户从nacos迁移，v0.6.3后r-nacos支持把nacos数据导出到r-nacos迁移格式数据文件。',
+    from_nacos_p02:
+      '使用命令 `rnacos openapi-to-data -u nacos -p nacos 127.0.0.1:8848 export.data` 通过openapi把nacos配置数据转化成迁移格式数据文件，之后即可在本页面把数据导入到r-nacos系统。\n（把127.0.0.1:8848信息换成实际nacos地址；如果nacos没有开启鉴权，则用户与密码参数可以不设置。）',
+    from_nacos_p03:
+      '使用命令 `rnacos mysql-to-data mysql://$user:$password@127.0.0.1:3306/nacos export.data` 把nacos mysql数据转化成迁移格式数据文件，之后即可在本页面把数据导入到r-nacos系统。'
   },
   menu: {
     config_management: '配置管理',

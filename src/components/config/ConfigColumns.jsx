@@ -32,6 +32,10 @@ export const createColumns = function (
       key: 'group'
     },
     {
+      title: t('config.desc'),
+      key: 'desc'
+    },
+    {
       title: t('common.operation'),
       key: 'type',
       fixed: 'right',

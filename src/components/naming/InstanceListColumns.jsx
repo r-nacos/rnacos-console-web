@@ -1,5 +1,6 @@
 import { NButton, NSwitch } from 'naive-ui';
 import { useI18n } from 'vue-i18n';
+import { toDatetime } from '@/utils/date';
 /*
 let slots ={
   "checked":()=> {
@@ -43,6 +44,18 @@ export const createColumns = function (
       key: 'healthy',
       render(row) {
         return <span>{row.healthy.toString()}</span>;
+      }
+    },
+    {
+      title: t('instance.registerTime'),
+      key: 'registerTime',
+      render(row) {
+        var value = '';
+        if (row.registerTime) {
+          var date = new Date(row.registerTime);
+          value = toDatetime(date);
+        }
+        return <span>{value}</span>;
       }
     },
     {

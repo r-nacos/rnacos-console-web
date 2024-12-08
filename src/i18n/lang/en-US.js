@@ -61,6 +61,7 @@ const message = {
     healthy: 'Healthy',
     online: 'Enable',
     editTitle: 'Edit instance',
+    registerTime: 'Register time',
     metadata: 'Metadata'
   },
   service: {

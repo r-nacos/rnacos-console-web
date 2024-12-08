@@ -59,6 +59,7 @@ const message = {
     healthy: '健康状态',
     online: '是否上线',
     editTitle: '编辑实例',
+    registerTime: '注册时间',
     metadata: '元数据'
   },
   service: {

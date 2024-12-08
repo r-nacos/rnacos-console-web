@@ -51,6 +51,16 @@ const message = {
     confirm_delete_info: "确认要删除 '<%:=name%>'(ID: <%:=id%>) 命名空间吗？",
     namespaceId_or: '命名空间ID,不填则自动生成'
   },
+  about: {
+    intro_title: '系统简介',
+    intro_p01:
+      'r-nacos是一个用rust实现的nacos服务。相较于java nacos来说，是一个提供相同功能，启动更快、占用系统资源更小（初始内存小于10M）、性能更高、运行更稳定的服务。',
+    intro_p02:
+      'r-nacos设计上完全兼容最新版本nacos面向client sdk 的协议（包含1.x的http OpenApi，和2.x的grpc协议）,支持使用nacos服务的应用平迁到 r-nacos。',
+    intro_p03: '使用过程有什么问题可以到 github提issue。',
+    version_title: '系统版本号',
+    user_title: '当前用户'
+  },
   instance: {
     list: '服务实例列表',
     port: '端口',

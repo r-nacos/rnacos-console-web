@@ -3,19 +3,12 @@
     <div class="wrap">
       <div class="content">
         <n-space vertical class="inner_wrap">
-          <n-card title="系统简介" size="medium">
-            <p>
-              r-nacos是一个用rust实现的nacos服务。相较于java
-              nacos来说，是一个提供相同功能，启动更快、占用系统资源更小（初始内存小于10M）、性能更高、运行更稳定的服务。
-            </p>
+          <n-card :title="this.$t('about.intro_title')" size="medium">
+            <p>{{ this.$t('about.intro_p01') }}</p>
             <br />
-            <p>
-              r-nacos设计上完全兼容最新版本nacos面向client sdk
-              的协议（包含1.x的http OpenApi，和2.x的grpc协议）,
-              支持使用nacos服务的应用平迁到 r-nacos。
-            </p>
+            <p>{{ this.$t('about.intro_p02') }}</p>
             <br />
-            <p>使用过程有什么问题可以到 github提issue。</p>
+            <p>{{ this.$t('about.intro_p03') }}</p>
             <p>
               <a href="https://github.com/r-nacos/r-nacos" target="_blank"
                 >r-nacos github</a
@@ -26,12 +19,12 @@
               >
             </p>
           </n-card>
-          <n-card title="系统版本号" size="medium">
+          <n-card :title="this.$t('about.version_title')" size="medium">
             {{ webResources.version }}
           </n-card>
           <n-card
             v-if="webResources.username !== ''"
-            title="当前用户"
+            :title="this.$t('about.user_title')"
             size="medium"
           >
             {{ webResources.username }}

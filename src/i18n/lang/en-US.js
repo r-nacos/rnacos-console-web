@@ -198,6 +198,17 @@ const message = {
     LOGIN_LIMITE_ERROR: 'login error too more times',
     LOGIN_UNKNOWN_ERROR: 'login fail unknown error'
   },
+  about: {
+    intro_title: 'System introduction',
+    intro_p01:
+      'r-nacos is a nacos service implemented in rust. Compared to java nacos, it is a service that provides the same functionality, starts faster, consumes less system resources (initial memory is less than 10M), has higher performance and runs more stable.',
+    intro_p02:
+      'r-nacos is designed to be fully compatible with the latest versions of the nacos client-side sdk protocols (including 1.x http OpenApi and 2.x grpc), allowing applications using nacos services to migrate to r-nacos.',
+    intro_p03:
+      'If there are any problems in the usage process, you can open an issue on github.',
+    version_title: 'System version',
+    user_title: 'Current user'
+  },
   menu: {
     config_management: 'ConfigManagement',
     config_list: 'Config list',

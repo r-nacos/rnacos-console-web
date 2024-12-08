@@ -1,4 +1,5 @@
 import { diffLines } from 'diff';
+import tjs from 'template_js';
 
 export const escapeHtml = function (html) {
   return html.replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -118,4 +119,8 @@ export const copyText = function (text) {
     // 移除输入框
     document.body.removeChild(textarea);
   }
+};
+
+export const template = function (t, obj) {
+  return tjs(t, obj);
 };

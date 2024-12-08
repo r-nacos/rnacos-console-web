@@ -19,7 +19,7 @@ import { useWebResources } from '@/data/resources';
 import { namespaceStore } from '../data/namespace';
 import { IHandeNamespace, INamespace } from '@/types/namespace';
 import styles from './NamespacePage.module.css';
-import template from 'template_js';
+import { template } from '@/utils/utils';
 
 import type { FormItemRule } from 'naive-ui';
 import type { IColumn, MyWindow } from '@/types/base';

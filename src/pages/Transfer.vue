@@ -2,22 +2,22 @@
   <div class="wrap">
     <div class="header">
       <div class="title">
-        <span>{{ this.$t('menu.data_transfer') }}</span>
+        <span>{{ t('menu.data_transfer') }}</span>
       </div>
     </div>
     <div class="content-wrap">
       <n-space vertical class="inner_wrap">
-        <n-card :title="this.$t('transfer.export_title')" size="medium">
-          <p>{{ this.$t('transfer.export_p01') }}</p>
+        <n-card :title="t('transfer.export_title')" size="medium">
+          <p>{{ t('transfer.export_p01') }}</p>
           <br />
           <a ref="downloadEle" @click="download"
             ><n-button type="info">{{
-              this.$t('transfer.export_button')
+              t('transfer.export_button')
             }}</n-button></a
           >
         </n-card>
-        <n-card :title="this.$t('transfer.import_title')" size="medium">
-          <p>{{ this.$t('transfer.import_p01') }}</p>
+        <n-card :title="t('transfer.import_title')" size="medium">
+          <p>{{ t('transfer.import_p01') }}</p>
           <br />
           <n-upload
             action="/rnacos/api/console/transfer/import"
@@ -26,26 +26,24 @@
             @before-upload="doBeforeUpload"
             @finish="handlerUploadFinish"
           >
-            <n-button type="info">{{
-              this.$t('transfer.import_button')
-            }}</n-button>
+            <n-button type="info">{{ t('transfer.import_button') }}</n-button>
           </n-upload>
         </n-card>
 
-        <n-card :title="this.$t('transfer.data_manage_title')" size="medium">
-          <p>{{ this.$t('transfer.data_manage_p01') }}</p>
+        <n-card :title="t('transfer.data_manage_title')" size="medium">
+          <p>{{ t('transfer.data_manage_p01') }}</p>
           <br />
-          <p>{{ this.$t('transfer.data_manage_p02') }}</p>
+          <p>{{ t('transfer.data_manage_p02') }}</p>
           <br />
-          <p>{{ this.$t('transfer.data_manage_p03') }}</p>
+          <p>{{ t('transfer.data_manage_p03') }}</p>
         </n-card>
 
-        <n-card :title="this.$t('transfer.from_nacos_title')" size="medium">
-          <p>{{ this.$t('transfer.from_nacos_p01') }}</p>
+        <n-card :title="t('transfer.from_nacos_title')" size="medium">
+          <p>{{ t('transfer.from_nacos_p01') }}</p>
           <br />
-          <p>{{ this.$t('transfer.from_nacos_p02') }}</p>
+          <p>{{ t('transfer.from_nacos_p02') }}</p>
           <br />
-          <p>{{ this.$t('transfer.from_nacos_p03') }}</p>
+          <p>{{ t('transfer.from_nacos_p03') }}</p>
         </n-card>
       </n-space>
     </div>
@@ -55,6 +53,9 @@
 <script setup>
 import { defineComponent, ref } from 'vue';
 import qs from 'qs';
+//import { useI18n } from 'vue-i18n';
+//let {t} = useI18n();
+import { getMessage as t } from '@/i18n/index.js';
 
 const uploadHeader = ref({});
 const downParams = ref({});

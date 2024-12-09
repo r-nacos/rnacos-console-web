@@ -1,17 +1,23 @@
 <template>
   <div>
     <n-form ref="formRef" :model="model" :rules="resetRules">
-      <n-form-item path="oldPassword" :label="$t('passwordpanel.old_password')">
+      <n-form-item
+        path="oldPassword"
+        :label="this.$t('passwordpanel.old_password')"
+      >
         <n-input
-          :placeholder="$t('passwordpanel.input_old_password')"
+          :placeholder="this.$t('passwordpanel.input_old_password')"
           type="password"
           v-model:value="model.oldPassword"
           @keydown.enter.prevent
         />
       </n-form-item>
-      <n-form-item path="newPassword" :label="$t('passwordpanel.new_password')">
+      <n-form-item
+        path="newPassword"
+        :label="this.$t('passwordpanel.new_password')"
+      >
         <n-input
-          :placeholder="$t('passwordpanel.input_new_password')"
+          :placeholder="this.$t('passwordpanel.input_new_password')"
           type="password"
           v-model:value="model.newPassword"
           @keydown.enter.prevent
@@ -19,10 +25,10 @@
       </n-form-item>
       <n-form-item
         path="newPasswordRepeated"
-        :label="$t('passwordpanel.new_password_confirm')"
+        :label="this.$t('passwordpanel.new_password_confirm')"
       >
         <n-input
-          :placeholder="$t('passwordpanel.input_new_password_confirm')"
+          :placeholder="this.$t('passwordpanel.input_new_password_confirm')"
           type="password"
           v-model:value="model.newPasswordRepeated"
           @keydown.enter.prevent

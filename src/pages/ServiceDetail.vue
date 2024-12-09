@@ -1,7 +1,7 @@
 <template>
   <div class="detailWrap">
     <n-form ref="formRef" :model="model" :rules="rules">
-      <n-form-item path="serviceName" :label="$t('service.name')">
+      <n-form-item path="serviceName" :label="this.$t('service.name')">
         <n-input
           :disabled="isKeyReadonly"
           placeholder="service name"
@@ -9,7 +9,7 @@
           @keydown.enter.prevent
         />
       </n-form-item>
-      <n-form-item path="groupName" :label="$t('service.groupName')">
+      <n-form-item path="groupName" :label="this.$t('service.groupName')">
         <n-input
           :disabled="isKeyReadonly"
           placeholder="group name"
@@ -19,7 +19,7 @@
       </n-form-item>
       <n-form-item
         path="protectThreshold"
-        :label="$t('service.protectThreshold')"
+        :label="this.$t('service.protectThreshold')"
       >
         <n-input
           :disabled="isReadonly"
@@ -28,7 +28,7 @@
           @keydown.enter.prevent
         />
       </n-form-item>
-      <n-form-item path="metadata" :label="$t('service.metadata')">
+      <n-form-item path="metadata" :label="this.$t('service.metadata')">
         <n-input
           :disabled="isReadonly"
           type="textarea"

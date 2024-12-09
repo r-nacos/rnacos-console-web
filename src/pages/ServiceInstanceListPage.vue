@@ -2,12 +2,12 @@
   <div class="wrap">
     <div class="header">
       <div class="title">
-        <span> {{ $t('instance.list') }} </span>
+        <span> {{ this.$t('instance.list') }} </span>
       </div>
       <div class="header-button">
         <span
           ><n-button @click="routerBack">{{
-            $t('common.back')
+            this.$t('common.back')
           }}</n-button></span
         >
       </div>
@@ -35,7 +35,7 @@
           <div class="queryButton">
             <span class="query-button-item">
               <n-button tertiary @click="reloadData">{{
-                $t('common.refresh')
+                this.$t('common.refresh')
               }}</n-button>
             </span>
           </div>
@@ -67,10 +67,10 @@
         <template #footer>
           <n-space align="baseline">
             <n-button text @click="closeForm">{{
-              $t('common.return')
+              this.$t('common.return')
             }}</n-button>
             <n-button type="primary" @click="submitForm">{{
-              $t('common.confirm')
+              this.$t('common.confirm')
             }}</n-button>
           </n-space>
         </template>

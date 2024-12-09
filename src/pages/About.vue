@@ -39,12 +39,15 @@
 import { defineComponent } from 'vue';
 import { useLayoutSize } from '@/data/appdata';
 import { useWebResources } from '@/data/resources';
+import { useI18n } from 'vue-i18n';
 
 export default defineComponent({
   setup() {
+    let { t } = useI18n();
     let layoutSize = useLayoutSize();
     let webResources = useWebResources();
     return {
+      t,
       layoutSize,
       webResources
     };

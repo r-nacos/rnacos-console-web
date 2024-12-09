@@ -3,20 +3,20 @@
     <n-form ref="formRef" :model="model" :rules="rules">
       <n-grid :cols="isHistory ? 2 : 3" :x-gap="12">
         <n-gi>
-          <n-form-item path="dataId" :label="this.$t('config.dataId')">
+          <n-form-item path="dataId" :label="t('config.dataId')">
             <n-input
               :disabled="isReadonly || isUpdate"
-              :placeholder="this.$t('config.input_dataId')"
+              :placeholder="t('config.input_dataId')"
               v-model:value="model.dataId"
               @keydown.enter.prevent
             />
           </n-form-item>
         </n-gi>
         <n-gi>
-          <n-form-item path="group" :label="this.$t('config.config_group')">
+          <n-form-item path="group" :label="t('config.config_group')">
             <n-input
               :disabled="isReadonly || isUpdate"
-              :placeholder="this.$t('config.input_config_group')"
+              :placeholder="t('config.input_config_group')"
               v-model:value="model.group"
               @keydown.enter.prevent
             />
@@ -33,14 +33,10 @@
           </n-form-item>
         </n-gi>
       </n-grid>
-      <n-form-item
-        v-show="!isHistory"
-        path="desc"
-        :label="this.$t('config.desc')"
-      >
+      <n-form-item v-show="!isHistory" path="desc" :label="t('config.desc')">
         <n-input
           :disabled="isReadonly"
-          :placeholder="this.$t('config.input_desc')"
+          :placeholder="t('config.input_desc')"
           v-model:value="model.desc"
           type="textarea"
           :autosize="{ minRows: 2 }"
@@ -50,7 +46,7 @@
       <n-form-item
         v-show="!isHistory"
         path="configType"
-        :label="this.$t('config.configType')"
+        :label="t('config.configType')"
       >
         <!--
         <n-radio-group v-model:value="langType"  name="configType">
@@ -72,13 +68,13 @@
           </n-space>
         </n-radio-group>
       </n-form-item>
-      <n-form-item path="content" :label="this.$t('config.content')">
+      <n-form-item path="content" :label="t('config.content')">
         <!--
 
         <n-input
           :disabled="isReadonly"
           type="textarea"
-          :placeholder="this.$t('config.input_content')"
+          :placeholder="t('config.input_content')"
           :autosize="{ minRows: 5 }"
           v-model:value="model.content"
         />

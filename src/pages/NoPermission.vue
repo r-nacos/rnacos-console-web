@@ -11,7 +11,7 @@
         <p class="title">No permission</p>
         <p>{{ path }}</p>
         <router-link class="link" :to="{ path: '/' }">{{
-          $t('common.home')
+          this.$t('common.home')
         }}</router-link>
       </div>
     </div>

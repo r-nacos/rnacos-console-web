@@ -17,17 +17,17 @@
       <n-drawer-content header-style="height: 52px;" closable>
         <template #header>
           <div>
-            <h3>{{ $t('passwordpanel.reset_password') }}</h3>
+            <h3>{{ this.$t('passwordpanel.reset_password') }}</h3>
           </div>
         </template>
         <ResetPassword :model="resetModel" />
         <template #footer>
           <n-space align="baseline">
             <n-button text @click="closeForm">{{
-              $t('common.return')
+              this.$t('common.return')
             }}</n-button>
             <n-button type="primary" @click="submitForm">{{
-              $t('common.confirm')
+              this.$t('common.confirm')
             }}</n-button>
           </n-space>
         </template>

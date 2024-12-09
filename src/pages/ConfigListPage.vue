@@ -2,7 +2,7 @@
   <div class="wrap">
     <div class="header">
       <div class="title">
-        <span> {{ $t('config.config_list') }} </span>
+        <span> {{ this.$t('config.config_list') }} </span>
       </div>
       <div class="namespace">
         <NamespacePopSelect @change="queryList" />
@@ -42,18 +42,18 @@
           <div class="queryButton">
             <span class="query-button-item">
               <n-button tertiary @click="queryList">{{
-                $t('common.query')
+                this.$t('common.query')
               }}</n-button>
             </span>
             <span v-if="webResources.canUpdateConfig" class="query-button-item">
               <n-button type="info" @click="showCreate">{{
-                $t('common.add')
+                this.$t('common.add')
               }}</n-button>
             </span>
             <span class="query-button-item">
               <a ref="download" @click="download"
                 ><n-button type="info">{{
-                  $t('config.export_config')
+                  this.$t('config.export_config')
                 }}</n-button></a
               >
             </span>
@@ -66,7 +66,7 @@
                 @finish="handlerUploadFinish"
               >
                 <n-button type="info">{{
-                  $t('config.import_config')
+                  this.$t('config.import_config')
                 }}</n-button>
               </n-upload>
             </span>

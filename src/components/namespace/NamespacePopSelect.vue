@@ -10,7 +10,7 @@
         </n-icon>
       </div>
     </div>
-    <div class="name">{{ $t('namespace.namespace') }}:</div>
+    <div class="name">{{ this.$t('namespace.namespace') }}:</div>
     <div class="popselect">
       <n-select
         class="popselect"

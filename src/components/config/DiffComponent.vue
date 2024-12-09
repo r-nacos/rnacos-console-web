@@ -1,15 +1,15 @@
 <template>
   <div>
     <!-- 
-    <div><span>{{ $t('config.comparison_of_configuration_changes')}}</span></div>
+    <div><span>{{ this.$t('config.comparison_of_configuration_changes')}}</span></div>
     -->
     <div class="result-wrap">
       <div class="inner-wrap">
         <div class="result-title">
-          {{ $t('config.current_configuration') }}:
+          {{ this.$t('config.current_configuration') }}:
         </div>
         <div class="result-title">
-          {{ $t('config.new_configurations_to_be_submitted') }}:
+          {{ this.$t('config.new_configurations_to_be_submitted') }}:
         </div>
       </div>
       <div class="inner-wrap">

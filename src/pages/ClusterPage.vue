@@ -2,7 +2,7 @@
   <div class="wrap">
     <div class="header">
       <div class="title">
-        <span> {{ $t('cluster.cluster_info') }}</span>
+        <span> {{ this.$t('cluster.cluster_info') }}</span>
       </div>
     </div>
     <div class="content-wrap">

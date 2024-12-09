@@ -9,7 +9,7 @@
           @keydown.enter.prevent
         />
       </n-form-item>
-      <n-form-item path="port" :label="$t('instance.port')">
+      <n-form-item path="port" :label="this.$t('instance.port')">
         <n-input
           :disabled="true"
           placeholder=""
@@ -17,10 +17,10 @@
           @keydown.enter.prevent
         />
       </n-form-item>
-      <n-form-item path="enabled" :label="$t('instance.online')">
+      <n-form-item path="enabled" :label="this.$t('instance.online')">
         <n-switch v-model:value="model.enabled" />
       </n-form-item>
-      <n-form-item path="weight" :label="$t('instance.weight')">
+      <n-form-item path="weight" :label="this.$t('instance.weight')">
         <n-input
           :disabled="isReadonly"
           placeholder=""
@@ -28,7 +28,7 @@
           @keydown.enter.prevent
         />
       </n-form-item>
-      <n-form-item path="metadata" :label="$t('instance.metadata')">
+      <n-form-item path="metadata" :label="this.$t('instance.metadata')">
         <n-input
           :disabled="isReadonly"
           type="textarea"

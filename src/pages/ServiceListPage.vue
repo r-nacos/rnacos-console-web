@@ -2,7 +2,7 @@
   <div class="wrap">
     <div class="header">
       <div class="title">
-        <span> {{ $t('menu.service_list') }} </span>
+        <span> {{ this.$t('menu.service_list') }} </span>
       </div>
       <div class="namespace">
         <NamespacePopSelect @change="queryList" />
@@ -42,7 +42,7 @@
           <div class="queryButton">
             <span class="query-button-item">
               <n-button tertiary @click="queryList">{{
-                $t('common.query')
+                this.$t('common.query')
               }}</n-button>
             </span>
             <span
@@ -50,7 +50,7 @@
               class="query-button-item"
             >
               <n-button type="info" @click="showCreate">{{
-                $t('common.add')
+                this.$t('common.add')
               }}</n-button>
             </span>
           </div>

@@ -2,12 +2,12 @@
   <div class="wrap">
     <div class="header">
       <div class="title">
-        <span>{{ $t('config.config_history') }}</span>
+        <span>{{ this.$t('config.config_history') }}</span>
       </div>
       <div class="header-button">
         <span
           ><n-button @click="routerBack">{{
-            $t('common.back')
+            this.$t('common.back')
           }}</n-button></span
         >
       </div>
@@ -18,7 +18,10 @@
         <div class="query-params">
           <n-form label-placement="left" label-width="auto">
             <div class="paramWrap">
-              <n-form-item :label="$t('config.dataId')" path="param.dataId">
+              <n-form-item
+                :label="this.$t('config.dataId')"
+                path="param.dataId"
+              >
                 <n-input
                   :disabled="true"
                   v-model:value="param.dataId"
@@ -26,7 +29,7 @@
                 />
               </n-form-item>
               <n-form-item
-                :label="$t('config.config_group')"
+                :label="this.$t('config.config_group')"
                 path="param.group"
               >
                 <n-input
@@ -40,7 +43,7 @@
           <div class="queryButton">
             <span class="query-button-item">
               <n-button tertiary @click="queryList">{{
-                $t('common.refresh')
+                this.$t('common.refresh')
               }}</n-button>
             </span>
           </div>
@@ -72,7 +75,7 @@
         <template #footer>
           <n-space align="baseline">
             <n-button text @click="closeForm">{{
-              $t('common.return')
+              this.$t('common.return')
             }}</n-button>
             <n-button
               v-if="webResources.canUpdateConfig"
@@ -87,8 +90,8 @@
     <Transition name="slide-fade">
       <SubContentFullPage
         v-if="useDiffForm"
-        :title="$t('config.diff_content')"
-        :submitName="$t('config.confirm_change')"
+        :title="this.$t('config.diff_content')"
+        :submitName="this.$t('config.confirm_change')"
         @close="closeDiffForm"
         @submit="submitDiffForm"
       >

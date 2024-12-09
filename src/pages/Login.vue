@@ -2,19 +2,19 @@
   <div class="container">
     <div class="wrap">
       <div class="header">
-        <span>R-NACOS {{ $t('login.login') }}</span>
+        <span>R-NACOS {{ this.$t('login.login') }}</span>
       </div>
       <n-form class="login_form" ref="formRef" :model="model" :rules="rules">
-        <n-form-item path="username" :label="$t('user.username')">
+        <n-form-item path="username" :label="this.$t('user.username')">
           <n-input
-            :placeholder="$t('user.username')"
+            :placeholder="this.$t('user.username')"
             v-model:value="model.username"
             @keydown.enter.prevent
           />
         </n-form-item>
-        <n-form-item path="password" :label="$t('login.password')">
+        <n-form-item path="password" :label="this.$t('login.password')">
           <n-input
-            :placeholder="$t('login.password')"
+            :placeholder="this.$t('login.password')"
             type="password"
             v-model:value="model.password"
             @keydown.enter="captcha_visible ? $event.preventDefault() : null"
@@ -27,9 +27,9 @@
           style="display: inline-flex; flex-direction: row"
         >
           <div class="captcha_code">
-            <n-form-item path="captcha" :label="$t('login.captcha')">
+            <n-form-item path="captcha" :label="this.$t('login.captcha')">
               <n-input
-                :placeholder="$t('login.captcha')"
+                :placeholder="this.$t('login.captcha')"
                 type="captcha"
                 v-model:value="model.captcha"
                 @keydown.enter.prevent
@@ -48,7 +48,7 @@
         </div>
         <div>
           <button class="login_btn" @click="submit">
-            {{ $t('login.login') }}
+            {{ this.$t('login.login') }}
           </button>
         </div>
       </n-form>

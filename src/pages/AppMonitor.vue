@@ -2,7 +2,7 @@
   <div class="wrap">
     <div class="header">
       <div class="title">
-        <span> {{ $t('monitor.system_monitor') }} </span>
+        <span> {{ t('monitor.system_monitor') }} </span>
       </div>
     </div>
     <div class="content-wrap">
@@ -11,7 +11,7 @@
           <n-form label-placement="left" label-width="auto">
             <div class="paramWrap">
               <n-form-item
-                :label="this.$t('monitor.service_node')"
+                :label="t('monitor.service_node')"
                 path="param.nodeId"
               >
                 <n-select
@@ -24,7 +24,7 @@
                 >
                 </n-select>
               </n-form-item>
-              <n-form-item :label="this.$t('monitor.interval_type')">
+              <n-form-item :label="t('monitor.interval_type')">
                 <n-select
                   class="paramselect"
                   v-model:value="param.timelineGroupName"
@@ -35,7 +35,7 @@
                 >
                 </n-select>
               </n-form-item>
-              <n-form-item :label="this.$t('monitor.auto_refresh')">
+              <n-form-item :label="t('monitor.auto_refresh')">
                 <n-switch
                   size="small"
                   v-model:value="autoLoad.enable"
@@ -47,7 +47,7 @@
           <div class="queryButton">
             <span class="query-button-item">
               <n-button tertiary @click="queryList">{{
-                $t('common.refresh')
+                t('common.refresh')
               }}</n-button>
             </span>
           </div>

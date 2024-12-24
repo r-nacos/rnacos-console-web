@@ -42,7 +42,7 @@
           @keydown.enter.prevent
         />
       </n-form-item>
-      <n-form-item path="protectThreshold" :label="this.$t('user.roles')">
+      <n-form-item path="roles" :label="this.$t('user.roles')">
         <n-select
           v-model:value="model.roles"
           :disabled="isReadonly"
@@ -53,6 +53,44 @@
       <n-form-item path="enabled" :label="this.$t('user.enable')">
         <n-switch :disabled="isReadonly" v-model:value="model.enable" />
       </n-form-item>
+      <n-form-item path="namespaceWhitelist" label="命名空间白名单">
+        <div class="privilege-group">
+          <div class="is_all">
+            所有
+            <n-switch
+              :disabled="isReadonly"
+              v-model:value="model.namespacePrivilege.whitelistIsAll"
+            />
+          </div>
+          <div v-if="!model.namespacePrivilege.whitelistIsAll" class="select">
+            <n-select
+              v-model:value="model.namespacePrivilege.whitelist"
+              :disabled="isReadonly"
+              multiple
+              :options="namespaceOptions"
+            />
+          </div>
+        </div>
+      </n-form-item>
+      <n-form-item path="namespaceWhitelist" label="命名空间黑名单">
+        <div class="privilege-group">
+          <div class="is_all">
+            所有
+            <n-switch
+              :disabled="isReadonly"
+              v-model:value="model.namespacePrivilege.blacklistIsAll"
+            />
+          </div>
+          <div v-if="!model.namespacePrivilege.blacklistIsAll" class="select">
+            <n-select
+              v-model:value="model.namespacePrivilege.blacklist"
+              :disabled="isReadonly"
+              multiple
+              :options="namespaceOptions"
+            />
+          </div>
+        </div>
+      </n-form-item>
     </n-form>
   </div>
 </template>
@@ -60,8 +98,9 @@
 <script>
 import { defineComponent } from 'vue';
 import * as constant from '@/types/constant';
+
 export default defineComponent({
-  props: ['model'],
+  props: ['model', 'namespaceOptions'],
   computed: {
     isReadonly() {
       return this.model.mode === constant.FORM_MODE_DETAIL;
@@ -121,5 +160,14 @@ export default defineComponent({
   background: #fff;
   padding: 3px;
   border-radius: 5px;
+}
+.privilege-group {
+  display: block;
+  position: relative;
+  width: 100%;
+  padding-left: 10px;
+}
+.select {
+  padding: 5px 0;
 }
 </style>

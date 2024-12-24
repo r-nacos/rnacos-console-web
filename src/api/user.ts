@@ -1,6 +1,11 @@
 import { AxiosResponse } from 'axios';
 import request from '../utils/request';
-import { IApiResult, IPageResult, WebResource } from '@/types/base';
+import {
+  IApiResult,
+  IPageResult,
+  WebResource,
+  IPrivilegeGroup
+} from '@/types/base';
 let axios = request;
 
 export interface ILoginParam {
@@ -30,6 +35,7 @@ export interface IUserInfo {
   enable: boolean;
   roles: Array<String>;
   extendInfo?: Map<String, String>;
+  namespacePrivilege?: IPrivilegeGroup;
 }
 
 export interface IUpdateUserParam {
@@ -38,6 +44,7 @@ export interface IUpdateUserParam {
   password?: string;
   enable?: boolean;
   roles?: string;
+  namespacePrivilegeParam?: IPrivilegeGroup;
 }
 
 class UserApi {
@@ -88,27 +95,27 @@ class UserApi {
     });
   }
   addUser(info: IUpdateUserParam): Promise<AxiosResponse<IApiResult<boolean>>> {
-    return axios.request({
+    return axios.requestJSON({
       method: 'post',
-      url: '/rnacos/api/console/user/add',
+      url: '/rnacos/api/console/v2/user/add',
       data: info
     });
   }
   updateUser(
     info: IUpdateUserParam
   ): Promise<AxiosResponse<IApiResult<boolean>>> {
-    return axios.request({
+    return axios.requestJSON({
       method: 'post',
-      url: '/rnacos/api/console/user/update',
+      url: '/rnacos/api/console/v2/user/update',
       data: info
     });
   }
   removeUser(
     info: IUpdateUserParam
   ): Promise<AxiosResponse<IApiResult<boolean>>> {
-    return axios.request({
+    return axios.requestJSON({
       method: 'post',
-      url: '/rnacos/api/console/user/remove',
+      url: '/rnacos/api/console/v2/user/remove',
       data: info
     });
   }

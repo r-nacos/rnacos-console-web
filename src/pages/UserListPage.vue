@@ -62,7 +62,7 @@
       resizable
     >
       <n-drawer-content :title="getDetailTitle" closable>
-        <UserDetail :model="model" />
+        <UserDetail :model="model" :namespaceOptions="namespaceOptions" />
         <template #footer>
           <n-space align="baseline">
             <n-button text @click="closeForm">{{
@@ -85,8 +85,16 @@ import * as constant from '@/types/constant';
 import { NButton } from 'naive-ui';
 import { createColumns } from '@/components/user/UserListColumns';
 import UserDetail from '@/pages/UserDetail.vue';
-import { getRoleNameByCode, roleOptions } from '@/data/role';
+import { roleOptions } from '@/data/role';
 import { useI18n } from 'vue-i18n';
+import { namespaceStore } from '@/data/namespace';
+
+const defaultNamespacePrivilege = {
+  whitelistIsAll: true,
+  whitelist: null,
+  blacklistIsAll: false,
+  blacklist: null
+};
 
 export default defineComponent({
   components: {
@@ -127,6 +135,7 @@ export default defineComponent({
       gmtModified: null,
       enable: true,
       roles: [],
+      namespacePrivilege: { ...defaultNamespacePrivilege },
       roleOptions
     });
     const showUpdate = (row) => {
@@ -138,6 +147,9 @@ export default defineComponent({
         password: null,
         enable: row.enable,
         roles: row.roles,
+        namespacePrivilege: row.namespacePrivilege || {
+          ...defaultNamespacePrivilege
+        },
         roleOptions
       };
       useFormRef.value = true;
@@ -150,6 +162,9 @@ export default defineComponent({
         password: null,
         enable: row.enable,
         roles: row.roles,
+        namespacePrivilege: row.namespacePrivilege || {
+          ...defaultNamespacePrivilege
+        },
         roleOptions
       };
       useFormRef.value = true;
@@ -184,6 +199,7 @@ export default defineComponent({
         gmtModified: null,
         enable: true,
         roles: [],
+        namespacePrivilege: { ...defaultNamespacePrivilege },
         roleOptions
       };
       useFormRef.value = true;
@@ -253,6 +269,7 @@ export default defineComponent({
       param: paramRef,
       useForm: useFormRef,
       model: modelRef,
+      namespaceOptions: namespaceStore.optionList,
       rowKey(rowData) {
         return rowData.groupName + '@@' + rowData.name;
       },
@@ -276,6 +293,7 @@ export default defineComponent({
           nickname: modelRef.value.nickname,
           password: modelRef.value.password,
           enable: modelRef.value.enable,
+          namespacePrivilegeParam: modelRef.value.namespacePrivilege,
           roles: modelRef.value.roles.join(',')
         };
         if (mode === constant.FORM_MODE_CREATE) {
@@ -310,6 +328,9 @@ export default defineComponent({
       }
       return this.$t('user.name');
     }
+  },
+  created() {
+    namespaceStore.initLoad();
   },
   mounted() {
     this.queryList();

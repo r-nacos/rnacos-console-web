@@ -60,3 +60,11 @@ export interface ILangStore {
   current: Ref<UnwrapRef<string>>;
   setCurrent: (arg: string) => any;
 }
+
+export interface IPrivilegeGroup {
+  enabled: ?boolean;
+  whitelistIsAll: ?boolean;
+  whitelist: ?Array<string>;
+  blacklistIsAll: ?boolean;
+  blacklist: ?Array<string>;
+}

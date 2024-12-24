@@ -1,9 +1,18 @@
 import { NButton, NSwitch, NTag, NPopconfirm } from 'naive-ui';
 
 import { toDatetime } from '@/utils/date';
+import { arrayCount } from '@/utils/utils.js';
 import { getRoleNameByCode } from '@/data/role';
 import { useI18n } from 'vue-i18n';
 import template from 'template_js';
+export const defaultNamespacePrivilege = {
+  enable: true,
+  whitelistIsAll: true,
+  whitelist: null,
+  blacklistIsAll: false,
+  blacklist: null
+};
+
 export const createColumns = function (showDetail, showUpdate, remove) {
   const { t } = useI18n();
   const removeConfirmSlots = {
@@ -65,6 +74,40 @@ export const createColumns = function (showDetail, showUpdate, remove) {
         var v = t('common.yes');
         if (!row.enable) {
           v = t('common.no');
+        }
+        return <span>{v}</span>;
+      }
+    },
+    {
+      title: t('menu.namespace') + t('common.join') + t('common.whitelist'),
+      key: 'namespaceWhitelist',
+      render(row) {
+        let namespacePrivilege =
+          row.namespacePrivilege || defaultNamespacePrivilege;
+        var v = t('common.all');
+        if (namespacePrivilege.enable && !namespacePrivilege.whitelistIsAll) {
+          v =
+            t('common.part') +
+            '(' +
+            arrayCount(namespacePrivilege.whitelist) +
+            ')';
+        }
+        return <span>{v}</span>;
+      }
+    },
+    {
+      title: t('menu.namespace') + t('common.join') + t('common.blacklist'),
+      key: 'namespaceBlacklist',
+      render(row) {
+        let namespacePrivilege =
+          row.namespacePrivilege || defaultNamespacePrivilege;
+        var v =
+          t('common.part') +
+          '(' +
+          arrayCount(namespacePrivilege.blacklist) +
+          ')';
+        if (namespacePrivilege.enable && namespacePrivilege.blacklistIsAll) {
+          v = t('common.all');
         }
         return <span>{v}</span>;
       }

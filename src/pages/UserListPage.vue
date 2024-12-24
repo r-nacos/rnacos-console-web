@@ -83,18 +83,14 @@ import { ref, reactive, defineComponent } from 'vue';
 import { userApi } from '@/api/user';
 import * as constant from '@/types/constant';
 import { NButton } from 'naive-ui';
-import { createColumns } from '@/components/user/UserListColumns';
+import {
+  createColumns,
+  defaultNamespacePrivilege
+} from '@/components/user/UserListColumns';
 import UserDetail from '@/pages/UserDetail.vue';
 import { roleOptions } from '@/data/role';
 import { useI18n } from 'vue-i18n';
 import { namespaceStore } from '@/data/namespace';
-
-const defaultNamespacePrivilege = {
-  whitelistIsAll: true,
-  whitelist: null,
-  blacklistIsAll: false,
-  blacklist: null
-};
 
 export default defineComponent({
   components: {
@@ -329,10 +325,8 @@ export default defineComponent({
       return this.$t('user.name');
     }
   },
-  created() {
-    namespaceStore.initLoad();
-  },
   mounted() {
+    namespaceStore.initLoad();
     this.queryList();
   }
 });

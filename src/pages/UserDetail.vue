@@ -53,14 +53,27 @@
       <n-form-item path="enabled" :label="this.$t('user.enable')">
         <n-switch :disabled="isReadonly" v-model:value="model.enable" />
       </n-form-item>
-      <n-form-item path="namespaceWhitelist" label="命名空间白名单">
+      <n-form-item
+        path="namespaceWhitelist"
+        :label="
+          this.$t('menu.namespace') +
+          this.$t('common.join') +
+          this.$t('common.whitelist')
+        "
+      >
         <div class="privilege-group">
           <div class="is_all">
-            所有
             <n-switch
               :disabled="isReadonly"
               v-model:value="model.namespacePrivilege.whitelistIsAll"
-            />
+            >
+              <template #checked>
+                {{ this.$t('common.all') }}
+              </template>
+              <template #unchecked>
+                {{ this.$t('common.part') }}
+              </template>
+            </n-switch>
           </div>
           <div v-if="!model.namespacePrivilege.whitelistIsAll" class="select">
             <n-select
@@ -72,14 +85,27 @@
           </div>
         </div>
       </n-form-item>
-      <n-form-item path="namespaceWhitelist" label="命名空间黑名单">
+      <n-form-item
+        path="namespaceBlacklist"
+        :label="
+          this.$t('menu.namespace') +
+          this.$t('common.join') +
+          this.$t('common.blacklist')
+        "
+      >
         <div class="privilege-group">
           <div class="is_all">
-            所有
             <n-switch
               :disabled="isReadonly"
               v-model:value="model.namespacePrivilege.blacklistIsAll"
-            />
+            >
+              <template #checked>
+                {{ this.$t('common.all') }}
+              </template>
+              <template #unchecked>
+                {{ this.$t('common.part') }}
+              </template>
+            </n-switch>
           </div>
           <div v-if="!model.namespacePrivilege.blacklistIsAll" class="select">
             <n-select
@@ -165,9 +191,8 @@ export default defineComponent({
   display: block;
   position: relative;
   width: 100%;
-  padding-left: 10px;
 }
 .select {
-  padding: 5px 0;
+  padding: 8px 0;
 }
 </style>

@@ -140,6 +140,12 @@ const message = {
     total: '总行数',
     add: '新建',
     preInput: '输入',
+    join: '',
+    whitelist: '白名单',
+    blacklist: '黑名单',
+    all: '全部',
+    part: '部分',
+    permission: '权限',
     home: '首页'
   },
   monitor: {

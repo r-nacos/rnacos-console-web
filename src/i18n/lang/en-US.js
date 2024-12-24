@@ -142,6 +142,12 @@ const message = {
     total: 'Total',
     add: 'Add',
     preInput: 'Input ',
+    join: ' ',
+    whitelist: 'Whitelist',
+    blacklist: 'Blacklist',
+    all: 'All',
+    part: 'Part',
+    permission: 'permission',
     home: 'Home'
   },
   monitor: {

@@ -1,5 +1,39 @@
 import enUS from 'naive-ui/lib/locales/common/enUS.js';
 const message = {
+  common: {
+    query: 'Query',
+    status: 'Status',
+    yes: 'Yes',
+    no: 'No',
+    enabled: 'Enabled',
+    disabled: 'Disabled',
+    confirm: 'Confirm',
+    title: 'Title',
+    return: 'Return',
+    back: 'Back',
+    confirm_action: 'Do you want to confirm the action?',
+    delete: 'Delete',
+    edit: 'Edit',
+    detail: 'Detail',
+    history: 'History',
+    operation: 'Operation',
+    clone: 'Clone',
+    updatedtime: 'Updated Time',
+    recover: 'Recover',
+    request_fail: 'Request Fail',
+    refresh: 'Refresh',
+    total: 'Total',
+    add: 'Add',
+    preInput: 'Input ',
+    join: ' ',
+    whitelist: 'Whitelist',
+    blacklist: 'Blacklist',
+    all: 'All',
+    part: 'Part',
+    permission: 'permission',
+    submitSuccess: 'Submit success',
+    home: 'Home'
+  },
   cluster: {
     node: 'Node',
     address: 'Address',
@@ -117,39 +151,6 @@ const message = {
     developer: 'Developer',
     guest: 'Guest'
   },
-  common: {
-    query: 'Query',
-    status: 'Status',
-    yes: 'Yes',
-    no: 'No',
-    enabled: 'Enabled',
-    disabled: 'Disabled',
-    confirm: 'Confirm',
-    title: 'Title',
-    return: 'Return',
-    back: 'Back',
-    confirm_action: 'Do you want to confirm the action?',
-    delete: 'Delete',
-    edit: 'Edit',
-    detail: 'Detail',
-    history: 'History',
-    operation: 'Operation',
-    clone: 'Clone',
-    updatedtime: 'Updated Time',
-    recover: 'Recover',
-    request_fail: 'Request Fail',
-    refresh: 'Refresh',
-    total: 'Total',
-    add: 'Add',
-    preInput: 'Input ',
-    join: ' ',
-    whitelist: 'Whitelist',
-    blacklist: 'Blacklist',
-    all: 'All',
-    part: 'Part',
-    permission: 'permission',
-    home: 'Home'
-  },
   monitor: {
     system_monitor: 'System Monitor',
     service_node: 'Service Node',
@@ -254,6 +255,10 @@ const message = {
     cluster_info: 'Cluster info',
     system_monitor: 'Monitor',
     about: 'About'
+  },
+  error: {
+    NO_PERMISSION: 'NO_PERMISSION',
+    SYSTEM_ERROR: 'SYSTEM_ERROR'
   }
 };
 export default {

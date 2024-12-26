@@ -2,7 +2,7 @@ import { AxiosResponse } from 'axios';
 import request from '../utils/request';
 import {
   IApiResult,
-  IPageResult,
+  IOldPageResult,
   WebResource,
   IPrivilegeGroup
 } from '@/types/base';
@@ -78,7 +78,7 @@ class UserApi {
   }
   getUserList(
     param: IUserPageParam
-  ): Promise<AxiosResponse<IApiResult<IPageResult<IUserInfo>>>> {
+  ): Promise<AxiosResponse<IApiResult<IOldPageResult<IUserInfo>>>> {
     return axios.request({
       method: 'get',
       url: '/rnacos/api/console/user/list',

@@ -1,5 +1,39 @@
 import zhCN from 'naive-ui/lib/locales/common/zhCN.js';
 const message = {
+  common: {
+    query: '查询',
+    status: '状态',
+    yes: '是',
+    no: '否',
+    enabled: '正常',
+    disabled: '失效',
+    confirm: '确认',
+    title: '标题',
+    return: '返回',
+    back: '返回',
+    confirm_action: '是否确认操作?',
+    delete: '删除',
+    edit: '编辑',
+    detail: '详情',
+    history: '历史记录',
+    operation: '操作',
+    clone: '克隆',
+    updatedtime: '更新时间',
+    recover: '恢复',
+    request_fail: '请求失败',
+    refresh: '刷新',
+    total: '总行数',
+    add: '新建',
+    preInput: '输入',
+    join: '',
+    whitelist: '白名单',
+    blacklist: '黑名单',
+    all: '全部',
+    part: '部分',
+    permission: '权限',
+    submitSuccess: '提交成功',
+    home: '首页'
+  },
   cluster: {
     node: '节点',
     address: '地址',
@@ -115,39 +149,6 @@ const message = {
     developer: '开发者',
     guest: '访客'
   },
-  common: {
-    query: '查询',
-    status: '状态',
-    yes: '是',
-    no: '否',
-    enabled: '正常',
-    disabled: '失效',
-    confirm: '确认',
-    title: '标题',
-    return: '返回',
-    back: '返回',
-    confirm_action: '是否确认操作?',
-    delete: '删除',
-    edit: '编辑',
-    detail: '详情',
-    history: '历史记录',
-    operation: '操作',
-    clone: '克隆',
-    updatedtime: '更新时间',
-    recover: '恢复',
-    request_fail: '请求失败',
-    refresh: '刷新',
-    total: '总行数',
-    add: '新建',
-    preInput: '输入',
-    join: '',
-    whitelist: '白名单',
-    blacklist: '黑名单',
-    all: '全部',
-    part: '部分',
-    permission: '权限',
-    home: '首页'
-  },
   monitor: {
     system_monitor: '系统监控',
     service_node: '服务节点',
@@ -246,6 +247,10 @@ const message = {
     cluster_info: '集群信息',
     system_monitor: '系统监控',
     about: '关于'
+  },
+  error: {
+    NO_PERMISSION: '没有权限',
+    SYSTEM_ERROR: '系统异常'
   }
 };
 export default {

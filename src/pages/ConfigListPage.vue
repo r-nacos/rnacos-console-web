@@ -129,6 +129,11 @@ import { Close } from '@vicons/ionicons5';
 import * as constant from '@/types/constant';
 import qs from 'qs';
 import { useI18n } from 'vue-i18n';
+import {
+  printApiError,
+  handleApiResult,
+  printApiSuccess
+} from '@/utils/request';
 export default defineComponent({
   components: {
     NamespacePopSelect,
@@ -201,23 +206,19 @@ export default defineComponent({
       if (!loadingRef.value) {
         loadingRef.value = true;
         doQueryList()
-          .then((res) => {
+          .then(handleApiResult)
+          .then((page) => {
             loadingRef.value = false;
-            if (res.status == 200) {
-              let count = res.data.count;
-              let pageSize = paginationReactive.pageSize;
-              dataRef.value = res.data.list;
-              paginationReactive.itemCount = count;
-              paginationReactive.pageCount = Math.round(
-                (count + pageSize - 1) / pageSize
-              );
-            } else {
-              window.$message.error('request err,status code:' + res.status);
-              dataRef.value = [];
-            }
+            let count = page.totalCount;
+            let pageSize = paginationReactive.pageSize;
+            dataRef.value = page.list;
+            paginationReactive.itemCount = count;
+            paginationReactive.pageCount = Math.round(
+              (count + pageSize - 1) / pageSize
+            );
           })
           .catch((err) => {
-            window.$message.error('request err,message' + err.message);
+            printApiError(err);
             dataRef.value = [];
             loadingRef.value = false;
           });
@@ -231,29 +232,24 @@ export default defineComponent({
       };
       configApi
         .getConfigV2(config)
-        .then((res) => {
-          if (res.status == 200 && res.data.success) {
-            if (mode == constant.FORM_MODE_CREATE) {
-              config.dataId = null;
-            }
-            modelRef.value = {
-              mode: mode,
-              showMd5: true,
-              content: res.data.data.value,
-              sourceContent: res.data.data.value,
-              md5: res.data.data.md5 || '',
-              desc: res.data.data.desc,
-              configType: res.data.data.configType || 'text',
-              ...config
-            };
-            useFormRef.value = true;
-          } else {
-            window.$message.error('查询配置报错,response code:' + res.status);
+        .then(handleApiResult)
+        .then((data) => {
+          if (mode == constant.FORM_MODE_CREATE) {
+            config.dataId = null;
           }
+          modelRef.value = {
+            mode: mode,
+            showMd5: true,
+            content: data.value,
+            sourceContent: data.value,
+            md5: data.md5 || '',
+            desc: data.desc,
+            configType: data.configType || 'text',
+            ...config
+          };
+          useFormRef.value = true;
         })
-        .catch((err) => {
-          window.$message.error('查询配置报错,' + err.message);
-        });
+        .catch(printApiError);
     };
     const updateItem = (row) => {
       doShowConfigDetail(row, constant.FORM_MODE_UPDATE);
@@ -285,21 +281,12 @@ export default defineComponent({
       };
       configApi
         .removeConfigV2(config)
-        .then((res) => {
-          if (res.status == 200) {
-            if (res.data.success) {
-              window.$message.info('删除配置成功');
-              doHandlePageChange(1);
-            } else {
-              window.$message.error('删除配置报错,' + res.data.message);
-            }
-          } else {
-            window.$message.error('删除配置报错,response code:' + res.status);
-          }
+        .then(handleApiResult)
+        .then(printApiSuccess)
+        .then(() => {
+          doHandlePageChange(1);
         })
-        .catch((err) => {
-          window.$message.error('删除配置报错,' + err.message);
-        });
+        .catch(printApiError);
     };
     const showHistory = (row) => {
       router.push({
@@ -388,23 +375,14 @@ export default defineComponent({
       };
       configApi
         .setConfigV2(config)
-        .then((res) => {
-          if (res.status == 200) {
-            if (res.data.success) {
-              window.$message.info('设置成功!');
-              this.useForm = false;
-              this.useDiffForm = false;
-              this.queryList();
-            } else {
-              window.$message.error('设置失败，' + res.data.message);
-            }
-            return;
-          }
-          window.$message.error('设置失败，response code' + res.status);
+        .then(handleApiResult)
+        .then(printApiSuccess)
+        .then(() => {
+          this.useForm = false;
+          this.useDiffForm = false;
+          this.queryList();
         })
-        .catch((err) => {
-          window.$message.error('设置失败，' + err.message);
-        });
+        .catch(printApiError);
     },
     submitForm() {
       if (this.model.mode === constant.FORM_MODE_DETAIL) {

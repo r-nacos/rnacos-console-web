@@ -7,31 +7,31 @@ class NamespaceApi {
   queryList(): Promise<AxiosResponse> {
     return axios.request({
       method: 'get',
-      url: '/rnacos/api/console/namespaces'
+      url: '/rnacos/api/console/v2/namespaces/list'
     });
   }
   add(namespace: INamespace): Promise<AxiosResponse> {
-    return axios.request({
+    return axios.requestJSON({
       method: 'post',
-      url: '/rnacos/api/console/namespaces',
+      url: '/rnacos/api/console/v2/namespaces/add',
       data: {
         ...namespace
       }
     });
   }
   update(namespace: INamespace): Promise<AxiosResponse> {
-    return axios.request({
-      method: 'put',
-      url: '/rnacos/api/console/namespaces',
+    return axios.requestJSON({
+      method: 'post',
+      url: '/rnacos/api/console/v2/namespaces/update',
       data: {
         ...namespace
       }
     });
   }
   delete(namespace: INamespace): Promise<AxiosResponse> {
-    return axios.request({
-      method: 'delete',
-      url: '/rnacos/api/console/namespaces',
+    return axios.requestJSON({
+      method: 'post',
+      url: '/rnacos/api/console/v2/namespaces/remove',
       data: {
         namespaceId: namespace.namespaceId
       }

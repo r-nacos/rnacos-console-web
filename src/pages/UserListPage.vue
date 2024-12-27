@@ -91,6 +91,11 @@ import UserDetail from '@/pages/UserDetail.vue';
 import { roleOptions } from '@/data/role';
 import { useI18n } from 'vue-i18n';
 import { namespaceStore } from '@/data/namespace';
+import {
+  handleApiResult,
+  printApiError,
+  printApiSuccess
+} from '@/utils/request';
 
 export default defineComponent({
   components: {
@@ -168,22 +173,13 @@ export default defineComponent({
     const removeItem = (row) => {
       userApi
         .removeUser({ username: row.username })
-        .then((res) => {
-          if (res.status === 200) {
-            if (res.data.success) {
-              window.$message.info('删除成功!');
-              useFormRef.value = false;
-              doHandlePageChange(1);
-            } else {
-              window.$message.error('操作失败: ' + res.data.message);
-            }
-          } else {
-            window.$message.error('操作失败，response code: ' + res.status);
-          }
+        .then(handleApiResult)
+        .then(printApiSuccess)
+        .then(() => {
+          useFormRef.value = false;
+          doHandlePageChange(1);
         })
-        .catch((err) => {
-          window.$message.error('操作失败: ' + err.message);
-        });
+        .catch(printApiError);
     };
     const showCreate = () => {
       modelRef.value = {
@@ -214,45 +210,24 @@ export default defineComponent({
       if (!loadingRef.value) {
         loadingRef.value = true;
         doQueryList()
-          .then((res) => {
+          .then(handleApiResult)
+          .then((page) => {
+            console.log(page);
             loadingRef.value = false;
-            if (res.status == 200) {
-              let count = res.data.data.size;
-              let pageSize = paginationReactive.pageSize;
-              dataRef.value = res.data.data.list;
-              paginationReactive.itemCount = count;
-              paginationReactive.pageCount = Math.round(
-                (count + pageSize - 1) / pageSize
-              );
-            } else {
-              window.$message.error('request err,status code:' + res.status);
-              dataRef.value = [];
-            }
+            let count = page.totalCount;
+            let pageSize = paginationReactive.pageSize;
+            dataRef.value = page.list;
+            paginationReactive.itemCount = count;
+            paginationReactive.pageCount = Math.round(
+              (count + pageSize - 1) / pageSize
+            );
           })
           .catch((err) => {
-            window.$message.error('request err,message' + err.message);
+            printApiError(err);
             dataRef.value = [];
             loadingRef.value = false;
           });
       }
-    };
-
-    let handleApiResult = function (res) {
-      if (res.status == 200) {
-        if (res.data.success) {
-          window.$message.info('操作成功!');
-          useFormRef.value = false;
-          doHandlePageChange(1);
-        } else {
-          if (res.data.code === 'USER_ROLE_IS_EMPTY') {
-            window.$message.error('用户角色不能为空');
-          } else {
-            window.$message.error('操作失败,未知错误,' + res.data.message);
-          }
-        }
-        return;
-      }
-      window.$message.error('操作失败，response code' + res.status);
     };
 
     let columns = createColumns(showDetail, showUpdate, removeItem);
@@ -295,21 +270,23 @@ export default defineComponent({
         if (mode === constant.FORM_MODE_CREATE) {
           userApi
             .addUser(userinfo)
-            .then((res) => {
-              handleApiResult(res);
+            .then(handleApiResult)
+            .then(printApiSuccess)
+            .then(() => {
+              useFormRef.value = false;
+              doHandlePageChange(1);
             })
-            .catch((err) => {
-              window.$message.error('操作失败' + err.message);
-            });
+            .catch(printApiError);
         } else {
           userApi
             .updateUser(userinfo)
-            .then((res) => {
-              handleApiResult(res);
+            .then(handleApiResult)
+            .then(printApiSuccess)
+            .then(() => {
+              useFormRef.value = false;
+              doHandlePageChange(1);
             })
-            .catch((err) => {
-              window.$message.error('操作失败' + err.message);
-            });
+            .catch(printApiError);
         }
       }
     };

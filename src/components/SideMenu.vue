@@ -43,6 +43,7 @@
 import { useWebResources } from '@/data/resources';
 import { ServerOutline, CubeOutline, AppsSharp } from '@vicons/ionicons5';
 import { userApi } from '@/api/user';
+import { handleApiResult } from '@/utils/request';
 
 export default {
   components: {
@@ -54,13 +55,12 @@ export default {
     const webResources = useWebResources();
     let updateWebResources = function () {
       if (!this.webResources.fromRequest) {
-        userApi.getUserWebResources().then((res) => {
-          if (res.status == 200) {
-            if (res.data.success) {
-              this.webResources.update(res.data.data);
-            }
-          }
-        });
+        userApi
+          .getUserWebResources()
+          .then(handleApiResult)
+          .then((data) => {
+            this.webResources.update(data);
+          });
       }
     };
     let pathRef = ref('/');

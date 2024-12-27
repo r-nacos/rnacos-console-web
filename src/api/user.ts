@@ -2,9 +2,9 @@ import { AxiosResponse } from 'axios';
 import request from '../utils/request';
 import {
   IApiResult,
-  IOldPageResult,
   WebResource,
-  IPrivilegeGroup
+  IPrivilegeGroup,
+  IPageResult
 } from '@/types/base';
 let axios = request;
 
@@ -51,37 +51,37 @@ class UserApi {
   login(info: ILoginParam): Promise<AxiosResponse<IApiResult<boolean>>> {
     return axios.request({
       method: 'post',
-      url: '/rnacos/api/console/login/login',
+      url: '/rnacos/api/console/v2/login/login',
       data: info
     });
   }
   genCaptcha(): Promise<AxiosResponse<IApiResult<string>>> {
     return axios.request({
       method: 'get',
-      url: '/rnacos/api/console/login/captcha'
+      url: '/rnacos/api/console/v2/login/captcha'
     });
   }
   logout(): Promise<AxiosResponse<IApiResult<boolean>>> {
     return axios.request({
       method: 'post',
-      url: '/rnacos/api/console/login/logout'
+      url: '/rnacos/api/console/v2/login/logout'
     });
   }
   resetPassword(
     info: IResetPasswordParam
   ): Promise<AxiosResponse<IApiResult<boolean>>> {
-    return axios.request({
+    return axios.requestJSON({
       method: 'post',
-      url: '/rnacos/api/console/user/reset_password',
+      url: '/rnacos/api/console/v2/user/reset_password',
       data: info
     });
   }
   getUserList(
     param: IUserPageParam
-  ): Promise<AxiosResponse<IApiResult<IOldPageResult<IUserInfo>>>> {
+  ): Promise<AxiosResponse<IApiResult<IPageResult<IUserInfo>>>> {
     return axios.request({
       method: 'get',
-      url: '/rnacos/api/console/user/list',
+      url: '/rnacos/api/console/v2/user/list',
       params: {
         ...param
       }
@@ -90,7 +90,7 @@ class UserApi {
   getUserWebResources(): Promise<AxiosResponse<IApiResult<WebResource>>> {
     return axios.request({
       method: 'get',
-      url: '/rnacos/api/console/user/web_resources',
+      url: '/rnacos/api/console/v2/user/web_resources',
       params: {}
     });
   }

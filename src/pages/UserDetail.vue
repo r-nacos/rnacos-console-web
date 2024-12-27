@@ -94,6 +94,7 @@
         "
       >
         <div class="privilege-group">
+          <!--
           <div class="is_all">
             <n-switch
               :disabled="isReadonly"
@@ -107,6 +108,7 @@
               </template>
             </n-switch>
           </div>
+          -->
           <div v-if="!model.namespacePrivilege.blacklistIsAll" class="select">
             <n-select
               v-model:value="model.namespacePrivilege.blacklist"

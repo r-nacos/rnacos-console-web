@@ -51,10 +51,12 @@ export interface IApiResult<T> {
   message: ?string;
 }
 
+/*
 export interface IOldPageResult<T> {
   size: number;
   list: Array<T>;
 }
+*/
 
 export interface IPageResult<T> {
   totalCount: number;

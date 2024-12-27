@@ -2,6 +2,7 @@ import { Ref, UnwrapRef, reactive, ref } from 'vue';
 import namespaceApi from '../api/namespace';
 import { INamespace, INamespaceStore } from '@/types/namespace';
 import { ILabelItem } from '@/types/base';
+import { handleApiResult } from '@/utils/request.ts';
 
 // 前期没有使用 pinia,后继调整时考虑迁移到pinia
 const NAMESPACE_STORAGE_KEY = 'RNACOS_NAMESPACE_KEY';
@@ -43,11 +44,12 @@ function createStore(): INamespaceStore {
   };
   const initLoad = function () {
     if (!loadRef.value) {
-      namespaceApi.queryList().then((res) => {
-        if (res.status == 200 && res.data.data.length > 0) {
-          setLastList(res.data.data);
-        }
-      });
+      namespaceApi
+        .queryList()
+        .then(handleApiResult)
+        .then((list) => {
+          setLastList(list || []);
+        });
     }
   };
   //load value from localStorage

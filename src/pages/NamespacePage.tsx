@@ -24,6 +24,11 @@ import { template } from '@/utils/utils';
 import type { FormItemRule } from 'naive-ui';
 import type { IColumn, MyWindow } from '@/types/base';
 import { useI18n } from 'vue-i18n';
+import {
+  handleApiResult,
+  printApiError,
+  printApiSuccess
+} from '@/utils/request.ts';
 
 declare var window: MyWindow;
 
@@ -135,13 +140,14 @@ export default defineComponent({
   },
   setup() {
     let webResources = useWebResources();
-    const dataRef = ref([
+    const dataValue: INamespace[] = [
       {
         namespaceId: '',
         namespaceName: 'public',
         type: '0'
       }
-    ]);
+    ];
+    const dataRef = ref(dataValue);
     const loadingRef = ref(false);
     const useFormRef = ref(false);
     const modelRef = ref({
@@ -181,35 +187,22 @@ export default defineComponent({
     const doLoadNamespace = function () {
       namespaceApi
         .queryList()
-        .then((res) => {
-          if (res.status == 200) {
-            dataRef.value = res.data.data;
-            namespaceStore.setLastList(res.data.data);
-          } else {
-            window.$message.error('request err,status code:' + res.status);
-          }
+        .then(handleApiResult)
+        .then((list) => {
+          const value = list || [];
+          dataRef.value = value;
+          namespaceStore.setLastList(value);
         })
-        .catch((err) => {
-          window.$message.error(err.message);
-        });
+        .catch(printApiError);
     };
     const removeItem = function (row: INamespace) {
       namespaceApi
         .delete(row)
-        .then((res) => {
-          if (res.status == 200) {
-            if (res.data.code == 200) {
-              doLoadNamespace();
-            } else {
-              window.$message.error('操作失败: ' + res.data.message);
-            }
-          } else {
-            window.$message.error('操作失败，response code: ' + res.status);
-          }
+        .then(handleApiResult)
+        .then(() => {
+          doLoadNamespace();
         })
-        .catch((err) => {
-          window.$message.error('操作失败: ' + err.message);
-        });
+        .catch(printApiError);
     };
     const columns: IColumn[] = createColumns(
       showUpdate,
@@ -261,40 +254,24 @@ export default defineComponent({
     doCreate() {
       namespaceApi
         .add(this.model)
-        .then((res) => {
-          if (res.status == 200) {
-            if (res.data.code == 200) {
-              this.closeForm();
-              this.doLoadNamespace();
-            } else {
-              window.$message.error(res.data.message);
-            }
-          } else {
-            window.$message.error('request err,status code:' + res.status);
-          }
+        .then(handleApiResult)
+        .then(printApiSuccess)
+        .then(() => {
+          this.closeForm();
+          this.doLoadNamespace();
         })
-        .catch((err) => {
-          window.$message.error(err.message);
-        });
+        .catch(printApiError);
     },
     doUpdate() {
       namespaceApi
         .update(this.model)
-        .then((res) => {
-          if (res.status == 200) {
-            if (res.data.code == 200) {
-              this.closeForm();
-              this.doLoadNamespace();
-            } else {
-              window.$message.error(res.data.message);
-            }
-          } else {
-            window.$message.error('request err,status code:' + res.status);
-          }
+        .then(handleApiResult)
+        .then(printApiSuccess)
+        .then(() => {
+          this.closeForm();
+          this.doLoadNamespace();
         })
-        .catch((err) => {
-          window.$message.error(err.message);
-        });
+        .catch(printApiError);
     }
   },
   created() {

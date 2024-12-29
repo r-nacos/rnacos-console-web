@@ -26,7 +26,7 @@ export const getMessage = function (key) {
   for (var subKey of items) {
     obj = obj[subKey];
   }
-  return obj || key;
+  return obj || '';
 };
 
 export default i18n;

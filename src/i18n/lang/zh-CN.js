@@ -32,6 +32,7 @@ const message = {
     part: '部分',
     permission: '权限',
     submitSuccess: '提交成功',
+    success: '成功',
     home: '首页'
   },
   cluster: {
@@ -92,6 +93,8 @@ const message = {
     weight: '权重',
     healthy: '健康状态',
     online: '是否上线',
+    onlineText: '上线',
+    offlineText: '下线',
     editTitle: '编辑实例',
     registerTime: '注册时间',
     metadata: '元数据'
@@ -250,6 +253,7 @@ const message = {
   },
   error: {
     NO_PERMISSION: '没有权限',
+    NO_NAMESPACE_PERMISSION: '没有命名空间权限',
     SYSTEM_ERROR: '系统异常'
   }
 };

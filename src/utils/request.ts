@@ -83,8 +83,9 @@ export const handleApiResult = function <T>(
     let errorMsg;
     if (response.status == 200) {
       let errorCode = response.data.code;
-      if (errorCode === 'NO_PERMISSION') {
-        errorMsg = t('error.NO_PERMISSION');
+      let errorCodeMsg = t('error.' + errorCode);
+      if (errorCodeMsg !== '' && errorCode !== 'SYSTEM_ERROR') {
+        errorMsg = errorCodeMsg;
       } else {
         errorMsg = t('error.SYSTEM_ERROR');
         if (response.data.message) {

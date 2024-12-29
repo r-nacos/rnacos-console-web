@@ -32,6 +32,7 @@ const message = {
     part: 'Part',
     permission: 'permission',
     submitSuccess: 'Submit success',
+    success: 'Success',
     home: 'Home'
   },
   cluster: {
@@ -94,6 +95,8 @@ const message = {
     weight: 'Weight',
     healthy: 'Healthy',
     online: 'Enable',
+    onlineText: 'Online',
+    offlineText: 'Offline',
     editTitle: 'Edit instance',
     registerTime: 'Register time',
     metadata: 'Metadata'
@@ -258,6 +261,7 @@ const message = {
   },
   error: {
     NO_PERMISSION: 'NO_PERMISSION',
+    NO_NAMESPACE_PERMISSION: 'NO_NAMESPACE_PERMISSION',
     SYSTEM_ERROR: 'SYSTEM_ERROR'
   }
 };

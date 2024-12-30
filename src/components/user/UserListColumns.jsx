@@ -6,7 +6,7 @@ import { getRoleNameByCode } from '@/data/role';
 import { useI18n } from 'vue-i18n';
 import template from 'template_js';
 export const defaultNamespacePrivilege = {
-  enable: true,
+  enabled: true,
   whitelistIsAll: true,
   whitelist: null,
   blacklistIsAll: false,
@@ -84,8 +84,8 @@ export const createColumns = function (showDetail, showUpdate, remove) {
       render(row) {
         let namespacePrivilege =
           row.namespacePrivilege || defaultNamespacePrivilege;
-        var v = t('common.all');
-        if (namespacePrivilege.enable && !namespacePrivilege.whitelistIsAll) {
+        let v = t('common.all');
+        if (namespacePrivilege.enabled && !namespacePrivilege.whitelistIsAll) {
           v =
             t('common.part') +
             '(' +
@@ -106,7 +106,7 @@ export const createColumns = function (showDetail, showUpdate, remove) {
           '(' +
           arrayCount(namespacePrivilege.blacklist) +
           ')';
-        if (namespacePrivilege.enable && namespacePrivilege.blacklistIsAll) {
+        if (namespacePrivilege.enabled && namespacePrivilege.blacklistIsAll) {
           v = t('common.all');
         }
         return <span>{v}</span>;

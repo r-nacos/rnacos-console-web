@@ -212,7 +212,6 @@ export default defineComponent({
         doQueryList()
           .then(handleApiResult)
           .then((page) => {
-            console.log(page);
             loadingRef.value = false;
             let count = page.totalCount;
             let pageSize = paginationReactive.pageSize;

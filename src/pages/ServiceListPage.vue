@@ -105,6 +105,11 @@ import ServiceDetail from './ServiceDetail.vue';
 import * as constant from '@/types/constant';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
+import {
+  handleApiResult,
+  printApiError,
+  printApiSuccess
+} from '@/utils/request';
 
 export default defineComponent({
   components: {
@@ -197,18 +202,12 @@ export default defineComponent({
       };
       namingApi
         .removeService(serviceKey)
-        .then((res) => {
-          if (res.status == 200) {
-            window.$message.info('删除服务成功!');
-            doHandlePageChange(paginationReactive.page || 1);
-            return;
-          }
-          window.$message.error('删除服务报错,' + res.data);
+        .then(handleApiResult)
+        .then(printApiSuccess)
+        .then(() => {
+          doHandlePageChange(paginationReactive.page || 1);
         })
-        .catch((err) => {
-          //window.$message.error("删除服务报错," + err.message);
-          window.$message.error('删除服务报错,' + err.response.data);
-        });
+        .catch(printApiError);
     };
     const showCreate = () => {
       modelRef.value = {
@@ -225,7 +224,6 @@ export default defineComponent({
     const doQueryList = () => {
       return namingApi.queryServicePage({
         namespaceId: namespaceStore.current.value.namespaceId,
-        accessToken: null,
         serviceNameParam: paramRef.value.serviceParam,
         groupNameParam: paramRef.value.groupParam,
         pageNo: paginationReactive.page,
@@ -238,23 +236,19 @@ export default defineComponent({
       if (!loadingRef.value) {
         loadingRef.value = true;
         doQueryList()
-          .then((res) => {
+          .then(handleApiResult)
+          .then((page) => {
             loadingRef.value = false;
-            if (res.status == 200) {
-              let count = res.data.count;
-              let pageSize = paginationReactive.pageSize;
-              dataRef.value = res.data.serviceList;
-              paginationReactive.itemCount = count;
-              paginationReactive.pageCount = Math.round(
-                (count + pageSize - 1) / pageSize
-              );
-            } else {
-              window.$message.error('request err,status code:' + res.status);
-              dataRef.value = [];
-            }
+            let count = page.totalCount;
+            let pageSize = paginationReactive.pageSize;
+            dataRef.value = page.list;
+            paginationReactive.itemCount = count;
+            paginationReactive.pageCount = Math.round(
+              (count + pageSize - 1) / pageSize
+            );
           })
           .catch((err) => {
-            window.$message.error('request err,message' + err.message);
+            printApiError(err);
             dataRef.value = [];
             loadingRef.value = false;
           });
@@ -317,40 +311,30 @@ export default defineComponent({
         namespaceId: this.namespaceId,
         groupName: this.model.groupName,
         serviceName: this.model.serviceName,
-        protectThreshold: this.model.protectThreshold,
+        protectThreshold: parseInt(this.model.protectThreshold) || 0,
         metadata: this.model.metadata,
         tenant: this.getTenant
       };
       if (this.model.mode === constant.FORM_MODE_CREATE) {
         namingApi
           .createService(serviceInfo)
-          .then((res) => {
-            if (res.status == 200) {
-              window.$message.info('设置成功!');
-              this.useForm = false;
-              this.queryList();
-              return;
-            }
-            window.$message.error('设置失败，response code' + res.status);
+          .then(handleApiResult)
+          .then(printApiSuccess)
+          .then(() => {
+            this.useForm = false;
+            this.queryList();
           })
-          .catch((err) => {
-            window.$message.error('设置失败，' + err.message);
-          });
+          .catch(printApiError);
       } else {
         namingApi
           .updateService(serviceInfo)
-          .then((res) => {
-            if (res.status == 200) {
-              window.$message.info('设置成功!');
-              this.useForm = false;
-              this.queryList();
-              return;
-            }
-            window.$message.error('设置失败，response code' + res.status);
+          .then(handleApiResult)
+          .then(printApiSuccess)
+          .then(() => {
+            this.useForm = false;
+            this.queryList();
           })
-          .catch((err) => {
-            window.$message.error('设置失败，' + err.message);
-          });
+          .catch(printApiError);
       }
     }
   },

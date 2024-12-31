@@ -1,14 +1,14 @@
 import { AxiosResponse } from 'axios';
 import request from '../utils/request';
 import { IClusterNode } from '@/types/cluster';
-import { IConsoleResult } from '@/types/base';
+import { IApiResult, IConsoleResult } from '@/types/base';
 let axios = request;
 
 class ClusterApi {
-  queryNodeList(): Promise<AxiosResponse<IConsoleResult<Array<IClusterNode>>>> {
+  queryNodeList(): Promise<AxiosResponse<IApiResult<Array<IClusterNode>>>> {
     return axios.request({
       method: 'get',
-      url: '/rnacos/api/console/cluster/cluster_node_list'
+      url: '/rnacos/api/console/v2/cluster/cluster_node_list'
     });
   }
 }

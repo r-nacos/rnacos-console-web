@@ -1,6 +1,6 @@
 import { AxiosResponse } from 'axios';
 import request from '../utils/request';
-import { IApiResult } from '@/types/base';
+import { IApiResult, IPageResult } from '@/types/base';
 let axios = request;
 
 export interface IConfig {
@@ -10,6 +10,13 @@ export interface IConfig {
   content?: string;
   md5?: string;
   modifiedTime?: number;
+  desc?: string;
+  configType?: string;
+}
+
+export interface IConfigValue {
+  value?: string;
+  md5?: string;
   desc?: string;
   configType?: string;
 }
@@ -37,17 +44,7 @@ export interface IConfigQueryHistoryParam {
 }
 
 class ConfigApi {
-  setConfig(config: IConfig): Promise<AxiosResponse> {
-    return axios.request({
-      method: 'post',
-      url: '/rnacos/api/console/cs/configs',
-      data: {
-        ...config
-      }
-    });
-  }
-
-  setConfigV2(config: IConfig): Promise<AxiosResponse> {
+  setConfigV2(config: IConfig): Promise<AxiosResponse<IApiResult<any>>> {
     return axios.requestJSON({
       method: 'post',
       url: '/rnacos/api/console/v2/config/update',
@@ -55,33 +52,13 @@ class ConfigApi {
     });
   }
 
-  getConfig(
+  getConfigV2(
     configKey: IConfigKey
-  ): Promise<AxiosResponse<IApiResult<IConfig>>> {
-    return axios.request({
-      method: 'get',
-      url: '/rnacos/api/console/cs/configs',
-      params: {
-        ...configKey
-      }
-    });
-  }
-
-  getConfigV2(configKey: IConfigKey): Promise<AxiosResponse> {
+  ): Promise<AxiosResponse<IApiResult<IConfigValue>>> {
     return axios.request({
       method: 'get',
       url: '/rnacos/api/console/v2/config/info',
       params: {
-        ...configKey
-      }
-    });
-  }
-
-  removeConfig(configKey: IConfigKey): Promise<AxiosResponse> {
-    return axios.request({
-      method: 'delete',
-      url: '/rnacos/api/console/cs/configs',
-      data: {
         ...configKey
       }
     });
@@ -95,10 +72,12 @@ class ConfigApi {
     });
   }
 
-  queryConfigPage(queryParam: IConfigQueryParam): Promise<AxiosResponse> {
+  queryConfigPage(
+    queryParam: IConfigQueryParam
+  ): Promise<AxiosResponse<IApiResult<IPageResult<IConfig>>>> {
     return axios.request({
       method: 'get',
-      url: '/rnacos/api/console/configs',
+      url: '/rnacos/api/console/v2/config/list',
       params: {
         ...queryParam
       }
@@ -107,10 +86,10 @@ class ConfigApi {
 
   queryConfigHistoryPage(
     queryParam: IConfigQueryHistoryParam
-  ): Promise<AxiosResponse> {
+  ): Promise<AxiosResponse<IApiResult<IPageResult<IConfig>>>> {
     return axios.request({
       method: 'get',
-      url: '/rnacos/api/console/config/history',
+      url: '/rnacos/api/console/v2/config/history',
       params: {
         ...queryParam
       }

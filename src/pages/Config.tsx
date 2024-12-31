@@ -8,6 +8,8 @@ import {
 } from '@/api/config';
 import { AxiosError } from 'axios';
 import { useI18n } from 'vue-i18n';
+import { handleApiResult, printApiError } from '@/utils/request.ts';
+import * as constant from '@/types/constant.ts';
 export default defineComponent({
   name: 'Config',
   data() {
@@ -30,15 +32,11 @@ export default defineComponent({
       };
       configApi
         .setConfigV2(config)
-        .then((res) => {
-          //console.log('response', res.request.responseText);
-          if (res.status == 200) {
-            this.content = '';
-          }
+        .then(handleApiResult)
+        .then(() => {
+          this.content = '';
         })
-        .catch((err: AxiosError) => {
-          console.log('response err', err.message);
-        });
+        .catch(printApiError);
     },
     getConfig() {
       //console.log('getConfig', this.group, this.dataId);
@@ -48,16 +46,14 @@ export default defineComponent({
         dataId: this.dataId
       };
       configApi
-        .getConfig(configKey)
-        .then((res) => {
-          //console.log('response', res.request.responseText);
-          if (res.status == 200) {
-            this.content = res.request.responseText;
+        .getConfigV2(configKey)
+        .then(handleApiResult)
+        .then((data) => {
+          if (data != null) {
+            this.content = data.value || '';
           }
         })
-        .catch((err: AxiosError) => {
-          console.log('response err', err.message);
-        });
+        .catch(printApiError);
     }
   },
   render() {

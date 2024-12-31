@@ -89,6 +89,11 @@ import { createColumns } from '@/components/naming/InstanceListColumns';
 import ServiceInstanceDetail from './ServiceInstanceDetail.vue';
 import * as constant from '@/types/constant';
 import { useRoute } from 'vue-router';
+import {
+  handleApiResult,
+  printApiError,
+  printApiSuccess
+} from '@/utils/request';
 
 export default defineComponent({
   components: {
@@ -129,9 +134,9 @@ export default defineComponent({
 
     const modelRef = ref({
       ip: '',
-      port: '0',
+      port: 0,
       enabled: true,
-      weight: '1',
+      weight: 1,
       metadata: '{}',
       mode: constant.FORM_MODE_DETAIL
     });
@@ -141,9 +146,9 @@ export default defineComponent({
     const showUpdate = (row) => {
       modelRef.value = {
         ip: row.ip,
-        port: row.port.toString(),
+        port: row.port,
         enabled: row.enabled,
-        weight: (row.weight || 1).toString(),
+        weight: row.weight || 1,
         metadata: JSON.stringify(row.metadata || {}),
         mode: constant.FORM_MODE_UPDATE
       };
@@ -163,23 +168,21 @@ export default defineComponent({
       };
       namingApi
         .updateInstance(instance)
-        .then((res) => {
-          if (res.status == 200) {
-            if (enabled) {
-              window.$message.info('上线成功!');
-            } else {
-              window.$message.info('下线成功!');
-            }
-            row.enabled = enabled;
-            setCurrentPageData(paginationReactive.page || 1);
-            //reloadData()
-            return;
+        .then(handleApiResult)
+        .then(() => {
+          if (enabled) {
+            window.$message.info(
+              t('instance.onlineText') + t('common.join') + t('common.success')
+            );
+          } else {
+            window.$message.info(
+              t('instance.offlineText') + t('common.join') + t('common.success')
+            );
           }
-          window.$message.error('设置失败，response code' + res.status);
+          row.enabled = enabled;
+          setCurrentPageData(paginationReactive.page || 1);
         })
-        .catch((err) => {
-          window.$message.error('设置失败，' + err.message);
-        });
+        .catch(printApiError);
     };
     const onLine = (row) => {
       setRowEnabled(row, true);
@@ -220,25 +223,21 @@ export default defineComponent({
       if (!loadingRef.value) {
         loadingRef.value = true;
         doQueryList()
-          .then((res) => {
+          .then(handleApiResult)
+          .then((page) => {
             loadingRef.value = false;
-            if (res.status == 200) {
-              let count = res.data.count;
-              let pageSize = paginationReactive.pageSize;
-              paginationReactive.itemCount = count;
-              paginationReactive.pageCount = Math.round(
-                (count + pageSize - 1) / pageSize
-              );
-              loadedRef.value = true;
-              sourceDataRef.value = res.data.list || [];
-              setCurrentPageData(currentPage);
-            } else {
-              window.$message.error('request err,status code:' + res.status);
-              dataRef.value = [];
-            }
+            let count = page.totalCount;
+            let pageSize = paginationReactive.pageSize;
+            paginationReactive.itemCount = count;
+            paginationReactive.pageCount = Math.round(
+              (count + pageSize - 1) / pageSize
+            );
+            loadedRef.value = true;
+            sourceDataRef.value = page.list || [];
+            setCurrentPageData(currentPage);
           })
           .catch((err) => {
-            window.$message.error('request err,message' + err.message);
+            printApiError(err);
             dataRef.value = [];
             loadingRef.value = false;
           });
@@ -307,25 +306,20 @@ export default defineComponent({
 
         ip: this.model.ip,
         port: this.model.port,
-        weight: this.model.weight,
+        weight: parseFloat(this.model.weight) || 1,
         enabled: this.model.enabled,
         metadata: this.model.metadata
       };
       if (this.model.mode === constant.FORM_MODE_UPDATE) {
         namingApi
           .updateInstance(instance)
-          .then((res) => {
-            if (res.status == 200) {
-              window.$message.info('设置成功!');
-              this.useForm = false;
-              this.reloadData();
-              return;
-            }
-            window.$message.error('设置失败，response code' + res.status);
+          .then(handleApiResult)
+          .then(printApiSuccess)
+          .then(() => {
+            this.useForm = false;
+            this.reloadData();
           })
-          .catch((err) => {
-            window.$message.error('设置失败，' + err.message);
-          });
+          .catch(printApiError);
       } else {
         this.useForm = false;
       }

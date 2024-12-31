@@ -1,4 +1,11 @@
 import { INamespace } from '@/types/namespace';
+import { MessageApiInjection } from 'naive-ui/es/message/src/MessageProvider';
+
+declare global {
+  interface Window {
+    $message?: MessageApiInjection;
+  }
+}
 
 export interface ILabelItem {
   label: string;
@@ -38,14 +45,21 @@ export interface IConsoleResult<T> {
 }
 
 export interface IApiResult<T> {
-  code: ?string;
-  message: ?string;
   data: ?T;
   success: boolean;
+  code: ?string;
+  message: ?string;
 }
 
-export interface IPageResult<T> {
+/*
+export interface IOldPageResult<T> {
   size: number;
+  list: Array<T>;
+}
+*/
+
+export interface IPageResult<T> {
+  totalCount: number;
   list: Array<T>;
 }
 
@@ -59,4 +73,12 @@ export interface WebResource {
 export interface ILangStore {
   current: Ref<UnwrapRef<string>>;
   setCurrent: (arg: string) => any;
+}
+
+export interface IPrivilegeGroup {
+  enabled: ?boolean;
+  whitelistIsAll: ?boolean;
+  whitelist: ?Array<string>;
+  blacklistIsAll: ?boolean;
+  blacklist: ?Array<string>;
 }

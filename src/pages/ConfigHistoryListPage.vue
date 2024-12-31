@@ -112,6 +112,11 @@ import ConfigDetail from './ConfigDetail.vue';
 import * as constant from '@/types/constant';
 import { useRoute } from 'vue-router';
 import { useI18n } from 'vue-i18n';
+import {
+  printApiError,
+  handleApiResult,
+  printApiSuccess
+} from '@/utils/request';
 export default defineComponent({
   components: {
     SubContentFullPage,
@@ -177,26 +182,22 @@ export default defineComponent({
       if (!loadingRef.value) {
         loadingRef.value = true;
         doQueryList()
-          .then((res) => {
+          .then(handleApiResult)
+          .then((page) => {
             loadingRef.value = false;
-            if (res.status == 200) {
-              let count = res.data.count;
-              let pageSize = paginationReactive.pageSize;
-              dataRef.value = res.data.list;
-              if (currentPage === 1 && res.data.list.length > 0) {
-                modelRef.value.sourceContent = res.data.list[0].content;
-              }
-              paginationReactive.itemCount = count;
-              paginationReactive.pageCount = Math.round(
-                (count + pageSize - 1) / pageSize
-              );
-            } else {
-              window.$message.error('request err,status code:' + res.status);
-              dataRef.value = [];
+            let count = page.totalCount;
+            let pageSize = paginationReactive.pageSize;
+            dataRef.value = page.list;
+            if (currentPage === 1 && page.list.length > 0) {
+              modelRef.value.sourceContent = page.list[0].content;
             }
+            paginationReactive.itemCount = count;
+            paginationReactive.pageCount = Math.round(
+              (count + pageSize - 1) / pageSize
+            );
           })
           .catch((err) => {
-            window.$message.error('request err,message' + err.message);
+            printApiError(err);
             dataRef.value = [];
             loadingRef.value = false;
           });
@@ -226,27 +227,14 @@ export default defineComponent({
       };
       configApi
         .setConfigV2(config)
-        .then((res) => {
-          if (res.status == 200) {
-            if (res.data.success) {
-              window.$message.info('恢复成功!');
-              useFormRef.value = false;
-              useDiffFormRef.value = false;
-              doHandlePageChange(1);
-            } else {
-              window.$message.error(
-                t('config.recover_fail') + '，' + res.data.message
-              );
-            }
-            return;
-          }
-          window.$message.error(
-            t('config.recover_fail') + '，response code' + res.status
-          );
+        .then(handleApiResult)
+        .then(printApiSuccess)
+        .then(() => {
+          useFormRef.value = false;
+          useDiffFormRef.value = false;
+          doHandlePageChange(1);
         })
-        .catch((err) => {
-          window.$message.error(t('config.recover_fail') + '，' + err.message);
-        });
+        .catch(printApiError);
     };
     const rollback = (row) => {
       modelRef.value.content = row.content;

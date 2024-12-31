@@ -124,3 +124,10 @@ export const copyText = function (text) {
 export const template = function (t, obj) {
   return tjs(t, obj);
 };
+
+export const arrayCount = function (array) {
+  if (!array) {
+    return 0;
+  }
+  return array.length;
+};

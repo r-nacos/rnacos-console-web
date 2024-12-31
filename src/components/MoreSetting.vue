@@ -48,6 +48,7 @@ import ResetPassword from './user/ResetPassword.vue';
 import { useWebResources } from '@/data/resources';
 import router from '@/route/router.js';
 import { useI18n } from 'vue-i18n';
+import { handleApiResult, printApiError } from '@/utils/request';
 const renderIcon = (icon) => {
   return () => {
     return h(NIcon, null, {
@@ -132,22 +133,13 @@ export default defineComponent({
             oldPassword: resetModel.oldPassword,
             newPassword: resetModel.newPassword
           })
-          .then((res) => {
-            if (res.status == 200 && res.data != null && res.data.success) {
-              window.$message.info(t('passwordpanel.reset_password_success'));
-              useFormRef.value = false;
-              clearResetModel();
-              return;
-            }
-            window.$message.error(
-              this.$t('common.request_fail') + '，response code' + res.status
-            );
+          .then(handleApiResult)
+          .then(() => {
+            window.$message.info(t('passwordpanel.reset_password_success'));
+            useFormRef.value = false;
+            clearResetModel();
           })
-          .catch((err) => {
-            window.$message.error(
-              this.$t('common.request_fail') + '，' + err.message
-            );
-          });
+          .catch(printApiError);
       }
     };
   }

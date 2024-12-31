@@ -1,5 +1,7 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import router from '@/route/router.js';
+import { IApiResult } from '@/types/base';
+import { getMessage as t } from '@/i18n';
 
 class HttpRequest {
   constructor() {}
@@ -71,3 +73,42 @@ class HttpRequest {
 
 const request = new HttpRequest();
 export default request;
+
+export const handleApiResult = function <T>(
+  response: AxiosResponse<IApiResult<T>>
+): T | null {
+  if (response.status == 200 && response.data.success) {
+    return response.data.data;
+  } else {
+    let errorMsg;
+    if (response.status == 200) {
+      let errorCode = response.data.code;
+      let errorCodeMsg = t('error.' + errorCode);
+      if (errorCodeMsg !== '' && errorCode !== 'SYSTEM_ERROR') {
+        errorMsg = errorCodeMsg;
+      } else {
+        errorMsg = t('error.SYSTEM_ERROR');
+        if (response.data.message) {
+          errorMsg += ' : ' + response.data.message;
+        }
+      }
+    } else {
+      errorMsg = 'request error,http code:' + response.status;
+    }
+    throw new Error(errorMsg);
+  }
+};
+
+export const printApiSuccess = function () {
+  if (window.$message) {
+    window.$message.info(t('common.submitSuccess'));
+  }
+};
+
+export const printApiError = function (err: any) {
+  if (window.$message) {
+    window.$message.error(err.message);
+  } else {
+    console.error(err.message);
+  }
+};

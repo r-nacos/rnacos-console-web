@@ -1,6 +1,11 @@
 import { AxiosResponse } from 'axios';
 import request from '../utils/request';
-import { IApiResult, IPageResult, WebResource } from '@/types/base';
+import {
+  IApiResult,
+  WebResource,
+  IPrivilegeGroup,
+  IPageResult
+} from '@/types/base';
 let axios = request;
 
 export interface ILoginParam {
@@ -30,6 +35,7 @@ export interface IUserInfo {
   enable: boolean;
   roles: Array<String>;
   extendInfo?: Map<String, String>;
+  namespacePrivilege?: IPrivilegeGroup;
 }
 
 export interface IUpdateUserParam {
@@ -38,34 +44,35 @@ export interface IUpdateUserParam {
   password?: string;
   enable?: boolean;
   roles?: string;
+  namespacePrivilegeParam?: IPrivilegeGroup;
 }
 
 class UserApi {
   login(info: ILoginParam): Promise<AxiosResponse<IApiResult<boolean>>> {
     return axios.request({
       method: 'post',
-      url: '/rnacos/api/console/login/login',
+      url: '/rnacos/api/console/v2/login/login',
       data: info
     });
   }
   genCaptcha(): Promise<AxiosResponse<IApiResult<string>>> {
     return axios.request({
       method: 'get',
-      url: '/rnacos/api/console/login/captcha'
+      url: '/rnacos/api/console/v2/login/captcha'
     });
   }
   logout(): Promise<AxiosResponse<IApiResult<boolean>>> {
     return axios.request({
       method: 'post',
-      url: '/rnacos/api/console/login/logout'
+      url: '/rnacos/api/console/v2/login/logout'
     });
   }
   resetPassword(
     info: IResetPasswordParam
   ): Promise<AxiosResponse<IApiResult<boolean>>> {
-    return axios.request({
+    return axios.requestJSON({
       method: 'post',
-      url: '/rnacos/api/console/user/reset_password',
+      url: '/rnacos/api/console/v2/user/reset_password',
       data: info
     });
   }
@@ -74,7 +81,7 @@ class UserApi {
   ): Promise<AxiosResponse<IApiResult<IPageResult<IUserInfo>>>> {
     return axios.request({
       method: 'get',
-      url: '/rnacos/api/console/user/list',
+      url: '/rnacos/api/console/v2/user/list',
       params: {
         ...param
       }
@@ -83,32 +90,32 @@ class UserApi {
   getUserWebResources(): Promise<AxiosResponse<IApiResult<WebResource>>> {
     return axios.request({
       method: 'get',
-      url: '/rnacos/api/console/user/web_resources',
+      url: '/rnacos/api/console/v2/user/web_resources',
       params: {}
     });
   }
   addUser(info: IUpdateUserParam): Promise<AxiosResponse<IApiResult<boolean>>> {
-    return axios.request({
+    return axios.requestJSON({
       method: 'post',
-      url: '/rnacos/api/console/user/add',
+      url: '/rnacos/api/console/v2/user/add',
       data: info
     });
   }
   updateUser(
     info: IUpdateUserParam
   ): Promise<AxiosResponse<IApiResult<boolean>>> {
-    return axios.request({
+    return axios.requestJSON({
       method: 'post',
-      url: '/rnacos/api/console/user/update',
+      url: '/rnacos/api/console/v2/user/update',
       data: info
     });
   }
   removeUser(
     info: IUpdateUserParam
   ): Promise<AxiosResponse<IApiResult<boolean>>> {
-    return axios.request({
+    return axios.requestJSON({
       method: 'post',
-      url: '/rnacos/api/console/user/remove',
+      url: '/rnacos/api/console/v2/user/remove',
       data: info
     });
   }

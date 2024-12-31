@@ -24,6 +24,7 @@
 import { defineComponent } from 'vue';
 import { clusterApi } from '@/api/cluster';
 import { createColumns } from '@/components/cluster/ClusterInfoColumns';
+import { handleApiResult, printApiError } from '@/utils/request';
 
 export default defineComponent({
   setup() {
@@ -32,16 +33,11 @@ export default defineComponent({
     const doLoadData = function () {
       clusterApi
         .queryNodeList()
-        .then((res) => {
-          if (res.status == 200) {
-            dataRef.value = res.data.data;
-          } else {
-            window.$message.error('request err,status code:' + res.status);
-          }
+        .then(handleApiResult)
+        .then((data) => {
+          dataRef.value = data || [];
         })
-        .catch((err) => {
-          window.$message.error(err.message);
-        });
+        .catch(printApiError);
     };
     return {
       columns,

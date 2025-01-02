@@ -5,6 +5,7 @@ import NamespacePage from '@/pages/NamespacePage';
 //import ConfigListPage from '@/pages/ConfigListPage.vue';
 //import ConfigHistoryListPage from '@/pages/ConfigHistoryListPage.vue';
 import ServiceListPage from '@/pages/ServiceListPage.vue';
+import SubscriberListPage from '@/pages/SubscriberListPage.vue';
 import ServiceInstanceListPage from '@/pages/ServiceInstanceListPage.vue';
 import NotFound from '@/pages/NotFound.vue';
 import ClusterPageVue from '@/pages/ClusterPage.vue';
@@ -84,6 +85,12 @@ export const routes = [
         name: 'manange service',
         meta: { title: t('menu.service_list') },
         component: ServiceListPage
+      },
+      {
+        path: '/manage/subscriber',
+        name: 'manange subscriber',
+        meta: { title: t('menu.subscriber_list') },
+        component: SubscriberListPage
       },
       {
         path: '/manage/service/instance',
@@ -171,7 +178,11 @@ export const sideAllMenu = [
       {
         name: t('menu.service_list'),
         path: '/manage/service'
-      }
+      },
+      {
+        name: t('menu.subscriber_list'),
+        path: '/manage/subscriber'
+      },
     ]
   },
   {

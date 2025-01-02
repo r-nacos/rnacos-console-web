@@ -38,9 +38,17 @@ class NamingApi {
       params: param
     });
   }
-
-  createService(info: IServiceInfo): Promise<AxiosResponse<IApiResult<any>>> {
-    return axios.requestJSON({
+  querySubscriberPage(
+    param: IServiceQueryPageParam
+  ): Promise<AxiosResponse<IServiceQueryPageResult<IServiceQueryItem>>> {
+    return axios.request({
+      method: 'get',
+      url: '/rnacos/api/console/ns/service/subscribers',
+      params: param
+    });
+  }
+  createService(info: IServiceInfo): Promise<AxiosResponse> {
+    return axios.request({
       method: 'post',
       url: '/rnacos/api/console/v2/service/add',
       data: JSON.stringify(info)

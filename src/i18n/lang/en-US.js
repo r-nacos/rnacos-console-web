@@ -75,6 +75,9 @@ const message = {
     export_config: 'Export Config',
     import_config: 'Import Config'
   },
+  client: {
+    address: 'Client Address'
+  },
   namespace: {
     namespace: 'Namespace',
     the_namespace_id_has_been_copied: 'The namespace id has been copied!',
@@ -250,6 +253,7 @@ const message = {
     config_history: 'Config histories',
     service_management: 'ServiceManagement',
     service_list: 'Service list',
+    subscriber_list: 'Subscriber list',
     service_instance_list: 'Service instance list',
     system_management: 'System',
     user_management: 'User list',

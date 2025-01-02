@@ -41,6 +41,9 @@ const message = {
     masternode: '主节点',
     cluster_info: '集群信息'
   },
+  client: {
+    address: '客户端地址'
+  },
   config: {
     config: '配置',
     config_id: '配置ID',
@@ -242,6 +245,7 @@ const message = {
     config_history: '配置历史记录',
     service_management: '服务管理',
     service_list: '服务列表',
+    subscriber_list: '订阅者列表',
     service_instance_list: '服务实例列表',
     system_management: '系统管理',
     user_management: '用户管理',

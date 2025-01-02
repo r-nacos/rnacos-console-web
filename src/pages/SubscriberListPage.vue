@@ -71,6 +71,7 @@ import { namespaceStore } from '@/data/namespace';
 import { createColumns } from '@/components/naming/SuberscriberListColumns.jsx';
 import NamespacePopSelect from '@/components/namespace/NamespacePopSelect.vue';
 import { useI18n } from 'vue-i18n';
+import { useRoute } from 'vue-router';
 
 export default defineComponent({
   components: {
@@ -78,12 +79,14 @@ export default defineComponent({
   },
   setup() {
     const { t } = useI18n();
+    let route = useRoute();
     const dataRef = ref([]);
     const loadingRef = ref(false);
+    let query = route.query;
     const paramRef = ref({
-      serviceParam: '',
-      groupParam: '',
-      namespaceId: '',
+      serviceParam: query.serviceName,
+      groupParam: query.groupName || '',
+      namespaceId: query.namespaceId || '',
       pageNo: 1,
       pageSize: 20
     });

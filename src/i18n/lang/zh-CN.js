@@ -104,6 +104,7 @@ const message = {
   },
   service: {
     name: '服务名称',
+    subscriber: '订阅者',
     inputName: '输入服务名称',
     groupName: '服务组',
     inputGroupName: '输入服务组',

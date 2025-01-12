@@ -6,6 +6,7 @@ export const createColumns = function (
   detail,
   showUpdate,
   remove,
+  showSubscribers,
   webResources
 ) {
   const { t } = useI18n();
@@ -89,6 +90,14 @@ export const createColumns = function (
               {t('common.detail')}
             </NButton>
             {editButton}
+            <NButton
+              size="tiny"
+              quaternary
+              type="info"
+              onClick={() => showSubscribers(row)}
+            >
+              {t('service.subscriber')}
+            </NButton>
             {removePopconfirm}
           </div>
         );

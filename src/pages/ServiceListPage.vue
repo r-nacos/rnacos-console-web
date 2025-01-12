@@ -179,6 +179,16 @@ export default defineComponent({
         }
       });
     };
+    const showSubscribers = (row) => {
+      router.push({
+        path: '/manage/subscriber',
+        query: {
+          groupName: row.groupName,
+          serviceName: row.name,
+          namespaceId: namespaceStore.current.value.namespaceId
+        }
+    });
+  };
     const showDetail = (row) => {
       let protectThreshold = '0';
       if (row.protectThreshold) {
@@ -260,6 +270,7 @@ export default defineComponent({
       showDetail,
       showUpdate,
       removeItem,
+      showSubscribers,
       webResources
     );
     return {

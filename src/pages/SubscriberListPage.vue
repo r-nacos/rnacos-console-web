@@ -75,7 +75,7 @@ import { useRoute } from 'vue-router';
 
 export default defineComponent({
   components: {
-    NamespacePopSelect,
+    NamespacePopSelect
   },
   setup() {
     const { t } = useI18n();
@@ -128,7 +128,7 @@ export default defineComponent({
             if (res.status == 200) {
               let count = res.data.count;
               let pageSize = paginationReactive.pageSize;
-              console.info(res)
+              console.info(res);
               dataRef.value = res.data.subscribers;
               paginationReactive.itemCount = count;
               paginationReactive.pageCount = Math.round(
@@ -155,22 +155,29 @@ export default defineComponent({
       loading: loadingRef,
       param: paramRef,
       rowKey(rowData) {
-        return rowData.groupName + '@@' + rowData.serviceName + '@@' + rowData.ip + ':' + rowData.port;
+        return (
+          rowData.groupName +
+          '@@' +
+          rowData.serviceName +
+          '@@' +
+          rowData.ip +
+          ':' +
+          rowData.port
+        );
       },
-      doHandlePageChange,
+      doHandlePageChange
     };
   },
 
-  computed: {
-  },
+  computed: {},
   methods: {
     queryList() {
       this.doHandlePageChange(1);
     },
-    
+
     handlePageChange(page) {
       this.doHandlePageChange(page);
-    },
+    }
   },
   mounted() {
     this.queryList();

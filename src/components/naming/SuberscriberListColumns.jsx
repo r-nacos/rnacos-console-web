@@ -1,6 +1,5 @@
 import { useI18n } from 'vue-i18n';
-export const createColumns = function (
-) {
+export const createColumns = function () {
   const { t } = useI18n();
 
   const columns = [
@@ -17,8 +16,8 @@ export const createColumns = function (
       key: 'address',
       render(row) {
         return `${row.ip}:${row.port}`;
-      },
-    },
+      }
+    }
   ];
   return columns;
 };

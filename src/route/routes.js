@@ -182,7 +182,7 @@ export const sideAllMenu = [
       {
         name: t('menu.subscriber_list'),
         path: '/manage/subscriber'
-      },
+      }
     ]
   },
   {

@@ -187,8 +187,8 @@ export default defineComponent({
           serviceName: row.name,
           namespaceId: namespaceStore.current.value.namespaceId
         }
-    });
-  };
+      });
+    };
     const showDetail = (row) => {
       let protectThreshold = '0';
       if (row.protectThreshold) {

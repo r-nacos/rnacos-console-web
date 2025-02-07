@@ -48,7 +48,7 @@ class NamingApi {
     });
   }
   createService(info: IServiceInfo): Promise<AxiosResponse> {
-    return axios.request({
+    return axios.requestJSON({
       method: 'post',
       url: '/rnacos/api/console/v2/service/add',
       data: JSON.stringify(info)

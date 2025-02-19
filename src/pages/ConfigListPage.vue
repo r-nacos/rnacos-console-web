@@ -10,68 +10,69 @@
     </div>
     <div class="content-wrap">
       <div class="form-container">
-        <div class="query-params">
-          <n-form label-placement="left" label-width="auto">
-            <div class="paramWrap">
-              <n-form-item
-                :label="this.$t('config.config_id')"
-                path="param.dataParam"
-              >
-                <n-input
-                  v-model:value="param.dataParam"
-                  :placeholder="this.$t('config.input_dataId')"
-                  clearable
-                  @keydown.enter.prevent
-                  @keyup.enter="queryList"
-                />
-              </n-form-item>
-              <n-form-item
-                :label="this.$t('config.config_group')"
-                path="param.groupParam"
-              >
-                <n-input
-                  v-model:value="param.groupParam"
-                  :placeholder="this.$t('config.input_config_group')"
-                  clearable
-                  @keydown.enter.prevent
-                  @keyup.enter="queryList"
-                />
-              </n-form-item>
-            </div>
+        <n-card :bordered="false">
+
+          <n-form label-placement="left" label-width="90">
+            <n-grid cols='1 s:1 m:2 l:3 xl:3 2xl:4' responsive="screen">
+                <n-gi>
+                  <n-form-item
+                    :label="this.$t('config.config_id')"
+                    path="param.dataParam"
+                  >
+                    <n-input
+                      v-model:value="param.dataParam"
+                      :placeholder="this.$t('config.input_dataId')"
+                      clearable
+                      @keydown.enter.prevent
+                      @keyup.enter="queryList"
+                    />
+                  </n-form-item>
+                </n-gi>
+                <n-gi>
+                  <n-form-item
+                    :label="this.$t('config.config_group')"
+                    path="param.groupParam"
+                  >
+                    <n-input
+                      v-model:value="param.groupParam"
+                      :placeholder="this.$t('config.input_config_group')"
+                      clearable
+                      @keydown.enter.prevent
+                      @keyup.enter="queryList"
+                    />
+                  </n-form-item>
+                </n-gi>
+
+                <n-gi suffix="true">
+                <n-space justify="end" class="ml-2">
+                  <n-button tertiary @click="queryList">{{
+                    this.$t('common.query')
+                  }}</n-button>
+                  <n-button v-if="webResources.canUpdateConfig" type="info" @click="showCreate">{{
+                    this.$t('common.add')
+                  }}</n-button>
+
+                  <n-button  @click="download" type="info">{{
+                    this.$t('config.export_config')
+                  }}</n-button>
+
+                <n-upload
+                v-if="webResources.canUpdateConfig"
+                  action="/rnacos/api/console/config/import"
+                  :headers="uploadHeader"
+                  :show-file-list="false"
+                  @before-upload="doBeforeUpload"
+                  @finish="handlerUploadFinish"
+                >
+                  <n-button type="info">{{
+                    this.$t('config.import_config')
+                  }}</n-button>
+                </n-upload>
+                </n-space>
+              </n-gi>
+            </n-grid>
           </n-form>
-          <div class="queryButton">
-            <span class="query-button-item">
-              <n-button tertiary @click="queryList">{{
-                this.$t('common.query')
-              }}</n-button>
-            </span>
-            <span v-if="webResources.canUpdateConfig" class="query-button-item">
-              <n-button type="info" @click="showCreate">{{
-                this.$t('common.add')
-              }}</n-button>
-            </span>
-            <span class="query-button-item">
-              <a ref="download" @click="download"
-                ><n-button type="info">{{
-                  this.$t('config.export_config')
-                }}</n-button></a
-              >
-            </span>
-            <span v-if="webResources.canUpdateConfig" class="query-button-item">
-              <n-upload
-                action="/rnacos/api/console/config/import"
-                :headers="uploadHeader"
-                :show-file-list="false"
-                @before-upload="doBeforeUpload"
-                @finish="handlerUploadFinish"
-              >
-                <n-button type="info">{{
-                  this.$t('config.import_config')
-                }}</n-button>
-              </n-upload>
-            </span>
-          </div>
-        </div>
+        </n-card>
         <n-data-table
           remote
           ref="table"
@@ -403,7 +404,11 @@ export default defineComponent({
       this.param.tenant = namespaceStore.current.value.namespaceId;
       var params = qs.stringify(this.param);
       var url = '/rnacos/api/console/config/download?' + params;
-      this.$refs.download.setAttribute('href', url);
+      const link = document.createElement('a');
+      document.body.appendChild(link);
+      link.href = url;
+      link.click();
+      document.body.removeChild(link);
       return true;
     }
   },
@@ -460,14 +465,6 @@ export default defineComponent({
   flex: 0 0 auto;
 }
 
-.query-params {
-  flex: 0 0 auto;
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  flex-direction: row;
-}
-
 .paramWrap {
   display: flex;
   gap: 8px;
@@ -475,10 +472,6 @@ export default defineComponent({
   flex-wrap: wrap;
 }
 
-.queryButton {
-  display: flex;
-  align-items: center;
-}
 
 .query-button-item {
   margin-left: 10px;

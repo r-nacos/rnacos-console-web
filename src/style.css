@@ -120,3 +120,4 @@ body {
   transform: translateY(10px);
   opacity: 0;
 }
+@import "tailwindcss";

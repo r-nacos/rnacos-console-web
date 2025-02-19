@@ -1,0 +1,18 @@
+services:
+  app:
+    build: .
+    volumes:
+      - .:/app
+      - /app/node_modules
+    command: npm run dev
+    environment:
+      - NODE_ENV=development 
+    ports:
+      - 5173:5173
+      # - 10840:10840
+    networks:
+      - r-nacos-simple_default
+
+networks:
+     r-nacos-simple_default:
+       external: true

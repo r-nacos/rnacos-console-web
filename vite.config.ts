@@ -53,7 +53,7 @@ export default defineConfig({
     host: '0.0.0.0',
     proxy: {
       "/rnacos/api": {
-        target: "http://127.0.0.1:10848",
+        target: "http://host.docker.internal:10848",
         changeOrigin: true,
       }
     }

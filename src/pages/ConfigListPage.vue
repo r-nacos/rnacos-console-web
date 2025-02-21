@@ -11,63 +11,65 @@
     <div class="content-wrap">
       <div class="form-container">
         <n-card :bordered="false">
-
           <n-form label-placement="left" label-width="90">
-            <n-grid cols='1 s:1 m:2 l:3 xl:3 2xl:4' responsive="screen">
-                <n-gi>
-                  <n-form-item
-                    :label="this.$t('config.config_id')"
-                    path="param.dataParam"
-                  >
-                    <n-input
-                      v-model:value="param.dataParam"
-                      :placeholder="this.$t('config.input_dataId')"
-                      clearable
-                      @keydown.enter.prevent
-                      @keyup.enter="queryList"
-                    />
-                  </n-form-item>
-                </n-gi>
-                <n-gi>
-                  <n-form-item
-                    :label="this.$t('config.config_group')"
-                    path="param.groupParam"
-                  >
-                    <n-input
-                      v-model:value="param.groupParam"
-                      :placeholder="this.$t('config.input_config_group')"
-                      clearable
-                      @keydown.enter.prevent
-                      @keyup.enter="queryList"
-                    />
-                  </n-form-item>
-                </n-gi>
+            <n-grid cols="1 s:1 m:2 l:3 xl:3 2xl:4" responsive="screen">
+              <n-gi>
+                <n-form-item
+                  :label="this.$t('config.config_id')"
+                  path="param.dataParam"
+                >
+                  <n-input
+                    v-model:value="param.dataParam"
+                    :placeholder="this.$t('config.input_dataId')"
+                    clearable
+                    @keydown.enter.prevent
+                    @keyup.enter="queryList"
+                  />
+                </n-form-item>
+              </n-gi>
+              <n-gi>
+                <n-form-item
+                  :label="this.$t('config.config_group')"
+                  path="param.groupParam"
+                >
+                  <n-input
+                    v-model:value="param.groupParam"
+                    :placeholder="this.$t('config.input_config_group')"
+                    clearable
+                    @keydown.enter.prevent
+                    @keyup.enter="queryList"
+                  />
+                </n-form-item>
+              </n-gi>
 
-                <n-gi suffix="true">
+              <n-gi suffix="true">
                 <n-space justify="end" class="ml-2">
                   <n-button tertiary @click="queryList">{{
                     this.$t('common.query')
                   }}</n-button>
-                  <n-button v-if="webResources.canUpdateConfig" type="info" @click="showCreate">{{
-                    this.$t('common.add')
-                  }}</n-button>
+                  <n-button
+                    v-if="webResources.canUpdateConfig"
+                    type="info"
+                    @click="showCreate"
+                    >{{ this.$t('common.add') }}</n-button
+                  >
 
-                  <n-button  @click="download" type="info">{{
+                  <n-button @click="download" type="info">{{
                     this.$t('config.export_config')
                   }}</n-button>
 
-                <n-upload
-                v-if="webResources.canUpdateConfig"
-                  action="/rnacos/api/console/config/import"
-                  :headers="uploadHeader"
-                  :show-file-list="false"
-                  @before-upload="doBeforeUpload"
-                  @finish="handlerUploadFinish"
-                >
-                  <n-button type="info">{{
-                    this.$t('config.import_config')
-                  }}</n-button>
-                </n-upload>
+                  <n-upload
+                    v-if="webResources.canUpdateConfig"
+                    action="/rnacos/api/console/config/import"
+                    :headers="uploadHeader"
+                    :show-file-list="false"
+                    @before-upload="doBeforeUpload"
+                    @finish="handlerUploadFinish"
+                  >
+                    <n-button type="info">{{
+                      this.$t('config.import_config')
+                    }}</n-button>
+                  </n-upload>
                 </n-space>
               </n-gi>
             </n-grid>
@@ -471,7 +473,6 @@ export default defineComponent({
   flex-direction: row;
   flex-wrap: wrap;
 }
-
 
 .query-button-item {
   margin-left: 10px;

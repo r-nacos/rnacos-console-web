@@ -1,14 +1,14 @@
 <template>
   <n-menu
-    :options="menuOptions"
-    :collapsed="collapsed"
-    :collapsed-width="64"
-    :collapsed-icon-size="22"
-    :value="getSelectedKeys"
-    :expanded-keys="openKeys"
-    @update:value="clickMenuItem"
-    @update:expanded-keys="menuExpanded"
-  />
+      :options="menuOptions"
+      :collapsed="collapsed"
+      :collapsed-width="64"
+      :collapsed-icon-size="22"
+      :value="getSelectedKeys"
+      :expanded-keys="openKeys"
+      @update:value="clickMenuItem"
+      @update:expanded-keys="menuExpanded"
+    />
 </template>
 
 <script lang="ts" setup>
@@ -28,6 +28,7 @@ const props = defineProps({
 });
 
 const webResources = useWebResources();
+const menuOptions = ref<MenuOption[]>(webResources.sideMenu);
 const pathRef = ref('/');
 const router = useRouter();
 const currentRoute = useRoute();
@@ -66,7 +67,6 @@ onMounted(() => {
 const selectedKeys = ref<string>(currentRoute.name as string);
 const getSelectedKeys = computed(() => unref(selectedKeys));
 
-const menuOptions = ref<MenuOption[]>(webResources.sideMenu);
 
 const matched = currentRoute.matched;
 const getOpenKeys =

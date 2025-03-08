@@ -1,23 +1,40 @@
 <template>
 	<n-layout has-sider>
 		<n-layout-sider
-		  v-show="!isMobile"
-		  class="h-screen"
+		  v-if="!isMobile"
+		  show-trigger="bar"
+		  @collapse="collapsed = true"
+		  :position="'left'"
+		  @expand="collapsed = false"
+		  :collapsed="collapsed"
 		  collapse-mode="width"
 		  :collapsed-width="64"
 		  :width="240"
-		  :collapsed="collapsed"
-		  show-trigger="bar"
-		  @collapse="collapsed = true"
-		  @expand="collapsed = false"
+		  :native-scrollbar="false"
+		  class="h-screen"
 		>
 			<Logo :collapsed="collapsed"/>
 			<AsideMenu v-model:collapsed="collapsed"/>
 		</n-layout-sider>
 
-		<!-- <n-drawer v-model:show="showSideDrawer" :width="240" :placement="isMobile ? 'left' : 'right'">
-		<n-layout-sider>111</n-layout-sider>	
-		</n-drawer> -->
+		<n-drawer 
+		v-model:show="showSideDrawer" 
+		:width="menuWidth" 
+		:placement="'left'"
+		:trap-focus="showSideDrawer"
+		:auto-focus="false"
+		>
+			<n-layout-sider
+			 :position="'left'"
+			 :width="menuWidth"
+			 :collapsed="false"
+			 :collapsed-width="64"
+            :native-scrollbar="false"
+			>
+			<Logo :collapsed="collapsed"/>
+			<AsideMenu />
+		</n-layout-sider>
+		</n-drawer>
 
 
 		<n-layout>
@@ -36,9 +53,10 @@ import { ref, computed, onMounted } from 'vue';
 import { AsideMenu } from './components/Menu';
 import { PageHeader } from './components/Header'
 import { Logo } from './components/Logo';
+
+const menuWidth = ref(200);
 const collapsed = ref(false);
 const isMobileState = ref(window.innerWidth <= 768);
-
 
 const isMobile = computed<boolean>({
 	get() {return isMobileState.value},
@@ -47,11 +65,15 @@ const isMobile = computed<boolean>({
 
   const showSideDrawer = computed<boolean>({
 	get() {return isMobile.value && collapsed.value},
-	set(val:boolean) {isMobile.value = val}
+	set(val:boolean) {collapsed.value = val}
   });
   //判断是否触发移动端模式
   function checkMobileMode() {
-	isMobile.value = document.body.clientWidth <= 768;
+	if(document.body.clientWidth <= 768) {
+		isMobile.value = true;
+	} else {
+		isMobile.value = false;
+	}
 	collapsed.value = false;
   };
 
@@ -63,6 +85,9 @@ const isMobile = computed<boolean>({
   onMounted(() => {
 	checkMobileMode();
 	window.addEventListener('resize', watchWidth);
+  });
 
+  onUnmounted(() => {
+	window.removeEventListener('resize', watchWidth);
   });
 </script>

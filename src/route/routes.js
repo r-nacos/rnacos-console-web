@@ -165,6 +165,7 @@ export const sideAllMenu = [
     children: [
       {
         label: t('menu.config_list'),
+        path: '/manage/configs',
         key: 'config'
       }
       /*
@@ -182,11 +183,13 @@ export const sideAllMenu = [
     children: [
       {
         label: t('menu.service_list'),
-        key: 'service'
+        key: 'service',
+        path: '/manage/service'
       },
       {
         label: t('menu.subscriber_list'),
-        key: 'subscriber'
+        key: 'subscriber',
+        path: '/manage/subscriber'
       }
     ]
   },
@@ -197,27 +200,33 @@ export const sideAllMenu = [
     children: [
       {
         label: t('menu.user_management'),
-        key: 'user'
+        key: 'user',
+        path: '/manage/user'
       },
       {
         label: t('menu.namespace'),
-        key: 'namespace'
+        key: 'namespace',
+        path: '/manage/namespace'
       },
       {
         label: t('menu.data_transfer'),
-        key: 'transfer'
+        key: 'transfer',
+        path: '/manage/transfer'
       },
       {
         label: t('menu.cluster_info'),
-        key: 'cluster'
+        key: 'cluster',
+        path: '/manage/cluster'
       },
       {
         label: t('menu.system_monitor'),
-        key: 'monitor'
+        key: 'monitor',
+        path: '/manage/appmonitor'
       },
       {
         label: t('menu.about'),
-        key: 'about'
+        key: 'about',
+        path: '/manage/about'
       }
     ]
   }

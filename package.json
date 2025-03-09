@@ -11,14 +11,15 @@
     "vue3"
   ],
   "private": true,
-  "version": "0.5.11",
+  "version": "0.5.12",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc && vite build",
     "preview": "vite preview",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
-    "format": "prettier --write src/"
+    "format": "prettier --write src/",
+    "fmt": "prettier --write src/"
   },
   "dependencies": {
     "@codemirror/lang-html": "^6.4.8",

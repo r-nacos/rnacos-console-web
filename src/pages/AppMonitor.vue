@@ -436,7 +436,7 @@ async function loadData() {
 
 async function initNodeData() {
   let resp = await clusterApi.queryNodeList();
-  if (resp.status != 200 || resp.data.code != 200) {
+  if (resp.status != 200 || !resp.data.success) {
     //console.log('initNodeData', resp);
     throw new Error('queryNodeList error');
   }

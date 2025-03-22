@@ -3,15 +3,15 @@
 		<n-layout-sider
 		  v-if="!isMobile"
 		  show-trigger="bar"
-		  @collapse="collapsed = true"
+		  @collapse="handleCollapse"
 		  :position="'left'"
-		  @expand="collapsed = false"
+		  @expand="handleExpand"
 		  :collapsed="collapsed"
 		  collapse-mode="width"
 		  :collapsed-width="64"
 		  :width="240"
 		  :native-scrollbar="false"
-		  class="h-screen"
+		  class="h-screen transition-all duration-300"
 		>
 			<Logo :collapsed="collapsed"/>
 			<AsideMenu v-model:collapsed="collapsed"/>
@@ -23,19 +23,20 @@
 		:placement="'left'"
 		:trap-focus="showSideDrawer"
 		:auto-focus="false"
+		class="md:hidden"
 		>
 			<n-layout-sider
 			 :position="'left'"
 			 :width="menuWidth"
 			 :collapsed="false"
 			 :collapsed-width="64"
-            :native-scrollbar="false"
+             :native-scrollbar="false"
+			 class="h-screen"
 			>
-			<Logo :collapsed="collapsed"/>
-			<AsideMenu />
-		</n-layout-sider>
+				<Logo :collapsed="false"/>
+				<AsideMenu :collapsed="false"/>
+			</n-layout-sider>
 		</n-drawer>
-
 
 		<n-layout>
       <n-layout-header class="flex justify-between items-center px-4 bg-gray-100">
@@ -45,49 +46,93 @@
 				<router-view></router-view>
 			</n-layout-content>
 		</n-layout>
-	  </n-layout>
+	</n-layout>
 </template>
   
 <script lang="ts" setup>
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { AsideMenu } from './components/Menu';
 import { PageHeader } from './components/Header'
 import { Logo } from './components/Logo';
 
-const menuWidth = ref(200);
+const menuWidth = ref(240);
 const collapsed = ref(false);
 const isMobileState = ref(window.innerWidth <= 768);
 
 const isMobile = computed<boolean>({
-	get() {return isMobileState.value},
-	set(val:boolean) {isMobileState.value = val}
-  });
+	get() { return isMobileState.value },
+	set(val: boolean) { isMobileState.value = val }
+});
 
-  const showSideDrawer = computed<boolean>({
-	get() {return isMobile.value && collapsed.value},
-	set(val:boolean) {collapsed.value = val}
-  });
-  //判断是否触发移动端模式
-  function checkMobileMode() {
-	if(document.body.clientWidth <= 768) {
-		isMobile.value = true;
+const showSideDrawer = computed<boolean>({
+	get() { return isMobile.value && !collapsed.value },
+	set(val: boolean) { collapsed.value = !val }
+});
+
+// 处理菜单折叠
+const handleCollapse = () => {
+	if (!isMobile.value) {
+		collapsed.value = true;
 	} else {
-		isMobile.value = false;
+		showSideDrawer.value = false;
 	}
-	collapsed.value = false;
-  };
+};
 
-  function watchWidth() {
-    const width = document.body.clientWidth;
-	collapsed.value = width <= 950;
-	checkMobileMode();
-  }
-  onMounted(() => {
-	checkMobileMode();
-	window.addEventListener('resize', watchWidth);
-  });
+// 处理菜单展开
+const handleExpand = () => {
+	if (!isMobile.value) {
+		collapsed.value = false;
+	} else {
+		showSideDrawer.value = true;
+	}
+};
 
-  onUnmounted(() => {
-	window.removeEventListener('resize', watchWidth);
-  });
+// 检查并设置移动端模式
+const checkMobileMode = () => {
+	const width = window.innerWidth;
+	isMobile.value = width <= 768;
+	
+	// 在移动端模式下，默认隐藏菜单
+	if (isMobile.value) {
+		collapsed.value = true;
+		showSideDrawer.value = false;
+	} else {
+		// 在桌面端模式下，根据窗口宽度决定是否折叠
+		collapsed.value = width <= 950;
+	}
+};
+
+// 监听窗口大小变化
+const handleResize = () => {
+	checkMobileMode();
+};
+
+// 组件挂载时初始化
+onMounted(() => {
+	checkMobileMode();
+	window.addEventListener('resize', handleResize);
+});
+
+// 组件卸载时清理
+onUnmounted(() => {
+	window.removeEventListener('resize', handleResize);
+});
 </script>
+
+<style scoped>
+/* 移动端样式 */
+@media (max-width: 768px) {
+	.n-layout-sider {
+		position: fixed;
+		z-index: 1000;
+	}
+}
+
+/* 桌面端样式 */
+@media (min-width: 769px) {
+	.n-layout-sider {
+		position: relative;
+		z-index: 1;
+	}
+}
+</style>

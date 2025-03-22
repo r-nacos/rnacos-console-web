@@ -11,8 +11,7 @@ declare module 'vue' {
     DiffComponent: typeof import('./src/components/config/DiffComponent.vue')['default']
     Foo: typeof import('./src/components/Foo.vue')['default']
     LangSwitch: typeof import('./src/components/LangSwitch.vue')['default']
-    Layout: typeof import('./src/layout/index.vue')['default']
-    MainLayout: typeof import('./src/components/layout/MainLayout.vue')['default']
+    MainLayout: typeof import('./src/layout/index.vue')['default']
     Menu: typeof import('./src/layout/components/Menu/index.vue')['default']
     MoreSetting: typeof import('./src/components/MoreSetting.vue')['default']
     NamespacePopSelect: typeof import('./src/components/namespace/NamespacePopSelect.vue')['default']
@@ -52,6 +51,5 @@ declare module 'vue' {
     ResetPassword: typeof import('./src/components/user/ResetPassword.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
-    SideMenu: typeof import('./src/components/SideMenu.vue')['default']
   }
 }

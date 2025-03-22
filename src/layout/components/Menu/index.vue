@@ -14,7 +14,7 @@
 <script lang="ts" setup>
 import type { MenuOption } from 'naive-ui';
 import { useWebResources } from '@/data/resources';
-import {ref, watch, reactive, defineEmits, toRefs, computed, unref, defineProps} from 'vue';
+import {ref, watch, reactive, toRefs, computed, unref} from 'vue';
 import { userApi } from '@/api/user';
 import { handleApiResult } from '@/utils/request';
 import { useRouter, useRoute } from 'vue-router';

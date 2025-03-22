@@ -1,10 +1,10 @@
 <template>
-  <div class="container">
-    <div class="wrap">
-      <div class="header">
+  <div class="min-h-screen w-full bg-gray-100 flex items-center justify-center">
+    <div class="w-full max-w-md mx-4">
+      <div class="h-[52px] leading-[52px] text-center rounded-t-lg bg-blue-500 text-white">
         <span>R-NACOS {{ this.$t('login.login') }}</span>
       </div>
-      <n-form class="login_form" ref="formRef" :model="model" :rules="rules">
+      <n-form class="border border-gray-300 p-5 pb-6 bg-white rounded-b-lg shadow-lg" ref="formRef" :model="model" :rules="rules">
         <n-form-item path="username" :label="this.$t('user.username')">
           <n-input
             :placeholder="this.$t('user.username')"
@@ -23,10 +23,9 @@
         </n-form-item>
         <div
           v-if="captcha_visible"
-          class="captcha"
-          style="display: inline-flex; flex-direction: row"
+          class="w-full inline-flex flex-row"
         >
-          <div class="captcha_code">
+          <div class="flex-1">
             <n-form-item path="captcha" :label="this.$t('login.captcha')">
               <n-input
                 :placeholder="this.$t('login.captcha')"
@@ -37,17 +36,20 @@
               />
             </n-form-item>
           </div>
-          <div class="captcha_img">
+          <div class="flex-none pl-0.5">
             <img
               :src="captcha_img"
               height="60"
-              style="margin: 0; padding: 0"
+              class="m-0 p-0 cursor-pointer h-20"
               @click="gen_captcha"
             />
           </div>
         </div>
         <div>
-          <button class="login_btn" @click="submit">
+          <button 
+            class="h-[34px] w-full text-sm leading-[14px] bg-blue-500 text-white border-0 rounded cursor-pointer hover:bg-blue-600 transition-colors duration-200"
+            @click="submit"
+          >
             {{ this.$t('login.login') }}
           </button>
         </div>
@@ -153,7 +155,6 @@ export default defineComponent({
         .then((res) => {
           if (res.status == 200) {
             if (res.data.success) {
-              //window.$message.info('登录成功!');
               userApi.getUserWebResources().then((res) => {
                 if (res.status == 200) {
                   if (res.data.success) {
@@ -169,7 +170,6 @@ export default defineComponent({
               return;
             } else {
               gen_captcha();
-              //console.log(res.data);
               if (res.data.code === 'USER_CHECK_ERROR') {
                 window.$message.error(t('login.USER_CHECK_ERROR'));
               } else if (res.data.code === 'CAPTCHA_CHECK_ERROR') {
@@ -204,59 +204,3 @@ export default defineComponent({
   }
 });
 </script>
-
-<style scoped>
-.container {
-  display: flex;
-  width: 100%;
-  height: 100%;
-  background: #efefef;
-}
-
-.wrap {
-  height: 360;
-  width: 300;
-  margin: 100px auto;
-}
-
-.header {
-  height: 52px;
-  line-height: 52px;
-  text-align: center;
-  border-radius: 10px 10px 0 0;
-  background: #2f6cf7;
-  color: #fff;
-}
-
-.login_form {
-  border: 1px solid #ccc;
-  padding: 10px 20px 20px;
-  background: #fff;
-  border-radius: 0 0 10px 10px;
-}
-
-.login_btn {
-  height: 34px;
-  width: 100%;
-  font-size: 14px;
-  line-height: 14px;
-  background: #2f6cf7;
-  color: #fff;
-  border: 0px solid #ccc;
-  border-radius: 3px;
-  cursor: pointer;
-}
-
-.captcha {
-  width: 100%;
-}
-
-.captcha_code {
-  flex: 1;
-}
-
-.captcha_img {
-  flex: 0;
-  padding-left: 2px;
-}
-</style>

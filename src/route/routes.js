@@ -1,6 +1,5 @@
 //import Boo from '@/components/Boo.jsx';
 
-// import MainLayout from '@/components/layout/MainLayout.vue';
 import MainLayout from '@/layout/index.vue';
 //import Config from '@/pages/Config';
 import NamespacePage from '@/pages/NamespacePage';

@@ -94,6 +94,7 @@ import {
   handleApiResult,
   printApiSuccess
 } from '@/utils/request';
+import { useProjectSettingStore } from '@/store/modules/projectSetting';
 export default defineComponent({
   components: {
     SubContentFullPage,
@@ -104,6 +105,7 @@ export default defineComponent({
     const { t } = useI18n();
     let route = useRoute();
     let webResources = useWebResources();
+    const projectSettingStore = useProjectSettingStore();
     let query = route.query;
     let param = {
       group: query.group || '',
@@ -220,11 +222,6 @@ export default defineComponent({
     };
     let columns = createHistoryColumns(showDetail, rollback, webResources);
 
-    // 添加移动端检测
-    const isMobile = computed(() => {
-      return window.innerWidth <= 768;
-    });
-
     return {
       columns,
       webResources,
@@ -241,7 +238,7 @@ export default defineComponent({
       },
       doHandlePageChange,
       doRollback,
-      isMobile,
+      isMobile: computed(() => projectSettingStore.getIsMobile),
     };
   },
   computed: {

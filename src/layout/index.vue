@@ -3,13 +3,13 @@
 		<n-layout-sider
 		  v-if="!isMobile"
 		  show-trigger="bar"
-		  @collapse="handleCollapse"
+		  @collapse="collapsed = true"
 		  :position="'left'"
-		  @expand="handleExpand"
+		  @expand="collapsed = false"
 		  :collapsed="collapsed"
 		  collapse-mode="width"
 		  :collapsed-width="64"
-		  :width="240"
+		  :width="leftMenuWidth"
 		  :native-scrollbar="false"
 		  class="h-screen transition-all duration-300"
 		>
@@ -54,52 +54,47 @@ import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { AsideMenu } from './components/Menu';
 import { PageHeader } from './components/Header'
 import { Logo } from './components/Logo';
+import { useProjectSetting } from '@/hooks/setting/useProjectSetting';
+import { useProjectSettingStore } from '@/store/modules/projectSetting';
 
-const menuWidth = ref(240);
+const {
+    // showFooter,
+    navMode,
+    navTheme,
+    headerSetting,
+    menuSetting,
+    multiTabsSetting,
+  } = useProjectSetting();
+  
 const collapsed = ref(false);
-const isMobileState = ref(window.innerWidth <= 768);
+const settingStore = useProjectSettingStore();
+
+const { mobileWidth, menuWidth } = unref(menuSetting);
 
 const isMobile = computed<boolean>({
-	get() { return isMobileState.value },
-	set(val: boolean) { isMobileState.value = val }
-});
+    get: () => settingStore.getIsMobile,
+    set: (val: boolean) => settingStore.setIsMobile(val),
+  });
 
 const showSideDrawer = computed<boolean>({
-	get() { return isMobile.value && !collapsed.value },
-	set(val: boolean) { collapsed.value = !val }
+	get: () => isMobile.value && collapsed.value,
+    set: (val: boolean) => (collapsed.value = val),
 });
 
-// 处理菜单折叠
-const handleCollapse = () => {
-	if (!isMobile.value) {
-		collapsed.value = true;
-	} else {
-		showSideDrawer.value = false;
-	}
-};
 
-// 处理菜单展开
-const handleExpand = () => {
-	if (!isMobile.value) {
-		collapsed.value = false;
-	} else {
-		showSideDrawer.value = true;
-	}
-};
+const leftMenuWidth = computed(() => {
+    const { minMenuWidth, menuWidth } = unref(menuSetting);
+    return collapsed.value ? minMenuWidth : menuWidth;
+  });
 
 // 检查并设置移动端模式
 const checkMobileMode = () => {
-	const width = window.innerWidth;
-	isMobile.value = width <= 768;
-	
-	// 在移动端模式下，默认隐藏菜单
-	if (isMobile.value) {
-		collapsed.value = true;
-		showSideDrawer.value = false;
-	} else {
-		// 在桌面端模式下，根据窗口宽度决定是否折叠
-		collapsed.value = width <= 950;
-	}
+	if (document.body.clientWidth <= mobileWidth) {
+      isMobile.value = true;
+    } else {
+      isMobile.value = false;
+    }
+    collapsed.value = false;
 };
 
 // 监听窗口大小变化

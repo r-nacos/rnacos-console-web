@@ -1,7 +1,7 @@
 <template>
-  <div class="detailWrap">
-    <n-form ref="formRef" :model="model" :rules="rules">
-      <n-grid :cols="isHistory ? 2 : 3" :x-gap="12">
+  <div class="bg-white rounded w-full">
+    <n-form ref="formRef" :model="model" :rules="rules" class="w-full">
+      <n-grid :cols="!isCreate && !isHistory ? '1 s:1 m:2 l:3 xl:3 2xl:4' : '1 s:1 m:2 l:2 xl:2 2xl:2'" :x-gap="12" responsive="screen">
         <n-gi>
           <n-form-item path="dataId" :label="t('config.dataId')">
             <n-input
@@ -13,7 +13,7 @@
           </n-form-item>
         </n-gi>
         <n-gi>
-          <n-form-item path="group" :label="t('config.config_group')">
+          <n-form-item path="group" :label="t('config.config_group')" >
             <n-input
               :disabled="isReadonly || isUpdate"
               :placeholder="t('config.input_config_group')"
@@ -22,8 +22,8 @@
             />
           </n-form-item>
         </n-gi>
-        <n-gi>
-          <n-form-item v-show="!isHistory" path="md5" label="MD5">
+        <n-gi v-if="!isCreate && !isHistory">
+          <n-form-item path="md5" label="MD5">
             <n-input
               :disabled="true"
               placeholder=""
@@ -48,9 +48,6 @@
         path="configType"
         :label="t('config.configType')"
       >
-        <!--
-        <n-radio-group v-model:value="langType"  name="configType">
-        -->
         <n-radio-group
           :disabled="isReadonly"
           v-model:value="model.configType"
@@ -69,23 +66,13 @@
         </n-radio-group>
       </n-form-item>
       <n-form-item path="content" :label="t('config.content')">
-        <!--
-
-        <n-input
-          :disabled="isReadonly"
-          type="textarea"
-          :placeholder="t('config.input_content')"
-          :autosize="{ minRows: 5 }"
-          v-model:value="model.content"
-        />
-        -->
-        <div class="code-container" ref="editorMainRef">
-          <div class="size_icon" @click="toggleFullScreen">
+        <div class="border border-gray-300 w-full relative bg-[#002b36] resize-both" ref="editorMainRef">
+          <div class="h-10 w-10 absolute right-0 bg-[#103b46] bg-opacity-70 z-10 p-2.5 cursor-pointer" @click="toggleFullScreen">
             <n-icon size="20" color="#fff">
               <Resize />
             </n-icon>
           </div>
-          <div class="code_warp" ref="editorRef" @click="focusEvent">
+          <div class="relative overflow-scroll bg-[#002b36] resize-both" ref="editorRef" @click="focusEvent">
             <div @click="stopPropagation">
               <code-mirror
                 :readonly="isReadonly"
@@ -190,6 +177,7 @@ const stopPropagation = function (e) {
 const isReadonly = computed(
   () => props.model.mode === constant.FORM_MODE_DETAIL
 );
+const isCreate = computed(() => props.model.mode === constant.FORM_MODE_CREATE);
 const isUpdate = computed(() => props.model.mode === constant.FORM_MODE_UPDATE);
 const isHistory = computed(() => props.fromHistory);
 const rules = {
@@ -299,41 +287,6 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
-.detailWrap {
-  background: #fff;
-  padding: 3px;
-  border-radius: 5px;
-  min-width: 500px;
-}
-
-.code-container {
-  border: 1px solid #ccc;
-  width: 100%;
-  position: relative;
-  background-color: #002b36;
-  resize: both;
-}
-
-.code_warp {
-  width: 100%;
-  position: relative;
-  overflow: scroll;
-  background-color: #002b36;
-  resize: both;
-}
-
-.size_icon {
-  height: 40px;
-  width: 40x;
-  position: absolute;
-  right: 0;
-  background: #103b46;
-  opacity: 0.7;
-  z-index: 10;
-  padding: 10px;
-  cursor: pointer;
-}
-
 .fullscreen {
   position: fixed;
   top: 0;

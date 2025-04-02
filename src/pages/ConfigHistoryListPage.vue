@@ -1,51 +1,28 @@
 <template>
-  <div class="wrap">
-    <div class="header">
-      <div class="title">
+  <div class="relative w-full h-full bg-gray-100">
+    <div class="flex items-center h-10 border-b border-gray-300 bg-white px-4">
+      <div class="flex-1 text-sm leading-[30px] pl-4 truncate">
         <span>{{ this.$t('config.config_history') }}</span>
       </div>
-      <div class="header-button">
-        <span
-          ><n-button @click="routerBack">{{
-            this.$t('common.back')
-          }}</n-button></span
-        >
+      <div class="flex-none">
+        <n-button @click="routerBack">{{ this.$t('common.back') }}</n-button>
       </div>
-      <div class="namespace"></div>
     </div>
-    <div class="content-wrap">
-      <div class="form-container">
-        <div class="query-params">
-          <n-form label-placement="left" label-width="auto">
-            <div class="paramWrap">
-              <n-form-item
-                :label="this.$t('config.dataId')"
-                path="param.dataId"
-              >
-                <n-input
-                  :disabled="true"
-                  v-model:value="param.dataId"
-                  placeholder=""
-                />
+    <div class="p-2.5 bg-gray-100">
+      <div class="flex flex-col relative bg-white rounded-lg p-4">
+        <div class="flex items-baseline justify-between mb-4">
+          <n-form label-placement="left" label-width="auto" class="flex-1">
+            <div class="flex gap-2 flex-wrap">
+              <n-form-item :label="this.$t('config.dataId')" path="param.dataId" class="flex-1 min-w-[200px]">
+                <n-input :disabled="true" v-model:value="param.dataId" placeholder="" />
               </n-form-item>
-              <n-form-item
-                :label="this.$t('config.config_group')"
-                path="param.group"
-              >
-                <n-input
-                  :disabled="true"
-                  v-model:value="param.group"
-                  placeholder=""
-                />
+              <n-form-item :label="this.$t('config.config_group')" path="param.group" class="flex-1 min-w-[200px]">
+                <n-input :disabled="true" v-model:value="param.group" placeholder="" />
               </n-form-item>
             </div>
           </n-form>
-          <div class="queryButton">
-            <span class="query-button-item">
-              <n-button tertiary @click="queryList">{{
-                this.$t('common.refresh')
-              }}</n-button>
-            </span>
+          <div class="flex items-center ml-2.5">
+            <n-button tertiary @click="queryList">{{ this.$t('common.refresh') }}</n-button>
           </div>
         </div>
         <n-data-table
@@ -63,26 +40,26 @@
       </div>
     </div>
     <n-drawer
-      to="#main_content"
       :block-scroll="false"
       :trap-focus="false"
       v-model:show="useForm"
-      default-width="600"
+      :width="isMobile ? '100%' : 600"
+      placement="right"
+      :show-mask="true"
+      :mask-closable="true"
+      :close-on-esc="true"
       resizable
     >
       <n-drawer-content :title="getDetailTitle" closable>
         <ConfigDetail :model="model" :fromHistory="true" />
         <template #footer>
           <n-space align="baseline">
-            <n-button text @click="closeForm">{{
-              this.$t('common.return')
-            }}</n-button>
+            <n-button text @click="closeForm">{{ this.$t('common.return') }}</n-button>
             <n-button
               v-if="webResources.canUpdateConfig"
               type="primary"
               @click="submitForm"
-              >{{ getSubmitName }}</n-button
-            >
+            >{{ getSubmitName }}</n-button>
           </n-space>
         </template>
       </n-drawer-content>
@@ -102,11 +79,11 @@
 </template>
 
 <script>
-import { defineComponent } from 'vue';
+import { defineComponent, ref, computed } from 'vue';
 import { configApi } from '@/api/config';
 import { useWebResources } from '@/data/resources';
 import { createHistoryColumns } from '@/components/config/ConfigColumns';
-import SubContentFullPage from '@/components/common/SubContentFullPage';
+import SubContentFullPage from '@/components/common/SubContentFullPage.vue';
 import DiffComponent from '@/components/config/DiffComponent.vue';
 import ConfigDetail from './ConfigDetail.vue';
 import * as constant from '@/types/constant';
@@ -159,7 +136,7 @@ export default defineComponent({
       dataId: param.dataId,
       group: param.group,
       md5: '',
-      showMd5: false,
+      desc: '',
       sourceContent: '',
       content: '',
       mode: constant.FORM_MODE_DETAIL
@@ -242,6 +219,12 @@ export default defineComponent({
       //doRollback(row.content)
     };
     let columns = createHistoryColumns(showDetail, rollback, webResources);
+
+    // 添加移动端检测
+    const isMobile = computed(() => {
+      return window.innerWidth <= 768;
+    });
+
     return {
       columns,
       webResources,
@@ -257,7 +240,8 @@ export default defineComponent({
         return rowData.id;
       },
       doHandlePageChange,
-      doRollback
+      doRollback,
+      isMobile,
     };
   },
   computed: {
@@ -300,75 +284,3 @@ export default defineComponent({
   }
 });
 </script>
-
-<style scoped>
-.wrap {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  background: #efefef;
-}
-
-.content-wrap {
-  padding: 10px 10px 10px 10px;
-  background: #efefef;
-}
-
-.form-container {
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  background: #ffffff;
-  border-radius: 8px;
-  padding: 16px 8px;
-}
-
-.header {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  height: 40px;
-  border-bottom: #ccc 1px solid;
-  background: #fff;
-  padding-right: 3px;
-}
-
-.title {
-  flex: 1 1 auto;
-  font: 14/1.25;
-  line-height: 40px;
-  padding-left: 15px;
-}
-
-.header-button {
-  flex: 0 0 auto;
-}
-
-.namespace {
-  flex: 0 0 auto;
-}
-
-.query-params {
-  flex: 0 0 auto;
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  flex-direction: row;
-}
-
-.paramWrap {
-  display: flex;
-  gap: 8px;
-  flex-direction: row;
-  flex-wrap: wrap;
-}
-
-.queryButton {
-  display: flex;
-  align-items: center;
-}
-
-.query-button-item {
-  margin-left: 10px;
-}
-</style>

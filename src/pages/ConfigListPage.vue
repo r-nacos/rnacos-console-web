@@ -1,23 +1,20 @@
 <template>
-  <div class="wrap">
-    <div class="header">
-      <div class="title">
-        <span> {{ this.$t('config.config_list') }} </span>
+  <div class="relative w-full h-full bg-gray-100">
+    <div class="flex flex-row items-center h-10 border-b border-gray-300 bg-white pr-3">
+      <div class="flex-1 text-sm leading-[30px] pl-4">
+        <span>{{ this.$t('config.config_list') }}</span>
       </div>
-      <div class="namespace">
+      <div class="flex-none">
         <NamespacePopSelect @change="queryList" />
       </div>
     </div>
-    <div class="content-wrap">
-      <div class="form-container">
+    <div class="p-2.5 bg-gray-100">
+      <div class="flex flex-col relative bg-white rounded-lg p-4">
         <n-card :bordered="false">
           <n-form label-placement="left" label-width="90">
             <n-grid cols="1 s:1 m:2 l:3 xl:3 2xl:4" responsive="screen">
               <n-gi>
-                <n-form-item
-                  :label="this.$t('config.config_id')"
-                  path="param.dataParam"
-                >
+                <n-form-item :label="this.$t('config.config_id')" path="param.dataParam">
                   <n-input
                     v-model:value="param.dataParam"
                     :placeholder="this.$t('config.input_dataId')"
@@ -42,17 +39,10 @@
                 </n-form-item>
               </n-gi>
 
-              <n-gi suffix="true">
+              <n-gi>
                 <n-space justify="end" class="ml-2">
-                  <n-button tertiary @click="queryList">{{
-                    this.$t('common.query')
-                  }}</n-button>
-                  <n-button
-                    v-if="webResources.canUpdateConfig"
-                    type="info"
-                    @click="showCreate"
-                    >{{ this.$t('common.add') }}</n-button
-                  >
+                  <n-button tertiary @click="queryList">{{ this.$t('common.query') }}</n-button>
+                  <n-button v-if="webResources.canUpdateConfig" type="info" @click="showCreate">{{ this.$t('common.add') }}</n-button>
 
                   <n-button @click="download" type="info">{{
                     this.$t('config.export_config')
@@ -93,6 +83,7 @@
       <SubContentFullPage
         v-show="useForm"
         :title="getDetailTitle"
+        :submitName="model.mode === constant.FORM_MODE_CREATE ? t('common.confirm') : t('config.confirm_change')"
         @close="closeForm"
         @submit="submitForm"
       >
@@ -124,7 +115,7 @@ import { namespaceStore } from '@/data/namespace';
 import { useWebResources } from '@/data/resources';
 import { createColumns } from '@/components/config/ConfigColumns';
 import NamespacePopSelect from '@/components/namespace/NamespacePopSelect.vue';
-import SubContentFullPage from '@/components/common/SubContentFullPage';
+import SubContentFullPage from '@/components/common/SubContentFullPage.vue';
 import DiffComponent from '@/components/config/DiffComponent.vue';
 import ConfigDetail from './ConfigDetail.vue';
 import { useRouter } from 'vue-router';
@@ -168,7 +159,7 @@ export default defineComponent({
       dataId: '',
       group: '',
       md5: '',
-      showMd5: true,
+      desc: '',
       sourceContent: '',
       content: '',
       configType: 'text',
@@ -242,7 +233,6 @@ export default defineComponent({
           }
           modelRef.value = {
             mode: mode,
-            showMd5: true,
             content: data.value,
             sourceContent: data.value,
             md5: data.md5 || '',
@@ -268,7 +258,7 @@ export default defineComponent({
         dataId: '',
         group: 'DEFAULT_GROUP',
         md5: '',
-        showMd5: true,
+        desc: '',
         content: '',
         configType: 'text',
         sourceContent: '',
@@ -324,6 +314,8 @@ export default defineComponent({
       showCreate,
       param: paramRef,
       namespaceId: '',
+      constant,
+      t,
       rowKey(rowData) {
         return rowData.group + '@@' + rowData.dataId;
       },
@@ -421,60 +413,14 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.wrap {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  background: #efefef;
+.slide-fade-enter-active,
+.slide-fade-leave-active {
+  transition: all 0.3s ease;
 }
 
-.content-wrap {
-  padding: 10px 10px 10px 10px;
-  background: #efefef;
-}
-
-.form-container {
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  background: #ffffff;
-  border-radius: 8px;
-  padding: 16px 8px;
-}
-
-.header {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  height: 40px;
-  border-bottom: #ccc 1px solid;
-  background: #fff;
-  padding-right: 3px;
-}
-
-.title {
-  flex: 1 1 auto;
-  font: 14/1.25;
-  line-height: 30px;
-  padding-left: 15px;
-}
-
-.header-button {
-  flex: 0 0 auto;
-}
-
-.namespace {
-  flex: 0 0 auto;
-}
-
-.paramWrap {
-  display: flex;
-  gap: 8px;
-  flex-direction: row;
-  flex-wrap: wrap;
-}
-
-.query-button-item {
-  margin-left: 10px;
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+  transform: translateX(20px);
+  opacity: 0;
 }
 </style>

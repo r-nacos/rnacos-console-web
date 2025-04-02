@@ -1,103 +1,87 @@
 <template>
-  <div>
-    <!-- 
-    <div><span>{{ this.$t('config.comparison_of_configuration_changes')}}</span></div>
-    -->
-    <div class="result-wrap">
-      <div class="inner-wrap">
-        <div class="result-title">
-          {{ this.$t('config.current_configuration') }}:
+  <div class="h-full overflow-y-scroll bg-[#1f1f1f]">
+    <div class="w-full flex">
+      <div class="flex-1 w-1/2 bg-[#1f1f1f] p-2">
+        <div class="text-white font-medium mb-2">
+          {{ this.$t('config.current_configuration') }}
         </div>
-        <div class="result-title">
-          {{ this.$t('config.new_configurations_to_be_submitted') }}:
+        <div class="overflow-x-scroll bg-[#1f1f1f] text-[#c9c9c9] flex">
+          <div class="flex-none w-[50px] text-right px-2 border-r border-[#2c2c2c] select-none">
+            <pre class="no-pre"><span v-html="srcNo"></span></pre>
+          </div>
+          <div class="flex-1">
+            <pre class="code-pre"><span v-html="srcCode"></span></pre>
+          </div>
         </div>
       </div>
-      <div class="inner-wrap">
-        <div class="diff-result">
-          <code class="no-code">
-            <pre class="no-pre"><span v-html="srcNo"></span></pre>
-          </code>
-          <code class="code">
-            <pre class="code-pre"><span v-html="srcCode"></span></pre>
-          </code>
+      <div class="flex-1 w-1/2 bg-[#1f1f1f] p-2">
+        <div class="text-white font-medium mb-2">
+          {{ this.$t('config.new_configurations_to_be_submitted') }}
         </div>
-        <div class="diff-result">
-          <code class="no-code">
+        <div class="overflow-x-scroll bg-[#1f1f1f] text-[#c9c9c9] flex">
+          <div class="flex-none w-[50px] text-right px-2 border-r border-[#2c2c2c] select-none">
             <pre class="no-pre"><span v-html="dstNo"></span></pre>
-          </code>
-          <code class="code">
+          </div>
+          <div class="flex-1">
             <pre class="code-pre"><span v-html="dstCode"></span></pre>
-          </code>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </template>
 
-<script>
-import { defineComponent, ref } from 'vue';
+<script setup>
 import { handleDiff, buildDiffResult } from '@/utils/utils';
 
-export default defineComponent({
-  props: ['src', 'dst'],
-  setup(props) {
-    var list = handleDiff(props['src'] || '', props['dst'] || '');
-    var res = buildDiffResult(list);
-    return {
-      ...res
-    };
-  }
-});
+const props = defineProps(['src', 'dst']);
+const list = handleDiff(props['src'] || '', props['dst'] || '');
+const res = buildDiffResult(list);
+const { srcNo, srcCode, dstNo, dstCode } = res;
 </script>
 
 <style scoped>
-.result-wrap {
-  height: 100%;
-  overflow-y: scroll;
+.no-pre {
+  margin: 0;
+  padding: 0;
+  font-family: 'Fira Code', monospace;
+  line-height: 1.5;
 }
 
-.inner-wrap {
-  width: 100%;
-  background: #1f1f1f;
-  display: flex;
-}
-
-.result-title {
-  flex: 1 1 auto;
-  width: 50%;
-  background: #fff;
-}
-
-.diff-result {
-  flex: 1 1 auto;
-  width: 50%;
-  overflow-x: scroll;
-  background: #1f1f1f;
-  color: #c9c9c9;
-  display: flex;
-}
-
-.no-code {
-  flex: 0 0 none;
-  width: 50px;
-  /*
-  background: #c9c9c9;
-  color: #1f1f1f;
-  color: #c9c9c9;
-  */
-  text-align: right;
-  padding: 0 3px;
-  border: 1px solid #2c2c2c;
-}
-
-.code {
-  flex: 1 1 auto;
-}
-
-/*
 .code-pre {
-  background: #1f1f1f;
-  color: #c9c9c9;
+  margin: 0;
+  padding: 0;
+  font-family: 'Fira Code', monospace;
+  line-height: 1.5;
+  white-space: pre-wrap;
 }
-*/
+
+:deep(span[style*="color:#f00"]) {
+  background-color: rgba(255, 0, 0, 0.1);
+  color: #ff6b6b;
+  display: inline-block;
+  width: 100%;
+  padding: 2px 0;
+  text-decoration: line-through;
+}
+
+:deep(span[style*="color:#0ff"]) {
+  background-color: rgba(0, 255, 255, 0.1);
+  color: #4dabf7;
+  display: inline-block;
+  width: 100%;
+  padding: 2px 0;
+}
+
+:deep(.line-number) {
+  color: #6c757d;
+}
+
+:deep(.removed-line) {
+  color: #ff6b6b;
+}
+
+:deep(.added-line) {
+  color: #4dabf7;
+}
 </style>

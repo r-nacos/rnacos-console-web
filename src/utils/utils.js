@@ -15,50 +15,46 @@ export const splitLines = (value) => {
 
 export const handleDiff = function (src, dst) {
   const diffs = diffLines(src, dst);
-  var list = [];
-  var srcLine = 0;
-  var dstLine = 0;
-  for (var i in diffs) {
-    const item = diffs[i];
+  const list = [];
+  let srcLine = 0;
+  let dstLine = 0;
+
+  for (const item of diffs) {
+    const subItems = splitLines(item.value);
+    
     if (item.removed) {
-      var subItems = splitLines(item.value);
-      for (var j in subItems) {
+      for (const line of subItems) {
         srcLine += 1;
-        var obj = {
-          src: subItems[j],
+        list.push({
+          src: line,
           dst: '',
-          srcLine: srcLine,
+          srcLine,
           dstLine: 0,
           t: 'R'
-        };
-        list.push(obj);
+        });
       }
     } else if (item.added) {
-      var subItems = splitLines(item.value);
-      for (var j in subItems) {
+      for (const line of subItems) {
         dstLine += 1;
-        var obj = {
+        list.push({
           src: '',
-          dst: subItems[j],
+          dst: line,
           srcLine: 0,
-          dstLine: dstLine,
+          dstLine,
           t: 'A'
-        };
-        list.push(obj);
+        });
       }
     } else {
-      var subItems = splitLines(item.value);
-      for (var j in subItems) {
+      for (const line of subItems) {
         srcLine += 1;
         dstLine += 1;
-        var obj = {
-          src: subItems[j],
-          dst: subItems[j],
-          srcLine: dstLine,
-          dstLine: dstLine,
+        list.push({
+          src: line,
+          dst: line,
+          srcLine,
+          dstLine,
           t: '='
-        };
-        list.push(obj);
+        });
       }
     }
   }
@@ -66,38 +62,34 @@ export const handleDiff = function (src, dst) {
 };
 
 export const buildDiffResult = function (list) {
-  var srcNo = '';
-  var srcCode = '';
-  var dstNo = '';
-  var dstCode = '';
+  let srcNo = '';
+  let srcCode = '';
+  let dstNo = '';
+  let dstCode = '';
 
-  for (var i in list) {
-    const item = list[i];
-    if (item.t == '=') {
-      srcCode += escapeHtml(item['src']) + '\n';
-      dstCode += escapeHtml(item['dst']) + '\n';
-      srcNo += item['srcLine'] + '   \n';
-      dstNo += item['dstLine'] + '   \n';
-    } else if (item.t == 'R') {
-      srcCode +=
-        "<span style='color:#f00'>" + escapeHtml(item['src']) + '</span>\n';
+  for (const item of list) {
+    const escapedSrc = escapeHtml(item.src);
+    const escapedDst = escapeHtml(item.dst);
+
+    if (item.t === '=') {
+      srcCode += `<span class="unchanged">${escapedSrc}</span>\n`;
+      dstCode += `<span class="unchanged">${escapedDst}</span>\n`;
+      srcNo += `<span class="line-number">${item.srcLine}</span>\n`;
+      dstNo += `<span class="line-number">${item.dstLine}</span>\n`;
+    } else if (item.t === 'R') {
+      srcCode += `<span class="removed">${escapedSrc}</span>\n`;
       dstCode += '\n';
-      srcNo += "<span style='color:#f00'>" + item['srcLine'] + ' - </span>\n';
+      srcNo += `<span class="removed-line">${item.srcLine} -</span>\n`;
       dstNo += '\n';
     } else {
       srcCode += '\n';
-      dstCode +=
-        "<span style='color:#0ff'>" + escapeHtml(item['dst']) + '</span>\n';
+      dstCode += `<span class="added">${escapedDst}</span>\n`;
       srcNo += '\n';
-      dstNo += "<span style='color:#0ff'>" + item['dstLine'] + ' + </span>\n';
+      dstNo += `<span class="added-line">${item.dstLine} +</span>\n`;
     }
   }
-  return {
-    srcNo,
-    srcCode,
-    dstNo,
-    dstCode
-  };
+
+  return { srcNo, srcCode, dstNo, dstCode };
 };
 
 export const copyText = function (text) {

@@ -1,66 +1,25 @@
 <template>
-  <div
-    class="top"
-    :style="{
-      width: +layoutSize.windowSize.width + 'px',
-      height: layoutSize.windowSize.height + 'px'
-    }"
-  >
-    <div class="wrap">
-      <div class="content">
-        <p class="title">No permission</p>
+  <div class="flex relative items-center bg-white flex-col w-full h-full">
+    <div class="flex-1 flex relative items-center bg-white flex-row">
+      <div class="flex-1 text-3xl leading-[60px] text-center">
+        <p class="text-6xl">No permission</p>
         <p>{{ path }}</p>
-        <router-link class="link" :to="{ path: '/' }">{{
-          this.$t('common.home')
-        }}</router-link>
+        <router-link class="text-blue-500 hover:text-blue-700" :to="{ path: '/' }">
+          {{ $t('common.home') }}
+        </router-link>
       </div>
     </div>
   </div>
 </template>
 
-<script>
-import { defineComponent } from 'vue';
-import { useLayoutSize } from '@/data/appdata';
+<script setup>
+import { computed } from 'vue';
+import { useRoute } from 'vue-router';
 
-export default defineComponent({
-  setup() {
-    let layoutSize = useLayoutSize();
-    return {
-      layoutSize
-    };
-  },
-  computed: {
-    path() {
-      return this.$route.query.path || '';
-    }
-  }
+const route = useRoute();
+
+const path = computed(() => {
+  return route.query.path || '';
 });
 </script>
 
-<style scoped>
-.top {
-  display: flex;
-  position: relative;
-  align-items: center;
-  background: #fff;
-  flex-direction: column;
-}
-
-.wrap {
-  flex: 1 1 auto;
-  display: flex;
-  position: relative;
-  align-items: center;
-  background: #fff;
-  flex-direction: row;
-}
-.content {
-  flex: 1 1 auto;
-  font-size: 30px;
-  line-height: 60px;
-  text-align: center;
-}
-.title {
-  font-size: 60px;
-}
-</style>

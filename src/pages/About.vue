@@ -1,30 +1,26 @@
 <template>
-  <div class="top">
-    <div class="wrap">
-      <div class="content">
-        <n-space vertical class="inner_wrap">
-          <n-card :title="this.$t('about.intro_title')" size="medium">
-            <p>{{ this.$t('about.intro_p01') }}</p>
+  <div class="flex relative items-center flex-col w-full h-full bg-gray-100">
+    <div class="block relative w-full h-full mx-auto">
+      <div class="flex-1 flex relative text-xl leading-[60px] p-2.5">
+        <n-space vertical class="w-full flex-1">
+          <n-card :title="$t('about.intro_title')" size="medium">
+            <p>{{ $t('about.intro_p01') }}</p>
             <br />
-            <p>{{ this.$t('about.intro_p02') }}</p>
+            <p>{{ $t('about.intro_p02') }}</p>
             <br />
-            <p>{{ this.$t('about.intro_p03') }}</p>
+            <p>{{ $t('about.intro_p03') }}</p>
             <p>
-              <a href="https://github.com/r-nacos/r-nacos" target="_blank"
-                >r-nacos github</a
-              >
+              <a href="https://github.com/r-nacos/r-nacos" target="_blank" class="text-blue-500 hover:text-blue-700">r-nacos github</a>
               <br />
-              <a href="https://gitee.com/hqp/rnacos" target="_blank"
-                >r-nacos gitee</a
-              >
+              <a href="https://gitee.com/hqp/rnacos" target="_blank" class="text-blue-500 hover:text-blue-700">r-nacos gitee</a>
             </p>
           </n-card>
-          <n-card :title="this.$t('about.version_title')" size="medium">
+          <n-card :title="$t('about.version_title')" size="medium">
             {{ webResources.version }}
           </n-card>
           <n-card
             v-if="webResources.username !== ''"
-            :title="this.$t('about.user_title')"
+            :title="$t('about.user_title')"
             size="medium"
           >
             {{ webResources.username }}
@@ -35,66 +31,13 @@
   </div>
 </template>
 
-<script>
-import { defineComponent } from 'vue';
-import { useLayoutSize } from '@/data/appdata';
+<script setup>
 import { useWebResources } from '@/data/resources';
-import { useI18n } from 'vue-i18n';
 
-export default defineComponent({
-  setup() {
-    let { t } = useI18n();
-    let layoutSize = useLayoutSize();
-    let webResources = useWebResources();
-    return {
-      t,
-      layoutSize,
-      webResources
-    };
-  },
-  computed: {
-    path() {
-      return this.$route.query.path || '';
-    }
-  }
+const webResources = useWebResources();
+
+const path = computed(() => {
+  return route.query.path || '';
 });
 </script>
 
-<style scoped>
-.top {
-  display: flex;
-  position: relative;
-  align-items: center;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
-  background: #eeeeee;
-}
-
-.wrap {
-  display: block;
-  position: relative;
-  width: 100%;
-  height: 100%;
-  margin: 0 auto;
-}
-.content {
-  flex: 1 1 auto;
-  display: flex;
-  position: relative;
-  font-size: 20px;
-  line-height: 60px;
-  padding: 10px;
-  /*
-  text-align: center;
-  */
-}
-
-.inner_wrap {
-  width: 100%;
-  flex: 1 1 auto;
-}
-.title {
-  font-size: 60px;
-}
-</style>

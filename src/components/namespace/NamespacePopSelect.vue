@@ -1,19 +1,19 @@
 <template>
-  <div class="wrap">
-    <div class="namespace_id" v-if="value.namespaceId != ''">
-      <div class="namespace_text">
+  <div class="inline-flex flex-row items-center">
+    <div v-if="value.namespaceId != ''" class="inline-flex flex-row items-center pr-4 ">
+      <div class="bg-gray-100 text-gray-700 leading-[30px] text-sm px-2">
         <span>{{ value.namespaceId }}</span>
       </div>
-      <div class="copy_icon" @click="copyId">
+      <div class="bg-gray-100 py-1.5 px-2 cursor-pointer hover:bg-gray-400 transition-colors" @click="copyId">
         <n-icon size="16" color="#2f6cf7">
           <CopyOutline />
         </n-icon>
       </div>
     </div>
-    <div class="name">{{ this.$t('namespace.namespace') }}:</div>
-    <div class="popselect">
+    <div class="bg-white leading-[30px] text-sm px-2 text-gray-700">{{ this.$t('namespace.namespace') }}:</div>
+    <div class="w-[260px]">
       <n-select
-        class="popselect"
+        class="w-[260px]"
         v-model:value="value.namespaceId"
         :options="optionList"
         :consistent-menu-width="false"
@@ -82,42 +82,5 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.wrap {
-  display: inline-flex;
-  flex-direction: row;
-}
-
-.namespace_id {
-  display: inline-flex;
-  flex-direction: row;
-  padding-right: 15px;
-  background: #fff;
-}
-
-.namespace_text {
-  background: #f0f0f0;
-  color: #333;
-  line-height: 34px;
-  font-size: 12px;
-  padding: 0px 5px;
-}
-
-.copy_icon {
-  background: #f0f0f0;
-  padding-top: 8px;
-  padding-right: 5px;
-  cursor: pointer;
-}
-
-.name {
-  background: #fff;
-  line-height: 34px;
-  /*
-  font-size: 12px;
-  */
-  padding: 0px 5px;
-}
-.popselect {
-  width: 260px;
-}
+/* 移除所有 scoped 样式，因为已经转换为 Tailwind 类名 */
 </style>

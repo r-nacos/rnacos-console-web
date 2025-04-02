@@ -1,10 +1,7 @@
 //import Boo from '@/components/Boo.jsx';
 
 import MainLayout from '@/layout/index.vue';
-//import Config from '@/pages/Config';
-import NamespacePage from '@/pages/NamespacePage';
-//import ConfigListPage from '@/pages/ConfigListPage.vue';
-//import ConfigHistoryListPage from '@/pages/ConfigHistoryListPage.vue';
+import NamespacePage from '@/pages/NamespacePage.vue';
 import ServiceListPage from '@/pages/ServiceListPage.vue';
 import SubscriberListPage from '@/pages/SubscriberListPage.vue';
 import ServiceInstanceListPage from '@/pages/ServiceInstanceListPage.vue';

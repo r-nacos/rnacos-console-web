@@ -71,6 +71,7 @@ export const createColumns = function (
     title: t('common.operation'),
     key: '_type',
     fixed: 'right',
+    width: 120,
     render(row) {
       const onOffLine = () => {
         // v-slots={slots}
@@ -93,7 +94,7 @@ export const createColumns = function (
         );
       };
       return (
-        <div>
+        <div class="flex gap-1">
           <span style={{ 'padding-right': '5px' }}>{onOffLine()}</span>
           <NButton
             size="tiny"

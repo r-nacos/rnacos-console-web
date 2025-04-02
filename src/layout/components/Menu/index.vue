@@ -1,6 +1,6 @@
 <template>
   <n-menu
-      :options="menuOptions"
+      :options="webResources.sideMenu"
       :collapsed="collapsed"
       :collapsed-width="64"
       :collapsed-icon-size="22"
@@ -92,7 +92,7 @@ function menuExpanded(openKeys: string[]) {
 function findChildrenLen(key: string) {
   if (!key) return false;
   const subRouteChildren: string[] = [];
-  for (const { children, key } of unref(menuOptions)) {
+  for (const { children, key } of unref(webResources.sideMenu)) {
     if (children && children.length) {
       subRouteChildren.push(key as string);
     }

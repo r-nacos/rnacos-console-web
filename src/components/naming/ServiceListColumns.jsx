@@ -40,6 +40,8 @@ export const createColumns = function (
     {
       title: t('common.operation'),
       key: 'type',
+      fixed: 'right',
+      width: 120,
       render(row) {
         let editButton;
         let removePopconfirm;
@@ -72,7 +74,7 @@ export const createColumns = function (
           removePopconfirm = editButton;
         }
         return (
-          <div>
+            <div class="flex gap-1">
             <NButton
               size="tiny"
               quaternary

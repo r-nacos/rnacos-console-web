@@ -1,49 +1,39 @@
 <template>
-  <div class="wrap">
-    <div class="header">
-      <div class="title">
-        <span> {{ this.$t('instance.list') }} </span>
+  <div class="relative w-full h-full bg-[#efefef]">
+    <div class="flex flex-row items-center h-10 border-b border-[#ccc] bg-white">
+      <div class="flex-1 text-sm leading-10 pl-4">
+        <span>{{ this.$t('instance.list') }}</span>
       </div>
-      <div class="header-button">
-        <span
-          ><n-button @click="routerBack">{{
-            this.$t('common.back')
-          }}</n-button></span
-        >
+      <div class="flex-none">
+        <span>
+          <n-button @click="routerBack">{{ this.$t('common.back') }}</n-button>
+        </span>
       </div>
-      <div class="namespace"></div>
+      <div class="flex-none"></div>
     </div>
-    <div class="content-wrap">
-      <div class="form-container">
-        <div class="query-params">
+    <div class="p-2.5 bg-[#efefef]">
+      <div class="flex flex-col relative bg-white rounded-lg p-4">
+        <div class="flex flex-row items-baseline justify-between">
           <n-form label-placement="left" label-width="auto">
-            <div class="paramWrap">
-              <n-form-item
-                :label="this.$t('service.name')"
-                path="param.serviceParam"
-              >
+            <div class="flex flex-row gap-2 flex-wrap">
+              <n-form-item :label="this.$t('service.name')" path="param.serviceParam">
                 <n-input :disabled="true" v-model:value="param.serviceName" />
               </n-form-item>
-              <n-form-item
-                :label="this.$t('service.groupName')"
-                path="param.groupParam"
-              >
+              <n-form-item :label="this.$t('service.groupName')" path="param.groupParam">
                 <n-input :disabled="true" v-model:value="param.groupName" />
               </n-form-item>
             </div>
           </n-form>
-          <div class="queryButton">
-            <span class="query-button-item">
-              <n-button tertiary @click="reloadData">{{
-                this.$t('common.refresh')
-              }}</n-button>
+          <div class="flex items-center">
+            <span class="ml-2.5">
+              <n-button tertiary @click="reloadData">{{ this.$t('common.refresh') }}</n-button>
             </span>
           </div>
         </div>
         <n-data-table
           remote
           ref="table"
-          :scroll-x="600"
+          :scroll-x="1000"
           :bordered="false"
           :columns="columns"
           :data="data"
@@ -55,7 +45,6 @@
       </div>
     </div>
     <n-drawer
-      to="#main_content"
       :block-scroll="false"
       :trap-focus="false"
       v-model:show="useForm"
@@ -66,12 +55,8 @@
         <ServiceInstanceDetail :model="model" />
         <template #footer>
           <n-space align="baseline">
-            <n-button text @click="closeForm">{{
-              this.$t('common.return')
-            }}</n-button>
-            <n-button type="primary" @click="submitForm">{{
-              this.$t('common.confirm')
-            }}</n-button>
+            <n-button text @click="closeForm">{{ this.$t('common.return') }}</n-button>
+            <n-button type="primary" @click="submitForm">{{ this.$t('common.confirm') }}</n-button>
           </n-space>
         </template>
       </n-drawer-content>
@@ -330,75 +315,3 @@ export default defineComponent({
   }
 });
 </script>
-
-<style scoped>
-.wrap {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  background: #efefef;
-}
-
-.content-wrap {
-  padding: 10px 10px 10px 10px;
-  background: #efefef;
-}
-
-.form-container {
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  background: #ffffff;
-  border-radius: 8px;
-  padding: 16px 8px;
-}
-
-.header {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  height: 40px;
-  border-bottom: #ccc 1px solid;
-  background: #fff;
-  padding-right: 3px;
-}
-
-.title {
-  flex: 1 1 auto;
-  font: 14/1.25;
-  line-height: 40px;
-  padding-left: 15px;
-}
-
-.header-button {
-  flex: 0 0 auto;
-}
-
-.namespace {
-  flex: 0 0 auto;
-}
-
-.query-params {
-  flex: 0 0 auto;
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  flex-direction: row;
-}
-
-.paramWrap {
-  display: flex;
-  gap: 8px;
-  flex-direction: row;
-  flex-wrap: wrap;
-}
-
-.queryButton {
-  display: flex;
-  align-items: center;
-}
-
-.query-button-item {
-  margin-left: 10px;
-}
-</style>

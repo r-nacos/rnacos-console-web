@@ -39,6 +39,7 @@ export const createColumns = function (
       title: t('common.operation'),
       key: 'type',
       fixed: 'right',
+      width: 120,
       render(row) {
         let editButton;
         let removePopconfirm;
@@ -47,7 +48,7 @@ export const createColumns = function (
           editButton = (
             <NButton
               size="tiny"
-              quaternary
+              text
               type="info"
               onClick={() => showUpdate(row)}
             >
@@ -82,7 +83,7 @@ export const createColumns = function (
           removePopconfirm = editButton;
         }
         return (
-          <div>
+            <div class="flex gap-1">
             <NButton
               size="tiny"
               quaternary
@@ -102,7 +103,7 @@ export const createColumns = function (
             {editButton}
             {cloneButton}
             {removePopconfirm}
-          </div>
+            </div>
         );
       }
     }
@@ -169,7 +170,8 @@ export const createHistoryColumns = function (detail, rollback, webResources) {
           rollbackButton = <span></span>;
         }
         return (
-          <div>
+          <div class="flex flex-col gap-1">
+            <div class="flex gap-2">
             <NButton
               size="tiny"
               quaternary
@@ -179,6 +181,7 @@ export const createHistoryColumns = function (detail, rollback, webResources) {
               {t('common.detail')}
             </NButton>
             {rollbackButton}
+            </div>
           </div>
         );
       }

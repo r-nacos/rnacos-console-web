@@ -4,12 +4,13 @@ services:
     volumes:
       - .:/app
       - /app/node_modules
-    command: npm run dev
-    environment:
-      - NODE_ENV=development 
     ports:
-      - 5173:5173
-      # - 10840:10840
+      - "${VITE_PORT}:${VITE_PORT}"
+    environment:
+      - VITE_PORT=${VITE_PORT}
+      - VITE_PROXY_URL=${VITE_PROXY_URL}
+      - VITE_BASE_URL=${VITE_BASE_URL}
+    command: npm run dev
     networks:
       - r-nacos-simple_default
 

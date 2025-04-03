@@ -45,4 +45,3 @@ let handleChange = function (value) {
   location.reload();
 };
 </script>
-

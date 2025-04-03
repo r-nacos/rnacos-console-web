@@ -1,6 +1,8 @@
 <template>
   <div class="relative w-full h-full bg-gray-100">
-    <div class="flex flex-row items-center h-10 border-b border-gray-300 bg-white pr-3">
+    <div
+      class="flex flex-row items-center h-10 border-b border-gray-300 bg-white pr-3"
+    >
       <div class="flex-1 text-sm leading-[30px] pl-4">
         <span>{{ this.$t('menu.service_list') }}</span>
       </div>
@@ -14,7 +16,10 @@
           <n-form label-placement="left" label-width="90">
             <n-grid cols="1 s:1 m:2 l:3 xl:3 2xl:4" responsive="screen">
               <n-gi>
-                <n-form-item :label="this.$t('service.name')" path="param.serviceParam">
+                <n-form-item
+                  :label="this.$t('service.name')"
+                  path="param.serviceParam"
+                >
                   <n-input
                     v-model:value="param.serviceParam"
                     :placeholder="this.$t('service.inputName')"
@@ -25,7 +30,10 @@
                 </n-form-item>
               </n-gi>
               <n-gi>
-                <n-form-item :label="this.$t('service.groupName')" path="param.groupParam">
+                <n-form-item
+                  :label="this.$t('service.groupName')"
+                  path="param.groupParam"
+                >
                   <n-input
                     v-model:value="param.groupParam"
                     :placeholder="this.$t('service.inputGroupName')"
@@ -37,8 +45,15 @@
               </n-gi>
               <n-gi>
                 <n-space justify="end" class="ml-2">
-                  <n-button tertiary @click="queryList">{{ this.$t('common.query') }}</n-button>
-                  <n-button v-if="webResources.canUpdateService" type="info" @click="showCreate">{{ this.$t('common.add') }}</n-button>
+                  <n-button tertiary @click="queryList">{{
+                    this.$t('common.query')
+                  }}</n-button>
+                  <n-button
+                    v-if="webResources.canUpdateService"
+                    type="info"
+                    @click="showCreate"
+                    >{{ this.$t('common.add') }}</n-button
+                  >
                 </n-space>
               </n-gi>
             </n-grid>
@@ -73,8 +88,12 @@
         <ServiceDetail :model="model" />
         <template #footer>
           <n-space align="baseline">
-            <n-button text @click="closeForm">{{ this.$t('common.return') }}</n-button>
-            <n-button type="primary" @click="submitForm">{{ this.$t('common.confirm') }}</n-button>
+            <n-button text @click="closeForm">{{
+              this.$t('common.return')
+            }}</n-button>
+            <n-button type="primary" @click="submitForm">{{
+              this.$t('common.confirm')
+            }}</n-button>
           </n-space>
         </template>
       </n-drawer-content>

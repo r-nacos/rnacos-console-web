@@ -74,7 +74,7 @@ export const createColumns = function (
           removePopconfirm = editButton;
         }
         return (
-            <div class="flex gap-1">
+          <div class="flex gap-1">
             <NButton
               size="tiny"
               quaternary

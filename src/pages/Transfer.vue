@@ -1,6 +1,8 @@
 <template>
   <div class="relative w-full h-full bg-gray-100">
-    <div class="flex flex-row items-center h-10 border-b border-gray-300 bg-white">
+    <div
+      class="flex flex-row items-center h-10 border-b border-gray-300 bg-white"
+    >
       <div class="flex-1 text-sm leading-[30px] pl-4">
         <span>{{ t('menu.data_transfer') }}</span>
       </div>

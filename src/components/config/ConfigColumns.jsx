@@ -83,7 +83,7 @@ export const createColumns = function (
           removePopconfirm = editButton;
         }
         return (
-            <div class="flex gap-1">
+          <div class="flex gap-1">
             <NButton
               size="tiny"
               quaternary
@@ -103,7 +103,7 @@ export const createColumns = function (
             {editButton}
             {cloneButton}
             {removePopconfirm}
-            </div>
+          </div>
         );
       }
     }
@@ -172,15 +172,15 @@ export const createHistoryColumns = function (detail, rollback, webResources) {
         return (
           <div class="flex flex-col gap-1">
             <div class="flex gap-2">
-            <NButton
-              size="tiny"
-              quaternary
-              type="info"
-              onClick={() => detail(row)}
-            >
-              {t('common.detail')}
-            </NButton>
-            {rollbackButton}
+              <NButton
+                size="tiny"
+                quaternary
+                type="info"
+                onClick={() => detail(row)}
+              >
+                {t('common.detail')}
+              </NButton>
+              {rollbackButton}
             </div>
           </div>
         );

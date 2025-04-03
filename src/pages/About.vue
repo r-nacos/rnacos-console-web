@@ -10,9 +10,19 @@
             <br />
             <p>{{ $t('about.intro_p03') }}</p>
             <p>
-              <a href="https://github.com/r-nacos/r-nacos" target="_blank" class="text-blue-500 hover:text-blue-700">r-nacos github</a>
+              <a
+                href="https://github.com/r-nacos/r-nacos"
+                target="_blank"
+                class="text-blue-500 hover:text-blue-700"
+                >r-nacos github</a
+              >
               <br />
-              <a href="https://gitee.com/hqp/rnacos" target="_blank" class="text-blue-500 hover:text-blue-700">r-nacos gitee</a>
+              <a
+                href="https://gitee.com/hqp/rnacos"
+                target="_blank"
+                class="text-blue-500 hover:text-blue-700"
+                >r-nacos gitee</a
+              >
             </p>
           </n-card>
           <n-card :title="$t('about.version_title')" size="medium">
@@ -40,4 +50,3 @@ const path = computed(() => {
   return route.query.path || '';
 });
 </script>
-

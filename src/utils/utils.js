@@ -21,7 +21,7 @@ export const handleDiff = function (src, dst) {
 
   for (const item of diffs) {
     const subItems = splitLines(item.value);
-    
+
     if (item.removed) {
       for (const line of subItems) {
         srcLine += 1;

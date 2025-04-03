@@ -1,6 +1,8 @@
 <template>
   <div class="relative w-full h-full bg-gray-100">
-    <div class="flex flex-row items-center h-10 border-b border-gray-300 bg-white pr-3">
+    <div
+      class="flex flex-row items-center h-10 border-b border-gray-300 bg-white pr-3"
+    >
       <div class="flex-1 text-sm leading-[30px] pl-4">
         <span>{{ t('cluster.cluster_info') }}</span>
       </div>
@@ -42,11 +44,11 @@ const doLoadData = () => {
       data.value = resultData || [];
       loading.value = false;
     })
-    .catch(err => {
+    .catch((err) => {
       printApiError(err);
       loading.value = false;
     });
-}
+};
 
 const rowKey = (rowData) => {
   return rowData.nodeId;

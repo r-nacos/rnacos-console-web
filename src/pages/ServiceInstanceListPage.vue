@@ -1,6 +1,8 @@
 <template>
   <div class="relative w-full h-full bg-[#efefef]">
-    <div class="flex flex-row items-center h-10 border-b border-[#ccc] bg-white">
+    <div
+      class="flex flex-row items-center h-10 border-b border-[#ccc] bg-white"
+    >
       <div class="flex-1 text-sm leading-10 pl-4">
         <span>{{ this.$t('instance.list') }}</span>
       </div>
@@ -16,17 +18,25 @@
         <div class="flex flex-row items-baseline justify-between">
           <n-form label-placement="left" label-width="auto">
             <div class="flex flex-row gap-2 flex-wrap">
-              <n-form-item :label="this.$t('service.name')" path="param.serviceParam">
+              <n-form-item
+                :label="this.$t('service.name')"
+                path="param.serviceParam"
+              >
                 <n-input :disabled="true" v-model:value="param.serviceName" />
               </n-form-item>
-              <n-form-item :label="this.$t('service.groupName')" path="param.groupParam">
+              <n-form-item
+                :label="this.$t('service.groupName')"
+                path="param.groupParam"
+              >
                 <n-input :disabled="true" v-model:value="param.groupName" />
               </n-form-item>
             </div>
           </n-form>
           <div class="flex items-center">
             <span class="ml-2.5">
-              <n-button tertiary @click="reloadData">{{ this.$t('common.refresh') }}</n-button>
+              <n-button tertiary @click="reloadData">{{
+                this.$t('common.refresh')
+              }}</n-button>
             </span>
           </div>
         </div>
@@ -55,8 +65,12 @@
         <ServiceInstanceDetail :model="model" />
         <template #footer>
           <n-space align="baseline">
-            <n-button text @click="closeForm">{{ this.$t('common.return') }}</n-button>
-            <n-button type="primary" @click="submitForm">{{ this.$t('common.confirm') }}</n-button>
+            <n-button text @click="closeForm">{{
+              this.$t('common.return')
+            }}</n-button>
+            <n-button type="primary" @click="submitForm">{{
+              this.$t('common.confirm')
+            }}</n-button>
           </n-space>
         </template>
       </n-drawer-content>

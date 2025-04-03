@@ -6,7 +6,9 @@
           {{ this.$t('config.current_configuration') }}
         </div>
         <div class="overflow-x-auto bg-[#1f1f1f] text-[#c9c9c9] flex">
-          <div class="flex-none w-[50px] text-right px-2 border-r border-[#2c2c2c] select-none sticky left-0">
+          <div
+            class="flex-none w-[50px] text-right px-2 border-r border-[#2c2c2c] select-none sticky left-0"
+          >
             <pre class="no-pre"><span v-html="srcNo"></span></pre>
           </div>
           <div class="flex-1 min-w-0">
@@ -19,7 +21,9 @@
           {{ this.$t('config.new_configurations_to_be_submitted') }}
         </div>
         <div class="overflow-x-auto bg-[#1f1f1f] text-[#c9c9c9] flex">
-          <div class="flex-none w-[50px] text-right px-2 border-r border-[#2c2c2c] select-none sticky left-0">
+          <div
+            class="flex-none w-[50px] text-right px-2 border-r border-[#2c2c2c] select-none sticky left-0"
+          >
             <pre class="no-pre"><span v-html="dstNo"></span></pre>
           </div>
           <div class="flex-1 min-w-0">
@@ -63,7 +67,7 @@ const { srcNo, srcCode, dstNo, dstCode } = res;
   word-break: break-word;
 }
 
-:deep(span[style*="color:#f00"]) {
+:deep(span[style*='color:#f00']) {
   background-color: rgba(255, 0, 0, 0.1);
   color: #ff6b6b;
   display: inline-block;
@@ -72,7 +76,7 @@ const { srcNo, srcCode, dstNo, dstCode } = res;
   text-decoration: line-through;
 }
 
-:deep(span[style*="color:#0ff"]) {
+:deep(span[style*='color:#0ff']) {
   background-color: rgba(0, 255, 255, 0.1);
   color: #4dabf7;
   display: inline-block;
@@ -93,7 +97,8 @@ const { srcNo, srcCode, dstNo, dstCode } = res;
 }
 
 @media (max-width: 768px) {
-  .no-pre, .code-pre {
+  .no-pre,
+  .code-pre {
     font-size: 12px;
   }
 }

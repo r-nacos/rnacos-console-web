@@ -1,6 +1,8 @@
 <template>
   <div class="relative w-full h-full bg-gray-100">
-    <div class="flex flex-row items-center h-10 border-b border-gray-300 bg-white pr-3">
+    <div
+      class="flex flex-row items-center h-10 border-b border-gray-300 bg-white pr-3"
+    >
       <div class="flex-1 text-sm leading-[30px] pl-4">
         <span>{{ this.$t('user.list') }}</span>
       </div>
@@ -11,10 +13,15 @@
           <n-form label-placement="left" label-width="90">
             <n-grid cols="1 s:1 m:2 l:3 xl:3 2xl:4" responsive="screen">
               <n-gi>
-                <n-form-item :label="this.$t('user.username')" path="param.username">
+                <n-form-item
+                  :label="this.$t('user.username')"
+                  path="param.username"
+                >
                   <n-input
                     v-model:value="param.username"
-                    :placeholder="this.$t('common.preInput') + this.$t('user.username')"
+                    :placeholder="
+                      this.$t('common.preInput') + this.$t('user.username')
+                    "
                     clearable
                     @keydown.enter.prevent
                     @keyup.enter="queryList"
@@ -23,8 +30,12 @@
               </n-gi>
               <n-gi>
                 <n-space justify="end" class="ml-2">
-                  <n-button tertiary @click="queryList">{{ this.$t('common.query') }}</n-button>
-                  <n-button type="info" @click="showCreate">{{ this.$t('common.add') }}</n-button>
+                  <n-button tertiary @click="queryList">{{
+                    this.$t('common.query')
+                  }}</n-button>
+                  <n-button type="info" @click="showCreate">{{
+                    this.$t('common.add')
+                  }}</n-button>
                 </n-space>
               </n-gi>
             </n-grid>
@@ -59,8 +70,12 @@
         <UserDetail :model="model" :namespaceOptions="namespaceOptions" />
         <template #footer>
           <n-space align="baseline">
-            <n-button text @click="closeForm">{{ this.$t('common.return') }}</n-button>
-            <n-button type="primary" @click="submitForm">{{ this.$t('common.confirm') }}</n-button>
+            <n-button text @click="closeForm">{{
+              this.$t('common.return')
+            }}</n-button>
+            <n-button type="primary" @click="submitForm">{{
+              this.$t('common.confirm')
+            }}</n-button>
           </n-space>
         </template>
       </n-drawer-content>
@@ -223,7 +238,7 @@ export default defineComponent({
     let columns = createColumns(showDetail, showUpdate, removeItem);
     //doHandlePageChange(1);
     const projectSettingStore = useProjectSettingStore();
-    
+
     return {
       columns,
       data: dataRef,
@@ -281,7 +296,7 @@ export default defineComponent({
             .catch(printApiError);
         }
       },
-      isMobile: computed(() => projectSettingStore.getIsMobile),
+      isMobile: computed(() => projectSettingStore.getIsMobile)
     };
   },
 

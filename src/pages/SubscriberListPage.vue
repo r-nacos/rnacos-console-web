@@ -1,6 +1,8 @@
 <template>
   <div class="relative w-full h-full bg-gray-100">
-    <div class="flex flex-row items-center h-10 border-b border-gray-300 bg-white pr-3">
+    <div
+      class="flex flex-row items-center h-10 border-b border-gray-300 bg-white pr-3"
+    >
       <div class="flex-1 text-sm leading-[30px] pl-4">
         <span>{{ this.$t('menu.subscriber_list') }}</span>
       </div>
@@ -13,7 +15,10 @@
         <div class="flex flex-row items-baseline justify-between">
           <n-form label-placement="left" label-width="auto">
             <div class="flex flex-row gap-2 flex-wrap">
-              <n-form-item :label="this.$t('service.name')" path="param.serviceParam">
+              <n-form-item
+                :label="this.$t('service.name')"
+                path="param.serviceParam"
+              >
                 <n-input
                   v-model:value="param.serviceParam"
                   :placeholder="this.$t('service.inputName')"
@@ -22,7 +27,10 @@
                   @keyup.enter="queryList"
                 />
               </n-form-item>
-              <n-form-item :label="this.$t('service.groupName')" path="param.groupParam">
+              <n-form-item
+                :label="this.$t('service.groupName')"
+                path="param.groupParam"
+              >
                 <n-input
                   v-model:value="param.groupParam"
                   :placeholder="this.$t('service.inputGroupName')"
@@ -35,7 +43,9 @@
           </n-form>
           <div class="flex items-center">
             <span class="ml-2.5">
-              <n-button tertiary @click="queryList">{{ this.$t('common.query') }}</n-button>
+              <n-button tertiary @click="queryList">{{
+                this.$t('common.query')
+              }}</n-button>
             </span>
           </div>
         </div>

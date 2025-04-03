@@ -4,7 +4,10 @@
       <div class="flex-1 text-3xl leading-[60px] text-center">
         <p class="text-6xl">No permission</p>
         <p>{{ path }}</p>
-        <router-link class="text-blue-500 hover:text-blue-700" :to="{ path: '/' }">
+        <router-link
+          class="text-blue-500 hover:text-blue-700"
+          :to="{ path: '/' }"
+        >
           {{ $t('common.home') }}
         </router-link>
       </div>
@@ -22,4 +25,3 @@ const path = computed(() => {
   return route.query.path || '';
 });
 </script>
-

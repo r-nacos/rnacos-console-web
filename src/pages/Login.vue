@@ -1,10 +1,17 @@
 <template>
   <div class="min-h-screen w-full bg-gray-100 flex items-center justify-center">
     <div class="w-full max-w-md mx-4">
-      <div class="h-[52px] leading-[52px] text-center rounded-t-lg bg-blue-500 text-white">
+      <div
+        class="h-[52px] leading-[52px] text-center rounded-t-lg bg-blue-500 text-white"
+      >
         <span>R-NACOS {{ this.$t('login.login') }}</span>
       </div>
-      <n-form class="border border-gray-300 p-5 pb-6 bg-white rounded-b-lg shadow-lg" ref="formRef" :model="model" :rules="rules">
+      <n-form
+        class="border border-gray-300 p-5 pb-6 bg-white rounded-b-lg shadow-lg"
+        ref="formRef"
+        :model="model"
+        :rules="rules"
+      >
         <n-form-item path="username" :label="this.$t('user.username')">
           <n-input
             :placeholder="this.$t('user.username')"
@@ -21,10 +28,7 @@
             @keyup.enter="!captcha_visible ? submit() : null"
           />
         </n-form-item>
-        <div
-          v-if="captcha_visible"
-          class="w-full inline-flex flex-row"
-        >
+        <div v-if="captcha_visible" class="w-full inline-flex flex-row">
           <div class="flex-1">
             <n-form-item path="captcha" :label="this.$t('login.captcha')">
               <n-input
@@ -46,7 +50,7 @@
           </div>
         </div>
         <div>
-          <button 
+          <button
             class="h-[34px] w-full text-sm leading-[14px] bg-blue-500 text-white border-0 rounded cursor-pointer hover:bg-blue-600 transition-colors duration-200"
             @click="submit"
           >

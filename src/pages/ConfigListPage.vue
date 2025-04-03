@@ -1,6 +1,8 @@
 <template>
   <div class="relative w-full h-full bg-gray-100">
-    <div class="flex flex-row items-center h-10 border-b border-gray-300 bg-white pr-3">
+    <div
+      class="flex flex-row items-center h-10 border-b border-gray-300 bg-white pr-3"
+    >
       <div class="flex-1 text-sm leading-[30px] pl-4">
         <span>{{ this.$t('config.config_list') }}</span>
       </div>
@@ -14,7 +16,10 @@
           <n-form label-placement="left" label-width="90">
             <n-grid cols="1 s:1 m:2 l:3 xl:3 2xl:4" responsive="screen">
               <n-gi>
-                <n-form-item :label="this.$t('config.config_id')" path="param.dataParam">
+                <n-form-item
+                  :label="this.$t('config.config_id')"
+                  path="param.dataParam"
+                >
                   <n-input
                     v-model:value="param.dataParam"
                     :placeholder="this.$t('config.input_dataId')"
@@ -41,8 +46,15 @@
 
               <n-gi>
                 <n-space justify="end" class="ml-2">
-                  <n-button tertiary @click="queryList">{{ this.$t('common.query') }}</n-button>
-                  <n-button v-if="webResources.canUpdateConfig" type="info" @click="showCreate">{{ this.$t('common.add') }}</n-button>
+                  <n-button tertiary @click="queryList">{{
+                    this.$t('common.query')
+                  }}</n-button>
+                  <n-button
+                    v-if="webResources.canUpdateConfig"
+                    type="info"
+                    @click="showCreate"
+                    >{{ this.$t('common.add') }}</n-button
+                  >
 
                   <n-button @click="download" type="info">{{
                     this.$t('config.export_config')
@@ -83,7 +95,11 @@
       <SubContentFullPage
         v-show="useForm"
         :title="getDetailTitle"
-        :submitName="model.mode === constant.FORM_MODE_CREATE ? t('common.confirm') : t('config.confirm_change')"
+        :submitName="
+          model.mode === constant.FORM_MODE_CREATE
+            ? t('common.confirm')
+            : t('config.confirm_change')
+        "
         @close="closeForm"
         @submit="submitForm"
       >

@@ -1,20 +1,20 @@
 <template>
   <n-menu
-      :options="webResources.sideMenu"
-      :collapsed="collapsed"
-      :collapsed-width="64"
-      :collapsed-icon-size="22"
-      :value="getSelectedKeys"
-      :expanded-keys="openKeys"
-      @update:value="clickMenuItem"
-      @update:expanded-keys="menuExpanded"
-    />
+    :options="webResources.sideMenu"
+    :collapsed="collapsed"
+    :collapsed-width="64"
+    :collapsed-icon-size="22"
+    :value="getSelectedKeys"
+    :expanded-keys="openKeys"
+    @update:value="clickMenuItem"
+    @update:expanded-keys="menuExpanded"
+  />
 </template>
 
 <script lang="ts" setup>
 import type { MenuOption } from 'naive-ui';
 import { useWebResources } from '@/data/resources';
-import {ref, watch, reactive, toRefs, computed, unref} from 'vue';
+import { ref, watch, reactive, toRefs, computed, unref } from 'vue';
 import { userApi } from '@/api/user';
 import { handleApiResult } from '@/utils/request';
 import { useRouter, useRoute } from 'vue-router';
@@ -66,7 +66,6 @@ onMounted(() => {
 
 const selectedKeys = ref<string>(currentRoute.name as string);
 const getSelectedKeys = computed(() => unref(selectedKeys));
-
 
 const matched = currentRoute.matched;
 const getOpenKeys =

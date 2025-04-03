@@ -35,7 +35,7 @@ export function useProjectSetting() {
     menuSetting,
     crumbsSetting,
     // permissionMode,
-    showFooter,
+    showFooter
     // isPageAnimate,
     // pageAnimateType,
   };

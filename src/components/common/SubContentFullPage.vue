@@ -5,7 +5,9 @@
       height: layoutSize.contentHeight + 'px'
     }"
   >
-    <div class="flex-none h-10 border-b border-gray-300 flex flex-row items-center bg-white px-4">
+    <div
+      class="flex-none h-10 border-b border-gray-300 flex flex-row items-center bg-white px-4"
+    >
       <div class="flex-1 text-sm leading-[30px] pl-4 truncate">
         <span>{{ title || t('common.title') }}</span>
       </div>
@@ -28,10 +30,7 @@
           {{ closeName || t('common.return') }}
         </n-button>
         <template v-if="usePopSubmit">
-          <n-popconfirm
-            @positive-click="handleSubmit"
-            :show-icon="false"
-          >
+          <n-popconfirm @positive-click="handleSubmit" :show-icon="false">
             <template #trigger>
               <n-button type="primary">
                 {{ submitName || t('common.confirm') }}
@@ -60,20 +59,20 @@ import { useLayoutSize } from '@/data/appdata';
 
 const props = defineProps({
   title: {
-    type: String,
+    type: String
   },
   closeName: {
-    type: String,
+    type: String
   },
   submitName: {
-    type: String,
+    type: String
   },
   usePopSubmit: {
     type: Boolean,
     default: false
   },
   submitPopTitle: {
-    type: String,
+    type: String
   }
 });
 
@@ -88,4 +87,4 @@ const handleClose = () => {
 const handleSubmit = () => {
   emit('submit');
 };
-</script> 
+</script>

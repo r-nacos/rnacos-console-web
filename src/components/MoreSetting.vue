@@ -109,7 +109,11 @@ const submitForm = () => {
     return;
   }
   if (resetModel.newPassword !== resetModel.newPasswordRepeated) {
-    window.$message.error(t('passwordpanel.confirm_that_the_content_does_not_match_the_new_password'));
+    window.$message.error(
+      t(
+        'passwordpanel.confirm_that_the_content_does_not_match_the_new_password'
+      )
+    );
     return;
   }
   userApi
@@ -126,4 +130,3 @@ const submitForm = () => {
     .catch(printApiError);
 };
 </script>
-

@@ -1,6 +1,11 @@
 import { defineStore } from 'pinia';
 import projectSetting from '@/settings/projectSetting';
-import type { IHeaderSetting, IMenuSetting, IMultiTabsSetting, ICrumbsSetting } from '/#/config';
+import type {
+  IHeaderSetting,
+  IMenuSetting,
+  IMultiTabsSetting,
+  ICrumbsSetting
+} from '/#/config';
 
 const {
   navMode,
@@ -10,7 +15,7 @@ const {
   showFooter,
   menuSetting,
   multiTabsSetting,
-  crumbsSetting,
+  crumbsSetting
   // permissionMode,
   // isPageAnimate,
   // pageAnimateType,
@@ -40,7 +45,7 @@ export const useProjectSettingStore = defineStore({
     showFooter,
     menuSetting,
     multiTabsSetting,
-    crumbsSetting,
+    crumbsSetting
     // permissionMode,
     // isPageAnimate,
     // pageAnimateType,
@@ -49,21 +54,24 @@ export const useProjectSettingStore = defineStore({
     getNavMode: (state: ProjectSettingState): string => state.navMode,
     getNavTheme: (state: ProjectSettingState): string => state.navTheme,
     getIsMobile: (state: ProjectSettingState): boolean => state.isMobile,
-    getHeaderSetting: (state: ProjectSettingState): object => state.headerSetting,
+    getHeaderSetting: (state: ProjectSettingState): object =>
+      state.headerSetting,
     getShowFooter: (state: ProjectSettingState): boolean => state.showFooter,
     getMenuSetting: (state: ProjectSettingState): object => state.menuSetting,
-    getMultiTabsSetting: (state: ProjectSettingState): object => state.multiTabsSetting,
-    getCrumbsSetting: (state: ProjectSettingState): object => state.crumbsSetting,
+    getMultiTabsSetting: (state: ProjectSettingState): object =>
+      state.multiTabsSetting,
+    getCrumbsSetting: (state: ProjectSettingState): object =>
+      state.crumbsSetting
     // getPermissionMode: (state: ProjectSettingState): string => state.permissionMode,
     // getIsPageAnimate: (state: ProjectSettingState): boolean => state.isPageAnimate,
     // getPageAnimateType: (state: ProjectSettingState): string => state.pageAnimateType,
   },
   actions: {
-    setNavTheme(this: ProjectSettingState, value: string): void { 
+    setNavTheme(this: ProjectSettingState, value: string): void {
       this.navTheme = value;
     },
     setIsMobile(this: ProjectSettingState, value: boolean): void {
       this.isMobile = value;
     }
-  },
-}); 
+  }
+});

@@ -1,6 +1,8 @@
 <template>
   <div class="relative w-full h-full bg-gray-100">
-    <div class="flex flex-row items-center h-10 border-b border-gray-300 bg-white">
+    <div
+      class="flex flex-row items-center h-10 border-b border-gray-300 bg-white"
+    >
       <div class="flex-1 text-sm leading-[30px] pl-4">
         <span>{{ t('monitor.system_monitor') }}</span>
       </div>
@@ -9,9 +11,17 @@
       <div class="flex flex-col relative bg-white rounded-lg">
         <n-card :bordered="false">
           <n-form label-placement="left">
-            <n-grid cols="1 s:1 m:2 l:3 xl:3 2xl:4" responsive="screen" :x-gap="12" :y-gap="8">
+            <n-grid
+              cols="1 s:1 m:2 l:3 xl:3 2xl:4"
+              responsive="screen"
+              :x-gap="12"
+              :y-gap="8"
+            >
               <n-gi>
-                <n-form-item :label="t('monitor.service_node')" path="param.nodeId">
+                <n-form-item
+                  :label="t('monitor.service_node')"
+                  path="param.nodeId"
+                >
                   <n-select
                     class="w-full"
                     v-model:value="param.nodeId"
@@ -45,7 +55,9 @@
               </n-gi>
               <n-gi suffix>
                 <n-space justify="end" class="ml-2">
-                  <n-button tertiary @click="queryList">{{ t('common.refresh') }}</n-button>
+                  <n-button tertiary @click="queryList">{{
+                    t('common.refresh')
+                  }}</n-button>
                 </n-space>
               </n-gi>
             </n-grid>
@@ -53,10 +65,18 @@
         </n-card>
         <div class="flex flex-col gap-4 overflow-x-auto">
           <template v-for="(charList, index) in charGroup" :key="index">
-            <div class="flex flex-col sm:flex-row gap-2 sm:gap-4 flex-nowrap min-h-[280px]">
+            <div
+              class="flex flex-col sm:flex-row gap-2 sm:gap-4 flex-nowrap min-h-[280px]"
+            >
               <template v-for="item in charList" :key="item.id">
-                <div v-if="item.id != null" class="relative bg-white rounded-lg sm:min-w-[300px] flex-1">
-                  <div :id="item.id" class="w-full h-[260px] sm:h-[300px]"></div>
+                <div
+                  v-if="item.id != null"
+                  class="relative bg-white rounded-lg sm:min-w-[300px] flex-1"
+                >
+                  <div
+                    :id="item.id"
+                    class="w-full h-[260px] sm:h-[300px]"
+                  ></div>
                 </div>
               </template>
             </div>
@@ -72,9 +92,8 @@ import { ref, onMounted, onUnmounted, computed } from 'vue';
 import { splitAndFillGroup, ChartViewManager } from '@/utils/EchartsUtils.js';
 import { metricsApi } from '@/api/metrics';
 import { clusterApi } from '@/api/cluster';
-import { useI18n } from 'vue-i18n';   
+import { useI18n } from 'vue-i18n';
 const { t } = useI18n();
-
 
 function emptyFunc() {}
 

@@ -1,12 +1,18 @@
 <template>
   <div class="relative w-full h-full bg-gray-100">
-    <div class="flex flex-row items-center h-10 border-b border-gray-300 bg-white pr-3">
+    <div
+      class="flex flex-row items-center h-10 border-b border-gray-300 bg-white pr-3"
+    >
       <div class="flex-1 text-sm leading-[30px] pl-4">
         <span>{{ $t('namespace.namespace') }}</span>
       </div>
       <div class="flex-none">
         <n-space size="small">
-          <n-button v-if="webResources.canUpdateNamespace" type="info" @click="showCreate">
+          <n-button
+            v-if="webResources.canUpdateNamespace"
+            type="info"
+            @click="showCreate"
+          >
             {{ $t('namespace.new_namespace') }}
           </n-button>
           <n-button tertiary @click="doLoadNamespace">
@@ -41,7 +47,12 @@
       resizable
     >
       <n-drawer-content :title="getDetailTitle" closable>
-        <n-form :model="model" :rules="rules" label-placement="left" label-width="90">
+        <n-form
+          :model="model"
+          :rules="rules"
+          label-placement="left"
+          label-width="90"
+        >
           <n-form-item :label="$t('namespace.namespaceId')" path="namespaceId">
             <n-input
               v-model:value="model.namespaceId"
@@ -49,14 +60,21 @@
               :disabled="model.mode === 'update'"
             />
           </n-form-item>
-          <n-form-item :label="$t('namespace.namespaceName')" path="namespaceName">
+          <n-form-item
+            :label="$t('namespace.namespaceName')"
+            path="namespaceName"
+          >
             <n-input v-model:value="model.namespaceName" />
           </n-form-item>
         </n-form>
         <template #footer>
           <n-space align="baseline">
-            <n-button text @click="closeForm">{{ $t('common.return') }}</n-button>
-            <n-button type="primary" @click="submit">{{ $t('common.confirm') }}</n-button>
+            <n-button text @click="closeForm">{{
+              $t('common.return')
+            }}</n-button>
+            <n-button type="primary" @click="submit">{{
+              $t('common.confirm')
+            }}</n-button>
           </n-space>
         </template>
       </n-drawer-content>
@@ -178,28 +196,44 @@ const columns = [
     fixed: 'right',
     render(row) {
       if (row.namespaceId === '') {
-        return h(NTag, { size: 'small', type: 'info' }, () => t('namespace.retain_space'));
+        return h(NTag, { size: 'small', type: 'info' }, () =>
+          t('namespace.retain_space')
+        );
       }
       return h('div', null, [
-        h(NButton, {
-          size: 'tiny',
-          quaternary: true,
-          type: 'info',
-          onClick: () => showUpdate(row)
-        }, () => t('common.edit')),
-        h(NPopconfirm, {
-          onPositiveClick: () => removeItem(row)
-        }, {
-          trigger: () => h(NButton, {
+        h(
+          NButton,
+          {
             size: 'tiny',
             quaternary: true,
-            type: 'error'
-          }, () => t('common.delete')),
-          default: () => template(t('namespace.confirm_delete_info'), {
-            name: row.namespaceName,
-            id: row.namespaceId
-          })
-        })
+            type: 'info',
+            onClick: () => showUpdate(row)
+          },
+          () => t('common.edit')
+        ),
+        h(
+          NPopconfirm,
+          {
+            onPositiveClick: () => removeItem(row)
+          },
+          {
+            trigger: () =>
+              h(
+                NButton,
+                {
+                  size: 'tiny',
+                  quaternary: true,
+                  type: 'error'
+                },
+                () => t('common.delete')
+              ),
+            default: () =>
+              template(t('namespace.confirm_delete_info'), {
+                name: row.namespaceName,
+                id: row.namespaceId
+              })
+          }
+        )
       ]);
     }
   }
@@ -282,18 +316,18 @@ doLoadNamespace();
   .n-drawer {
     width: 100% !important;
   }
-  
+
   .n-drawer-content {
     padding: 16px;
   }
-  
+
   .n-form-item {
     margin-bottom: 16px;
   }
-  
+
   .n-form-item-label {
     width: 100% !important;
     text-align: left;
   }
 }
-</style> 
+</style>

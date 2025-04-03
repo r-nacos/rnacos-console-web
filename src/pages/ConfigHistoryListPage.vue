@@ -13,16 +13,34 @@
         <div class="flex items-baseline justify-between mb-4">
           <n-form label-placement="left" label-width="auto" class="flex-1">
             <div class="flex gap-2 flex-wrap">
-              <n-form-item :label="this.$t('config.dataId')" path="param.dataId" class="flex-1 min-w-[200px]">
-                <n-input :disabled="true" v-model:value="param.dataId" placeholder="" />
+              <n-form-item
+                :label="this.$t('config.dataId')"
+                path="param.dataId"
+                class="flex-1 min-w-[200px]"
+              >
+                <n-input
+                  :disabled="true"
+                  v-model:value="param.dataId"
+                  placeholder=""
+                />
               </n-form-item>
-              <n-form-item :label="this.$t('config.config_group')" path="param.group" class="flex-1 min-w-[200px]">
-                <n-input :disabled="true" v-model:value="param.group" placeholder="" />
+              <n-form-item
+                :label="this.$t('config.config_group')"
+                path="param.group"
+                class="flex-1 min-w-[200px]"
+              >
+                <n-input
+                  :disabled="true"
+                  v-model:value="param.group"
+                  placeholder=""
+                />
               </n-form-item>
             </div>
           </n-form>
           <div class="flex items-center ml-2.5">
-            <n-button tertiary @click="queryList">{{ this.$t('common.refresh') }}</n-button>
+            <n-button tertiary @click="queryList">{{
+              this.$t('common.refresh')
+            }}</n-button>
           </div>
         </div>
         <n-data-table
@@ -54,12 +72,15 @@
         <ConfigDetail :model="model" :fromHistory="true" />
         <template #footer>
           <n-space align="baseline">
-            <n-button text @click="closeForm">{{ this.$t('common.return') }}</n-button>
+            <n-button text @click="closeForm">{{
+              this.$t('common.return')
+            }}</n-button>
             <n-button
               v-if="webResources.canUpdateConfig"
               type="primary"
               @click="submitForm"
-            >{{ getSubmitName }}</n-button>
+              >{{ getSubmitName }}</n-button
+            >
           </n-space>
         </template>
       </n-drawer-content>
@@ -238,7 +259,7 @@ export default defineComponent({
       },
       doHandlePageChange,
       doRollback,
-      isMobile: computed(() => projectSettingStore.getIsMobile),
+      isMobile: computed(() => projectSettingStore.getIsMobile)
     };
   },
   computed: {

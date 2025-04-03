@@ -1,16 +1,24 @@
 <template>
   <div class="inline-flex flex-row items-center">
-    <div v-if="value.namespaceId != ''" class="inline-flex flex-row items-center pr-4 ">
+    <div
+      v-if="value.namespaceId != ''"
+      class="inline-flex flex-row items-center pr-4"
+    >
       <div class="bg-gray-100 text-gray-700 leading-[30px] text-sm px-2">
         <span>{{ value.namespaceId }}</span>
       </div>
-      <div class="bg-gray-100 py-1.5 px-2 cursor-pointer hover:bg-gray-400 transition-colors" @click="copyId">
+      <div
+        class="bg-gray-100 py-1.5 px-2 cursor-pointer hover:bg-gray-400 transition-colors"
+        @click="copyId"
+      >
         <n-icon size="16" color="#2f6cf7">
           <CopyOutline />
         </n-icon>
       </div>
     </div>
-    <div class="bg-white leading-[30px] text-sm px-2 text-gray-700">{{ this.$t('namespace.namespace') }}:</div>
+    <div class="bg-white leading-[30px] text-sm px-2 text-gray-700">
+      {{ this.$t('namespace.namespace') }}:
+    </div>
     <div class="w-[260px]">
       <n-select
         class="w-[260px]"

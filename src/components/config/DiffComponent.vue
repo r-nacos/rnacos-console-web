@@ -95,11 +95,4 @@ const { srcNo, srcCode, dstNo, dstCode } = res;
 :deep(.added-line) {
   color: #4dabf7;
 }
-
-@media (max-width: 768px) {
-  .no-pre,
-  .code-pre {
-    font-size: 12px;
-  }
-}
 </style>

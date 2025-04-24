@@ -1,13 +1,9 @@
 <template>
-  <div class="relative w-full h-full bg-gray-100">
-    <div
-      class="flex flex-row items-center h-10 border-b border-gray-300 bg-white pr-3"
-    >
-      <div class="flex-1 text-sm leading-[30px] pl-4">
-        <span>{{ $t('namespace.namespace') }}</span>
-      </div>
-      <div class="flex-none">
-        <n-space size="small">
+  <div class="relative">
+    <n-card :bordered="false">
+      <div class="flex justify-between items-center">
+        <span class="text-lg font-bold">{{ $t('namespace.namespace') }}</span>
+        <div class="flex items-center gap-4">
           <n-button
             v-if="webResources.canUpdateNamespace"
             type="info"
@@ -18,10 +14,10 @@
           <n-button tertiary @click="doLoadNamespace">
             {{ $t('common.refresh') }}
           </n-button>
-        </n-space>
+        </div>
       </div>
-    </div>
-    <div class="p-2.5 bg-gray-100">
+    </n-card>
+    <div class="mt-4">
       <div class="flex flex-col relative bg-white rounded-lg p-4">
         <n-data-table
           remote

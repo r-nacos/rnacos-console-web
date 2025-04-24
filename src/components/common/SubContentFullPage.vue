@@ -1,10 +1,5 @@
 <template>
-  <div
-    class="absolute inset-0 flex flex-col bg-white z-50 overflow-x-hidden"
-    :style="{
-      height: layoutSize.contentHeight + 'px'
-    }"
-  >
+  <div class="absolute inset-0 flex flex-col bg-white z-50 overflow-x-hidden">
     <div
       class="flex-none h-10 border-b border-gray-300 flex flex-row items-center bg-white px-4"
     >
@@ -17,8 +12,8 @@
         </n-icon>
       </n-button>
     </div>
-    <div class="relative flex-1 overflow-hidden">
-      <div class="absolute inset-0 overflow-auto">
+    <div class="flex-1 overflow-hidden">
+      <div class="h-full overflow-auto">
         <div class="p-4">
           <slot></slot>
         </div>
@@ -55,7 +50,6 @@
 import { NIcon, NButton, NPopconfirm } from 'naive-ui';
 import { Close } from '@vicons/ionicons5';
 import { useI18n } from 'vue-i18n';
-import { useLayoutSize } from '@/data/appdata';
 
 const props = defineProps({
   title: {
@@ -78,7 +72,6 @@ const props = defineProps({
 
 const emit = defineEmits(['close', 'submit']);
 const { t } = useI18n();
-const layoutSize = useLayoutSize();
 
 const handleClose = () => {
   emit('close');
@@ -88,3 +81,10 @@ const handleSubmit = () => {
   emit('submit');
 };
 </script>
+
+<style scoped>
+:deep(::-webkit-scrollbar) {
+  width: 0;
+  height: 0;
+}
+</style>

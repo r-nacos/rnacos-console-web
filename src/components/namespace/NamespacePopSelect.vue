@@ -1,38 +1,52 @@
 <template>
   <div class="inline-flex flex-row items-center">
-    <div
-      v-if="value.namespaceId != ''"
-      class="inline-flex flex-row items-center pr-4"
+    <n-grid
+      cols="1 s:1 m:2 l:2 xl:2 2xl:2"
+      :y-gap="8"
+      responsive="screen"
+      class="min-w-[200px] sm:min-w-[260px]"
     >
-      <div class="bg-gray-100 text-gray-700 leading-[30px] text-sm px-2">
-        <span>{{ value.namespaceId }}</span>
-      </div>
-      <div
-        class="bg-gray-100 py-1.5 px-2 cursor-pointer hover:bg-gray-400 transition-colors"
-        @click="copyId"
-      >
-        <n-icon size="16" color="#2f6cf7">
-          <CopyOutline />
-        </n-icon>
-      </div>
-    </div>
-    <div class="bg-white leading-[30px] text-sm px-2 text-gray-700">
-      {{ this.$t('namespace.namespace') }}:
-    </div>
-    <div class="w-[260px]">
-      <n-select
-        class="w-[260px]"
-        v-model:value="value.namespaceId"
-        :options="optionList"
-        :consistent-menu-width="false"
-        size="medium"
-        @update:value="update"
-        scrollable
-        filterable
-      >
-        {{ value.namespaceName || 'public' }}
-      </n-select>
-    </div>
+      <n-gi v-if="value.namespaceId != ''">
+        <div class="flex items-center justify-center h-full">
+          <div class="inline-flex items-center bg-gray-100">
+            <span class="text-gray-700 leading-[30px] text-sm px-2">{{
+              value.namespaceId
+            }}</span>
+            <div
+              class="py-1.5 px-2 cursor-pointer hover:bg-gray-400 transition-colors"
+              @click="copyId"
+            >
+              <n-icon size="16" color="#2f6cf7">
+                <CopyOutline />
+              </n-icon>
+            </div>
+          </div>
+        </div>
+      </n-gi>
+      <n-gi>
+        <div class="flex items-center justify-center h-full">
+          <div
+            class="bg-white leading-[30px] text-sm px-2 text-gray-700 whitespace-nowrap"
+          >
+            {{ this.$t('namespace.namespace') }}:
+          </div>
+          <div class="w-[200px] sm:w-[260px]">
+            <n-select
+              class="w-full"
+              v-model:value="value.namespaceId"
+              :options="optionList"
+              :consistent-menu-width="false"
+              size="medium"
+              @update:value="update"
+              scrollable
+              filterable
+            >
+              {{ value.namespaceName || 'public' }}
+            </n-select>
+          </div>
+        </div>
+      </n-gi>
+    </n-grid>
   </div>
 </template>
 
@@ -88,7 +102,3 @@ export default defineComponent({
   }
 });
 </script>
-
-<style scoped>
-/* 移除所有 scoped 样式，因为已经转换为 Tailwind 类名 */
-</style>

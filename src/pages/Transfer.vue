@@ -1,13 +1,7 @@
 <template>
-  <div class="relative w-full h-full bg-gray-100">
-    <div
-      class="flex flex-row items-center h-10 border-b border-gray-300 bg-white"
-    >
-      <div class="flex-1 text-sm leading-[30px] pl-4">
-        <span>{{ t('menu.data_transfer') }}</span>
-      </div>
-    </div>
-    <div class="p-2.5 bg-gray-100">
+  <div class="relative">
+    <n-card :bordered="false" :title="t('menu.data_transfer')"></n-card>
+    <div class="mt-4">
       <n-space vertical class="w-full">
         <n-card :title="t('transfer.export_title')" size="medium">
           <p>{{ t('transfer.export_p01') }}</p>

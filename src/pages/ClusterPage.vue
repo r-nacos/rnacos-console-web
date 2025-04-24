@@ -1,26 +1,18 @@
 <template>
-  <div class="relative w-full h-full bg-gray-100">
-    <div
-      class="flex flex-row items-center h-10 border-b border-gray-300 bg-white pr-3"
-    >
-      <div class="flex-1 text-sm leading-[30px] pl-4">
-        <span>{{ t('cluster.cluster_info') }}</span>
-      </div>
-    </div>
-    <div class="p-2.5 bg-gray-100">
-      <div class="flex flex-col relative bg-white rounded-lg">
-        <n-card :bordered="false">
-          <n-data-table
-            remote
-            ref="table"
-            :bordered="false"
-            :columns="columns"
-            :data="data"
-            :loading="loading"
-            :row-key="rowKey"
-          />
-        </n-card>
-      </div>
+  <div class="relative">
+    <n-card :bordered="false" :title="t('cluster.cluster_info')"></n-card>
+    <div class="mt-4">
+      <n-card :bordered="false">
+        <n-data-table
+          remote
+          ref="table"
+          :bordered="false"
+          :columns="columns"
+          :data="data"
+          :loading="loading"
+          :row-key="rowKey"
+        />
+      </n-card>
     </div>
   </div>
 </template>

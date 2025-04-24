@@ -1,18 +1,36 @@
 <template>
-  <div class="flex items-center p-0 w-full h-16" @click="handleMenuCollapsed">
-    <n-icon size="16" v-if="collapsed">
-      <MenuUnfoldOutlined />
-    </n-icon>
-    <n-icon size="16" v-else>
-      <MenuFoldOutlined />
-    </n-icon>
-  </div>
+  <div
+    class="flex justify-between items-center p-0 h-13 shadow transition-all duration-200 ease-in-out w-full z-11"
+  >
+    <div class="flex items-center">
+      <div
+        class="ml-1 cursor-pointer items-center text-center w-auto p-2"
+        @click="handleMenuCollapsed"
+      >
+        <n-icon size="18" v-if="collapsed">
+          <MenuUnfoldOutlined />
+        </n-icon>
+        <n-icon size="18" v-else>
+          <MenuFoldOutlined />
+        </n-icon>
+      </div>
+    </div>
 
-  <div class="flex gap-x-2">
-    <MoreSetting class="h-inherit flex-0" />
-    <LangSwitch class="h-inherit flex-0" />
+    <div class="flex items-center justify-center mr-5">
+      <div
+        class="inline-flex h-16 text-center cursor-pointer transition-all duration-200 ease-in-out"
+      >
+        <MoreSetting class="h-inherit" />
+      </div>
+      <div
+        class="inline-block h-16 text-center cursor-pointer transition-all duration-200 ease-in-out"
+      >
+        <LangSwitch class="h-inherit flex-0" />
+      </div>
+    </div>
   </div>
 </template>
+
 <script lang="ts" setup>
 import MoreSetting from '@/components/MoreSetting.vue';
 import LangSwitch from '@/components/LangSwitch.vue';

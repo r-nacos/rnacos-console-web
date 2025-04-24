@@ -1,14 +1,14 @@
 <template>
-  <div class="relative w-full h-full bg-gray-100">
-    <div class="flex items-center h-10 border-b border-gray-300 bg-white px-4">
-      <div class="flex-1 text-sm leading-[30px] pl-4 truncate">
-        <span>{{ this.$t('config.config_history') }}</span>
-      </div>
-      <div class="flex-none">
-        <n-button @click="routerBack">{{ this.$t('common.back') }}</n-button>
-      </div>
-    </div>
-    <div class="p-2.5 bg-gray-100">
+  <div class="relative" style="height: calc(100vh - 100px)">
+    <n-card
+      :bordered="false"
+      :title="this.$t('config.config_history')"
+      closable
+      @close="routerBack"
+    >
+    </n-card>
+
+    <div class="mt-4">
       <div class="flex flex-col relative bg-white rounded-lg p-4">
         <div class="flex items-baseline justify-between mb-4">
           <n-form label-placement="left" label-width="auto" class="flex-1">

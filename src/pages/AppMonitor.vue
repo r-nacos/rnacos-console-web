@@ -1,13 +1,7 @@
 <template>
-  <div class="relative w-full h-full bg-gray-100">
-    <div
-      class="flex flex-row items-center h-10 border-b border-gray-300 bg-white"
-    >
-      <div class="flex-1 text-sm leading-[30px] pl-4">
-        <span>{{ t('monitor.system_monitor') }}</span>
-      </div>
-    </div>
-    <div class="p-4 bg-gray-100">
+  <div class="relative">
+    <n-card :bordered="false" :title="t('monitor.system_monitor')"></n-card>
+    <div class="mt-4">
       <div class="flex flex-col relative bg-white rounded-lg">
         <n-card :bordered="false">
           <n-form label-placement="left">

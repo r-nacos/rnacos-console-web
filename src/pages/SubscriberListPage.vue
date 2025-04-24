@@ -1,68 +1,74 @@
 <template>
-  <div class="relative w-full h-full bg-gray-100">
-    <div
-      class="flex flex-row items-center h-10 border-b border-gray-300 bg-white pr-3"
-    >
-      <div class="flex-1 text-sm leading-[30px] pl-4">
-        <span>{{ this.$t('menu.subscriber_list') }}</span>
-      </div>
-      <div class="flex-none">
-        <NamespacePopSelect @change="queryList" />
-      </div>
-    </div>
-    <div class="p-2.5 bg-gray-100">
-      <div class="flex flex-col relative bg-white rounded-lg p-4">
-        <div class="flex flex-row items-baseline justify-between">
-          <n-form label-placement="left" label-width="auto">
-            <div class="flex flex-row gap-2 flex-wrap">
-              <n-form-item
-                :label="this.$t('service.name')"
-                path="param.serviceParam"
-              >
-                <n-input
-                  v-model:value="param.serviceParam"
-                  :placeholder="this.$t('service.inputName')"
-                  clearable
-                  @keydown.enter.prevent
-                  @keyup.enter="queryList"
-                />
-              </n-form-item>
-              <n-form-item
-                :label="this.$t('service.groupName')"
-                path="param.groupParam"
-              >
-                <n-input
-                  v-model:value="param.groupParam"
-                  :placeholder="this.$t('service.inputGroupName')"
-                  clearable
-                  @keydown.enter.prevent
-                  @keyup.enter="queryList"
-                />
-              </n-form-item>
-            </div>
-          </n-form>
-          <div class="flex items-center">
-            <span class="ml-2.5">
+  <div class="relative">
+    <n-card :bordered="false">
+      <template #header>
+        <div
+          class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2"
+        >
+          <div class="text-lg font-medium">
+            {{ this.$t('config.config_list') }}
+          </div>
+          <NamespacePopSelect @change="queryList" />
+        </div>
+      </template>
+    </n-card>
+
+    <n-card :bordered="false" class="mt-4">
+      <n-form label-placement="left" label-width="90">
+        <n-grid cols="1 s:1 m:2 l:3 xl:3 2xl:4" responsive="screen">
+          <n-gi>
+            <n-form-item
+              :label="this.$t('service.name')"
+              path="param.serviceParam"
+            >
+              <n-input
+                v-model:value="param.serviceParam"
+                :placeholder="this.$t('service.inputName')"
+                clearable
+                @keydown.enter.prevent
+                @keyup.enter="queryList"
+              />
+            </n-form-item>
+          </n-gi>
+          <n-gi>
+            <n-form-item
+              :label="this.$t('service.groupName')"
+              path="param.groupParam"
+            >
+              <n-input
+                v-model:value="param.groupParam"
+                :placeholder="this.$t('service.inputGroupName')"
+                clearable
+                @keydown.enter.prevent
+                @keyup.enter="queryList"
+              />
+            </n-form-item>
+          </n-gi>
+          <n-gi>
+            <n-space justify="end" class="ml-2">
               <n-button tertiary @click="queryList">{{
                 this.$t('common.query')
               }}</n-button>
-            </span>
-          </div>
-        </div>
-        <n-data-table
-          remote
-          ref="table"
-          :scroll-x="600"
-          :bordered="false"
-          :columns="columns"
-          :data="data"
-          :loading="loading"
-          :pagination="pagination"
-          :row-key="rowKey"
-          @update:page="handlePageChange"
-        />
-      </div>
-    </div>
+            </n-space>
+          </n-gi>
+        </n-grid>
+      </n-form>
+    </n-card>
+
+    <n-card :bordered="false" class="mt-3">
+      <n-data-table
+        remote
+        ref="table"
+        :scroll-x="600"
+        :bordered="false"
+        :columns="columns"
+        :data="data"
+        :loading="loading"
+        :pagination="pagination"
+        :row-key="rowKey"
+        @update:page="handlePageChange"
+      />
+    </n-card>
   </div>
 </template>
 

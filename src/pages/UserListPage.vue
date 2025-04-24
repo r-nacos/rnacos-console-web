@@ -1,13 +1,8 @@
 <template>
-  <div class="relative w-full h-full bg-gray-100">
-    <div
-      class="flex flex-row items-center h-10 border-b border-gray-300 bg-white pr-3"
-    >
-      <div class="flex-1 text-sm leading-[30px] pl-4">
-        <span>{{ this.$t('user.list') }}</span>
-      </div>
-    </div>
-    <div class="p-2.5 bg-gray-100">
+  <div class="relative">
+    <n-card :bordered="false" :title="this.$t('user.list')"></n-card>
+
+    <div class="mt-4">
       <div class="flex flex-col relative bg-white rounded-lg p-4">
         <n-card :bordered="false">
           <n-form label-placement="left" label-width="90">

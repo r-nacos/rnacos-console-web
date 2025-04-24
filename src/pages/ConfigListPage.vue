@@ -1,126 +1,138 @@
 <template>
-  <div class="relative w-full h-full bg-gray-100">
+  <div class="relative" style="height: calc(100vh - 100px)">
+    <n-card :bordered="false">
+      <template #header>
+        <div
+          class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2"
+        >
+          <div class="text-lg font-medium">
+            {{ this.$t('config.config_list') }}
+          </div>
+          <NamespacePopSelect @change="queryList" />
+        </div>
+      </template>
+    </n-card>
+    <n-card :bordered="false" class="mt-4">
+      <n-form label-placement="left" label-width="90">
+        <n-grid cols="1 s:1 m:2 l:3 xl:3 2xl:4" responsive="screen">
+          <n-gi>
+            <n-form-item
+              :label="this.$t('config.config_id')"
+              path="param.dataParam"
+            >
+              <n-input
+                v-model:value="param.dataParam"
+                :placeholder="this.$t('config.input_dataId')"
+                clearable
+                @keydown.enter.prevent
+                @keyup.enter="queryList"
+              />
+            </n-form-item>
+          </n-gi>
+          <n-gi>
+            <n-form-item
+              :label="this.$t('config.config_group')"
+              path="param.groupParam"
+            >
+              <n-input
+                v-model:value="param.groupParam"
+                :placeholder="this.$t('config.input_config_group')"
+                clearable
+                @keydown.enter.prevent
+                @keyup.enter="queryList"
+              />
+            </n-form-item>
+          </n-gi>
+          <n-gi>
+            <n-space justify="end" class="ml-2">
+              <n-button tertiary @click="queryList">{{
+                this.$t('common.query')
+              }}</n-button>
+              <n-button
+                v-if="webResources.canUpdateConfig"
+                type="info"
+                @click="showCreate"
+                >{{ this.$t('common.add') }}</n-button
+              >
+
+              <n-button @click="download" type="info">{{
+                this.$t('config.export_config')
+              }}</n-button>
+
+              <n-upload
+                v-if="webResources.canUpdateConfig"
+                action="/rnacos/api/console/config/import"
+                :headers="uploadHeader"
+                :show-file-list="false"
+                @before-upload="doBeforeUpload"
+                @finish="handlerUploadFinish"
+              >
+                <n-button type="info">{{
+                  this.$t('config.import_config')
+                }}</n-button>
+              </n-upload>
+            </n-space>
+          </n-gi>
+        </n-grid>
+      </n-form>
+    </n-card>
+
+    <n-card :bordered="false" class="mt-3">
+      <n-data-table
+        remote
+        ref="table"
+        :scroll-x="600"
+        :bordered="false"
+        :columns="columns"
+        :data="data"
+        :loading="loading"
+        :pagination="pagination"
+        :row-key="rowKey"
+        @update:page="handlePageChange"
+      />
+    </n-card>
+
     <div
-      class="flex flex-row items-center h-10 border-b border-gray-300 bg-white pr-3"
+      class="absolute inset-0 bg-gray-100 h-full"
+      v-if="useForm || useDiffForm"
     >
-      <div class="flex-1 text-sm leading-[30px] pl-4">
-        <span>{{ this.$t('config.config_list') }}</span>
-      </div>
-      <div class="flex-none">
-        <NamespacePopSelect @change="queryList" />
-      </div>
-    </div>
-    <div class="p-2.5 bg-gray-100">
-      <div class="flex flex-col relative bg-white rounded-lg p-4">
-        <n-card :bordered="false">
-          <n-form label-placement="left" label-width="90">
-            <n-grid cols="1 s:1 m:2 l:3 xl:3 2xl:4" responsive="screen">
-              <n-gi>
-                <n-form-item
-                  :label="this.$t('config.config_id')"
-                  path="param.dataParam"
-                >
-                  <n-input
-                    v-model:value="param.dataParam"
-                    :placeholder="this.$t('config.input_dataId')"
-                    clearable
-                    @keydown.enter.prevent
-                    @keyup.enter="queryList"
-                  />
-                </n-form-item>
-              </n-gi>
-              <n-gi>
-                <n-form-item
-                  :label="this.$t('config.config_group')"
-                  path="param.groupParam"
-                >
-                  <n-input
-                    v-model:value="param.groupParam"
-                    :placeholder="this.$t('config.input_config_group')"
-                    clearable
-                    @keydown.enter.prevent
-                    @keyup.enter="queryList"
-                  />
-                </n-form-item>
-              </n-gi>
-
-              <n-gi>
-                <n-space justify="end" class="ml-2">
-                  <n-button tertiary @click="queryList">{{
-                    this.$t('common.query')
-                  }}</n-button>
-                  <n-button
-                    v-if="webResources.canUpdateConfig"
-                    type="info"
-                    @click="showCreate"
-                    >{{ this.$t('common.add') }}</n-button
-                  >
-
-                  <n-button @click="download" type="info">{{
-                    this.$t('config.export_config')
-                  }}</n-button>
-
-                  <n-upload
-                    v-if="webResources.canUpdateConfig"
-                    action="/rnacos/api/console/config/import"
-                    :headers="uploadHeader"
-                    :show-file-list="false"
-                    @before-upload="doBeforeUpload"
-                    @finish="handlerUploadFinish"
-                  >
-                    <n-button type="info">{{
-                      this.$t('config.import_config')
-                    }}</n-button>
-                  </n-upload>
-                </n-space>
-              </n-gi>
-            </n-grid>
-          </n-form>
-        </n-card>
-        <n-data-table
-          remote
-          ref="table"
-          :scroll-x="600"
-          :bordered="false"
-          :columns="columns"
-          :data="data"
-          :loading="loading"
-          :pagination="pagination"
-          :row-key="rowKey"
-          @update:page="handlePageChange"
-        />
-      </div>
-    </div>
-    <Transition name="slide-fade">
-      <SubContentFullPage
-        v-show="useForm"
-        :title="getDetailTitle"
-        :submitName="
-          model.mode === constant.FORM_MODE_CREATE
-            ? t('common.confirm')
-            : t('config.confirm_change')
-        "
-        @close="closeForm"
-        @submit="submitForm"
+      <Transition
+        class="transition-all duration-200 ease-in-out"
+        name="slide-fade"
       >
-        <ConfigDetail
-          ref="configDetailRef"
-          :model="model"
-          :fromHistory="false"
-        />
-      </SubContentFullPage>
-    </Transition>
-    <Transition name="slide-fade">
-      <SubContentFullPage
-        v-if="useDiffForm"
-        :title="this.$t('config.diff_content')"
-        :submitName="this.$t('config.confirm_change')"
-        @close="closeDiffForm"
-        @submit="submitData"
+        <SubContentFullPage
+          v-show="useForm"
+          :title="getDetailTitle"
+          :submitName="
+            model.mode === constant.FORM_MODE_CREATE
+              ? t('common.confirm')
+              : t('config.confirm_change')
+          "
+          @close="closeForm"
+          @submit="submitForm"
+        >
+          <ConfigDetail
+            ref="configDetailRef"
+            :model="model"
+            :fromHistory="false"
+          />
+        </SubContentFullPage>
+      </Transition>
+      <Transition
+        class="transition-all duration-200 ease-in-out"
+        name="slide-fade"
       >
-        <DiffComponent :src="model.sourceContent" :dst="model.content" />
-      </SubContentFullPage>
-    </Transition>
+        <SubContentFullPage
+          v-if="useDiffForm"
+          :title="this.$t('config.diff_content')"
+          :submitName="this.$t('config.confirm_change')"
+          @close="closeDiffForm"
+          @submit="submitData"
+        >
+          <DiffComponent :src="model.sourceContent" :dst="model.content" />
+        </SubContentFullPage>
+      </Transition>
+    </div>
   </div>
 </template>
 
@@ -427,16 +439,3 @@ export default defineComponent({
   }
 });
 </script>
-
-<style scoped>
-.slide-fade-enter-active,
-.slide-fade-leave-active {
-  transition: all 0.3s ease;
-}
-
-.slide-fade-enter-from,
-.slide-fade-leave-to {
-  transform: translateX(20px);
-  opacity: 0;
-}
-</style>

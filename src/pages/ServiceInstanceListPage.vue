@@ -1,19 +1,13 @@
 <template>
-  <div class="relative w-full h-full bg-[#efefef]">
-    <div
-      class="flex flex-row items-center h-10 border-b border-[#ccc] bg-white"
+  <div class="relative">
+    <n-card
+      :bordered="false"
+      :title="this.$t('instance.list')"
+      closable
+      @close="routerBack"
     >
-      <div class="flex-1 text-sm leading-10 pl-4">
-        <span>{{ this.$t('instance.list') }}</span>
-      </div>
-      <div class="flex-none">
-        <span>
-          <n-button @click="routerBack">{{ this.$t('common.back') }}</n-button>
-        </span>
-      </div>
-      <div class="flex-none"></div>
-    </div>
-    <div class="p-2.5 bg-[#efefef]">
+    </n-card>
+    <div class="mt-4">
       <div class="flex flex-col relative bg-white rounded-lg p-4">
         <div class="flex flex-row items-baseline justify-between">
           <n-form label-placement="left" label-width="auto">

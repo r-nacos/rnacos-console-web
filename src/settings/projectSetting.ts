@@ -30,7 +30,7 @@ const setting = {
     //最小宽度
     minMenuWidth: 64,
     //菜单宽度
-    menuWidth: 240,
+    menuWidth: 200,
     //固定菜单
     fixed: true,
     //分割菜单

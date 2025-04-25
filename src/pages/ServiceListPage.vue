@@ -1,19 +1,18 @@
 <template>
   <div class="relative">
-    <n-card :bordered="false">
-      <template #header>
-        <div
-          class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2"
-        >
-          <div class="text-lg font-medium">
-            {{ this.$t('config.config_list') }}
-          </div>
-          <NamespacePopSelect @change="queryList" />
-        </div>
-      </template>
-    </n-card>
+    <div
+      class="flex flex-row items-center border-b border-gray-300 bg-white pr-3"
+      :class="{'h-[40px]': !isMobile}"
+    >
+      <div class="flex-1 text-sm pl-4">
+        <span>{{ this.$t('config.config_list') }}</span>
+      </div>
+      <div class="flex-none">
+        <NamespacePopSelect @change="queryList" />
+      </div>
+    </div>
 
-    <div class="mt-4">
+    <div class="m-2">
       <div class="flex flex-col relative bg-white rounded-lg p-4">
         <n-card :bordered="false">
           <n-form label-placement="left" label-width="90">

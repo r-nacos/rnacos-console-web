@@ -1,5 +1,5 @@
 <template>
-  <div class="detailWrap">
+  <div class="bg-white rounded-lg p-4">
     <n-form ref="formRef" :model="model" :rules="rules">
       <n-form-item path="ip" label="IP">
         <n-input
@@ -86,11 +86,3 @@ export default defineComponent({
   }
 });
 </script>
-
-<style scoped>
-.detailWrap {
-  background: #fff;
-  padding: 3px;
-  border-radius: 5px;
-}
-</style>

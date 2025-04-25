@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex justify-between items-center p-0 h-13 shadow transition-all duration-200 ease-in-out w-full z-11"
+    class="flex justify-between bg-[#2f6cf7] text-white items-center p-0 h-13 shadow transition-all duration-200 ease-in-out w-full z-11"
   >
     <div class="flex items-center">
       <div

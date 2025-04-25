@@ -1,96 +1,97 @@
 <template>
   <div class="relative" style="height: calc(100vh - 100px)">
-    <n-card :bordered="false">
-      <template #header>
-        <div
-          class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2"
-        >
-          <div class="text-lg font-medium">
-            {{ this.$t('config.config_list') }}
-          </div>
-          <NamespacePopSelect @change="queryList" />
-        </div>
-      </template>
-    </n-card>
-    <n-card :bordered="false" class="mt-4">
-      <n-form label-placement="left" label-width="90">
-        <n-grid cols="1 s:1 m:2 l:3 xl:3 2xl:4" responsive="screen">
-          <n-gi>
-            <n-form-item
-              :label="this.$t('config.config_id')"
-              path="param.dataParam"
-            >
-              <n-input
-                v-model:value="param.dataParam"
-                :placeholder="this.$t('config.input_dataId')"
-                clearable
-                @keydown.enter.prevent
-                @keyup.enter="queryList"
-              />
-            </n-form-item>
-          </n-gi>
-          <n-gi>
-            <n-form-item
-              :label="this.$t('config.config_group')"
-              path="param.groupParam"
-            >
-              <n-input
-                v-model:value="param.groupParam"
-                :placeholder="this.$t('config.input_config_group')"
-                clearable
-                @keydown.enter.prevent
-                @keyup.enter="queryList"
-              />
-            </n-form-item>
-          </n-gi>
-          <n-gi>
-            <n-space justify="end" class="ml-2">
-              <n-button tertiary @click="queryList">{{
-                this.$t('common.query')
-              }}</n-button>
-              <n-button
-                v-if="webResources.canUpdateConfig"
-                type="info"
-                @click="showCreate"
-                >{{ this.$t('common.add') }}</n-button
-              >
+    <div
+      class="flex flex-row items-center border-b border-gray-300 bg-white pr-3"
+      :class="{'h-[40px]': !isMobile}"
+    >
+      <div class="flex-1 text-sm pl-4">
+        <span>{{ this.$t('config.config_list') }}</span>
+      </div>
+      <div class="flex-none">
+        <NamespacePopSelect @change="queryList" />
+      </div>
+    </div>
 
-              <n-button @click="download" type="info">{{
-                this.$t('config.export_config')
-              }}</n-button>
+    <div class="m-2">
+      <div class="flex flex-col relative bg-white rounded-lg p-4">
+        <n-card :bordered="false">
+          <n-form label-placement="left" label-width="90">
+            <n-grid cols="1 s:1 m:2 l:3 xl:3 2xl:4" responsive="screen">
+              <n-gi>
+                <n-form-item
+                  :label="this.$t('config.config_id')"
+                  path="param.dataParam"
+                >
+                  <n-input
+                    v-model:value="param.dataParam"
+                    :placeholder="this.$t('config.input_dataId')"
+                    clearable
+                    @keydown.enter.prevent
+                    @keyup.enter="queryList"
+                  />
+                </n-form-item>
+              </n-gi>
+              <n-gi>
+                <n-form-item
+                  :label="this.$t('config.config_group')"
+                  path="param.groupParam"
+                >
+                  <n-input
+                    v-model:value="param.groupParam"
+                    :placeholder="this.$t('config.input_config_group')"
+                    clearable
+                    @keydown.enter.prevent
+                    @keyup.enter="queryList"
+                  />
+                </n-form-item>
+              </n-gi>
+              <n-gi>
+                <n-space justify="end" class="ml-2">
+                  <n-button tertiary @click="queryList">{{
+                    this.$t('common.query')
+                  }}</n-button>
+                  <n-button
+                    v-if="webResources.canUpdateConfig"
+                    type="info"
+                    @click="showCreate"
+                    >{{ this.$t('common.add') }}</n-button
+                  >
 
-              <n-upload
-                v-if="webResources.canUpdateConfig"
-                action="/rnacos/api/console/config/import"
-                :headers="uploadHeader"
-                :show-file-list="false"
-                @before-upload="doBeforeUpload"
-                @finish="handlerUploadFinish"
-              >
-                <n-button type="info">{{
-                  this.$t('config.import_config')
-                }}</n-button>
-              </n-upload>
-            </n-space>
-          </n-gi>
-        </n-grid>
-      </n-form>
-    </n-card>
+                  <n-button @click="download" type="info">{{
+                    this.$t('config.export_config')
+                  }}</n-button>
 
-    <n-card :bordered="false" class="mt-3">
-      <n-data-table
-        remote
-        ref="table"
-        :scroll-x="600"
-        :bordered="false"
-        :columns="columns"
-        :data="data"
-        :loading="loading"
-        :pagination="pagination"
-        :row-key="rowKey"
-        @update:page="handlePageChange"
-      />
-    </n-card>
+                  <n-upload
+                    v-if="webResources.canUpdateConfig"
+                    action="/rnacos/api/console/config/import"
+                    :headers="uploadHeader"
+                    :show-file-list="false"
+                    @before-upload="doBeforeUpload"
+                    @finish="handlerUploadFinish"
+                  >
+                    <n-button type="info">{{
+                      this.$t('config.import_config')
+                    }}</n-button>
+                  </n-upload>
+                </n-space>
+              </n-gi>
+            </n-grid>
+          </n-form>
+        </n-card>
+        <n-data-table
+          remote
+          ref="table"
+          :scroll-x="600"
+          :bordered="false"
+          :columns="columns"
+          :data="data"
+          :loading="loading"
+          :pagination="pagination"
+          :row-key="rowKey"
+          @update:page="handlePageChange"
+        />
+      </div>
+    </div>
 
     <div
       class="absolute inset-0 bg-gray-100 h-full"
@@ -137,7 +138,7 @@
 </template>
 
 <script>
-import { ref, reactive, defineComponent } from 'vue';
+import { ref, reactive, defineComponent, computed } from 'vue';
 import { configApi } from '@/api/config';
 import { namespaceStore } from '@/data/namespace';
 import { useWebResources } from '@/data/resources';
@@ -156,6 +157,8 @@ import {
   handleApiResult,
   printApiSuccess
 } from '@/utils/request';
+import { useProjectSettingStore } from '@/store/modules/projectSetting';
+
 export default defineComponent({
   components: {
     NamespacePopSelect,
@@ -164,9 +167,9 @@ export default defineComponent({
     ConfigDetail,
     DiffComponent
   },
-  setup(self) {
+  setup() {
     const { t } = useI18n();
-    //window.$message = useMessage();
+    const projectSettingStore = useProjectSettingStore();
     let router = useRouter();
     let webResources = useWebResources();
     const dataRef = ref([]);
@@ -281,19 +284,6 @@ export default defineComponent({
     const detailItem = (row) => {
       doShowConfigDetail(row, constant.FORM_MODE_DETAIL);
     };
-    const showCreate = () => {
-      modelRef.value = {
-        dataId: '',
-        group: 'DEFAULT_GROUP',
-        md5: '',
-        desc: '',
-        content: '',
-        configType: 'text',
-        sourceContent: '',
-        mode: constant.FORM_MODE_CREATE
-      };
-      useFormRef.value = true;
-    };
     const removeItem = (row) => {
       let config = {
         tenant: row.tenant,
@@ -319,8 +309,20 @@ export default defineComponent({
         }
       });
     };
-
-    const columns = createColumns(
+    const showCreate = () => {
+      modelRef.value = {
+        dataId: '',
+        group: 'DEFAULT_GROUP',
+        md5: '',
+        desc: '',
+        content: '',
+        configType: 'text',
+        sourceContent: '',
+        mode: constant.FORM_MODE_CREATE
+      };
+      useFormRef.value = true;
+    };
+    let columns = createColumns(
       detailItem,
       showHistory,
       updateItem,
@@ -344,6 +346,7 @@ export default defineComponent({
       namespaceId: '',
       constant,
       t,
+      isMobile: computed(() => projectSettingStore.getIsMobile),
       rowKey(rowData) {
         return rowData.group + '@@' + rowData.dataId;
       },
@@ -372,7 +375,6 @@ export default defineComponent({
       return '编辑详情';
     }
   },
-
   methods: {
     handlePageChange(page) {
       this.doHandlePageChange(page);
@@ -384,7 +386,6 @@ export default defineComponent({
       this.useForm = false;
     },
     closeDiffForm() {
-      //this.useForm = false;
       this.useDiffForm = false;
     },
     submitData() {
@@ -417,7 +418,6 @@ export default defineComponent({
           this.useForm = false;
           this.submitData();
         } else {
-          //this.useForm = false;
           this.useDiffForm = true;
         }
       });
@@ -439,3 +439,16 @@ export default defineComponent({
   }
 });
 </script>
+
+<style scoped>
+.slide-fade-enter-active,
+.slide-fade-leave-active {
+  transition: all 0.3s ease;
+}
+
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+  transform: translateX(20px);
+  opacity: 0;
+}
+</style>

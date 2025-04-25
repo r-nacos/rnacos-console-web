@@ -48,7 +48,7 @@
       </n-layout-header>
       <n-layout-content class="flex-1 !bg-gray-100 min-h-0">
         <!-- 面包屑 pt-16 -->
-        <div class="m-0 mb-[10px] mx-[10px] relative pt-3">
+        <div class="m-0 relative">
           <div class="pt-0">
             <router-view></router-view>
           </div>

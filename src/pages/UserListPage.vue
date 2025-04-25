@@ -1,8 +1,12 @@
 <template>
   <div class="relative">
-    <n-card :bordered="false" :title="this.$t('user.list')"></n-card>
+    <div class="flex flex-row items-center border-b h-[40px] border-gray-300 bg-white pr-3">
+      <div class="flex-1 text-sm leading-[30px] pl-4 truncate">
+        <span>{{ this.$t('user.list') }}</span>
+      </div>
+    </div>
 
-    <div class="mt-4">
+    <div class="m-2">
       <div class="flex flex-col relative bg-white rounded-lg p-4">
         <n-card :bordered="false">
           <n-form label-placement="left" label-width="90">
@@ -23,7 +27,7 @@
                   />
                 </n-form-item>
               </n-gi>
-              <n-gi>
+              <n-gi suffix class="suffix">
                 <n-space justify="end" class="ml-2">
                   <n-button tertiary @click="queryList">{{
                     this.$t('common.query')

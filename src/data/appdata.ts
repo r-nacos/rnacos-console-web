@@ -1,11 +1,22 @@
 import { ISize } from '@/types/base';
 import { defineStore } from 'pinia';
+import { useProjectSettingStore } from '@/store/modules/projectSetting';
+import setting from '@/settings/projectSetting';
+
+interface LayoutSizeState {
+  headerHeight: number;
+  footerHeight: number;
+  siderWidth: number;
+  contentHeight: number;
+  contentWidth: number;
+  windowSize: ISize;
+}
 
 export const useLayoutSize = defineStore('layoutSize', {
-  state: () => ({
-    headerHeight: 52,
+  state: (): LayoutSizeState => ({
+    headerHeight: setting.headerSetting.height,
     footerHeight: 0,
-    siderWidth: 200,
+    siderWidth: setting.menuSetting.menuWidth,
     contentHeight: 0,
     contentWidth: 0,
     windowSize: {
@@ -13,24 +24,36 @@ export const useLayoutSize = defineStore('layoutSize', {
       width: 0
     }
   }),
-  getters: {},
+  getters: {
+    getContentWidth(): number {
+      const projectSettingStore = useProjectSettingStore();
+      const currentWidth = window.innerWidth;
+      if (projectSettingStore.getIsMobile) {
+        return currentWidth;
+      }
+      return (
+        currentWidth -
+        (projectSettingStore.getMenuCollapsed
+          ? setting.menuSetting.minMenuWidth
+          : setting.menuSetting.menuWidth)
+      );
+    }
+  },
   actions: {
-    updateLayoutSize(windowSize?: ISize) {
+    updateLayoutSize(this: { $state: LayoutSizeState }, windowSize?: ISize) {
       if (windowSize) {
-        this.windowSize = windowSize;
+        this.$state.windowSize = windowSize;
       } else {
-        this.windowSize = {
+        this.$state.windowSize = {
           height: window.innerHeight,
           width: window.innerWidth
         };
       }
-      this.contentHeight =
-        this.windowSize.height - this.headerHeight - this.footerHeight;
-      this.contentWidth = this.windowSize.width - this.siderWidth;
-    },
-    setSiderWidth(siderWidth: number) {
-      this.siderWidth = siderWidth;
-      this.updateLayoutSize(undefined);
+      this.$state.contentHeight =
+        this.$state.windowSize.height -
+        this.$state.headerHeight -
+        this.$state.footerHeight;
+      this.$state.contentWidth = this.getContentWidth;
     }
   }
 });

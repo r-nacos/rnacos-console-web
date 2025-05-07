@@ -1,5 +1,5 @@
 <template>
-  <n-layout class="flex flex-auto flex-row min-h-screen" has-sider>
+  <n-layout class="flex flex-auto flex-row h-screen" has-sider>
     <n-layout-sider
       v-if="!isMobile"
       show-trigger="bar"
@@ -11,7 +11,7 @@
       :collapsed-width="64"
       :width="leftMenuWidth"
       :native-scrollbar="false"
-      class="h-screen shadow-md transition-all duration-200 ease-in-out relative"
+      class="h-full shadow-md transition-all duration-200 ease-in-out relative"
     >
       <Logo :collapsed="collapsed" />
       <AsideMenu v-model:collapsed="collapsed" />
@@ -31,7 +31,7 @@
         :collapsed="false"
         :collapsed-width="64"
         :native-scrollbar="false"
-        class="h-screen shadow-md transition-all duration-200 ease-in-out relative"
+        class="h-full shadow-md transition-all duration-200 ease-in-out relative"
       >
         <Logo :collapsed="false" />
         <AsideMenu :collapsed="false" />
@@ -40,13 +40,12 @@
 
     <n-layout
       :native-scrollbar="false"
-      class="!bg-gray-100"
-      :class="{ 'h-screen': isMobile }"
+      class="!bg-gray-100 flex flex-col h-full relative"
     >
-      <n-layout-header>
+      <n-layout-header class="flex-none absolute top-0 right-0 left-0 z-50">
         <PageHeader v-model:collapsed="collapsed" />
       </n-layout-header>
-      <n-layout-content class="flex-1 !bg-gray-100 min-h-0">
+      <n-layout-content class="flex-1 !bg-gray-100 min-h-0 pt-[52px]">
         <!-- 面包屑 pt-16 -->
         <div class="m-0 relative">
           <div class="pt-0">
@@ -59,7 +58,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue';
+import { ref, computed, onMounted, onUnmounted, watch } from 'vue';
 import { AsideMenu } from './components/Menu';
 import { PageHeader } from './components/Header';
 import { Logo } from './components/Logo';
@@ -77,11 +76,18 @@ const {
 } = useProjectSetting();
 
 const layoutSize = useLayoutSize();
-const collapsed = ref(false);
 const settingStore = useProjectSettingStore();
 
 const { mobileWidth, menuWidth } = unref(menuSetting);
 
+const collapsed = computed<boolean>({
+  get: () => settingStore.getMenuSetting.collapsed,
+  set: (val: boolean) => settingStore.setMenuCollapsed(val)
+});
+// 监听菜单折叠状态变化
+watch(collapsed, () => {
+  layoutSize.updateLayoutSize();
+});
 const isMobile = computed<boolean>({
   get: () => settingStore.getIsMobile,
   set: (val: boolean) => settingStore.setIsMobile(val)
@@ -110,15 +116,15 @@ const checkMobileMode = () => {
 // 监听窗口大小变化
 const handleResize = () => {
   checkMobileMode();
+  layoutSize.updateLayoutSize();
 };
 
-// 组件挂载时初始化
 onMounted(() => {
   checkMobileMode();
+  layoutSize.updateLayoutSize();
   window.addEventListener('resize', handleResize);
 });
 
-// 组件卸载时清理
 onUnmounted(() => {
   window.removeEventListener('resize', handleResize);
 });

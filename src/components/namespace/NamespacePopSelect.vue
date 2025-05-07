@@ -4,11 +4,13 @@
       v-if="value.namespaceId != ''"
       class="inline-flex flex-row items-center pr-2 sm:pr-4 mb-2 sm:mb-0"
     >
-      <div class="bg-gray-100 text-gray-700 text-sm px-2 h-[40px] sm:h-[30px] flex items-center">
+      <div
+        class="bg-gray-100 text-gray-700 text-sm px-2 sm:h-[30px] flex items-center"
+      >
         <span class="whitespace-nowrap">{{ value.namespaceId }}</span>
       </div>
       <div
-        class="bg-gray-100 h-[40px] sm:h-[30px] px-2 cursor-pointer hover:bg-gray-400 transition-colors flex items-center"
+        class="bg-gray-100 sm:h-[30px] px-2 cursor-pointer hover:bg-gray-400 transition-colors flex items-center"
         @click="copyId"
       >
         <n-icon size="16" color="#2f6cf7">
@@ -17,7 +19,9 @@
       </div>
     </div>
     <div class="flex flex-row items-center">
-      <div class="bg-white text-sm px-2 text-gray-700 h-[40px] sm:h-[30px] flex items-center">
+      <div
+        class="bg-white text-sm px-2 text-gray-700 sm:h-[30px] flex items-center"
+      >
         {{ this.$t('namespace.namespace') }}:
       </div>
       <div class="w-[260px]">

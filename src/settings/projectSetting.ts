@@ -12,7 +12,8 @@ const setting = {
     //固定顶部
     fixed: true,
     //显示重载按钮
-    isReload: true
+    isReload: true,
+    height: 52
   },
   //页脚
   showFooter: false,

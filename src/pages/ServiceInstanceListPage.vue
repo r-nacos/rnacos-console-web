@@ -1,6 +1,8 @@
 <template>
   <div class="relative">
-    <div class="flex flex-row items-center border-b h-[40px] border-gray-300 bg-white pr-3">
+    <div
+      class="flex flex-row items-center border-b h-[40px] border-gray-300 bg-white pr-3"
+    >
       <div class="flex-1 text-sm leading-[30px] pl-4 truncate">
         <span>{{ this.$t('config.config_history') }}</span>
       </div>
@@ -8,7 +10,7 @@
         <n-button @click="routerBack">{{ this.$t('common.back') }}</n-button>
       </div>
     </div>
-    
+
     <div class="m-2">
       <div class="flex flex-col relative bg-white rounded-lg p-4">
         <div class="flex flex-row items-baseline justify-between">

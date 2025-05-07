@@ -1,10 +1,9 @@
 <template>
-  <div class="relative" style="height: calc(100vh - 100px)">
+  <div class="relative flex flex-col w-full h-ful">
     <div
-      class="flex flex-row items-center border-b border-gray-300 bg-white pr-3"
-      :class="{'h-[40px]': !isMobile}"
+      class="flex flex-row items-center h-10 border-b border-gray-300 bg-white pr-3"
     >
-      <div class="flex-1 text-sm pl-4">
+      <div class="flex-1 text-sm leading-[30px] pl-4">
         <span>{{ this.$t('config.config_list') }}</span>
       </div>
       <div class="flex-none">
@@ -93,47 +92,48 @@
       </div>
     </div>
 
-    <div
-      class="absolute inset-0 bg-gray-100 h-full"
-      v-if="useForm || useDiffForm"
+    <Transition
+      class="transition-all duration-300 ease-in-out"
+      enter-from-class="translate-x-5 opacity-0"
+      enter-to-class="translate-x-0 opacity-100"
+      leave-from-class="translate-x-0 opacity-100"
+      leave-to-class="translate-x-5 opacity-0"
     >
-      <Transition
-        class="transition-all duration-200 ease-in-out"
-        name="slide-fade"
+      <SubContentFullPage
+        v-show="useForm"
+        :title="getDetailTitle"
+        :submitName="
+          model.mode === constant.FORM_MODE_CREATE
+            ? t('common.confirm')
+            : t('config.confirm_change')
+        "
+        @close="closeForm"
+        @submit="submitForm"
       >
-        <SubContentFullPage
-          v-show="useForm"
-          :title="getDetailTitle"
-          :submitName="
-            model.mode === constant.FORM_MODE_CREATE
-              ? t('common.confirm')
-              : t('config.confirm_change')
-          "
-          @close="closeForm"
-          @submit="submitForm"
-        >
-          <ConfigDetail
-            ref="configDetailRef"
-            :model="model"
-            :fromHistory="false"
-          />
-        </SubContentFullPage>
-      </Transition>
-      <Transition
-        class="transition-all duration-200 ease-in-out"
-        name="slide-fade"
+        <ConfigDetail
+          ref="configDetailRef"
+          :model="model"
+          :fromHistory="false"
+        />
+      </SubContentFullPage>
+    </Transition>
+    <Transition
+      class="transition-all duration-300 ease-in-out"
+      enter-from-class="translate-x-5 opacity-0"
+      enter-to-class="translate-x-0 opacity-100"
+      leave-from-class="translate-x-0 opacity-100"
+      leave-to-class="translate-x-5 opacity-0"
+    >
+      <SubContentFullPage
+        v-if="useDiffForm"
+        :title="this.$t('config.diff_content')"
+        :submitName="this.$t('config.confirm_change')"
+        @close="closeDiffForm"
+        @submit="submitData"
       >
-        <SubContentFullPage
-          v-if="useDiffForm"
-          :title="this.$t('config.diff_content')"
-          :submitName="this.$t('config.confirm_change')"
-          @close="closeDiffForm"
-          @submit="submitData"
-        >
-          <DiffComponent :src="model.sourceContent" :dst="model.content" />
-        </SubContentFullPage>
-      </Transition>
-    </div>
+        <DiffComponent :src="model.sourceContent" :dst="model.content" />
+      </SubContentFullPage>
+    </Transition>
   </div>
 </template>
 
@@ -439,16 +439,3 @@ export default defineComponent({
   }
 });
 </script>
-
-<style scoped>
-.slide-fade-enter-active,
-.slide-fade-leave-active {
-  transition: all 0.3s ease;
-}
-
-.slide-fade-enter-from,
-.slide-fade-leave-to {
-  transform: translateX(20px);
-  opacity: 0;
-}
-</style>

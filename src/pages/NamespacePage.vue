@@ -1,20 +1,22 @@
 <template>
   <div class="relative">
-    <div class="flex flex-row items-center border-b h-[40px] border-gray-300 bg-white pr-3">
+    <div
+      class="flex flex-row items-center border-b h-[40px] border-gray-300 bg-white pr-3"
+    >
       <div class="flex-1 text-sm leading-[30px] pl-4 truncate">
         <span>{{ this.$t('namespace.namespace') }}</span>
       </div>
       <div class="flex items-center gap-4">
         <n-button
-            v-if="webResources.canUpdateNamespace"
-            type="info"
-            @click="showCreate"
-          >
-            {{ $t('namespace.new_namespace') }}
-          </n-button>
-          <n-button tertiary @click="doLoadNamespace">
-            {{ $t('common.refresh') }}
-          </n-button>
+          v-if="webResources.canUpdateNamespace"
+          type="info"
+          @click="showCreate"
+        >
+          {{ $t('namespace.new_namespace') }}
+        </n-button>
+        <n-button tertiary @click="doLoadNamespace">
+          {{ $t('common.refresh') }}
+        </n-button>
       </div>
     </div>
 

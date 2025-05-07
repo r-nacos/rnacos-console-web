@@ -35,8 +35,7 @@ interface ProjectSettingState {
   isMobile: boolean; // 是否处于移动端模式
 }
 
-export const useProjectSettingStore = defineStore({
-  id: 'app-project-setting',
+export const useProjectSettingStore = defineStore('app-project-setting', {
   state: (): ProjectSettingState => ({
     navMode: navMode,
     navTheme,
@@ -54,6 +53,8 @@ export const useProjectSettingStore = defineStore({
     getNavMode: (state: ProjectSettingState): string => state.navMode,
     getNavTheme: (state: ProjectSettingState): string => state.navTheme,
     getIsMobile: (state: ProjectSettingState): boolean => state.isMobile,
+    getMenuCollapsed: (state: ProjectSettingState): boolean =>
+      state.menuSetting.collapsed,
     getHeaderSetting: (state: ProjectSettingState): object =>
       state.headerSetting,
     getShowFooter: (state: ProjectSettingState): boolean => state.showFooter,
@@ -72,6 +73,9 @@ export const useProjectSettingStore = defineStore({
     },
     setIsMobile(this: ProjectSettingState, value: boolean): void {
       this.isMobile = value;
+    },
+    setMenuCollapsed(this: ProjectSettingState, value: boolean): void {
+      this.menuSetting.collapsed = value;
     }
   }
 });

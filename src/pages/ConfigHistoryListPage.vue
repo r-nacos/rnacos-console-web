@@ -1,6 +1,8 @@
 <template>
-  <div class="relative" style="height: calc(100vh - 100px)">
-    <div class="flex flex-row items-center border-b h-[40px] border-gray-300 bg-white pr-3">
+  <div class="relative flex flex-col w-full h-ful">
+    <div
+      class="flex flex-row items-center border-b h-[40px] border-gray-300 bg-white pr-3"
+    >
       <div class="flex-1 text-sm leading-[30px] pl-4 truncate">
         <span>{{ this.$t('config.config_history') }}</span>
       </div>
@@ -86,7 +88,13 @@
         </template>
       </n-drawer-content>
     </n-drawer>
-    <Transition name="slide-fade">
+    <Transition
+      class="transition-all duration-300 ease-in-out"
+      enter-from-class="translate-x-5 opacity-0"
+      enter-to-class="translate-x-0 opacity-100"
+      leave-from-class="translate-x-0 opacity-100"
+      leave-to-class="translate-x-5 opacity-0"
+    >
       <SubContentFullPage
         v-if="useDiffForm"
         :title="this.$t('config.diff_content')"

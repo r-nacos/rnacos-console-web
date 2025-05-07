@@ -2,7 +2,7 @@
   <div class="relative">
     <div
       class="flex flex-row items-center border-b border-gray-300 bg-white pr-3"
-      :class="{'h-[40px]': !isMobile}"
+      :class="{ 'h-[40px]': !isMobile }"
     >
       <div class="flex-1 text-sm pl-4">
         <span>{{ this.$t('config.config_list') }}</span>

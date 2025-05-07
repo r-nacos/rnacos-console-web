@@ -75,7 +75,7 @@
       </n-form-item>
       <n-form-item path="content" :label="t('config.content')">
         <div
-          class="border border-gray-300 w-full relative bg-[#002b36] resize-both"
+          class="border border-gray-300 w-full relative bg-[#002b36]"
           ref="editorMainRef"
         >
           <div
@@ -87,9 +87,10 @@
             </n-icon>
           </div>
           <div
-            class="relative overflow-scroll bg-[#002b36] resize-both"
+            class="relative overflow-scroll bg-[#002b36] resize"
             ref="editorRef"
             @click="focusEvent"
+            style="height: 838px"
           >
             <div @click="stopPropagation">
               <code-mirror

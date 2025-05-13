@@ -24,36 +24,37 @@ export const useLayoutSize = defineStore('layoutSize', {
       width: 0
     }
   }),
-  getters: {
-    getContentWidth(): number {
-      const projectSettingStore = useProjectSettingStore();
-      const currentWidth = window.innerWidth;
-      if (projectSettingStore.getIsMobile) {
-        return currentWidth;
-      }
-      return (
-        currentWidth -
-        (projectSettingStore.getMenuCollapsed
-          ? setting.menuSetting.minMenuWidth
-          : setting.menuSetting.menuWidth)
-      );
-    }
-  },
   actions: {
-    updateLayoutSize(this: { $state: LayoutSizeState }, windowSize?: ISize) {
-      if (windowSize) {
-        this.$state.windowSize = windowSize;
-      } else {
-        this.$state.windowSize = {
-          height: window.innerHeight,
-          width: window.innerWidth
-        };
-      }
-      this.$state.contentHeight =
-        this.$state.windowSize.height -
-        this.$state.headerHeight -
-        this.$state.footerHeight;
-      this.$state.contentWidth = this.getContentWidth;
+    updateLayoutSize(
+      this: {
+        $state: LayoutSizeState;
+        $patch: (fn: (state: LayoutSizeState) => void) => void;
+      },
+      windowSize?: ISize
+    ) {
+      this.$patch((state) => {
+        if (windowSize) {
+          state.windowSize = windowSize;
+        } else {
+          state.windowSize = {
+            height: window.innerHeight,
+            width: window.innerWidth
+          };
+        }
+        state.contentHeight =
+          state.windowSize.height - state.headerHeight - state.footerHeight;
+        const projectSettingStore = useProjectSettingStore();
+        const currentWidth = window.innerWidth;
+        if (projectSettingStore.getIsMobile) {
+          state.contentWidth = currentWidth;
+        } else {
+          state.contentWidth =
+            currentWidth -
+            (projectSettingStore.getMenuCollapsed
+              ? setting.menuSetting.minMenuWidth
+              : setting.menuSetting.menuWidth);
+        }
+      });
     }
   }
 });

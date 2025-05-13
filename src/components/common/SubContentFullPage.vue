@@ -52,7 +52,8 @@ import { NIcon, NButton, NPopconfirm } from 'naive-ui';
 import { Close } from '@vicons/ionicons5';
 import { useI18n } from 'vue-i18n';
 import { useLayoutSize } from '@/data/appdata';
-import { onMounted } from 'vue';
+import { onMounted, onUnmounted, computed, watch } from 'vue';
+import { useProjectSettingStore } from '@/store/modules/projectSetting';
 
 const props = defineProps({
   title: {
@@ -80,6 +81,10 @@ const props = defineProps({
 const emit = defineEmits(['close', 'submit']);
 const { t } = useI18n();
 const layoutSize = useLayoutSize();
+
+const projectSettingStore = useProjectSettingStore();
+const collapsed = computed(() => projectSettingStore.getMenuSetting.collapsed);
+
 const handleClose = () => {
   emit('close');
 };
@@ -87,4 +92,21 @@ const handleClose = () => {
 const handleSubmit = () => {
   emit('submit');
 };
+// 监听菜单折叠状态变化
+watch(collapsed, () => {
+  layoutSize.updateLayoutSize();
+});
+// 监听窗口大小变化
+const handleResize = () => {
+  layoutSize.updateLayoutSize();
+};
+
+onMounted(() => {
+  layoutSize.updateLayoutSize();
+  window.addEventListener('resize', handleResize);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('resize', handleResize);
+});
 </script>

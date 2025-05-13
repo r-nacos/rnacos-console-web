@@ -58,11 +58,10 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, onMounted, onUnmounted, watch } from 'vue';
+import { computed, onMounted, onUnmounted } from 'vue';
 import { AsideMenu } from './components/Menu';
 import { PageHeader } from './components/Header';
 import { Logo } from './components/Logo';
-import { useLayoutSize } from '@/data/appdata';
 import { useProjectSetting } from '@/hooks/setting/useProjectSetting';
 import { useProjectSettingStore } from '@/store/modules/projectSetting';
 
@@ -75,7 +74,6 @@ const {
   multiTabsSetting
 } = useProjectSetting();
 
-const layoutSize = useLayoutSize();
 const settingStore = useProjectSettingStore();
 
 const { mobileWidth, menuWidth } = unref(menuSetting);
@@ -84,10 +82,7 @@ const collapsed = computed<boolean>({
   get: () => settingStore.getMenuSetting.collapsed,
   set: (val: boolean) => settingStore.setMenuCollapsed(val)
 });
-// 监听菜单折叠状态变化
-watch(collapsed, () => {
-  layoutSize.updateLayoutSize();
-});
+
 const isMobile = computed<boolean>({
   get: () => settingStore.getIsMobile,
   set: (val: boolean) => settingStore.setIsMobile(val)
@@ -116,12 +111,10 @@ const checkMobileMode = () => {
 // 监听窗口大小变化
 const handleResize = () => {
   checkMobileMode();
-  layoutSize.updateLayoutSize();
 };
 
 onMounted(() => {
   checkMobileMode();
-  layoutSize.updateLayoutSize();
   window.addEventListener('resize', handleResize);
 });
 

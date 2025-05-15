@@ -77,13 +77,13 @@ export const buildDiffResult = function (list) {
       srcNo += `<span class="line-number">${item.srcLine}</span>\n`;
       dstNo += `<span class="line-number">${item.dstLine}</span>\n`;
     } else if (item.t === 'R') {
-      srcCode += `<span class="removed">${escapedSrc}</span>\n`;
+      srcCode += `<span class="removed-line" style="color:#f00">${escapedSrc}</span>\n`;
       dstCode += '\n';
       srcNo += `<span class="removed-line">${item.srcLine} -</span>\n`;
       dstNo += '\n';
     } else {
       srcCode += '\n';
-      dstCode += `<span class="added">${escapedDst}</span>\n`;
+      dstCode += `<span class="added-line" style="color:#0ff">${escapedDst}</span>\n`;
       srcNo += '\n';
       dstNo += `<span class="added-line">${item.dstLine} +</span>\n`;
     }

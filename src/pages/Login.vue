@@ -1,8 +1,8 @@
 <template>
-  <div class="min-h-screen w-full bg-gray-100 flex items-center justify-center">
-    <div class="w-full max-w-md mx-4">
+  <div class="min-h-screen w-full bg-gray-100 flex justify-center">
+    <div class="w-[300px] h-[360px] m-25 mx-4">
       <div
-        class="h-[52px] leading-[52px] text-center rounded-t-lg bg-blue-500 text-white"
+        class="h-[52px] leading-[52px] text-center rounded-t-lg bg-blue-600 text-white"
       >
         <span>R-NACOS {{ this.$t('login.login') }}</span>
       </div>
@@ -44,14 +44,14 @@
             <img
               :src="captcha_img"
               height="60"
-              class="m-0 p-0 cursor-pointer h-20"
+              class="m-0 p-0 cursor-pointer h-15"
               @click="gen_captcha"
             />
           </div>
         </div>
         <div>
           <button
-            class="h-[34px] w-full text-sm leading-[14px] bg-blue-500 text-white border-0 rounded cursor-pointer hover:bg-blue-600 transition-colors duration-200"
+            class="h-[34px] w-full text-sm leading-[14px] bg-blue-600 text-white border-0 rounded cursor-pointer hover:bg-blue-700 transition-colors duration-200"
             @click="submit"
           >
             {{ this.$t('login.login') }}

@@ -23,7 +23,6 @@
       :placement="'left'"
       :trap-focus="showSideDrawer"
       :auto-focus="false"
-      class="md:hidden"
     >
       <n-layout-sider
         :position="'left'"

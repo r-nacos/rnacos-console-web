@@ -37,54 +37,8 @@
 
 <script setup>
 import { handleDiff, buildDiffResult } from '@/utils/utils';
-import { useProjectSettingStore } from '@/store/modules/projectSetting';
-import { computed } from 'vue';
-
 const props = defineProps(['src', 'dst']);
-const projectSettingStore = useProjectSettingStore();
-const isMobile = computed(() => projectSettingStore.getIsMobile);
 const list = handleDiff(props['src'] || '', props['dst'] || '');
 const res = buildDiffResult(list);
 const { srcNo, srcCode, dstNo, dstCode } = res;
 </script>
-
-<style scoped>
-.no-pre, .code-pre, .line-pre {
-  margin: 0;
-  padding: 0;
-  font-family: 'Fira Code', monospace;
-  line-height: 1.7;
-  font-size: 14px;
-  /* 保证数字等宽 */
-  letter-spacing: 0.05em;
-  /* 让每行高度一致 */
-  min-height: 1.7em;
-  /* 禁止自动换行 */
-  white-space: pre;
-}
-
-
-/* 未改变的行 */
-:deep(.unchanged) {
-  color: #c9c9c9;
-  width: 100%;
-  background: transparent;
-}
-
-/* 删除的行 */
-:deep(.removed-line) {
-  color: #f00;
-}
-
-/* 新增的行 */
-:deep(.added-line) {
-  color: #0ff;
-}
-
-/* 保证内容区的差异行也有背景色 */
-:deep(.removed-line),
-:deep(.added-line),
-:deep(.unchanged) {
-  padding: 2px 0;
-}
-</style>

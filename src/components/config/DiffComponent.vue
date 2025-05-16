@@ -7,7 +7,7 @@
         </div>
         <div class="overflow-x-auto bg-[#1f1f1f] text-[#c9c9c9] flex">
           <div
-            class="flex-none w-[64px] text-right px-2 border-r border-[#2c2c2c] select-none sticky left-0 bg-[#1f1f1f]"
+            class="flex-none w-[50px] text-right px-1 border-r border-[#2c2c2c] select-none sticky left-0 bg-[#1f1f1f]"
           >
             <pre class="no-pre line-pre"><span v-html="srcNo"></span></pre>
           </div>
@@ -22,7 +22,7 @@
         </div>
         <div class="overflow-x-auto bg-[#1f1f1f] text-[#c9c9c9] flex">
           <div
-            class="flex-none w-[64px] text-right px-2 border-r border-[#2c2c2c] select-none sticky left-0 bg-[#1f1f1f]"
+            class="flex-none w-[50px] text-right px-1 border-l-2 border-r-1 border-[#2c2c2c] select-none sticky left-0 bg-[#1f1f1f]"
           >
             <pre class="no-pre line-pre"><span v-html="dstNo"></span></pre>
           </div>

@@ -36,7 +36,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { ref, reactive } from 'vue';
 import {
   EllipsisHorizontal,
@@ -82,7 +82,7 @@ const options = [
   }
 ];
 
-const handleSelect = async (key: string) => {
+const handleSelect = async (key) => {
   if (key === 'logout') {
     userApi.logout().then((res) => {
       if (res.status == 200) {

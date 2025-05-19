@@ -4,7 +4,7 @@
       v-if="!isMobile"
       show-trigger="bar"
       @collapse="collapsed = true"
-      :position="'left'"
+      :position="'static'"
       @expand="collapsed = false"
       :collapsed="collapsed"
       collapse-mode="width"
@@ -25,7 +25,7 @@
       :auto-focus="false"
     >
       <n-layout-sider
-        :position="'left'"
+        :position="'static'"
         :width="menuWidth"
         :collapsed="false"
         :collapsed-width="64"
@@ -78,7 +78,7 @@ const settingStore = useProjectSettingStore();
 const { mobileWidth, menuWidth } = unref(menuSetting);
 
 const collapsed = computed<boolean>({
-  get: () => settingStore.getMenuSetting.collapsed,
+  get: () => settingStore.getMenuCollapsed,
   set: (val: boolean) => settingStore.setMenuCollapsed(val)
 });
 
@@ -123,11 +123,6 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-:deep(.n-scrollbar)::-webkit-scrollbar {
-  width: 0;
-  height: 0;
-}
-
 .n-layout-sider::-webkit-scrollbar {
   width: 0;
   height: 0;

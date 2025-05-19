@@ -18,7 +18,9 @@ import { ref, watch, reactive, toRefs, computed, unref } from 'vue';
 import { userApi } from '@/api/user';
 import { handleApiResult } from '@/utils/request';
 import { useRouter, useRoute } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 
+const { t } = useI18n();
 const emits = defineEmits(['update:collapsed', 'clickMenuItem']);
 const props = defineProps({
   collapsed: {
@@ -39,7 +41,11 @@ const updateWebResources = () => {
       .getUserWebResources()
       .then(handleApiResult)
       .then((data) => {
-        webResources.update(data);
+        if (data) {
+          webResources.update(data);
+        } else {
+          window?.$message?.error(t('common.request_fail'));
+        }
       });
   }
 };

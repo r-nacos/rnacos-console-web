@@ -29,7 +29,7 @@
           class="w-[260px]"
           v-model:value="value.namespaceId"
           :options="optionList"
-          :consistent-menu-width="false"
+          :consistent-menu-width="isMobile ? true : false"
           size="medium"
           @update:value="update"
           scrollable
@@ -43,7 +43,8 @@
 </template>
 
 <script>
-import { defineComponent } from 'vue';
+import { useProjectSettingStore } from '@/store/modules/projectSetting';
+import { defineComponent, computed } from 'vue';
 import { CopyOutline } from '@vicons/ionicons5';
 
 import { namespaceStore } from '../../data/namespace';
@@ -54,7 +55,13 @@ export default defineComponent({
   components: {
     CopyOutline
   },
-  setup() {},
+  setup() {
+    const projectSettingStore = useProjectSettingStore();
+    const isMobile = computed(() => projectSettingStore.getIsMobile);
+    return {
+      isMobile
+    };
+  },
   data() {
     /*
         var obj={

@@ -1,20 +1,20 @@
 <template>
-  <div class="wrap">
-    <div class="header">
-      <div class="title">
-        <span>{{ t('menu.data_transfer') }}</span>
+  <div class="relative">
+    <div
+      class="flex flex-row items-center border-b h-[40px] border-gray-300 bg-white pr-3"
+    >
+      <div class="flex-1 text-sm leading-[30px] pl-4 truncate">
+        <span>{{ this.$t('menu.data_transfer') }}</span>
       </div>
     </div>
-    <div class="content-wrap">
-      <n-space vertical class="inner_wrap">
+    <div class="m-2">
+      <n-space vertical class="w-full">
         <n-card :title="t('transfer.export_title')" size="medium">
           <p>{{ t('transfer.export_p01') }}</p>
           <br />
-          <a ref="downloadEle" @click="download"
-            ><n-button type="info">{{
-              t('transfer.export_button')
-            }}</n-button></a
-          >
+          <a ref="downloadEle" @click="download">
+            <n-button type="info">{{ t('transfer.export_button') }}</n-button>
+          </a>
         </n-card>
         <n-card :title="t('transfer.import_title')" size="medium">
           <p>{{ t('transfer.import_p01') }}</p>
@@ -51,11 +51,9 @@
 </template>
 
 <script setup>
-import { defineComponent, ref } from 'vue';
+import { ref } from 'vue';
 import qs from 'qs';
-//import { useI18n } from 'vue-i18n';
-//let {t} = useI18n();
-import { getMessage as t } from '@/i18n/index.js';
+import { getMessage as t } from '@/i18n';
 
 const uploadHeader = ref({});
 const downParams = ref({});
@@ -82,47 +80,3 @@ const handlerUploadFinish = ({ event }) => {
   }
 };
 </script>
-
-<style scoped>
-.wrap {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  background: #efefef;
-}
-
-.content-wrap {
-  padding: 10px 10px 10px 10px;
-  background: #efefef;
-}
-
-.form-container {
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  background: #ffffff;
-  border-radius: 8px;
-  padding: 8px;
-}
-
-.header {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  height: 40px;
-  border-bottom: #ccc 1px solid;
-  background: #fff;
-}
-
-.title {
-  flex: 1 1 auto;
-  font: 14/1.25;
-  line-height: 30px;
-  padding-left: 15px;
-}
-
-.inner_wrap {
-  width: 100%;
-  flex: 1 1 auto;
-}
-</style>

@@ -1,71 +1,95 @@
 <template>
-  <div class="wrap">
-    <div class="header">
-      <div class="title">
-        <span> {{ t('monitor.system_monitor') }} </span>
+  <div class="relative">
+    <div
+      class="flex flex-row items-center border-b h-[40px] border-gray-300 bg-white pr-3"
+    >
+      <div class="flex-1 text-sm leading-[30px] pl-4 truncate">
+        <span>{{ this.$t('monitor.system_monitor') }}</span>
       </div>
     </div>
-    <div class="content-wrap">
-      <div class="form-container">
-        <div class="query-params">
-          <n-form label-placement="left" label-width="auto">
-            <div class="paramWrap">
-              <n-form-item
-                :label="t('monitor.service_node')"
-                path="param.nodeId"
-              >
-                <n-select
-                  class="paramselect"
-                  v-model:value="param.nodeId"
-                  :options="nodeList"
-                  size="medium"
-                  @update:value="viewGroupUpdate"
-                  scrollable
+
+    <div class="m-2">
+      <div class="flex flex-col relative bg-white rounded-lg">
+        <n-card :bordered="false">
+          <n-form label-placement="left">
+            <n-grid
+              cols="1 s:1 m:2 l:3 xl:3 2xl:4"
+              responsive="screen"
+              :x-gap="12"
+              :y-gap="8"
+            >
+              <n-gi>
+                <n-form-item
+                  :label="t('monitor.service_node')"
+                  path="param.nodeId"
                 >
-                </n-select>
-              </n-form-item>
-              <n-form-item :label="t('monitor.interval_type')">
-                <n-select
-                  class="paramselect"
-                  v-model:value="param.timelineGroupName"
-                  :options="viewGroup"
-                  size="medium"
-                  @update:value="viewGroupUpdate"
-                  scrollable
-                >
-                </n-select>
-              </n-form-item>
-              <n-form-item :label="t('monitor.auto_refresh')">
-                <n-switch
-                  size="small"
-                  v-model:value="autoLoad.enable"
-                  @update:value="updateAutoLoad"
-                />
-              </n-form-item>
-            </div>
+                  <n-select
+                    class="w-full"
+                    v-model:value="param.nodeId"
+                    :options="nodeList"
+                    size="medium"
+                    @update:value="viewGroupUpdate"
+                    scrollable
+                  />
+                </n-form-item>
+              </n-gi>
+              <n-gi>
+                <n-form-item :label="t('monitor.interval_type')">
+                  <n-select
+                    class="w-full"
+                    v-model:value="param.timelineGroupName"
+                    :options="viewGroup"
+                    size="medium"
+                    @update:value="viewGroupUpdate"
+                    scrollable
+                  />
+                </n-form-item>
+              </n-gi>
+              <n-gi>
+                <n-form-item :label="t('monitor.auto_refresh')">
+                  <n-switch
+                    size="small"
+                    v-model:value="autoLoad.enable"
+                    @update:value="updateAutoLoad"
+                  />
+                </n-form-item>
+              </n-gi>
+              <n-gi suffix>
+                <n-space justify="end" class="ml-2">
+                  <n-button tertiary @click="queryList">{{
+                    t('common.refresh')
+                  }}</n-button>
+                </n-space>
+              </n-gi>
+            </n-grid>
           </n-form>
-          <div class="queryButton">
-            <span class="query-button-item">
-              <n-button tertiary @click="queryList">{{
-                t('common.refresh')
-              }}</n-button>
-            </span>
-          </div>
-        </div>
-        <div class="char_root">
-          <div v-for="charList in charGroup" class="char_group">
-            <div v-for="item in charList" class="char_item">
-              <div v-if="item.id != null" :id="item.id" class="char"></div>
+        </n-card>
+        <div class="flex flex-col gap-4 overflow-x-auto">
+          <template v-for="(charList, index) in charGroup" :key="index">
+            <div
+              class="flex flex-col sm:flex-row gap-2 sm:gap-4 flex-nowrap min-h-[280px]"
+            >
+              <template v-for="item in charList" :key="item.id">
+                <div
+                  v-if="item.id != null"
+                  class="relative bg-white rounded-lg sm:min-w-[300px] flex-1"
+                >
+                  <div
+                    :id="item.id"
+                    class="w-full h-[260px] sm:h-[300px]"
+                  ></div>
+                </div>
+              </template>
             </div>
-          </div>
+          </template>
         </div>
       </div>
     </div>
   </div>
 </template>
+
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue';
-//import echarts from '@/utils/EchartsWrap.js';
+import { ref, onMounted, onUnmounted, computed } from 'vue';
 import { splitAndFillGroup, ChartViewManager } from '@/utils/EchartsUtils.js';
 import { metricsApi } from '@/api/metrics';
 import { clusterApi } from '@/api/cluster';
@@ -483,108 +507,7 @@ onUnmounted(() => {
 });
 
 window.addEventListener('resize', function () {
+  console.log('resize 事件');
   resize();
 });
 </script>
-
-<style scoped>
-.wrap {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  background: #efefef;
-}
-
-.content-wrap {
-  padding: 10px 10px 10px 10px;
-  background: #efefef;
-}
-
-.form-container {
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  background: #ffffff;
-  border-radius: 8px;
-  padding: 16px 8px;
-}
-
-.header {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  height: 40px;
-  border-bottom: #ccc 1px solid;
-  background: #fff;
-  padding-right: 3px;
-}
-
-.title {
-  flex: 1 1 auto;
-  font: 14/1.25;
-  line-height: 30px;
-  padding-left: 15px;
-}
-
-.header-button {
-  flex: 0 0 auto;
-}
-
-.namespace {
-  flex: 0 0 auto;
-}
-
-.query-params {
-  flex: 0 0 auto;
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  flex-direction: row;
-}
-
-.paramWrap {
-  display: flex;
-  gap: 8px;
-  flex-direction: row;
-  flex-wrap: wrap;
-}
-
-.queryButton {
-  display: flex;
-  align-items: center;
-}
-
-.query-button-item {
-  margin-left: 10px;
-}
-
-.char_root {
-  position: relative;
-  /*
-    background: #fff;
-  */
-}
-.char_group {
-  position: relative;
-  display: flex;
-  flex-direction: row;
-  flex: 1;
-}
-
-.char_item {
-  flex: 1;
-  position: relative;
-  width: 100%;
-  padding: 2px;
-}
-
-.char {
-  width: 100%;
-  height: 300px;
-  background: #fff;
-}
-
-.paramselect {
-  width: 200px;
-}
-</style>

@@ -1,0 +1,19 @@
+services:
+  app:
+    build: .
+    volumes:
+      - .:/app
+      - /app/node_modules
+    ports:
+      - "${VITE_PORT}:${VITE_PORT}"
+    environment:
+      - VITE_PORT=${VITE_PORT}
+      - VITE_PROXY_URL=${VITE_PROXY_URL}
+      - VITE_BASE_URL=${VITE_BASE_URL}
+    command: npm run dev
+    networks:
+      - r-nacos-simple_default
+
+networks:
+     r-nacos-simple_default:
+       external: true

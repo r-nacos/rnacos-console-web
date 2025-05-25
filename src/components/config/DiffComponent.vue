@@ -1,103 +1,44 @@
 <template>
-  <div>
-    <!-- 
-    <div><span>{{ this.$t('config.comparison_of_configuration_changes')}}</span></div>
-    -->
-    <div class="result-wrap">
-      <div class="inner-wrap">
-        <div class="result-title">
-          {{ this.$t('config.current_configuration') }}:
+  <div class="h-full overflow-y-scroll bg-[#1f1f1f]">
+    <div class="w-full flex flex-col md:flex-row">
+      <div class="w-full md:w-1/2 bg-[#1f1f1f] p-2">
+        <div class="text-white font-medium mb-2 sticky top-0 bg-[#1f1f1f] z-10">
+          {{ this.$t('config.current_configuration') }}
         </div>
-        <div class="result-title">
-          {{ this.$t('config.new_configurations_to_be_submitted') }}:
+        <div class="overflow-x-auto bg-[#1f1f1f] text-[#c9c9c9] flex">
+          <div
+            class="flex-none w-[50px] text-right px-1 border-r border-[#2c2c2c] select-none sticky left-0 bg-[#1f1f1f]"
+          >
+            <pre class="no-pre line-pre"><span v-html="srcNo"></span></pre>
+          </div>
+          <div class="flex-1 min-w-0">
+            <pre class="code-pre line-pre"><span v-html="srcCode"></span></pre>
+          </div>
         </div>
       </div>
-      <div class="inner-wrap">
-        <div class="diff-result">
-          <code class="no-code">
-            <pre class="no-pre"><span v-html="srcNo"></span></pre>
-          </code>
-          <code class="code">
-            <pre class="code-pre"><span v-html="srcCode"></span></pre>
-          </code>
+      <div class="w-full md:w-1/2 bg-[#1f1f1f] p-2">
+        <div class="text-white font-medium mb-2 sticky top-0 bg-[#1f1f1f] z-10">
+          {{ this.$t('config.new_configurations_to_be_submitted') }}
         </div>
-        <div class="diff-result">
-          <code class="no-code">
-            <pre class="no-pre"><span v-html="dstNo"></span></pre>
-          </code>
-          <code class="code">
-            <pre class="code-pre"><span v-html="dstCode"></span></pre>
-          </code>
+        <div class="overflow-x-auto bg-[#1f1f1f] text-[#c9c9c9] flex">
+          <div
+            class="flex-none w-[50px] text-right px-1 border-l-2 border-r-1 border-[#2c2c2c] select-none sticky left-0 bg-[#1f1f1f]"
+          >
+            <pre class="no-pre line-pre"><span v-html="dstNo"></span></pre>
+          </div>
+          <div class="flex-1 min-w-0">
+            <pre class="code-pre line-pre"><span v-html="dstCode"></span></pre>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </template>
 
-<script>
-import { defineComponent, ref } from 'vue';
+<script setup>
 import { handleDiff, buildDiffResult } from '@/utils/utils';
-
-export default defineComponent({
-  props: ['src', 'dst'],
-  setup(props) {
-    var list = handleDiff(props['src'] || '', props['dst'] || '');
-    var res = buildDiffResult(list);
-    return {
-      ...res
-    };
-  }
-});
+const props = defineProps(['src', 'dst']);
+const list = handleDiff(props['src'] || '', props['dst'] || '');
+const res = buildDiffResult(list);
+const { srcNo, srcCode, dstNo, dstCode } = res;
 </script>
-
-<style scoped>
-.result-wrap {
-  height: 100%;
-  overflow-y: scroll;
-}
-
-.inner-wrap {
-  width: 100%;
-  background: #1f1f1f;
-  display: flex;
-}
-
-.result-title {
-  flex: 1 1 auto;
-  width: 50%;
-  background: #fff;
-}
-
-.diff-result {
-  flex: 1 1 auto;
-  width: 50%;
-  overflow-x: scroll;
-  background: #1f1f1f;
-  color: #c9c9c9;
-  display: flex;
-}
-
-.no-code {
-  flex: 0 0 none;
-  width: 50px;
-  /*
-  background: #c9c9c9;
-  color: #1f1f1f;
-  color: #c9c9c9;
-  */
-  text-align: right;
-  padding: 0 3px;
-  border: 1px solid #2c2c2c;
-}
-
-.code {
-  flex: 1 1 auto;
-}
-
-/*
-.code-pre {
-  background: #1f1f1f;
-  color: #c9c9c9;
-}
-*/
-</style>

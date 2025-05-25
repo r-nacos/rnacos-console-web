@@ -115,6 +115,8 @@ export const createColumns = function (showDetail, showUpdate, remove) {
     {
       title: t('common.operation'),
       key: 'actions',
+      fixed: 'right',
+      width: 120,
       render(row) {
         /*
             <NButton
@@ -127,7 +129,7 @@ export const createColumns = function (showDetail, showUpdate, remove) {
             </NButton>
         */
         return (
-          <>
+          <div class="flex gap-1">
             <NButton
               size="tiny"
               quaternary
@@ -146,7 +148,7 @@ export const createColumns = function (showDetail, showUpdate, remove) {
                 })}
               </span>
             </NPopconfirm>
-          </>
+          </div>
         );
       }
     }

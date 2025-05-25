@@ -1,48 +1,51 @@
 <template>
-  <div class="wrap">
-    <div class="header">
-      <div class="title">
+  <div class="relative">
+    <div
+      class="flex flex-row items-center border-b h-[40px] border-gray-300 bg-white pr-3"
+    >
+      <div class="flex-1 text-sm leading-[30px] pl-4 truncate">
         <span>{{ this.$t('user.list') }}</span>
       </div>
     </div>
-    <div class="content-wrap">
-      <div class="form-container">
-        <div class="query-params">
-          <n-form label-placement="left" label-width="auto">
-            <div class="paramWrap">
-              <n-form-item
-                :label="this.$t('user.username')"
-                path="param.username"
-              >
-                <n-input
-                  v-model:value="param.username"
-                  :placeholder="
-                    this.$t('common.preInput') + this.$t('user.username')
-                  "
-                  clearable
-                  @keydown.enter.prevent
-                  @keyup.enter="queryList"
-                />
-              </n-form-item>
-            </div>
+
+    <div class="m-2">
+      <div class="flex flex-col relative bg-white rounded-lg p-4">
+        <n-card :bordered="false">
+          <n-form label-placement="left" label-width="90">
+            <n-grid cols="1 s:1 m:2 l:3 xl:3 2xl:4" responsive="screen">
+              <n-gi>
+                <n-form-item
+                  :label="this.$t('user.username')"
+                  path="param.username"
+                >
+                  <n-input
+                    v-model:value="param.username"
+                    :placeholder="
+                      this.$t('common.preInput') + this.$t('user.username')
+                    "
+                    clearable
+                    @keydown.enter.prevent
+                    @keyup.enter="queryList"
+                  />
+                </n-form-item>
+              </n-gi>
+              <n-gi suffix class="suffix">
+                <n-space justify="end" class="ml-2">
+                  <n-button tertiary @click="queryList">{{
+                    this.$t('common.query')
+                  }}</n-button>
+                  <n-button type="info" @click="showCreate">{{
+                    this.$t('common.add')
+                  }}</n-button>
+                </n-space>
+              </n-gi>
+            </n-grid>
           </n-form>
-          <div class="queryButton">
-            <span class="query-button-item">
-              <n-button tertiary @click="queryList">{{
-                this.$t('common.query')
-              }}</n-button>
-            </span>
-            <span class="query-button-item">
-              <n-button type="info" @click="showCreate">{{
-                this.$t('common.add')
-              }}</n-button>
-            </span>
-          </div>
-        </div>
+        </n-card>
         <n-data-table
           remote
           ref="table"
-          :scroll-x="600"
+          :scroll-x="1000"
           :bordered="false"
           :columns="columns"
           :data="data"
@@ -54,11 +57,14 @@
       </div>
     </div>
     <n-drawer
-      to="#main_content"
       :block-scroll="false"
       :trap-focus="false"
       v-model:show="useForm"
-      default-width="600"
+      :width="isMobile ? '100%' : 600"
+      placement="right"
+      :show-mask="true"
+      :mask-closable="true"
+      :close-on-esc="true"
       resizable
     >
       <n-drawer-content :title="getDetailTitle" closable>
@@ -79,7 +85,7 @@
 </template>
 
 <script>
-import { ref, reactive, defineComponent } from 'vue';
+import { ref, reactive, defineComponent, computed } from 'vue';
 import { userApi } from '@/api/user';
 import * as constant from '@/types/constant';
 import { NButton } from 'naive-ui';
@@ -96,6 +102,7 @@ import {
   printApiError,
   printApiSuccess
 } from '@/utils/request';
+import { useProjectSettingStore } from '@/store/modules/projectSetting';
 
 export default defineComponent({
   components: {
@@ -231,6 +238,8 @@ export default defineComponent({
 
     let columns = createColumns(showDetail, showUpdate, removeItem);
     //doHandlePageChange(1);
+    const projectSettingStore = useProjectSettingStore();
+
     return {
       columns,
       data: dataRef,
@@ -287,7 +296,8 @@ export default defineComponent({
             })
             .catch(printApiError);
         }
-      }
+      },
+      isMobile: computed(() => projectSettingStore.getIsMobile)
     };
   },
 
@@ -309,73 +319,14 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.wrap {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  background: #efefef;
+.slide-fade-enter-active,
+.slide-fade-leave-active {
+  transition: all 0.3s ease;
 }
 
-.content-wrap {
-  padding: 10px 10px 10px 10px;
-  background: #efefef;
-}
-
-.form-container {
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  background: #ffffff;
-  border-radius: 8px;
-  padding: 16px 8px;
-}
-
-.header {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  height: 40px;
-  border-bottom: #ccc 1px solid;
-  background: #fff;
-  padding-right: 3px;
-}
-
-.title {
-  flex: 1 1 auto;
-  font: 14/1.25;
-  line-height: 30px;
-  padding-left: 15px;
-}
-
-.header-button {
-  flex: 0 0 auto;
-}
-
-.namespace {
-  flex: 0 0 auto;
-}
-
-.query-params {
-  flex: 0 0 auto;
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  flex-direction: row;
-}
-
-.paramWrap {
-  display: flex;
-  gap: 8px;
-  flex-direction: row;
-  flex-wrap: wrap;
-}
-
-.queryButton {
-  display: flex;
-  align-items: center;
-}
-
-.query-button-item {
-  margin-left: 10px;
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+  transform: translateX(20px);
+  opacity: 0;
 }
 </style>

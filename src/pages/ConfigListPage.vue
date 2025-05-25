@@ -1,77 +1,82 @@
 <template>
-  <div class="wrap">
-    <div class="header">
-      <div class="title">
-        <span> {{ this.$t('config.config_list') }} </span>
+  <div class="relative flex flex-col w-full h-ful">
+    <div
+      class="flex flex-row items-center h-10 border-b border-gray-300 bg-white pr-3"
+    >
+      <div class="flex-1 text-sm leading-[30px] pl-4">
+        <span>{{ this.$t('config.config_list') }}</span>
       </div>
-      <div class="namespace">
+      <div class="flex-none">
         <NamespacePopSelect @change="queryList" />
       </div>
     </div>
-    <div class="content-wrap">
-      <div class="form-container">
-        <div class="query-params">
-          <n-form label-placement="left" label-width="auto">
-            <div class="paramWrap">
-              <n-form-item
-                :label="this.$t('config.config_id')"
-                path="param.dataParam"
-              >
-                <n-input
-                  v-model:value="param.dataParam"
-                  :placeholder="this.$t('config.input_dataId')"
-                  clearable
-                  @keydown.enter.prevent
-                  @keyup.enter="queryList"
-                />
-              </n-form-item>
-              <n-form-item
-                :label="this.$t('config.config_group')"
-                path="param.groupParam"
-              >
-                <n-input
-                  v-model:value="param.groupParam"
-                  :placeholder="this.$t('config.input_config_group')"
-                  clearable
-                  @keydown.enter.prevent
-                  @keyup.enter="queryList"
-                />
-              </n-form-item>
-            </div>
+
+    <div class="m-2">
+      <div class="flex flex-col relative bg-white rounded-lg p-4">
+        <n-card :bordered="false">
+          <n-form label-placement="left" label-width="90">
+            <n-grid cols="1 s:1 m:2 l:3 xl:3 2xl:4" responsive="screen">
+              <n-gi>
+                <n-form-item
+                  :label="this.$t('config.config_id')"
+                  path="param.dataParam"
+                >
+                  <n-input
+                    v-model:value="param.dataParam"
+                    :placeholder="this.$t('config.input_dataId')"
+                    clearable
+                    @keydown.enter.prevent
+                    @keyup.enter="queryList"
+                  />
+                </n-form-item>
+              </n-gi>
+              <n-gi>
+                <n-form-item
+                  :label="this.$t('config.config_group')"
+                  path="param.groupParam"
+                >
+                  <n-input
+                    v-model:value="param.groupParam"
+                    :placeholder="this.$t('config.input_config_group')"
+                    clearable
+                    @keydown.enter.prevent
+                    @keyup.enter="queryList"
+                  />
+                </n-form-item>
+              </n-gi>
+              <n-gi>
+                <n-space justify="end" class="ml-2">
+                  <n-button tertiary @click="queryList">{{
+                    this.$t('common.query')
+                  }}</n-button>
+                  <n-button
+                    v-if="webResources.canUpdateConfig"
+                    type="info"
+                    @click="showCreate"
+                    >{{ this.$t('common.add') }}</n-button
+                  >
+
+                  <n-button @click="download" type="info">{{
+                    this.$t('config.export_config')
+                  }}</n-button>
+
+                  <n-upload
+                    v-if="webResources.canUpdateConfig"
+                    action="/rnacos/api/console/config/import"
+                    :headers="uploadHeader"
+                    :show-file-list="false"
+                    @before-upload="doBeforeUpload"
+                    @finish="handlerUploadFinish"
+                  >
+                    <n-button type="info">{{
+                      this.$t('config.import_config')
+                    }}</n-button>
+                  </n-upload>
+                </n-space>
+              </n-gi>
+            </n-grid>
           </n-form>
-          <div class="queryButton">
-            <span class="query-button-item">
-              <n-button tertiary @click="queryList">{{
-                this.$t('common.query')
-              }}</n-button>
-            </span>
-            <span v-if="webResources.canUpdateConfig" class="query-button-item">
-              <n-button type="info" @click="showCreate">{{
-                this.$t('common.add')
-              }}</n-button>
-            </span>
-            <span class="query-button-item">
-              <a ref="download" @click="download"
-                ><n-button type="info">{{
-                  this.$t('config.export_config')
-                }}</n-button></a
-              >
-            </span>
-            <span v-if="webResources.canUpdateConfig" class="query-button-item">
-              <n-upload
-                action="/rnacos/api/console/config/import"
-                :headers="uploadHeader"
-                :show-file-list="false"
-                @before-upload="doBeforeUpload"
-                @finish="handlerUploadFinish"
-              >
-                <n-button type="info">{{
-                  this.$t('config.import_config')
-                }}</n-button>
-              </n-upload>
-            </span>
-          </div>
-        </div>
+        </n-card>
         <n-data-table
           remote
           ref="table"
@@ -86,10 +91,22 @@
         />
       </div>
     </div>
-    <Transition name="slide-fade">
+
+    <Transition
+      class="transition-all duration-300 ease-in-out"
+      enter-from-class="translate-x-5 opacity-0"
+      enter-to-class="translate-x-0 opacity-100"
+      leave-from-class="translate-x-0 opacity-100"
+      leave-to-class="translate-x-5 opacity-0"
+    >
       <SubContentFullPage
         v-show="useForm"
         :title="getDetailTitle"
+        :submitName="
+          model.mode === constant.FORM_MODE_CREATE
+            ? t('common.confirm')
+            : t('config.confirm_change')
+        "
         @close="closeForm"
         @submit="submitForm"
       >
@@ -100,7 +117,13 @@
         />
       </SubContentFullPage>
     </Transition>
-    <Transition name="slide-fade">
+    <Transition
+      class="transition-all duration-300 ease-in-out"
+      enter-from-class="translate-x-5 opacity-0"
+      enter-to-class="translate-x-0 opacity-100"
+      leave-from-class="translate-x-0 opacity-100"
+      leave-to-class="translate-x-5 opacity-0"
+    >
       <SubContentFullPage
         v-if="useDiffForm"
         :title="this.$t('config.diff_content')"
@@ -115,13 +138,13 @@
 </template>
 
 <script>
-import { ref, reactive, defineComponent } from 'vue';
+import { ref, reactive, defineComponent, computed } from 'vue';
 import { configApi } from '@/api/config';
 import { namespaceStore } from '@/data/namespace';
 import { useWebResources } from '@/data/resources';
 import { createColumns } from '@/components/config/ConfigColumns';
 import NamespacePopSelect from '@/components/namespace/NamespacePopSelect.vue';
-import SubContentFullPage from '@/components/common/SubContentFullPage';
+import SubContentFullPage from '@/components/common/SubContentFullPage.vue';
 import DiffComponent from '@/components/config/DiffComponent.vue';
 import ConfigDetail from './ConfigDetail.vue';
 import { useRouter } from 'vue-router';
@@ -134,6 +157,8 @@ import {
   handleApiResult,
   printApiSuccess
 } from '@/utils/request';
+import { useProjectSettingStore } from '@/store/modules/projectSetting';
+
 export default defineComponent({
   components: {
     NamespacePopSelect,
@@ -142,9 +167,9 @@ export default defineComponent({
     ConfigDetail,
     DiffComponent
   },
-  setup(self) {
+  setup() {
     const { t } = useI18n();
-    //window.$message = useMessage();
+    const projectSettingStore = useProjectSettingStore();
     let router = useRouter();
     let webResources = useWebResources();
     const dataRef = ref([]);
@@ -165,7 +190,7 @@ export default defineComponent({
       dataId: '',
       group: '',
       md5: '',
-      showMd5: true,
+      desc: '',
       sourceContent: '',
       content: '',
       configType: 'text',
@@ -239,7 +264,6 @@ export default defineComponent({
           }
           modelRef.value = {
             mode: mode,
-            showMd5: true,
             content: data.value,
             sourceContent: data.value,
             md5: data.md5 || '',
@@ -259,19 +283,6 @@ export default defineComponent({
     };
     const detailItem = (row) => {
       doShowConfigDetail(row, constant.FORM_MODE_DETAIL);
-    };
-    const showCreate = () => {
-      modelRef.value = {
-        dataId: '',
-        group: 'DEFAULT_GROUP',
-        md5: '',
-        showMd5: true,
-        content: '',
-        configType: 'text',
-        sourceContent: '',
-        mode: constant.FORM_MODE_CREATE
-      };
-      useFormRef.value = true;
     };
     const removeItem = (row) => {
       let config = {
@@ -298,8 +309,20 @@ export default defineComponent({
         }
       });
     };
-
-    const columns = createColumns(
+    const showCreate = () => {
+      modelRef.value = {
+        dataId: '',
+        group: 'DEFAULT_GROUP',
+        md5: '',
+        desc: '',
+        content: '',
+        configType: 'text',
+        sourceContent: '',
+        mode: constant.FORM_MODE_CREATE
+      };
+      useFormRef.value = true;
+    };
+    let columns = createColumns(
       detailItem,
       showHistory,
       updateItem,
@@ -321,6 +344,9 @@ export default defineComponent({
       showCreate,
       param: paramRef,
       namespaceId: '',
+      constant,
+      t,
+      isMobile: computed(() => projectSettingStore.getIsMobile),
       rowKey(rowData) {
         return rowData.group + '@@' + rowData.dataId;
       },
@@ -349,7 +375,6 @@ export default defineComponent({
       return '编辑详情';
     }
   },
-
   methods: {
     handlePageChange(page) {
       this.doHandlePageChange(page);
@@ -361,7 +386,6 @@ export default defineComponent({
       this.useForm = false;
     },
     closeDiffForm() {
-      //this.useForm = false;
       this.useDiffForm = false;
     },
     submitData() {
@@ -394,7 +418,6 @@ export default defineComponent({
           this.useForm = false;
           this.submitData();
         } else {
-          //this.useForm = false;
           this.useDiffForm = true;
         }
       });
@@ -403,7 +426,11 @@ export default defineComponent({
       this.param.tenant = namespaceStore.current.value.namespaceId;
       var params = qs.stringify(this.param);
       var url = '/rnacos/api/console/config/download?' + params;
-      this.$refs.download.setAttribute('href', url);
+      const link = document.createElement('a');
+      document.body.appendChild(link);
+      link.href = url;
+      link.click();
+      document.body.removeChild(link);
       return true;
     }
   },
@@ -412,75 +439,3 @@ export default defineComponent({
   }
 });
 </script>
-
-<style scoped>
-.wrap {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  background: #efefef;
-}
-
-.content-wrap {
-  padding: 10px 10px 10px 10px;
-  background: #efefef;
-}
-
-.form-container {
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  background: #ffffff;
-  border-radius: 8px;
-  padding: 16px 8px;
-}
-
-.header {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  height: 40px;
-  border-bottom: #ccc 1px solid;
-  background: #fff;
-  padding-right: 3px;
-}
-
-.title {
-  flex: 1 1 auto;
-  font: 14/1.25;
-  line-height: 30px;
-  padding-left: 15px;
-}
-
-.header-button {
-  flex: 0 0 auto;
-}
-
-.namespace {
-  flex: 0 0 auto;
-}
-
-.query-params {
-  flex: 0 0 auto;
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  flex-direction: row;
-}
-
-.paramWrap {
-  display: flex;
-  gap: 8px;
-  flex-direction: row;
-  flex-wrap: wrap;
-}
-
-.queryButton {
-  display: flex;
-  align-items: center;
-}
-
-.query-button-item {
-  margin-left: 10px;
-}
-</style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="wrap">
+  <div class="h-full px-2 flex items-center justify-center">
     <n-switch
       v-model:value="active"
       :rail-style="railStyle"
@@ -11,7 +11,6 @@
   </div>
 </template>
 <script setup>
-//import type { CSSProperties } from 'vue';
 import { langStore } from '@/data/lang';
 import { useI18n } from 'vue-i18n';
 
@@ -46,11 +45,3 @@ let handleChange = function (value) {
   location.reload();
 };
 </script>
-<style scoped>
-.wrap {
-  height: 100%;
-  /*align-items: center; /* 居中 */
-  justify-content: center; /*垂直于父方向居中*/
-  padding-right: 5px;
-}
-</style>

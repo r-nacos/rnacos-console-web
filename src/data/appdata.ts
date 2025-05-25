@@ -1,11 +1,22 @@
 import { ISize } from '@/types/base';
 import { defineStore } from 'pinia';
+import { useProjectSettingStore } from '@/store/modules/projectSetting';
+import setting from '@/settings/projectSetting';
+
+interface LayoutSizeState {
+  headerHeight: number;
+  footerHeight: number;
+  siderWidth: number;
+  contentHeight: number;
+  contentWidth: number;
+  windowSize: ISize;
+}
 
 export const useLayoutSize = defineStore('layoutSize', {
-  state: () => ({
-    headerHeight: 52,
+  state: (): LayoutSizeState => ({
+    headerHeight: setting.headerSetting.height,
     footerHeight: 0,
-    siderWidth: 200,
+    siderWidth: setting.menuSetting.menuWidth,
     contentHeight: 0,
     contentWidth: 0,
     windowSize: {
@@ -13,24 +24,37 @@ export const useLayoutSize = defineStore('layoutSize', {
       width: 0
     }
   }),
-  getters: {},
   actions: {
-    updateLayoutSize(windowSize?: ISize) {
-      if (windowSize) {
-        this.windowSize = windowSize;
-      } else {
-        this.windowSize = {
-          height: window.innerHeight,
-          width: window.innerWidth
-        };
-      }
-      this.contentHeight =
-        this.windowSize.height - this.headerHeight - this.footerHeight;
-      this.contentWidth = this.windowSize.width - this.siderWidth;
-    },
-    setSiderWidth(siderWidth: number) {
-      this.siderWidth = siderWidth;
-      this.updateLayoutSize(undefined);
+    updateLayoutSize(
+      this: {
+        $state: LayoutSizeState;
+        $patch: (fn: (state: LayoutSizeState) => void) => void;
+      },
+      windowSize?: ISize
+    ) {
+      this.$patch((state) => {
+        if (windowSize) {
+          state.windowSize = windowSize;
+        } else {
+          state.windowSize = {
+            height: window.innerHeight,
+            width: window.innerWidth
+          };
+        }
+        state.contentHeight =
+          state.windowSize.height - state.headerHeight - state.footerHeight;
+        const projectSettingStore = useProjectSettingStore();
+        const currentWidth = window.innerWidth;
+        if (projectSettingStore.getIsMobile) {
+          state.contentWidth = currentWidth;
+        } else {
+          state.contentWidth =
+            currentWidth -
+            (projectSettingStore.getMenuCollapsed
+              ? setting.menuSetting.minMenuWidth
+              : setting.menuSetting.menuWidth);
+        }
+      });
     }
   }
 });

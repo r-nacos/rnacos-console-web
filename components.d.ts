@@ -10,7 +10,6 @@ declare module 'vue' {
     DiffComponent: typeof import('./src/components/config/DiffComponent.vue')['default']
     Foo: typeof import('./src/components/Foo.vue')['default']
     LangSwitch: typeof import('./src/components/LangSwitch.vue')['default']
-    MainLayout: typeof import('./src/components/layout/MainLayout.vue')['default']
     MoreSetting: typeof import('./src/components/MoreSetting.vue')['default']
     NamespacePopSelect: typeof import('./src/components/namespace/NamespacePopSelect.vue')['default']
     NButton: typeof import('naive-ui')['NButton']
@@ -26,6 +25,11 @@ declare module 'vue' {
     NGrid: typeof import('naive-ui')['NGrid']
     NIcon: typeof import('naive-ui')['NIcon']
     NInput: typeof import('naive-ui')['NInput']
+    NLayout: typeof import('naive-ui')['NLayout']
+    NLayoutContent: typeof import('naive-ui')['NLayoutContent']
+    NLayoutHeader: typeof import('naive-ui')['NLayoutHeader']
+    NLayoutSider: typeof import('naive-ui')['NLayoutSider']
+    NMenu: typeof import('naive-ui')['NMenu']
     NMessageProvider: typeof import('naive-ui')['NMessageProvider']
     NRadio: typeof import('naive-ui')['NRadio']
     NRadioGroup: typeof import('naive-ui')['NRadioGroup']
@@ -36,6 +40,6 @@ declare module 'vue' {
     ResetPassword: typeof import('./src/components/user/ResetPassword.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
-    SideMenu: typeof import('./src/components/SideMenu.vue')['default']
+    SubContentFullPage: typeof import('./src/components/common/SubContentFullPage.vue')['default']
   }
 }

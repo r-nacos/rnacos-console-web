@@ -1,35 +1,50 @@
 <template>
-  <div class="wrap">
-    <div class="namespace_id" v-if="value.namespaceId != ''">
-      <div class="namespace_text">
-        <span>{{ value.namespaceId }}</span>
+  <div class="inline-flex flex-col sm:flex-row items-start sm:items-center">
+    <div
+      v-if="value.namespaceId != ''"
+      class="inline-flex flex-row items-center pr-2 sm:pr-4 mb-2 sm:mb-0"
+    >
+      <div
+        class="bg-gray-100 text-gray-700 text-sm px-2 sm:h-[30px] flex items-center"
+      >
+        <span class="whitespace-nowrap">{{ value.namespaceId }}</span>
       </div>
-      <div class="copy_icon" @click="copyId">
+      <div
+        class="bg-gray-100 sm:h-[30px] px-2 cursor-pointer hover:bg-gray-400 transition-colors flex items-center"
+        @click="copyId"
+      >
         <n-icon size="16" color="#2f6cf7">
           <CopyOutline />
         </n-icon>
       </div>
     </div>
-    <div class="name">{{ this.$t('namespace.namespace') }}:</div>
-    <div class="popselect">
-      <n-select
-        class="popselect"
-        v-model:value="value.namespaceId"
-        :options="optionList"
-        :consistent-menu-width="false"
-        size="medium"
-        @update:value="update"
-        scrollable
-        filterable
+    <div class="flex flex-row items-center">
+      <div
+        class="bg-white text-sm px-2 text-gray-700 sm:h-[30px] flex items-center"
       >
-        {{ value.namespaceName || 'public' }}
-      </n-select>
+        {{ this.$t('namespace.namespace') }}:
+      </div>
+      <div class="w-[260px]">
+        <n-select
+          class="w-[260px]"
+          v-model:value="value.namespaceId"
+          :options="optionList"
+          :consistent-menu-width="isMobile ? true : false"
+          size="medium"
+          @update:value="update"
+          scrollable
+          filterable
+        >
+          {{ value.namespaceName || 'public' }}
+        </n-select>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import { defineComponent } from 'vue';
+import { useProjectSettingStore } from '@/store/modules/projectSetting';
+import { defineComponent, computed } from 'vue';
 import { CopyOutline } from '@vicons/ionicons5';
 
 import { namespaceStore } from '../../data/namespace';
@@ -40,7 +55,13 @@ export default defineComponent({
   components: {
     CopyOutline
   },
-  setup() {},
+  setup() {
+    const projectSettingStore = useProjectSettingStore();
+    const isMobile = computed(() => projectSettingStore.getIsMobile);
+    return {
+      isMobile
+    };
+  },
   data() {
     /*
         var obj={
@@ -80,44 +101,3 @@ export default defineComponent({
   }
 });
 </script>
-
-<style scoped>
-.wrap {
-  display: inline-flex;
-  flex-direction: row;
-}
-
-.namespace_id {
-  display: inline-flex;
-  flex-direction: row;
-  padding-right: 15px;
-  background: #fff;
-}
-
-.namespace_text {
-  background: #f0f0f0;
-  color: #333;
-  line-height: 34px;
-  font-size: 12px;
-  padding: 0px 5px;
-}
-
-.copy_icon {
-  background: #f0f0f0;
-  padding-top: 8px;
-  padding-right: 5px;
-  cursor: pointer;
-}
-
-.name {
-  background: #fff;
-  line-height: 34px;
-  /*
-  font-size: 12px;
-  */
-  padding: 0px 5px;
-}
-.popselect {
-  width: 260px;
-}
-</style>

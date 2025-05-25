@@ -1,9 +1,7 @@
 //import Boo from '@/components/Boo.jsx';
-import MainLayout from '@/components/layout/MainLayout.vue';
-//import Config from '@/pages/Config';
-import NamespacePage from '@/pages/NamespacePage';
-//import ConfigListPage from '@/pages/ConfigListPage.vue';
-//import ConfigHistoryListPage from '@/pages/ConfigHistoryListPage.vue';
+
+import MainLayout from '@/layout/index.vue';
+import NamespacePage from '@/pages/NamespacePage.vue';
 import ServiceListPage from '@/pages/ServiceListPage.vue';
 import SubscriberListPage from '@/pages/SubscriberListPage.vue';
 import ServiceInstanceListPage from '@/pages/ServiceInstanceListPage.vue';
@@ -19,6 +17,7 @@ import About from '@/pages/About.vue';
 import Transfer from '@/pages/Transfer.vue';
 import { ServerOutline, CubeOutline, AppsSharp } from '@vicons/ionicons5';
 import { getMessage as t } from '@/i18n';
+import { renderIcon } from '@/utils/index';
 
 export const routes = [
   {
@@ -50,23 +49,25 @@ export const routes = [
   },
   {
     path: '/manage',
-    name: 'manage',
-    meta: { title: 'manage title' },
+    name: 'configs',
+    meta: { title: 'config title' },
     component: MainLayout,
     children: [
       {
-        path: '/manage/configs',
-        name: 'manange configs',
+        path: 'configs',
+        name: 'config',
         meta: { title: t('menu.config_list') },
         component: () => import('@/pages/ConfigListPage.vue')
       },
       {
         path: '/manage/config/history',
-        name: 'manange configs history',
+        name: 'config-history',
         meta: { title: t('menu.config_history') },
         component: () => import('@/pages/ConfigHistoryListPage.vue')
-      },
-      /*
+      }
+    ]
+  },
+  /*
             {
                 path: '/manage/config',
                 name: 'manange config',
@@ -80,18 +81,32 @@ export const routes = [
         component: () => import('@/pages/ChartDemo.vue')
       },
       */
+  {
+    path: '/manage',
+    name: 'services',
+    meta: { title: 'service title' },
+    component: MainLayout,
+    children: [
       {
         path: '/manage/service',
-        name: 'manange service',
+        name: 'service',
         meta: { title: t('menu.service_list') },
         component: ServiceListPage
       },
       {
         path: '/manage/subscriber',
-        name: 'manange subscriber',
+        name: 'subscriber',
         meta: { title: t('menu.subscriber_list') },
         component: SubscriberListPage
-      },
+      }
+    ]
+  },
+  {
+    path: '/manage',
+    name: 'app',
+    meta: { title: 'config title' },
+    component: MainLayout,
+    children: [
       {
         path: '/manage/service/instance',
         name: 'manange instance',
@@ -138,30 +153,16 @@ export const routes = [
   }
 ];
 
-function buildManageMenu(routes) {
-  var manageMenu = [];
-  for (var manage of routes) {
-    if (manage.path === '/manage') {
-      for (var item of manage.children || []) {
-        manageMenu.push({ ...item });
-      }
-    }
-  }
-  return manageMenu;
-}
-
-//const manageMenu = buildManageMenu(routes)
-
-export const manageMenu = buildManageMenu(routes);
-
 export const sideAllMenu = [
   {
-    name: t('menu.config_management'),
-    icon: markRaw(CubeOutline),
+    label: t('menu.config_management'),
+    key: 'configs',
+    icon: renderIcon(CubeOutline),
     children: [
       {
-        name: t('menu.config_list'),
-        path: '/manage/configs'
+        label: t('menu.config_list'),
+        path: '/manage/configs',
+        key: 'config'
       }
       /*
       {
@@ -172,54 +173,57 @@ export const sideAllMenu = [
     ]
   },
   {
-    name: t('menu.service_management'),
-    icon: markRaw(ServerOutline),
+    label: t('menu.service_management'),
+    key: 'services',
+    icon: renderIcon(ServerOutline),
     children: [
       {
-        name: t('menu.service_list'),
+        label: t('menu.service_list'),
+        key: 'service',
         path: '/manage/service'
       },
       {
-        name: t('menu.subscriber_list'),
+        label: t('menu.subscriber_list'),
+        key: 'subscriber',
         path: '/manage/subscriber'
       }
     ]
   },
   {
-    name: t('menu.system_management'),
-    icon: markRaw(AppsSharp),
+    label: t('menu.system_management'),
+    key: 'app',
+    icon: renderIcon(AppsSharp),
     children: [
       {
-        name: t('menu.user_management'),
+        label: t('menu.user_management'),
+        key: 'user',
         path: '/manage/user'
       },
       {
-        name: t('menu.namespace'),
+        label: t('menu.namespace'),
+        key: 'namespace',
         path: '/manage/namespace'
       },
       {
-        name: t('menu.data_transfer'),
+        label: t('menu.data_transfer'),
+        key: 'transfer',
         path: '/manage/transfer'
       },
       {
-        name: t('menu.cluster_info'),
+        label: t('menu.cluster_info'),
+        key: 'cluster',
         path: '/manage/cluster'
       },
       {
-        name: t('menu.system_monitor'),
+        label: t('menu.system_monitor'),
+        key: 'monitor',
         path: '/manage/appmonitor'
       },
       {
-        name: t('menu.about'),
+        label: t('menu.about'),
+        key: 'about',
         path: '/manage/about'
       }
     ]
   }
 ];
-
-//export default routes ;
-/*
-    routes,
-    manageMenu
-};
-*/

@@ -86,8 +86,8 @@ import { createColumns } from '@/components/naming/SuberscriberListColumns.jsx';
 import NamespacePopSelect from '@/components/namespace/NamespacePopSelect.vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
-import { clusterApi } from '@/api/cluster.js';
-import { handleApiResult, printApiError } from '@/utils/request.js';
+import { clusterApi } from '@/api/cluster';
+import { handleApiResult, printApiError } from '@/utils/request';
 
 export default defineComponent({
   components: {

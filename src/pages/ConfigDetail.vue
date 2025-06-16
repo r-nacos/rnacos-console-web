@@ -92,15 +92,11 @@
             @click="focusEvent"
             style="height: 838px"
           >
-            <div @click="stopPropagation">
-              <code-mirror
-                :readonly="isReadonly"
+            <div @click="stopPropagation" style="height: 100%;">
+              <monaco-editor
                 v-model="model.content"
-                :foucsValue="focusValue"
-                :lang="lang"
-                :basic="true"
-                :tab="true"
-                :extensions="extensions"
+                :readonly="isReadonly"
+                :language="monacoLanguage"
               />
             </div>
           </div>
@@ -111,19 +107,13 @@
 </template>
 
 <script setup>
-import CodeMirror from '@/components/config/CodeMirror';
+import MonacoEditor from '@/components/config/MonacoEditor.vue';
 import { Resize } from '@vicons/ionicons5';
-import { solarizedDark } from '@/components/config/cm6theme';
-import { json } from '@codemirror/lang-json';
-import { xml } from '@codemirror/lang-xml';
-import { html } from '@codemirror/lang-html';
-import { yaml } from '@codemirror/lang-yaml';
 import * as constant from '@/types/constant';
-import { ref, defineExpose, onMounted, onBeforeUnmount } from 'vue';
+import { ref, defineExpose, onMounted, onBeforeUnmount, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 const { t } = useI18n();
 const props = defineProps(['model', 'fromHistory']);
-const extensions = [solarizedDark];
 
 const langs = [
   {
@@ -155,44 +145,20 @@ const langs = [
     label: 'TOML'
   }
 ];
-const yamlLang = yaml();
-const langMap = {
-  json: json(),
-  xml: xml(),
-  yaml: yamlLang,
-  html: html(),
-  toml: yamlLang,
-  properties: yamlLang
-};
-//let model = props.model;
-//console.log("model configType:",model.configType.value);
 
-const lang = ref();
-//const langType = ref();
-//const doc = ref("123434324")
-//doc.value = model.content;
-const focusValue = ref(0);
-const doChangeLang = function (v) {
-  if (v) {
-    lang.value = langMap[v];
-    props.model.configType = v;
-  }
-};
-/**
- * 点击编辑器父容器时，直接focus到编辑器
- * @param {*} e
- */
-const focusEvent = function (e) {
-  focusValue.value += 1;
-};
-/**
- * 如果点击编辑器内容则阻止事件冒泡，避免被父容器收到事件后重新focus到编辑器
- * @param {*} e
- */
-const stopPropagation = function (e) {
-  e.stopPropagation();
-  return false;
-};
+const monacoLanguage = computed(() => {
+  const langMap = {
+    text: 'plaintext',
+    json: 'json',
+    xml: 'xml',
+    yaml: 'yaml',
+    html: 'html',
+    properties: 'ini',
+    toml: 'rust'
+  };
+  return langMap[props.model.configType] || 'plaintext';
+});
+
 const isReadonly = computed(
   () => props.model.mode === constant.FORM_MODE_DETAIL
 );
@@ -228,7 +194,7 @@ const rules = {
 };
 const langChange = function (e) {
   let v = e.target.value;
-  doChangeLang(v);
+  props.model.configType = v;
 };
 
 const formRef = ref();
@@ -276,7 +242,7 @@ defineExpose({
 watch(
   () => props.model.configType,
   (nv, ov) => {
-    doChangeLang(props.model.configType);
+    props.model.configType = nv;
   }
 );
 
@@ -293,6 +259,15 @@ const adjustCodeContainerHeight = () => {
     }
     editor.style.height = `${editorHeight.value}px`;
   }
+};
+
+const focusEvent = function (e) {
+  // Monaco Editor 会自动处理焦点，不需要手动处理
+};
+
+const stopPropagation = function (e) {
+  e.stopPropagation();
+  return false;
 };
 
 onMounted(() => {

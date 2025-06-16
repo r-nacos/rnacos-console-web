@@ -10,6 +10,7 @@ declare module 'vue' {
     DiffComponent: typeof import('./src/components/config/DiffComponent.vue')['default']
     Foo: typeof import('./src/components/Foo.vue')['default']
     LangSwitch: typeof import('./src/components/LangSwitch.vue')['default']
+    MonacoEditor: typeof import('./src/components/config/MonacoEditor.vue')['default']
     MoreSetting: typeof import('./src/components/MoreSetting.vue')['default']
     NamespacePopSelect: typeof import('./src/components/namespace/NamespacePopSelect.vue')['default']
     NButton: typeof import('naive-ui')['NButton']

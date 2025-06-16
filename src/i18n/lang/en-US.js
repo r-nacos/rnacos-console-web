@@ -73,7 +73,22 @@ const message = {
     recover_history: 'Recover history',
     config_list: 'Config list',
     export_config: 'Export Config',
-    import_config: 'Import Config'
+    import_config: 'Import Config',
+    validation: {
+      empty_content: 'Content cannot be empty',
+      invalid_format: 'Invalid format',
+      json_error: 'JSON format error',
+      yaml_error: 'YAML format error',
+      toml_error: 'TOML format error',
+      xml_error: 'XML syntax error',
+      xml_root_required: 'XML must contain a root element',
+      html_error: 'HTML syntax error',
+      html_structure_required:
+        'HTML must contain DOCTYPE declaration and html tag',
+      html_tags_required: 'HTML must contain valid html tag',
+      html_head_body_required: 'HTML must contain head and body tags',
+      properties_error: 'Line {line} is not a valid key=value format'
+    }
   },
   client: {
     address: 'Client Address'

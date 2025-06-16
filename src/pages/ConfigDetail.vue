@@ -228,7 +228,10 @@ const validateContent = (content, type) => {
         const doc = parser.parseFromString(xmlToCheck, 'application/xml');
         const parseError = doc.querySelector('parsererror');
         if (parseError) {
-          throw new Error('XML 语法错误');
+          throw new Error(t('config.validation.xml_error'));
+        }
+        if (!doc.documentElement) {
+          throw new Error(t('config.validation.xml_root_required'));
         }
         break;
       }
@@ -237,8 +240,11 @@ const validateContent = (content, type) => {
           return true;
         }
         const tempContent = content.trim();
-        if (!tempContent.startsWith('<') && !tempContent.endsWith('>')) {
-          throw new Error('不是有效的 HTML 格式');
+        if (
+          !tempContent.toLowerCase().includes('<!doctype html>') &&
+          !tempContent.toLowerCase().includes('<html')
+        ) {
+          throw new Error(t('config.validation.html_structure_required'));
         }
         const doc = new window.DOMParser().parseFromString(
           content,
@@ -246,7 +252,16 @@ const validateContent = (content, type) => {
         );
         const parseError = doc.querySelector('parsererror');
         if (parseError) {
-          throw new Error('HTML 语法错误');
+          throw new Error(t('config.validation.html_error'));
+        }
+        if (
+          !doc.documentElement ||
+          doc.documentElement.tagName.toLowerCase() !== 'html'
+        ) {
+          throw new Error(t('config.validation.html_tags_required'));
+        }
+        if (!doc.head || !doc.body) {
+          throw new Error(t('config.validation.html_head_body_required'));
         }
         break;
       }
@@ -256,7 +271,9 @@ const validateContent = (content, type) => {
           const line = lines[i].trim();
           if (!line || line.startsWith('#')) continue;
           if (!/^[^=]+=[^=]*$/.test(line)) {
-            throw new Error(`第 ${i + 1} 行不是合法的 key=value 格式`);
+            throw new Error(
+              t('config.validation.properties_error', { line: i + 1 })
+            );
           }
         }
         break;
@@ -268,7 +285,9 @@ const validateContent = (content, type) => {
   } catch (error) {
     return {
       valid: false,
-      message: `${type.toUpperCase()} 格式错误: ${error.message}`
+      message: `${type.toUpperCase()} ${t(
+        'config.validation.invalid_format'
+      )}: ${error.message}`
     };
   }
 };

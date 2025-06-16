@@ -92,7 +92,7 @@
             @click="focusEvent"
             style="height: 838px"
           >
-            <div @click="stopPropagation" style="height: 100%;">
+            <div @click="stopPropagation" style="height: 100%">
               <monaco-editor
                 v-model="model.content"
                 :readonly="isReadonly"
@@ -208,7 +208,7 @@ const validateContent = (content, type) => {
         JSON.parse(content);
         break;
       case 'yaml':
-        YAML.parse(content, { 
+        YAML.parse(content, {
           strict: false,
           prettyErrors: true
         });
@@ -240,7 +240,10 @@ const validateContent = (content, type) => {
         if (!tempContent.startsWith('<') && !tempContent.endsWith('>')) {
           throw new Error('不是有效的 HTML 格式');
         }
-        const doc = new window.DOMParser().parseFromString(content, 'text/html');
+        const doc = new window.DOMParser().parseFromString(
+          content,
+          'text/html'
+        );
         const parseError = doc.querySelector('parsererror');
         if (parseError) {
           throw new Error('HTML 语法错误');
@@ -278,7 +281,10 @@ const submitValidate = function (callback) {
         t('config.check_fail') + ':' + errors[0][0].message
       );
     } else {
-      const validationResult = validateContent(props.model.content, props.model.configType);
+      const validationResult = validateContent(
+        props.model.content,
+        props.model.configType
+      );
       if (validationResult !== true) {
         window.$message.error(validationResult.message);
         return;

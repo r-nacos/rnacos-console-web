@@ -30,7 +30,7 @@ self.MonacoEnvironment = {
       return new tsWorker();
     }
     return new editorWorker();
-  },
+  }
 };
 
 const props = defineProps({
@@ -77,9 +77,15 @@ const initDiffEditor = async () => {
     });
 
     // 设置原始内容和修改后的内容
-    const originalModel = monaco.editor.createModel(props.src || '', props.language);
-    const modifiedModel = monaco.editor.createModel(props.dst || '', props.language);
-    
+    const originalModel = monaco.editor.createModel(
+      props.src || '',
+      props.language
+    );
+    const modifiedModel = monaco.editor.createModel(
+      props.dst || '',
+      props.language
+    );
+
     diffEditor.setModel({
       original: originalModel,
       modified: modifiedModel
@@ -88,28 +94,37 @@ const initDiffEditor = async () => {
 };
 
 // 监听属性变化
-watch(() => props.src, (newValue) => {
-  if (diffEditor) {
-    const originalModel = diffEditor.getModel().original;
-    originalModel.setValue(newValue || '');
+watch(
+  () => props.src,
+  (newValue) => {
+    if (diffEditor) {
+      const originalModel = diffEditor.getModel().original;
+      originalModel.setValue(newValue || '');
+    }
   }
-});
+);
 
-watch(() => props.dst, (newValue) => {
-  if (diffEditor) {
-    const modifiedModel = diffEditor.getModel().modified;
-    modifiedModel.setValue(newValue || '');
+watch(
+  () => props.dst,
+  (newValue) => {
+    if (diffEditor) {
+      const modifiedModel = diffEditor.getModel().modified;
+      modifiedModel.setValue(newValue || '');
+    }
   }
-});
+);
 
-watch(() => props.language, (newValue) => {
-  if (diffEditor) {
-    const originalModel = diffEditor.getModel().original;
-    const modifiedModel = diffEditor.getModel().modified;
-    monaco.editor.setModelLanguage(originalModel, newValue);
-    monaco.editor.setModelLanguage(modifiedModel, newValue);
+watch(
+  () => props.language,
+  (newValue) => {
+    if (diffEditor) {
+      const originalModel = diffEditor.getModel().original;
+      const modifiedModel = diffEditor.getModel().modified;
+      monaco.editor.setModelLanguage(originalModel, newValue);
+      monaco.editor.setModelLanguage(modifiedModel, newValue);
+    }
   }
-});
+);
 
 onMounted(() => {
   initDiffEditor();

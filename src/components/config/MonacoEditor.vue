@@ -1,5 +1,9 @@
 <template>
-  <div class="monaco-editor-container" ref="editorContainer" style="height: 100%; min-height: 300px;"></div>
+  <div
+    class="monaco-editor-container"
+    ref="editorContainer"
+    style="height: 100%; min-height: 300px"
+  ></div>
 </template>
 
 <script setup>
@@ -28,7 +32,7 @@ self.MonacoEnvironment = {
       return new tsWorker();
     }
     return new editorWorker();
-  },
+  }
 };
 
 loader.config({ monaco });
@@ -58,19 +62,29 @@ const initMonaco = async () => {
   if (editorContainer.value) {
     // 等待 DOM 更新
     await nextTick();
-    
+
     // 如果已经存在编辑器实例，先销毁
     if (editor) {
       editor.dispose();
     }
-    const supportedLangs = ['de', 'es', 'fr', 'it', 'ja', 'ko', 'ru', 'zh-cn', 'zh-tw'];
+    const supportedLangs = [
+      'de',
+      'es',
+      'fr',
+      'it',
+      'ja',
+      'ko',
+      'ru',
+      'zh-cn',
+      'zh-tw'
+    ];
     let currentLang = langStore.current.value;
-    if(currentLang == 'zh') {
+    if (currentLang == 'zh') {
       currentLang = 'zh-cn';
     }
     const lang = supportedLangs.includes(currentLang) ? currentLang : null;
     try {
-      if(lang) {
+      if (lang) {
         loader.config({ 'vs/nls': { availableLanguages: { '*': lang } } });
       }
       const monaco = await loader.init();
@@ -103,23 +117,32 @@ const initMonaco = async () => {
   }
 };
 
-watch(() => props.modelValue, (newValue) => {
-  if (editor && newValue !== editor.getValue()) {
-    editor.setValue(newValue || '');
+watch(
+  () => props.modelValue,
+  (newValue) => {
+    if (editor && newValue !== editor.getValue()) {
+      editor.setValue(newValue || '');
+    }
   }
-});
+);
 
-watch(() => props.language, (newValue) => {
-  if (editor && monacoRef.value) {
-    monacoRef.value.editor.setModelLanguage(editor.getModel(), newValue);
+watch(
+  () => props.language,
+  (newValue) => {
+    if (editor && monacoRef.value) {
+      monacoRef.value.editor.setModelLanguage(editor.getModel(), newValue);
+    }
   }
-});
+);
 
-watch(() => props.readonly, (newValue) => {
-  if (editor) {
-    editor.updateOptions({ readOnly: newValue });
+watch(
+  () => props.readonly,
+  (newValue) => {
+    if (editor) {
+      editor.updateOptions({ readOnly: newValue });
+    }
   }
-});
+);
 
 onMounted(() => {
   initMonaco();
@@ -154,4 +177,4 @@ defineExpose({
   min-height: 300px;
   position: relative;
 }
-</style> 
+</style>

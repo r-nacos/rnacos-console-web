@@ -75,7 +75,21 @@ const message = {
     recover_history: '恢复历史记录',
     config_list: '配置列表',
     export_config: '导出配置',
-    import_config: '导入配置'
+    import_config: '导入配置',
+    validation: {
+      empty_content: '内容不能为空',
+      invalid_format: '格式错误',
+      json_error: 'JSON 格式错误',
+      yaml_error: 'YAML 格式错误',
+      toml_error: 'TOML 格式错误',
+      xml_error: 'XML 语法错误',
+      xml_root_required: 'XML 必须包含一个根元素',
+      html_error: 'HTML 语法错误',
+      html_structure_required: 'HTML 必须包含 DOCTYPE 声明和 html 标签',
+      html_tags_required: 'HTML 必须包含有效的 html 标签',
+      html_head_body_required: 'HTML 必须包含 head 和 body 标签',
+      properties_error: '第 {line} 行不是合法的 key=value 格式'
+    }
   },
   namespace: {
     namespace: '命名空间',

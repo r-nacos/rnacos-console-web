@@ -1,44 +1,140 @@
 <template>
   <div class="h-full overflow-y-scroll bg-[#1f1f1f]">
-    <div class="w-full flex flex-col md:flex-row">
-      <div class="w-full md:w-1/2 bg-[#1f1f1f] p-2">
-        <div class="text-white font-medium mb-2 sticky top-0 bg-[#1f1f1f] z-10">
-          {{ this.$t('config.current_configuration') }}
-        </div>
-        <div class="overflow-x-auto bg-[#1f1f1f] text-[#c9c9c9] flex">
-          <div
-            class="flex-none w-[50px] text-right px-1 border-r border-[#2c2c2c] select-none sticky left-0 bg-[#1f1f1f]"
-          >
-            <pre class="no-pre line-pre"><span v-html="srcNo"></span></pre>
-          </div>
-          <div class="flex-1 min-w-0">
-            <pre class="code-pre line-pre"><span v-html="srcCode"></span></pre>
-          </div>
-        </div>
-      </div>
-      <div class="w-full md:w-1/2 bg-[#1f1f1f] p-2">
-        <div class="text-white font-medium mb-2 sticky top-0 bg-[#1f1f1f] z-10">
-          {{ this.$t('config.new_configurations_to_be_submitted') }}
-        </div>
-        <div class="overflow-x-auto bg-[#1f1f1f] text-[#c9c9c9] flex">
-          <div
-            class="flex-none w-[50px] text-right px-1 border-l-2 border-r-1 border-[#2c2c2c] select-none sticky left-0 bg-[#1f1f1f]"
-          >
-            <pre class="no-pre line-pre"><span v-html="dstNo"></span></pre>
-          </div>
-          <div class="flex-1 min-w-0">
-            <pre class="code-pre line-pre"><span v-html="dstCode"></span></pre>
-          </div>
-        </div>
-      </div>
+    <div class="w-full h-full">
+      <div ref="editorContainer" class="h-full"></div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { handleDiff, buildDiffResult } from '@/utils/utils';
-const props = defineProps(['src', 'dst']);
-const list = handleDiff(props['src'] || '', props['dst'] || '');
-const res = buildDiffResult(list);
-const { srcNo, srcCode, dstNo, dstCode } = res;
+import { ref, onMounted, onBeforeUnmount, watch } from 'vue';
+import * as monaco from 'monaco-editor';
+import { getMonacoWorkerUrl } from '@/utils/monaco';
+
+// 配置 Monaco 环境
+self.MonacoEnvironment = {
+  getWorkerUrl: function (moduleId, label) {
+    return getMonacoWorkerUrl(label);
+  }
+};
+
+const props = defineProps({
+  src: {
+    type: String,
+    default: ''
+  },
+  dst: {
+    type: String,
+    default: ''
+  },
+  language: {
+    type: String,
+    default: 'plaintext'
+  }
+});
+
+const editorContainer = ref(null);
+let diffEditor = null;
+
+const initDiffEditor = async () => {
+  if (editorContainer.value) {
+    // 如果已经存在编辑器实例，先销毁
+    if (diffEditor) {
+      diffEditor.dispose();
+    }
+
+    diffEditor = monaco.editor.createDiffEditor(editorContainer.value, {
+      readOnly: true,
+      automaticLayout: true,
+      theme: 'vs-dark',
+      renderSideBySide: true,
+      originalEditable: false,
+      renderIndicators: true,
+      enableSplitViewResizing: true,
+      renderOverviewRuler: true,
+      minimap: {
+        enabled: false
+      },
+      scrollBeyondLastLine: false,
+      fontSize: 14,
+      tabSize: 2,
+      wordWrap: 'on'
+    });
+
+    // 设置原始内容和修改后的内容
+    const originalModel = monaco.editor.createModel(
+      props.src || '',
+      props.language
+    );
+    const modifiedModel = monaco.editor.createModel(
+      props.dst || '',
+      props.language
+    );
+
+    diffEditor.setModel({
+      original: originalModel,
+      modified: modifiedModel
+    });
+  }
+};
+
+// 监听属性变化
+watch(
+  () => props.src,
+  (newValue) => {
+    if (diffEditor) {
+      const originalModel = diffEditor.getModel().original;
+      originalModel.setValue(newValue || '');
+    }
+  }
+);
+
+watch(
+  () => props.dst,
+  (newValue) => {
+    if (diffEditor) {
+      const modifiedModel = diffEditor.getModel().modified;
+      modifiedModel.setValue(newValue || '');
+    }
+  }
+);
+
+watch(
+  () => props.language,
+  (newValue) => {
+    if (diffEditor) {
+      const originalModel = diffEditor.getModel().original;
+      const modifiedModel = diffEditor.getModel().modified;
+      monaco.editor.setModelLanguage(originalModel, newValue);
+      monaco.editor.setModelLanguage(modifiedModel, newValue);
+    }
+  }
+);
+
+onMounted(() => {
+  initDiffEditor();
+  // 添加窗口大小变化的监听
+  window.addEventListener('resize', () => {
+    if (diffEditor) {
+      diffEditor.layout();
+    }
+  });
+});
+
+onBeforeUnmount(() => {
+  if (diffEditor) {
+    diffEditor.dispose();
+  }
+  window.removeEventListener('resize', () => {
+    if (diffEditor) {
+      diffEditor.layout();
+    }
+  });
+});
 </script>
+
+<style scoped>
+.h-full {
+  height: 100%;
+}
+</style>

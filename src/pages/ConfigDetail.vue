@@ -92,15 +92,11 @@
             @click="focusEvent"
             style="height: 838px"
           >
-            <div @click="stopPropagation">
-              <code-mirror
-                :readonly="isReadonly"
+            <div @click="stopPropagation" style="height: 100%">
+              <monaco-editor
                 v-model="model.content"
-                :foucsValue="focusValue"
-                :lang="lang"
-                :basic="true"
-                :tab="true"
-                :extensions="extensions"
+                :readonly="isReadonly"
+                :language="monacoLanguage"
               />
             </div>
           </div>
@@ -111,19 +107,16 @@
 </template>
 
 <script setup>
-import CodeMirror from '@/components/config/CodeMirror';
+import MonacoEditor from '@/components/config/MonacoEditor.vue';
 import { Resize } from '@vicons/ionicons5';
-import { solarizedDark } from '@/components/config/cm6theme';
-import { json } from '@codemirror/lang-json';
-import { xml } from '@codemirror/lang-xml';
-import { html } from '@codemirror/lang-html';
-import { yaml } from '@codemirror/lang-yaml';
 import * as constant from '@/types/constant';
-import { ref, defineExpose, onMounted, onBeforeUnmount } from 'vue';
+import { ref, defineExpose, onMounted, onBeforeUnmount, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { parse as parseTOML } from 'toml';
+import * as YAML from 'yaml';
+
 const { t } = useI18n();
 const props = defineProps(['model', 'fromHistory']);
-const extensions = [solarizedDark];
 
 const langs = [
   {
@@ -155,44 +148,20 @@ const langs = [
     label: 'TOML'
   }
 ];
-const yamlLang = yaml();
-const langMap = {
-  json: json(),
-  xml: xml(),
-  yaml: yamlLang,
-  html: html(),
-  toml: yamlLang,
-  properties: yamlLang
-};
-//let model = props.model;
-//console.log("model configType:",model.configType.value);
 
-const lang = ref();
-//const langType = ref();
-//const doc = ref("123434324")
-//doc.value = model.content;
-const focusValue = ref(0);
-const doChangeLang = function (v) {
-  if (v) {
-    lang.value = langMap[v];
-    props.model.configType = v;
-  }
-};
-/**
- * 点击编辑器父容器时，直接focus到编辑器
- * @param {*} e
- */
-const focusEvent = function (e) {
-  focusValue.value += 1;
-};
-/**
- * 如果点击编辑器内容则阻止事件冒泡，避免被父容器收到事件后重新focus到编辑器
- * @param {*} e
- */
-const stopPropagation = function (e) {
-  e.stopPropagation();
-  return false;
-};
+const monacoLanguage = computed(() => {
+  const langMap = {
+    text: 'plaintext',
+    json: 'json',
+    xml: 'xml',
+    yaml: 'yaml',
+    html: 'html',
+    properties: 'ini',
+    toml: 'rust'
+  };
+  return langMap[props.model.configType] || 'plaintext';
+});
+
 const isReadonly = computed(
   () => props.model.mode === constant.FORM_MODE_DETAIL
 );
@@ -228,10 +197,101 @@ const rules = {
 };
 const langChange = function (e) {
   let v = e.target.value;
-  doChangeLang(v);
+  props.model.configType = v;
 };
 
 const formRef = ref();
+const validateContent = (content, type) => {
+  try {
+    switch (type) {
+      case 'json':
+        JSON.parse(content);
+        break;
+      case 'yaml':
+        YAML.parse(content, {
+          strict: false,
+          prettyErrors: true
+        });
+        break;
+      case 'toml':
+        if (!content.trim()) {
+          return true;
+        }
+        parseTOML(content);
+        break;
+      case 'xml': {
+        if (!content.trim()) {
+          return true;
+        }
+        let xmlToCheck = content.trim();
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(xmlToCheck, 'application/xml');
+        const parseError = doc.querySelector('parsererror');
+        if (parseError) {
+          throw new Error(t('config.validation.xml_error'));
+        }
+        if (!doc.documentElement) {
+          throw new Error(t('config.validation.xml_root_required'));
+        }
+        break;
+      }
+      case 'html': {
+        if (!content.trim()) {
+          return true;
+        }
+        const tempContent = content.trim();
+        if (
+          !tempContent.toLowerCase().includes('<!doctype html>') &&
+          !tempContent.toLowerCase().includes('<html')
+        ) {
+          throw new Error(t('config.validation.html_structure_required'));
+        }
+        const doc = new window.DOMParser().parseFromString(
+          content,
+          'text/html'
+        );
+        const parseError = doc.querySelector('parsererror');
+        if (parseError) {
+          throw new Error(t('config.validation.html_error'));
+        }
+        if (
+          !doc.documentElement ||
+          doc.documentElement.tagName.toLowerCase() !== 'html'
+        ) {
+          throw new Error(t('config.validation.html_tags_required'));
+        }
+        if (!doc.head || !doc.body) {
+          throw new Error(t('config.validation.html_head_body_required'));
+        }
+        break;
+      }
+      case 'properties': {
+        const lines = content.split('\n');
+        for (let i = 0; i < lines.length; i++) {
+          const line = lines[i].trim();
+          if (!line || line.startsWith('#')) continue;
+          if (!/^[^=]+=[^=]*$/.test(line)) {
+            throw new Error(
+              t('config.validation.properties_error', { line: i + 1 })
+            );
+          }
+        }
+        break;
+      }
+      default:
+        return true;
+    }
+    return true;
+  } catch (error) {
+    return {
+      valid: false,
+      message: `${type.toUpperCase()} ${t(
+        'config.validation.invalid_format'
+      )}: ${error.message}`
+    };
+  }
+};
+
 const submitValidate = function (callback) {
   formRef.value?.validate((errors) => {
     if (errors) {
@@ -240,6 +300,14 @@ const submitValidate = function (callback) {
         t('config.check_fail') + ':' + errors[0][0].message
       );
     } else {
+      const validationResult = validateContent(
+        props.model.content,
+        props.model.configType
+      );
+      if (validationResult !== true) {
+        window.$message.error(validationResult.message);
+        return;
+      }
       callback();
     }
   });
@@ -259,8 +327,6 @@ const toggleFullScreen = function () {
     if (editorMain.classList.contains('fullscreen')) {
       fullStatue.value = true;
       editor.style.height = '100%';
-
-      /* empty */
     } else {
       fullStatue.value = false;
       editorMain.style.height = '';
@@ -276,7 +342,7 @@ defineExpose({
 watch(
   () => props.model.configType,
   (nv, ov) => {
-    doChangeLang(props.model.configType);
+    props.model.configType = nv;
   }
 );
 
@@ -293,6 +359,15 @@ const adjustCodeContainerHeight = () => {
     }
     editor.style.height = `${editorHeight.value}px`;
   }
+};
+
+const focusEvent = function (e) {
+  // Monaco Editor 会自动处理焦点，不需要手动处理
+};
+
+const stopPropagation = function (e) {
+  e.stopPropagation();
+  return false;
 };
 
 onMounted(() => {

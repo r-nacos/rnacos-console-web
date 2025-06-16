@@ -34,14 +34,17 @@
     "crypto-js": "^4.2.0",
     "diff": "^5.1.0",
     "echarts": "^5.5.1",
+    "fast-xml-parser": "^5.2.5",
     "pinia": "^2.0.35",
     "qs": "^6.11.2",
     "tailwindcss": "^4.0.7",
     "template_js": "^3.1.4",
+    "toml": "^3.0.0",
     "vue": "^3.2.47",
     "vue-demi": "^0.14.7",
     "vue-i18n": "^10.0.4",
-    "vue-router": "^4.1.6"
+    "vue-router": "^4.1.6",
+    "yaml": "^2.8.0"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "1.5.1",

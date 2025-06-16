@@ -112,6 +112,9 @@ import { Resize } from '@vicons/ionicons5';
 import * as constant from '@/types/constant';
 import { ref, defineExpose, onMounted, onBeforeUnmount, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { parse as parseTOML } from 'toml';
+import * as YAML from 'yaml';
+
 const { t } = useI18n();
 const props = defineProps(['model', 'fromHistory']);
 
@@ -198,6 +201,75 @@ const langChange = function (e) {
 };
 
 const formRef = ref();
+const validateContent = (content, type) => {
+  try {
+    switch (type) {
+      case 'json':
+        JSON.parse(content);
+        break;
+      case 'yaml':
+        YAML.parse(content, { 
+          strict: false,
+          prettyErrors: true
+        });
+        break;
+      case 'toml':
+        if (!content.trim()) {
+          return true;
+        }
+        parseTOML(content);
+        break;
+      case 'xml': {
+        if (!content.trim()) {
+          return true;
+        }
+        let xmlToCheck = content.trim();
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(xmlToCheck, 'application/xml');
+        const parseError = doc.querySelector('parsererror');
+        if (parseError) {
+          throw new Error('XML 语法错误');
+        }
+        break;
+      }
+      case 'html': {
+        if (!content.trim()) {
+          return true;
+        }
+        const tempContent = content.trim();
+        if (!tempContent.startsWith('<') && !tempContent.endsWith('>')) {
+          throw new Error('不是有效的 HTML 格式');
+        }
+        const doc = new window.DOMParser().parseFromString(content, 'text/html');
+        const parseError = doc.querySelector('parsererror');
+        if (parseError) {
+          throw new Error('HTML 语法错误');
+        }
+        break;
+      }
+      case 'properties': {
+        const lines = content.split('\n');
+        for (let i = 0; i < lines.length; i++) {
+          const line = lines[i].trim();
+          if (!line || line.startsWith('#')) continue;
+          if (!/^[^=]+=[^=]*$/.test(line)) {
+            throw new Error(`第 ${i + 1} 行不是合法的 key=value 格式`);
+          }
+        }
+        break;
+      }
+      default:
+        return true;
+    }
+    return true;
+  } catch (error) {
+    return {
+      valid: false,
+      message: `${type.toUpperCase()} 格式错误: ${error.message}`
+    };
+  }
+};
+
 const submitValidate = function (callback) {
   formRef.value?.validate((errors) => {
     if (errors) {
@@ -206,6 +278,11 @@ const submitValidate = function (callback) {
         t('config.check_fail') + ':' + errors[0][0].message
       );
     } else {
+      const validationResult = validateContent(props.model.content, props.model.configType);
+      if (validationResult !== true) {
+        window.$message.error(validationResult.message);
+        return;
+      }
       callback();
     }
   });
@@ -225,8 +302,6 @@ const toggleFullScreen = function () {
     if (editorMain.classList.contains('fullscreen')) {
       fullStatue.value = true;
       editor.style.height = '100%';
-
-      /* empty */
     } else {
       fullStatue.value = false;
       editorMain.style.height = '';

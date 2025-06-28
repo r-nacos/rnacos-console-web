@@ -25,10 +25,12 @@ class HttpRequest {
         config.headers['No-Logig'] === '1' ||
         config.headers['no-login'] === '1'
       ) {
-        router.push(
-          '/p/login?redirect_url=' +
-            encodeURIComponent(location.pathname + location.search)
-        );
+        if (!location.pathname.startsWith('/rnacos/p/login')) {
+          router.push(
+            '/p/login?redirect_url=' +
+              encodeURIComponent(location.pathname + location.search)
+          );
+        }
       }
       return config;
     });

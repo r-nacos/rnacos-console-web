@@ -133,6 +133,10 @@ export const createHistoryColumns = function (detail, rollback, webResources) {
       key: 'group'
     },
     {
+      title: t('config.op_user'),
+      key: 'opUser'
+    },
+    {
       title: t('common.updatedtime'),
       key: 'modifiedTime',
       render(row) {

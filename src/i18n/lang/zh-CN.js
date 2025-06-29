@@ -1,3 +1,4 @@
+import { format } from 'echarts/core';
 import zhCN from 'naive-ui/lib/locales/common/zhCN.js';
 const message = {
   common: {
@@ -75,7 +76,9 @@ const message = {
     recover_history: '恢复历史记录',
     config_list: '配置列表',
     export_config: '导出配置',
-    import_config: '导入配置'
+    import_config: '导入配置',
+    format: '格式化',
+    lint_error: '配置内容校验不通过，请检查配置内容是否正确',
   },
   namespace: {
     namespace: '命名空间',

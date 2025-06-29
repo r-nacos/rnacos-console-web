@@ -73,7 +73,9 @@ const message = {
     recover_history: 'Recover history',
     config_list: 'Config list',
     export_config: 'Export Config',
-    import_config: 'Import Config'
+    import_config: 'Import Config',
+    format: 'Format',
+    lint_error: 'Config content check fail, please check if the config content is correct'
   },
   client: {
     address: 'Client Address'

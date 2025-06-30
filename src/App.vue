@@ -33,13 +33,11 @@ const locale = langStore.current.value == 'zh' ? zhCN : enUS;
 </script>
 
 <template>
-  <n-config-provider
-    :theme-overrides="themeOverrides"
-    :locale="locale"
-    abstract
-  >
+  <n-config-provider :theme-overrides="themeOverrides" :locale="locale" abstract>
     <n-message-provider>
-      <router-view></router-view>
+      <n-dialog-provider>
+        <router-view />
+      </n-dialog-provider>
     </n-message-provider>
   </n-config-provider>
 </template>

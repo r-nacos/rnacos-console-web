@@ -77,18 +77,27 @@
             </n-grid>
           </n-form>
         </n-card>
-        <n-data-table
-          remote
-          ref="table"
-          :scroll-x="600"
-          :bordered="false"
-          :columns="columns"
-          :data="data"
-          :loading="loading"
-          :pagination="pagination"
-          :row-key="rowKey"
-          @update:page="handlePageChange"
-        />
+        <div class="flex justify-between items-center mb-2 px-4">
+          <div class="flex items-center gap-2">
+            <n-button type="info" size="tiny" @click="toggleBatchMode">
+              {{ isBatchModeRef ? t('common.exit') : t('common.batch') }}
+            </n-button>
+            <n-button v-if="isBatchModeRef" tertiary size="tiny" :disabled="checkedRowKeysRef.length === 0"
+              @click="checkedRowKeysRef = []">
+              {{ t('common.cancel') }}
+            </n-button>
+            <n-button v-if="isBatchModeRef" type="error" size="tiny" :disabled="checkedRowKeysRef.length === 0"
+              @click="batchRemove">
+              {{ t('common.delete') }}
+            </n-button>
+          </div>
+          <div v-if="isBatchModeRef">
+            {{ selectedText }}
+          </div>
+        </div>
+        <n-data-table remote ref="table" :scroll-x="600" :bordered="false" :columns="computedColumns" :data="data"
+          :loading="loading" :pagination="pagination" :row-key="rowKey" v-model:checked-row-keys="checkedRowKeysRef"
+          @update:page="handlePageChange" />
       </div>
     </div>
 
@@ -104,8 +113,8 @@
         :title="getDetailTitle"
         :submitName="
           model.mode === constant.FORM_MODE_CREATE
-            ? t('common.confirm')
-            : t('config.confirm_change')
+        ? t('common.confirm')
+        : t('config.confirm_change')
         "
         @close="closeForm"
         @submit="submitForm"
@@ -158,6 +167,8 @@ import {
   printApiSuccess
 } from '@/utils/request';
 import { useProjectSettingStore } from '@/store/modules/projectSetting';
+import { useDialog } from 'naive-ui';
+import template from 'template_js';
 
 export default defineComponent({
   components: {
@@ -165,9 +176,69 @@ export default defineComponent({
     Close,
     SubContentFullPage,
     ConfigDetail,
-    DiffComponent
+    DiffComponent,
   },
   setup() {
+    const checkedRowKeysRef = ref([]);
+    const isBatchModeRef = ref(false);
+    function toggleBatchMode() {
+      isBatchModeRef.value = !isBatchModeRef.value;
+      if (!isBatchModeRef.value) {
+        checkedRowKeysRef.value = [];
+      }
+    }
+    const rowKey = (rowData) => rowData.group + '@@' + rowData.dataId;
+
+    const toggleSelectAll = (checked) => {
+      if (checked) {
+        checkedRowKeysRef.value = dataRef.value.map(rowKey);
+      } else {
+        checkedRowKeysRef.value = [];
+      }
+    };
+
+    const dialog = useDialog();
+    const batchRemove = () => {
+      if (checkedRowKeysRef.value.length === 0) return;
+      dialog.warning({
+        title: t('config.batch_delete'),
+        content: template(t('config.confirm_batch_delete_config_action'), {
+                  count: checkedRowKeysRef.value.length,
+                }),
+        positiveButtonProps: {
+          type: 'primary'
+        },
+        positiveText: t('common.confirm'),
+        negativeText: t('common.cancel'),
+        onPositiveClick: async () => {
+          try {
+            for (const key of checkedRowKeysRef.value) {
+              const [group, dataId] = key.split('@@');
+              await configApi
+                .removeConfigV2({
+                  tenant: namespaceStore.current.value.namespaceId,
+                  group,
+                  dataId
+                })
+                .then(handleApiResult)
+            }
+
+            window.$message.success(
+              template(t('config.bacth_delete_access'), {
+                count: checkedRowKeysRef.value.length,
+              })
+            );
+
+            checkedRowKeysRef.value = [];
+            doHandlePageChange(1);
+            toggleBatchMode();
+          } catch (error) {
+            printApiError(error);
+          }
+        }
+      });
+    };
+
     const { t } = useI18n();
     const projectSettingStore = useProjectSettingStore();
     let router = useRouter();
@@ -233,6 +304,7 @@ export default defineComponent({
         doQueryList()
           .then(handleApiResult)
           .then((page) => {
+            console.log('page response:', page);
             loadingRef.value = false;
             let count = page.totalCount;
             let pageSize = paginationReactive.pageSize;
@@ -330,8 +402,23 @@ export default defineComponent({
       removeItem,
       webResources
     );
+
+    const computedColumns = computed(() => {
+      if (isBatchModeRef.value) {
+        return [
+          { type: 'selection', width: 48 },
+          ...columns
+        ];
+      }
+      return columns;
+    });
+
+    const selectedText = computed(() =>
+      template(t('config.selected_items'), { count: checkedRowKeysRef.value.length })
+    );
+
     return {
-      columns,
+      computedColumns,
       webResources,
       data: dataRef,
       useForm: useFormRef,
@@ -347,9 +434,7 @@ export default defineComponent({
       constant,
       t,
       isMobile: computed(() => projectSettingStore.getIsMobile),
-      rowKey(rowData) {
-        return rowData.group + '@@' + rowData.dataId;
-      },
+      rowKey,
       doQueryList,
       doHandlePageChange,
       handlerUploadFinish({ event }) {
@@ -359,8 +444,15 @@ export default defineComponent({
         } else {
           window.$message.error('上传处理失败');
         }
-      }
+      },
+      checkedRowKeysRef,
+      toggleSelectAll,
+      batchRemove,
+      toggleBatchMode,
+      isBatchModeRef,
+      selectedText
     };
+
   },
   computed: {
     getTenant() {

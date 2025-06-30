@@ -8,6 +8,8 @@ const message = {
     enabled: 'Enabled',
     disabled: 'Disabled',
     confirm: 'Confirm',
+    cancel: 'Cancel',
+    exit: 'Exit',
     title: 'Title',
     return: 'Return',
     back: 'Back',
@@ -33,7 +35,8 @@ const message = {
     permission: 'permission',
     submitSuccess: 'Submit success',
     success: 'Success',
-    home: 'Home'
+    home: 'Home',
+    batch: 'Batch'
   },
   cluster: {
     node: 'Node',
@@ -73,7 +76,11 @@ const message = {
     recover_history: 'Recover history',
     config_list: 'Config list',
     export_config: 'Export Config',
-    import_config: 'Import Config'
+    import_config: 'Import Config',
+    confirm_batch_delete_config_action: 'Are you sure you want to delete the selected <%:=count%> items?',
+    batch_delete: 'Batch delete',
+    batch_delete_success: 'Successfully deleted <%:=count%> items!',
+    selected_items: 'Selected <%:=count%> items',
   },
   client: {
     address: 'Client Address'

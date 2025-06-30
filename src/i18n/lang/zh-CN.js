@@ -81,7 +81,7 @@ const message = {
     import_config: '导入配置',
     confirm_batch_delete_config_action: '确定要删除选中的 <%:=count%> 项吗？',
     batch_delete: '批量删除',
-    bacth_delete_access: '成功删除 <%:=count%> 项！',
+    batch_delete_success: '成功删除 <%:=count%> 项！',
     selected_items: '已选 <%:=count%> 项',
   },
   namespace: {

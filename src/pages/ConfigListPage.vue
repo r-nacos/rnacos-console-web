@@ -48,7 +48,7 @@
                 <n-space justify="end" class="ml-2">
                   <n-button tertiary @click="queryList">{{
                     this.$t('common.query')
-                  }}</n-button>
+                    }}</n-button>
                   <n-button
                     v-if="webResources.canUpdateConfig"
                     type="info"
@@ -58,7 +58,7 @@
 
                   <n-button @click="download" type="info">{{
                     this.$t('config.export_config')
-                  }}</n-button>
+                    }}</n-button>
 
                   <n-upload
                     v-if="webResources.canUpdateConfig"
@@ -70,7 +70,7 @@
                   >
                     <n-button type="info">{{
                       this.$t('config.import_config')
-                    }}</n-button>
+                      }}</n-button>
                   </n-upload>
                 </n-space>
               </n-gi>
@@ -85,6 +85,10 @@
             <n-button v-if="isBatchModeRef" tertiary size="tiny" :disabled="checkedRowKeysRef.length === 0"
               @click="checkedRowKeysRef = []">
               {{ t('common.cancel') }}
+            </n-button>
+            <n-button v-if="isBatchModeRef" type="info" size="tiny" :disabled="checkedRowKeysRef.length === 0"
+              @click="batchDownload">
+              {{ t('config.export_config') }}
             </n-button>
             <n-button v-if="isBatchModeRef" type="error" size="tiny" :disabled="checkedRowKeysRef.length === 0"
               @click="batchRemove">
@@ -147,7 +151,7 @@
 </template>
 
 <script>
-import { ref, reactive, defineComponent, computed } from 'vue';
+import { ref, reactive, defineComponent, computed, watch } from 'vue';
 import { configApi } from '@/api/config';
 import { namespaceStore } from '@/data/namespace';
 import { useWebResources } from '@/data/resources';
@@ -169,6 +173,7 @@ import {
 import { useProjectSettingStore } from '@/store/modules/projectSetting';
 import { useDialog } from 'naive-ui';
 import template from 'template_js';
+import axios from "axios";
 
 export default defineComponent({
   components: {
@@ -203,8 +208,8 @@ export default defineComponent({
       dialog.warning({
         title: t('config.batch_delete'),
         content: template(t('config.confirm_batch_delete_config_action'), {
-                  count: checkedRowKeysRef.value.length,
-                }),
+          count: checkedRowKeysRef.value.length,
+        }),
         positiveButtonProps: {
           type: 'primary'
         },
@@ -224,14 +229,13 @@ export default defineComponent({
             }
 
             window.$message.success(
-              template(t('config.bacth_delete_access'), {
+              template(t('config.batch_delete_success'), {
                 count: checkedRowKeysRef.value.length,
               })
             );
 
             checkedRowKeysRef.value = [];
             doHandlePageChange(1);
-            toggleBatchMode();
           } catch (error) {
             printApiError(error);
           }
@@ -417,6 +421,41 @@ export default defineComponent({
       template(t('config.selected_items'), { count: checkedRowKeysRef.value.length })
     );
 
+    async function batchDownload() {
+      const body = checkedRowKeysRef.value.map(key => {
+        const [group, dataId] = key.split('@@');
+        return {
+          tenant: namespaceStore.current.value.namespaceId,
+          group,
+          dataId
+        };
+      });
+
+      const response = await axios.post(
+        "/rnacos/api/console/config/download",
+        body,
+        {
+          responseType: "blob"
+        }
+      );
+
+      const blob = new Blob([response.data], { type: "application/zip" });
+      const url = window.URL.createObjectURL(blob);
+
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `rnacos_config_export_${Date.now()}.zip`;
+      link.click();
+
+      window.URL.revokeObjectURL(url);
+      checkedRowKeysRef.value = [];
+    }
+    watch(
+      () => namespaceStore.current.value.namespaceId,
+      () => {
+        checkedRowKeysRef.value = [];
+      }
+    );
     return {
       computedColumns,
       webResources,
@@ -450,7 +489,8 @@ export default defineComponent({
       batchRemove,
       toggleBatchMode,
       isBatchModeRef,
-      selectedText
+      selectedText,
+      batchDownload
     };
 
   },

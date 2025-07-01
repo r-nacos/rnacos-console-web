@@ -435,14 +435,6 @@ export default defineComponent({
     }
   },
   created() {
-    namespaceStore.initLoad();
-    const first = namespaceStore.optionList.value[0];
-    if (first) {
-      namespaceStore.current.value = {
-        namespaceId: first.value,
-        namespaceName: first.label
-      };
-    }
     this.queryList();
   }
 });

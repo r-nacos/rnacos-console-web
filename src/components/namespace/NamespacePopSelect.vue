@@ -32,6 +32,7 @@
           :consistent-menu-width="isMobile ? true : false"
           size="medium"
           @update:value="update"
+          @update:show="onDropdownShow"
           scrollable
           filterable
         >
@@ -49,7 +50,7 @@ import { CopyOutline } from '@vicons/ionicons5';
 
 import { namespaceStore } from '../../data/namespace';
 import { copyText } from '@/utils/utils';
-
+import namespaceApi from '@/api/namespace';
 export default defineComponent({
   emits: ['change'],
   components: {
@@ -94,7 +95,26 @@ export default defineComponent({
       window.$message.info(
         this.$t('namespace.the_namespace_id_has_been_copied')
       );
-    }
+    },
+    async onDropdownShow(visible) {
+  if (visible) {
+    try {
+      const res = await namespaceApi.queryList();
+      console.log('res:', res);
+      const list = res.data?.data || [];
+      this.optionList.splice(
+        0,
+        this.optionList.length,
+        ...list.map(item => ({
+          value: item.namespaceId,
+          label: item.namespaceName
+        }))
+      );
+    } catch (e) {
+      window.$message.error('加载命名空间失败');
+  }
+}
+    },
   },
   created() {
     namespaceStore.initLoad();

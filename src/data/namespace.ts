@@ -41,6 +41,10 @@ function createStore(): INamespaceStore {
     listListRef.value = list;
     optionListRef.value = optionList;
     loadRef.value = true;
+    namespaceStore.current.value = {
+      namespaceId: optionList[0].value,
+      namespaceName: optionList[0].label
+    };
   };
   const initLoad = function () {
     if (!loadRef.value) {
@@ -73,3 +77,4 @@ function createStore(): INamespaceStore {
 }
 
 export const namespaceStore: INamespaceStore = createStore();
+namespaceStore.initLoad();

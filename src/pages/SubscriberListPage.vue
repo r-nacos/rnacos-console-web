@@ -11,12 +11,27 @@
         <NamespacePopSelect @change="queryList" />
       </div>
     </div>
-
     <div class="m-2">
       <div class="flex flex-col relative bg-white rounded-lg p-4">
         <n-card :bordered="false">
           <n-form label-placement="left" label-width="90">
             <n-grid cols="1 s:1 m:2 l:3 xl:3 2xl:4" responsive="screen">
+              <n-gi>
+                <n-form-item
+                  :label="this.$t('monitor.service_node')"
+                  path="param.nodeId"
+                >
+                  <n-select
+                    class="w-90"
+                    v-model:value="param.nodeId"
+                    :options="nodeList"
+                    size="medium"
+                    @update:value="queryList"
+                    scrollable
+                  >
+                  </n-select>
+                </n-form-item>
+              </n-gi>
               <n-gi>
                 <n-form-item
                   :label="this.$t('service.name')"
@@ -81,6 +96,8 @@ import NamespacePopSelect from '@/components/namespace/NamespacePopSelect.vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 import { useProjectSettingStore } from '@/store/modules/projectSetting';
+import { clusterApi } from '@/api/cluster.js';
+import { handleApiResult, printApiError } from '@/utils/request.js';
 
 export default defineComponent({
   components: {
@@ -93,10 +110,17 @@ export default defineComponent({
     const dataRef = ref([]);
     const loadingRef = ref(false);
     let query = route.query;
+    const nodeList = ref([
+      {
+        label: t('monitor.DIRECT_NODE'),
+        value: 0
+      }
+    ]);
     const paramRef = ref({
       serviceParam: query.serviceName,
       groupParam: query.groupName || '',
       namespaceId: query.namespaceId || '',
+      nodeId: 0,
       pageNo: 1,
       pageSize: 20
     });
@@ -117,12 +141,42 @@ export default defineComponent({
       }
     });
 
+    const initNodeData = () => {
+      clusterApi
+        .queryNodeList()
+        .then((resp) => {
+          if (resp.status == 200) {
+            let data = resp.data.data;
+            if (data.length > 0) {
+              let list = [
+                {
+                  label: t('monitor.DIRECT_NODE'),
+                  value: 0
+                }
+              ];
+              for (let item of data) {
+                list.push({
+                  label: item.nodeId + '@' + item.addr,
+                  value: item.nodeId
+                });
+              }
+              nodeList.value = list;
+            }
+          } else {
+            window.$message.error('request err,status code:' + resp.status);
+          }
+        })
+        .catch((err) => {
+          window.$message.error('request err,message' + err.message);
+        });
+    };
+
     const doQueryList = () => {
-      return namingApi.querySubscriberPage({
+      return namingApi.queryServiceSubscriberPage({
         namespaceId: namespaceStore.current.value.namespaceId,
-        accessToken: null,
-        serviceName: paramRef.value.serviceParam,
-        groupName: paramRef.value.groupParam,
+        serviceNameParam: paramRef.value.serviceParam,
+        groupNameParam: paramRef.value.groupParam,
+        nodeId: paramRef.value.nodeId,
         pageNo: paginationReactive.page,
         pageSize: paginationReactive.pageSize
       });
@@ -133,24 +187,19 @@ export default defineComponent({
       if (!loadingRef.value) {
         loadingRef.value = true;
         doQueryList()
-          .then((res) => {
+          .then(handleApiResult)
+          .then((page) => {
             loadingRef.value = false;
-            if (res.status == 200) {
-              let count = res.data.count;
-              let pageSize = paginationReactive.pageSize;
-              console.info(res);
-              dataRef.value = res.data.subscribers;
-              paginationReactive.itemCount = count;
-              paginationReactive.pageCount = Math.round(
-                (count + pageSize - 1) / pageSize
-              );
-            } else {
-              window.$message.error('request err,status code:' + res.status);
-              dataRef.value = [];
-            }
+            let count = page.totalCount;
+            let pageSize = paginationReactive.pageSize;
+            dataRef.value = page.list;
+            paginationReactive.itemCount = count;
+            paginationReactive.pageCount = Math.round(
+              (count + pageSize - 1) / pageSize
+            );
           })
           .catch((err) => {
-            window.$message.error('request err,message' + err.message);
+            printApiError(err);
             dataRef.value = [];
             loadingRef.value = false;
           });
@@ -160,6 +209,8 @@ export default defineComponent({
     let columns = createColumns();
     return {
       columns,
+      nodeList,
+      initNodeData,
       data: dataRef,
       pagination: paginationReactive,
       loading: loadingRef,
@@ -192,10 +243,10 @@ export default defineComponent({
   },
   mounted() {
     this.queryList();
+    this.initNodeData();
   }
 });
 </script>
 
 <style scoped>
-/* 移除所有 scoped 样式，因为已经转换为 Tailwind 类名 */
 </style>

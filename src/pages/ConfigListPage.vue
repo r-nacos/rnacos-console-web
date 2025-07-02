@@ -158,7 +158,7 @@ import {
   printApiSuccess
 } from '@/utils/request';
 import { useProjectSettingStore } from '@/store/modules/projectSetting';
-
+import namespaceApi from '@/api/namespace';
 export default defineComponent({
   components: {
     NamespacePopSelect,
@@ -243,9 +243,26 @@ export default defineComponent({
             );
           })
           .catch((err) => {
-            printApiError(err);
-            dataRef.value = [];
             loadingRef.value = false;
+
+            namespaceApi.queryList()
+              .then(handleApiResult)
+              .then((list) => {
+                const firstNamespace = list[0];
+                if (firstNamespace) {
+                  namespaceStore.setCurrent({
+                    namespaceId: firstNamespace.namespaceId,
+                    namespaceName: firstNamespace.namespaceName
+                  });
+                  window.$message.warning(`当前命名空间无权限，已切换至【${firstNamespace.namespaceName || 'public'}】命名空间`);
+                  doHandlePageChange(1);
+                } else {
+                  window.$message.error(`当前命名空间无权限，且没有可用的命名空间`);
+                }
+              })
+              .catch((err) => {
+                printApiError(err)
+              });
           });
       }
     };

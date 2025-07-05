@@ -79,7 +79,7 @@ const message = {
   },
   namespace: {
     namespace: '命名空间',
-    the_namespace_id_has_been_copied: '已复制命名空间id!',
+    the_namespace_id_has_been_copied: '已复制命名空间id！',
     namespaceName: '命名空间名称',
     namespaceId: '命名空间Id',
     new_namespace: '创建命名空间',
@@ -87,7 +87,11 @@ const message = {
     edit_namespace: '修改命名空间',
     retain_space: '保留空间',
     confirm_delete_info: "确认要删除 '<%:=name%>'(ID: <%:=id%>) 命名空间吗？",
-    namespaceId_or: '命名空间ID,不填则自动生成'
+    namespaceId_or: '命名空间ID，不填则自动生成',
+    no_permission_and_no_namespaces: '当前命名空间无权限，且没有可用的命名空间',
+    namespace_permission_switch_notice:
+      "当前命名空间无权限，已切换至'<%:=name%>'命名空间",
+    failed_to_load_namespaces: '加载命名空间失败'
   },
   instance: {
     list: '服务实例列表',

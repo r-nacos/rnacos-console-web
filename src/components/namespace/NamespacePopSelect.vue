@@ -91,9 +91,7 @@ export default defineComponent({
     copyId() {
       let namespaceId = this.value.namespaceId;
       copyText(namespaceId);
-      window.$message.info(
-        this.$t('namespace.the_namespace_id_has_been_copied')
-      );
+      window.$message.info(t('namespace.the_namespace_id_has_been_copied'));
     },
     async onDropdownShow() {
       try {
@@ -102,15 +100,15 @@ export default defineComponent({
         this.optionList.splice(
           0,
           this.optionList.length,
-          ...list.map(item => ({
+          ...list.map((item) => ({
             value: item.namespaceId,
             label: item.namespaceName
           }))
         );
       } catch (e) {
-        window.$message.error('加载命名空间失败');
+        window.$message.error(t('namespace.failed_to_load_namespaces'));
       }
-    },
+    }
   },
   created() {
     namespaceStore.initLoad();

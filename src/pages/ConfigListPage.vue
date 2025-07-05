@@ -159,6 +159,8 @@ import {
 } from '@/utils/request';
 import { useProjectSettingStore } from '@/store/modules/projectSetting';
 import namespaceApi from '@/api/namespace';
+import template from 'template_js';
+
 export default defineComponent({
   components: {
     NamespacePopSelect,
@@ -245,7 +247,8 @@ export default defineComponent({
           .catch((err) => {
             loadingRef.value = false;
 
-            namespaceApi.queryList()
+            namespaceApi
+              .queryList()
               .then(handleApiResult)
               .then((list) => {
                 const firstNamespace = list[0];
@@ -254,14 +257,23 @@ export default defineComponent({
                     namespaceId: firstNamespace.namespaceId,
                     namespaceName: firstNamespace.namespaceName
                   });
-                  window.$message.warning(`当前命名空间无权限，已切换至【${firstNamespace.namespaceName || 'public'}】命名空间`);
+                  window.$message.warning(
+                    template(
+                      t('namespace.namespace_permission_switch_notice'),
+                      {
+                        name: firstNamespace.namespaceName || 'public'
+                      }
+                    )
+                  );
                   doHandlePageChange(1);
                 } else {
-                  window.$message.error(`当前命名空间无权限，且没有可用的命名空间`);
+                  window.$message.error(
+                    t('namespace.no_permission_and_no_namespaces')
+                  );
                 }
               })
               .catch((err) => {
-                printApiError(err)
+                printApiError(err);
               });
           });
       }

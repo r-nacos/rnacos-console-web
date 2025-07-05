@@ -77,10 +77,11 @@ const message = {
     config_list: 'Config list',
     export_config: 'Export Config',
     import_config: 'Import Config',
-    confirm_batch_delete_config_action: 'Are you sure you want to delete the selected <%:=count%> items?',
+    confirm_batch_delete_config_action:
+      'Are you sure you want to delete the selected <%:=count%> items?',
     batch_delete: 'Batch delete',
     batch_delete_success: 'Successfully deleted <%:=count%> items!',
-    selected_items: 'Selected <%:=count%> items',
+    selected_items: 'Selected <%:=count%> items'
   },
   client: {
     address: 'Client Address'

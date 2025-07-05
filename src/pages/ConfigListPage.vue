@@ -48,7 +48,7 @@
                 <n-space justify="end" class="ml-2">
                   <n-button tertiary @click="queryList">{{
                     this.$t('common.query')
-                    }}</n-button>
+                  }}</n-button>
                   <n-button
                     v-if="webResources.canUpdateConfig"
                     type="info"
@@ -58,7 +58,7 @@
 
                   <n-button @click="download" type="info">{{
                     this.$t('config.export_config')
-                    }}</n-button>
+                  }}</n-button>
 
                   <n-upload
                     v-if="webResources.canUpdateConfig"
@@ -70,7 +70,7 @@
                   >
                     <n-button type="info">{{
                       this.$t('config.import_config')
-                      }}</n-button>
+                    }}</n-button>
                   </n-upload>
                 </n-space>
               </n-gi>
@@ -82,16 +82,31 @@
             <n-button type="info" size="tiny" @click="toggleBatchMode">
               {{ isBatchModeRef ? t('common.exit') : t('common.batch') }}
             </n-button>
-            <n-button v-if="isBatchModeRef" tertiary size="tiny" :disabled="checkedRowKeysRef.length === 0"
-              @click="checkedRowKeysRef = []">
+            <n-button
+              v-if="isBatchModeRef"
+              tertiary
+              size="tiny"
+              :disabled="checkedRowKeysRef.length === 0"
+              @click="checkedRowKeysRef = []"
+            >
               {{ t('common.cancel') }}
             </n-button>
-            <n-button v-if="isBatchModeRef" type="info" size="tiny" :disabled="checkedRowKeysRef.length === 0"
-              @click="batchDownload">
+            <n-button
+              v-if="isBatchModeRef"
+              type="info"
+              size="tiny"
+              :disabled="checkedRowKeysRef.length === 0"
+              @click="batchDownload"
+            >
               {{ t('config.export_config') }}
             </n-button>
-            <n-button v-if="isBatchModeRef" type="error" size="tiny" :disabled="checkedRowKeysRef.length === 0"
-              @click="batchRemove">
+            <n-button
+              v-if="isBatchModeRef"
+              type="error"
+              size="tiny"
+              :disabled="checkedRowKeysRef.length === 0"
+              @click="batchRemove"
+            >
               {{ t('common.delete') }}
             </n-button>
           </div>
@@ -99,9 +114,19 @@
             {{ selectedText }}
           </div>
         </div>
-        <n-data-table remote ref="table" :scroll-x="600" :bordered="false" :columns="computedColumns" :data="data"
-          :loading="loading" :pagination="pagination" :row-key="rowKey" v-model:checked-row-keys="checkedRowKeysRef"
-          @update:page="handlePageChange" />
+        <n-data-table
+          remote
+          ref="table"
+          :scroll-x="600"
+          :bordered="false"
+          :columns="computedColumns"
+          :data="data"
+          :loading="loading"
+          :pagination="pagination"
+          :row-key="rowKey"
+          v-model:checked-row-keys="checkedRowKeysRef"
+          @update:page="handlePageChange"
+        />
       </div>
     </div>
 
@@ -117,8 +142,8 @@
         :title="getDetailTitle"
         :submitName="
           model.mode === constant.FORM_MODE_CREATE
-        ? t('common.confirm')
-        : t('config.confirm_change')
+            ? t('common.confirm')
+            : t('config.confirm_change')
         "
         @close="closeForm"
         @submit="submitForm"
@@ -173,7 +198,7 @@ import {
 import { useProjectSettingStore } from '@/store/modules/projectSetting';
 import { useDialog } from 'naive-ui';
 import template from 'template_js';
-import axios from "axios";
+import axios from 'axios';
 
 export default defineComponent({
   components: {
@@ -181,7 +206,7 @@ export default defineComponent({
     Close,
     SubContentFullPage,
     ConfigDetail,
-    DiffComponent,
+    DiffComponent
   },
   setup() {
     const checkedRowKeysRef = ref([]);
@@ -208,7 +233,7 @@ export default defineComponent({
       dialog.warning({
         title: t('config.batch_delete'),
         content: template(t('config.confirm_batch_delete_config_action'), {
-          count: checkedRowKeysRef.value.length,
+          count: checkedRowKeysRef.value.length
         }),
         positiveButtonProps: {
           type: 'primary'
@@ -225,12 +250,12 @@ export default defineComponent({
                   group,
                   dataId
                 })
-                .then(handleApiResult)
+                .then(handleApiResult);
             }
 
             window.$message.success(
               template(t('config.batch_delete_success'), {
-                count: checkedRowKeysRef.value.length,
+                count: checkedRowKeysRef.value.length
               })
             );
 
@@ -409,20 +434,19 @@ export default defineComponent({
 
     const computedColumns = computed(() => {
       if (isBatchModeRef.value) {
-        return [
-          { type: 'selection', width: 48 },
-          ...columns
-        ];
+        return [{ type: 'selection', width: 48 }, ...columns];
       }
       return columns;
     });
 
     const selectedText = computed(() =>
-      template(t('config.selected_items'), { count: checkedRowKeysRef.value.length })
+      template(t('config.selected_items'), {
+        count: checkedRowKeysRef.value.length
+      })
     );
 
     async function batchDownload() {
-      const body = checkedRowKeysRef.value.map(key => {
+      const body = checkedRowKeysRef.value.map((key) => {
         const [group, dataId] = key.split('@@');
         return {
           tenant: namespaceStore.current.value.namespaceId,
@@ -432,17 +456,17 @@ export default defineComponent({
       });
 
       const response = await axios.post(
-        "/rnacos/api/console/config/download",
+        '/rnacos/api/console/config/download',
         body,
         {
-          responseType: "blob"
+          responseType: 'blob'
         }
       );
 
-      const blob = new Blob([response.data], { type: "application/zip" });
+      const blob = new Blob([response.data], { type: 'application/zip' });
       const url = window.URL.createObjectURL(blob);
 
-      const link = document.createElement("a");
+      const link = document.createElement('a');
       link.href = url;
       link.download = `rnacos_config_export_${Date.now()}.zip`;
       link.click();
@@ -492,7 +516,6 @@ export default defineComponent({
       selectedText,
       batchDownload
     };
-
   },
   computed: {
     getTenant() {

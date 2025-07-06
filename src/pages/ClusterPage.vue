@@ -4,7 +4,7 @@
       class="flex flex-row items-center border-b h-[40px] border-gray-300 bg-white pr-3"
     >
       <div class="flex-1 text-sm leading-[30px] pl-4 truncate">
-        <span>{{ this.$t('cluster.cluster_info') }}</span>
+        <span>{{ t('cluster.cluster_info') }}</span>
       </div>
     </div>
     <div class="m-2">

@@ -3,7 +3,7 @@
     <div class="w-full flex flex-col md:flex-row">
       <div class="w-full md:w-1/2 bg-[#1f1f1f] p-2">
         <div class="text-white font-medium mb-2 sticky top-0 bg-[#1f1f1f] z-10">
-          {{ this.$t('config.current_configuration') }}
+          {{ t('config.current_configuration') }}
         </div>
         <div class="overflow-x-auto bg-[#1f1f1f] text-[#c9c9c9] flex">
           <div
@@ -18,7 +18,7 @@
       </div>
       <div class="w-full md:w-1/2 bg-[#1f1f1f] p-2">
         <div class="text-white font-medium mb-2 sticky top-0 bg-[#1f1f1f] z-10">
-          {{ this.$t('config.new_configurations_to_be_submitted') }}
+          {{ t('config.new_configurations_to_be_submitted') }}
         </div>
         <div class="overflow-x-auto bg-[#1f1f1f] text-[#c9c9c9] flex">
           <div
@@ -37,6 +37,7 @@
 
 <script setup>
 import { handleDiff, buildDiffResult } from '@/utils/utils';
+import { getMessage as t } from '@/i18n';
 const props = defineProps(['src', 'dst']);
 const list = handleDiff(props['src'] || '', props['dst'] || '');
 const res = buildDiffResult(list);

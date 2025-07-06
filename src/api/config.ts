@@ -12,6 +12,7 @@ export interface IConfig {
   modifiedTime?: number;
   desc?: string;
   configType?: string;
+  opUser?: string;
 }
 
 export interface IConfigValue {

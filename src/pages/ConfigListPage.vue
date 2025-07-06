@@ -199,6 +199,7 @@ import { useProjectSettingStore } from '@/store/modules/projectSetting';
 import { useDialog } from 'naive-ui';
 import template from 'template_js';
 import axios from 'axios';
+import namespaceApi from '@/api/namespace';
 
 export default defineComponent({
   components: {
@@ -344,9 +345,36 @@ export default defineComponent({
             );
           })
           .catch((err) => {
-            printApiError(err);
-            dataRef.value = [];
             loadingRef.value = false;
+
+            namespaceApi
+              .queryList()
+              .then(handleApiResult)
+              .then((list) => {
+                const firstNamespace = list[0];
+                if (firstNamespace) {
+                  namespaceStore.setCurrent({
+                    namespaceId: firstNamespace.namespaceId,
+                    namespaceName: firstNamespace.namespaceName
+                  });
+                  window.$message.warning(
+                    template(
+                      t('namespace.namespace_permission_switch_notice'),
+                      {
+                        name: firstNamespace.namespaceName || 'public'
+                      }
+                    )
+                  );
+                  doHandlePageChange(1);
+                } else {
+                  window.$message.error(
+                    t('namespace.no_permission_and_no_namespaces')
+                  );
+                }
+              })
+              .catch((err) => {
+                printApiError(err);
+              });
           });
       }
     };

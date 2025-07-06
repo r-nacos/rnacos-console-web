@@ -119,6 +119,12 @@ class UserApi {
       data: info
     });
   }
+  getCurrentUser(): Promise<AxiosResponse<IApiResult<IUserInfo>>> {
+    return axios.request({
+      method: 'get',
+      url: '/rnacos/api/console/v2/user/info'
+    });
+  }
 }
 
 export const userApi = new UserApi();

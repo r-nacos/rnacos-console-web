@@ -82,7 +82,8 @@ const message = {
     confirm_batch_delete_config_action: '确定要删除选中的 <%:=count%> 项吗？',
     batch_delete: '批量删除',
     batch_delete_success: '成功删除 <%:=count%> 项！',
-    selected_items: '已选 <%:=count%> 项'
+    selected_items: '已选 <%:=count%> 项',
+    op_user: '操作用户',
   },
   namespace: {
     namespace: '命名空间',
@@ -94,7 +95,11 @@ const message = {
     edit_namespace: '修改命名空间',
     retain_space: '保留空间',
     confirm_delete_info: "确认要删除 '<%:=name%>'(ID: <%:=id%>) 命名空间吗？",
-    namespaceId_or: '命名空间ID,不填则自动生成'
+    namespaceId_or: '命名空间ID，不填则自动生成',
+    no_permission_and_no_namespaces: '当前命名空间无权限，且没有可用的命名空间',
+    namespace_permission_switch_notice:
+      "当前命名空间无权限，已切换至'<%:=name%>'命名空间",
+    failed_to_load_namespaces: '加载命名空间失败'
   },
   instance: {
     list: '服务实例列表',

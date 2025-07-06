@@ -10,6 +10,7 @@ export interface IServiceQueryPageParam {
   groupNameParam: string;
   pageNo: Number;
   pageSize: Number;
+  nodeId?: number;
 }
 
 export interface IServiceQueryItem {
@@ -38,6 +39,16 @@ class NamingApi {
       params: param
     });
   }
+  queryServiceSubscriberPage(
+    param: IServiceQueryPageParam
+  ): Promise<AxiosResponse<IApiResult<IPageResult<IServiceQueryItem>>>> {
+    return axios.request({
+      method: 'get',
+      url: '/rnacos/api/console/v2/service/subscriber/list',
+      params: param
+    });
+  }
+  // querySubscriberPage 旧版接口标记废弃
   querySubscriberPage(
     param: IServiceQueryPageParam
   ): Promise<AxiosResponse<IServiceQueryPageResult<IServiceQueryItem>>> {

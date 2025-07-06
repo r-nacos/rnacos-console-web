@@ -75,7 +75,8 @@ const message = {
     recover_history: '恢复历史记录',
     config_list: '配置列表',
     export_config: '导出配置',
-    import_config: '导入配置'
+    import_config: '导入配置',
+    op_user: '操作用户',
   },
   namespace: {
     namespace: '命名空间',

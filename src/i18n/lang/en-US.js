@@ -73,7 +73,8 @@ const message = {
     recover_history: 'Recover history',
     config_list: 'Config list',
     export_config: 'Export Config',
-    import_config: 'Import Config'
+    import_config: 'Import Config',
+    op_user: 'Operator'
   },
   client: {
     address: 'Client Address'

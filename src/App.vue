@@ -39,7 +39,9 @@ const locale = langStore.current.value == 'zh' ? zhCN : enUS;
     abstract
   >
     <n-message-provider>
-      <router-view></router-view>
+      <n-dialog-provider>
+        <router-view />
+      </n-dialog-provider>
     </n-message-provider>
   </n-config-provider>
 </template>

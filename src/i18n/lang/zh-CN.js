@@ -8,6 +8,8 @@ const message = {
     enabled: '正常',
     disabled: '失效',
     confirm: '确认',
+    cancel: '取消',
+    exit: '退出',
     title: '标题',
     return: '返回',
     back: '返回',
@@ -33,7 +35,8 @@ const message = {
     permission: '权限',
     submitSuccess: '提交成功',
     success: '成功',
-    home: '首页'
+    home: '首页',
+    batch: '批量'
   },
   cluster: {
     node: '节点',
@@ -76,6 +79,10 @@ const message = {
     config_list: '配置列表',
     export_config: '导出配置',
     import_config: '导入配置',
+    confirm_batch_delete_config_action: '确定要删除选中的 <%:=count%> 项吗？',
+    batch_delete: '批量删除',
+    batch_delete_success: '成功删除 <%:=count%> 项！',
+    selected_items: '已选 <%:=count%> 项',
     op_user: '操作用户',
   },
   namespace: {
@@ -209,9 +216,9 @@ const message = {
     need_password: '需要输入密码',
     need_captcha: '需要输入验证码',
     get_captcha_fail: '获取验证码失败',
-    USER_CHECK_ERROR: '登录失败，用户名或密码错误!',
-    CAPTCHA_CHECK_ERROR: '验证码校验不通过!',
-    LOGIN_LIMITE_ERROR: '登录校验太频繁，稍后再试!',
+    USER_CHECK_ERROR: '登录失败，用户名或密码错误！',
+    CAPTCHA_CHECK_ERROR: '验证码校验不通过！',
+    LOGIN_LIMITE_ERROR: '登录校验太频繁，稍后再试！',
     LOGIN_UNKNOWN_ERROR: '登录失败，未知错误'
   },
   about: {
@@ -219,7 +226,7 @@ const message = {
     intro_p01:
       'r-nacos是一个用rust实现的nacos服务。相较于java nacos来说，是一个提供相同功能，启动更快、占用系统资源更小（初始内存小于10M）、性能更高、运行更稳定的服务。',
     intro_p02:
-      'r-nacos设计上完全兼容最新版本nacos面向client sdk 的协议（包含1.x的http OpenApi，和2.x的grpc协议）,支持使用nacos服务的应用平迁到 r-nacos。',
+      'r-nacos设计上完全兼容最新版本nacos面向client sdk 的协议（包含1.x的http OpenApi，和2.x的grpc协议），支持使用nacos服务的应用平迁到 r-nacos。',
     intro_p03: '使用过程有什么问题可以到 github提issue。',
     version_title: '系统版本号',
     user_title: '当前用户'

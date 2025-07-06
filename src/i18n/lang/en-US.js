@@ -89,7 +89,12 @@ const message = {
     retain_space: 'Retain Namespace',
     confirm_delete_info:
       "Are you sure you want to delete the '<%:=name%>'(ID: <%:=id%>) namespace?",
-    namespaceId_or: 'Namespace Id,null then auto create'
+    namespaceId_or: 'Namespace Id,null then auto create',
+    no_permission_and_no_namespaces:
+      'You have no permission for current namespace, and no available namespaces',
+    namespace_permission_switch_notice:
+      "You have no permission for current namespace, switched to '<%:=name%>' namespace",
+    failed_to_load_namespaces: 'Failed to load namespaces'
   },
   instance: {
     list: 'Service instance list',

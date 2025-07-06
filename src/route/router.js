@@ -1,4 +1,6 @@
 import { routes } from './routes';
+import { handleApiResult } from '@/utils/request'
+import { userApi } from '@/api/user'
 
 import {
   createRouter,
@@ -31,4 +33,34 @@ router.afterEach((to, from) => {
   }
 });
 
+let loginChecked = false;
+let isLoggedIn = false;
+
+router.beforeEach(async (to, from, next) => {
+  if (to.path.startsWith('/p/login')) {
+    if (!loginChecked) {
+      try {
+        const res = await userApi.getCurrentUser();
+        const user = handleApiResult(res);
+        if (user) {
+          isLoggedIn = true;
+        }
+      } catch {
+        isLoggedIn = false;
+      }
+      loginChecked = true;
+    }
+
+    if (isLoggedIn) {
+      const redirectUrl = (to.query.redirect_url || '/manage/about')
+        .toString()
+        .replace(/^\/rnacos/, '');
+      return next(redirectUrl);
+    } else {
+      return next();
+    }
+  }
+
+  next();
+});
 export default router;

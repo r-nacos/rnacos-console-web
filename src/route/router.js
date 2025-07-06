@@ -1,6 +1,6 @@
 import { routes } from './routes';
-import { handleApiResult } from '@/utils/request'
-import { userApi } from '@/api/user'
+import { handleApiResult } from '@/utils/request';
+import { userApi } from '@/api/user';
 
 import {
   createRouter,

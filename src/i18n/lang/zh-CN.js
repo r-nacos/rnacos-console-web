@@ -83,7 +83,7 @@ const message = {
     batch_delete: '批量删除',
     batch_delete_success: '成功删除 <%:=count%> 项！',
     selected_items: '已选 <%:=count%> 项',
-    op_user: '操作用户',
+    op_user: '操作用户'
   },
   namespace: {
     namespace: '命名空间',

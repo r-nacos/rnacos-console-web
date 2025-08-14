@@ -315,14 +315,33 @@ const message = {
     toggle_fullscreen: 'Toggle fullscreen',
     format_success: 'Format success',
     format_failed: 'Format failed',
-    confirm_delete_toolspec: 'Are you sure to delete tool {toolName} (group: {group})?',
+    confirm_delete_toolspec:
+      'Are you sure to delete tool {toolName} (group: {group})?',
     delete_success: 'Delete success',
     create_success: 'Create success',
     update_success: 'Update success',
     create_failed: 'Create failed',
     update_failed: 'Update failed',
-    invalid_parameters_structure: 'Invalid parameters structure, must be an object',
-    yaml_parse_not_supported: 'YAML parsing not supported yet, please use JSON format',
+    invalid_parameters_structure:
+      'Invalid parameters structure, must be an object',
+    parameters_should_be_object: 'Parameters should be an object, not an array',
+    parameters_syntax_error: 'Parameters syntax error',
+    parameters_conversion_error: 'Parameters conversion error',
+    unsupported_parameters_format: 'Unsupported parameters format',
+    invalid_submission_data: 'Invalid submission data structure',
+    submission_data_build_failed: 'Failed to build submission data',
+    format_conversion_failed: 'Format conversion failed',
+    format_conversion_syntax_error:
+      'Format conversion failed due to syntax error',
+    format_conversion_unsupported:
+      'Format conversion failed: unsupported format',
+    format_no_change_needed: 'Format conversion not needed',
+    validation_errors: 'Validation Errors',
+    validation_warnings: 'Validation Warnings',
+    validation_error: 'Validation error occurred',
+    converting: 'Converting...',
+    yaml_parse_not_supported:
+      'YAML parsing not supported yet, please use JSON format',
     detail_page_coming_soon: 'Detail page coming soon',
     edit_page_coming_soon: 'Edit page coming soon',
     create_page_coming_soon: 'Create page coming soon'

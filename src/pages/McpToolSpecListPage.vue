@@ -60,7 +60,7 @@
             </n-grid>
           </n-form>
         </n-card>
-        
+
         <n-data-table
           remote
           ref="table"
@@ -90,8 +90,8 @@
           model.mode === constant.FORM_MODE_CREATE
             ? t('common.confirm')
             : model.mode === constant.FORM_MODE_DETAIL
-            ? t('common.return')
-            : t('common.confirm')
+              ? t('common.return')
+              : t('common.confirm')
         "
         @close="closeForm"
         @submit="submitForm"
@@ -121,10 +121,7 @@ import SubContentFullPage from '@/components/common/SubContentFullPage.vue';
 import McpToolSpecDetail from './McpToolSpecDetail.vue';
 
 import { useI18n } from 'vue-i18n';
-import {
-  printApiError,
-  handleApiResult
-} from '@/utils/request';
+import { printApiError, handleApiResult } from '@/utils/request';
 import { useProjectSettingStore } from '@/store/modules/projectSetting';
 import { useDialog } from 'naive-ui';
 import template from 'template_js';
@@ -143,7 +140,7 @@ export default defineComponent({
     const projectSettingStore = useProjectSettingStore();
 
     const webResources = useWebResources();
-    
+
     const dataRef = ref([]);
     const loadingRef = ref(false);
     const useFormRef = ref(false);
@@ -153,7 +150,7 @@ export default defineComponent({
       pageNo: 1,
       pageSize: 20
     });
-    
+
     const modelRef = ref({
       namespace: '',
       group: '',
@@ -184,7 +181,7 @@ export default defineComponent({
       }
     });
 
-    const rowKey = (rowData) => 
+    const rowKey = (rowData) =>
       `${rowData.namespace}@@${rowData.group}@@${rowData.toolName}`;
 
     const doQueryList = () => {
@@ -209,19 +206,26 @@ export default defineComponent({
             const pageSize = paginationReactive.pageSize;
             dataRef.value = page.list || [];
             paginationReactive.itemCount = count;
-            paginationReactive.pageCount = Math.max(1, Math.ceil(count / pageSize));
+            paginationReactive.pageCount = Math.max(
+              1,
+              Math.ceil(count / pageSize)
+            );
           })
           .catch((error) => {
             loadingRef.value = false;
             console.error('Failed to load ToolSpec list:', error);
-            
+
             // Handle namespace permission error similar to ConfigListPage
             namespaceApi
               .queryList()
               .then(handleApiResult)
               .then((list) => {
                 const firstNamespace = list[0];
-                if (firstNamespace && namespaceStore.current.value.namespaceId !== firstNamespace.namespaceId) {
+                if (
+                  firstNamespace &&
+                  namespaceStore.current.value.namespaceId !==
+                    firstNamespace.namespaceId
+                ) {
                   namespaceStore.setCurrent({
                     namespaceId: firstNamespace.namespaceId,
                     namespaceName: firstNamespace.namespaceName
@@ -260,7 +264,7 @@ export default defineComponent({
           group: row.group,
           toolName: row.toolName
         });
-        
+
         if (toolSpec) {
           modelRef.value = {
             namespace: toolSpec.namespace,
@@ -269,7 +273,9 @@ export default defineComponent({
             name: toolSpec.name || '',
             description: toolSpec.description || '',
             version: toolSpec.version,
-            function: toolSpec.function ? JSON.stringify(toolSpec.function.parameters, null, 2) : '{}',
+            function: toolSpec.function
+              ? JSON.stringify(toolSpec.function.parameters, null, 2)
+              : '{}',
             functionFormat: 'json',
             mode: constant.FORM_MODE_DETAIL
           };
@@ -287,7 +293,7 @@ export default defineComponent({
           group: row.group,
           toolName: row.toolName
         });
-        
+
         if (toolSpec) {
           modelRef.value = {
             namespace: toolSpec.namespace,
@@ -296,7 +302,9 @@ export default defineComponent({
             name: toolSpec.name || '',
             description: toolSpec.description || '',
             version: toolSpec.version,
-            function: toolSpec.function ? JSON.stringify(toolSpec.function.parameters, null, 2) : '{}',
+            function: toolSpec.function
+              ? JSON.stringify(toolSpec.function.parameters, null, 2)
+              : '{}',
             functionFormat: 'json',
             mode: constant.FORM_MODE_UPDATE
           };
@@ -328,7 +336,7 @@ export default defineComponent({
                 toolName: row.toolName
               })
               .then(handleApiResult);
-            
+
             window.$message.success(t('toolspec.delete_success'));
             doHandlePageChange(1);
           } catch (error) {
@@ -358,13 +366,13 @@ export default defineComponent({
     };
 
     const toolSpecDetailRef = ref();
-    
+
     const submitForm = async () => {
       if (modelRef.value.mode === constant.FORM_MODE_DETAIL) {
         useFormRef.value = false;
         return;
       }
-      
+
       // Use the detail component's submit method
       if (toolSpecDetailRef.value) {
         const success = await toolSpecDetailRef.value.handleSubmit();
@@ -479,7 +487,9 @@ export default defineComponent({
         key: 'createTime',
         width: 160,
         render(row) {
-          return row.createTime ? new Date(row.createTime).toLocaleString() : '-';
+          return row.createTime
+            ? new Date(row.createTime).toLocaleString()
+            : '-';
         }
       },
       {
@@ -487,7 +497,9 @@ export default defineComponent({
         key: 'lastModifiedMillis',
         width: 160,
         render(row) {
-          return row.lastModifiedMillis ? new Date(row.lastModifiedMillis).toLocaleString() : '-';
+          return row.lastModifiedMillis
+            ? new Date(row.lastModifiedMillis).toLocaleString()
+            : '-';
         }
       },
       {

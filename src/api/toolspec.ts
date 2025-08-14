@@ -1,11 +1,22 @@
 import { AxiosResponse } from 'axios';
-import request, { handleApiResult, printApiError, printApiSuccess } from '../utils/request';
+import request, {
+  handleApiResult,
+  printApiError,
+  printApiSuccess
+} from '../utils/request';
 import { IApiResult, IPageResult } from '@/types/base';
 
 const axios = request;
 
 // JSON Schema 类型定义
-export type JsonType = 'object' | 'array' | 'string' | 'integer' | 'number' | 'boolean' | 'null';
+export type JsonType =
+  | 'object'
+  | 'array'
+  | 'string'
+  | 'integer'
+  | 'number'
+  | 'boolean'
+  | 'null';
 
 // JSON Schema 接口定义
 export interface IJsonSchema {
@@ -248,13 +259,21 @@ export const formatToolSpecForDisplay = (toolSpec: IToolSpec) => {
   return {
     ...toolSpec,
     createTimeFormatted: new Date(toolSpec.createTime).toLocaleString(),
-    lastModifiedFormatted: new Date(toolSpec.lastModifiedMillis).toLocaleString(),
-    functionParametersJson: JSON.stringify(toolSpec.function.parameters, null, 2)
+    lastModifiedFormatted: new Date(
+      toolSpec.lastModifiedMillis
+    ).toLocaleString(),
+    functionParametersJson: JSON.stringify(
+      toolSpec.function.parameters,
+      null,
+      2
+    )
   };
 };
 
 // 工具函数：从 JSON 字符串解析函数参数
-export const parseFunctionParametersFromJson = (jsonString: string): Record<string, IJsonSchema> | null => {
+export const parseFunctionParametersFromJson = (
+  jsonString: string
+): Record<string, IJsonSchema> | null => {
   try {
     return JSON.parse(jsonString);
   } catch (error) {
@@ -264,7 +283,9 @@ export const parseFunctionParametersFromJson = (jsonString: string): Record<stri
 };
 
 // 工具函数：将函数参数转换为 JSON 字符串
-export const stringifyFunctionParameters = (parameters: Record<string, IJsonSchema>): string => {
+export const stringifyFunctionParameters = (
+  parameters: Record<string, IJsonSchema>
+): string => {
   try {
     return JSON.stringify(parameters, null, 2);
   } catch (error) {

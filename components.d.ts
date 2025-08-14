@@ -11,6 +11,7 @@ declare module 'vue' {
     Foo: typeof import('./src/components/Foo.vue')['default']
     LangSwitch: typeof import('./src/components/LangSwitch.vue')['default']
     MoreSetting: typeof import('./src/components/MoreSetting.vue')['default']
+    NAlert: typeof import('naive-ui')['NAlert']
     NamespacePopSelect: typeof import('./src/components/namespace/NamespacePopSelect.vue')['default']
     NButton: typeof import('naive-ui')['NButton']
     NCard: typeof import('naive-ui')['NCard']

@@ -102,7 +102,7 @@
           @submit-success="handleSubmitSuccess"
           @cancel="handleFormCancel"
           @close="closeForm"
-          @update-parameters="handleUpdateParameters"
+          @update-function="handleUpdateFunction"
           @update-format="handleUpdateFormat"
           @reset-form="handleResetForm"
         />
@@ -161,8 +161,8 @@ export default defineComponent({
       name: '',
       description: '',
       version: 0,
-      parameters: '',
-      parametersFormat: 'yaml',
+      function: '',
+      functionFormat: 'yaml',
       mode: ''
     });
 
@@ -269,8 +269,8 @@ export default defineComponent({
             name: toolSpec.name || '',
             description: toolSpec.description || '',
             version: toolSpec.version,
-            parameters: toolSpec.function ? JSON.stringify(toolSpec.function.parameters, null, 2) : '{}',
-            parametersFormat: 'json',
+            function: toolSpec.function ? JSON.stringify(toolSpec.function.parameters, null, 2) : '{}',
+            functionFormat: 'json',
             mode: constant.FORM_MODE_DETAIL
           };
           useFormRef.value = true;
@@ -296,8 +296,8 @@ export default defineComponent({
             name: toolSpec.name || '',
             description: toolSpec.description || '',
             version: toolSpec.version,
-            parameters: toolSpec.function ? JSON.stringify(toolSpec.function.parameters, null, 2) : '{}',
-            parametersFormat: 'json',
+            function: toolSpec.function ? JSON.stringify(toolSpec.function.parameters, null, 2) : '{}',
+            functionFormat: 'json',
             mode: constant.FORM_MODE_UPDATE
           };
           useFormRef.value = true;
@@ -346,8 +346,8 @@ export default defineComponent({
         name: '',
         description: '',
         version: 0,
-        parameters: '{}',
-        parametersFormat: 'yaml',
+        function: '{}',
+        functionFormat: 'yaml',
         mode: constant.FORM_MODE_CREATE
       };
       useFormRef.value = true;
@@ -386,14 +386,14 @@ export default defineComponent({
       useFormRef.value = false;
     };
 
-    // Handle parameters update from detail component
-    const handleUpdateParameters = (newParameters) => {
-      modelRef.value.parameters = newParameters;
+    // Handle function update from detail component
+    const handleUpdateFunction = (newFunction) => {
+      modelRef.value.function = newFunction;
     };
 
     // Handle format update from detail component
     const handleUpdateFormat = (newFormat) => {
-      modelRef.value.parametersFormat = newFormat;
+      modelRef.value.functionFormat = newFormat;
     };
 
     // Handle form reset from detail component
@@ -404,8 +404,8 @@ export default defineComponent({
         modelRef.value.toolName = '';
         modelRef.value.name = '';
         modelRef.value.description = '';
-        modelRef.value.parameters = '{}';
-        modelRef.value.parametersFormat = 'yaml';
+        modelRef.value.function = '{}';
+        modelRef.value.functionFormat = 'yaml';
       }
     };
 
@@ -553,7 +553,7 @@ export default defineComponent({
       submitForm,
       handleSubmitSuccess,
       handleFormCancel,
-      handleUpdateParameters,
+      handleUpdateFunction,
       handleUpdateFormat,
       handleResetForm,
       getDetailTitle

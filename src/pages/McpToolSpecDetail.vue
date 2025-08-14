@@ -69,14 +69,14 @@
       
       <n-form-item
         v-show="!isReadonly"
-        path="parametersFormat"
+        path="functionFormat"
         :label="t('toolspec.parameters_format')"
       >
         <n-space align="center">
           <n-radio-group
             :disabled="isReadonly"
-            v-model:value="model.parametersFormat"
-            name="parametersFormat"
+            v-model:value="model.functionFormat"
+            name="functionFormat"
           >
             <n-space>
               <n-radio value="yaml" @change="formatChange">
@@ -88,7 +88,7 @@
             </n-space>
           </n-radio-group>
           <n-tag
-            v-if="model.parameters && model.parameters.trim()"
+            v-if="model.function && model.function.trim()"
             :type="isValidFormat ? 'success' : 'error'"
             size="small"
           >
@@ -97,16 +97,16 @@
         </n-space>
       </n-form-item>
       
-      <n-form-item path="parameters" :label="t('toolspec.parameters')">
+      <n-form-item path="function" :label="t('toolspec.parameters')">
         <div
           class="border border-gray-300 w-full relative bg-[#002b36]"
           ref="editorMainRef"
         >
           <div class="absolute right-0 top-0 z-10 flex">
             <div
-              v-if="!isReadonly && model.parametersFormat === 'json'"
+              v-if="!isReadonly && model.functionFormat === 'json'"
               class="h-10 w-10 bg-[#103b46] bg-opacity-70 p-2.5 cursor-pointer"
-              @click="formatParameters"
+              @click="formatFunction"
               :title="t('toolspec.format_parameters')"
             >
               <n-icon size="20" color="#fff">
@@ -134,7 +134,7 @@
             <div @click="stopPropagation">
               <code-mirror
                 :readonly="isReadonly"
-                v-model="model.parameters"
+                v-model="model.function"
                 :foucsValue="focusValue"
                 :lang="lang"
                 :basic="true"
@@ -162,7 +162,7 @@ import { toolSpecApi } from '@/api/toolspec';
 
 const { t } = useI18n();
 const props = defineProps(['model']);
-const emit = defineEmits(['cancel', 'close', 'submit-success', 'update-parameters', 'update-format', 'reset-form']);
+const emit = defineEmits(['cancel', 'close', 'submit-success', 'update-function', 'update-format', 'reset-form']);
 const extensions = [solarizedDark];
 
 const yamlLang = yaml();
@@ -177,7 +177,7 @@ const focusValue = ref(0);
 const doChangeLang = function (v) {
   if (v) {
     lang.value = langMap[v];
-    props.model.parametersFormat = v;
+    props.model.functionFormat = v;
   }
 };
 
@@ -225,13 +225,13 @@ const jsonToYaml = function (obj, indent = 0) {
 };
 
 /**
- * 转换参数格式
+ * 转换函数格式
  * @param {string} fromFormat - 源格式 (yaml/json)
  * @param {string} toFormat - 目标格式 (yaml/json)
  * @param {string} content - 内容
  * @returns {string} 转换后的内容
  */
-const convertParametersFormat = function (fromFormat, toFormat, content) {
+const convertFunctionFormat = function (fromFormat, toFormat, content) {
   if (!content || content.trim() === '' || fromFormat === toFormat) {
     return content;
   }
@@ -252,12 +252,12 @@ const convertParametersFormat = function (fromFormat, toFormat, content) {
 };
 
 /**
- * 验证参数格式
+ * 验证函数格式
  * @param {string} format - 格式类型 (yaml/json)
  * @param {string} content - 内容
  * @returns {boolean} 是否有效
  */
-const validateParametersFormat = function (format, content) {
+const validateFunctionFormat = function (format, content) {
   if (!content || content.trim() === '') {
     return false;
   }
@@ -320,12 +320,12 @@ const isReadonly = computed(
 const isCreate = computed(() => props.model.mode === constant.FORM_MODE_CREATE);
 const isUpdate = computed(() => props.model.mode === constant.FORM_MODE_UPDATE);
 
-// Real-time parameter format validation
+// Real-time function format validation
 const isValidFormat = computed(() => {
-  if (!props.model.parameters || props.model.parameters.trim() === '') {
+  if (!props.model.function || props.model.function.trim() === '') {
     return true; // Empty content is considered valid
   }
-  return validateParametersFormat(props.model.parametersFormat, props.model.parameters);
+  return validateFunctionFormat(props.model.functionFormat, props.model.function);
 });
 
 const rules = {
@@ -377,7 +377,7 @@ const rules = {
       trigger: ['input', 'blur']
     }
   ],
-  parameters: [
+  function: [
     {
       required: true,
       validator(_, value) {
@@ -386,7 +386,7 @@ const rules = {
         }
         
         // Use enhanced format validation function
-        if (!validateParametersFormat(props.model.parametersFormat, value)) {
+        if (!validateFunctionFormat(props.model.functionFormat, value)) {
           return new Error(t('toolspec.invalid_parameters_format'));
         }
         
@@ -399,18 +399,18 @@ const rules = {
 
 const formatChange = function (event) {
   let newFormat = event.target.value;
-  let oldFormat = props.model.parametersFormat;
+  let oldFormat = props.model.functionFormat;
   
   // If there's content and format changes, try to convert format (only JSON to YAML supported)
-  if (props.model.parameters && oldFormat !== newFormat && oldFormat === 'json' && newFormat === 'yaml') {
-    const convertedContent = convertParametersFormat(
+  if (props.model.function && oldFormat !== newFormat && oldFormat === 'json' && newFormat === 'yaml') {
+    const convertedContent = convertFunctionFormat(
       oldFormat, 
       newFormat, 
-      props.model.parameters
+      props.model.function
     );
-    if (convertedContent !== props.model.parameters) {
+    if (convertedContent !== props.model.function) {
       // Emit event to parent to update the model instead of direct mutation
-      emit('update-parameters', convertedContent);
+      emit('update-function', convertedContent);
       window.$message.success(t('toolspec.format_converted_successfully'));
     }
   }
@@ -452,40 +452,40 @@ const resetForm = function () {
 };
 
 /**
- * 验证并转换参数数据
- * @returns {Object|null} 转换后的参数对象，失败返回null
+ * 验证并转换函数数据
+ * @returns {Object|null} 转换后的函数对象，失败返回null
  */
-const validateAndParseParameters = function () {
-  if (!props.model.parameters || props.model.parameters.trim() === '') {
+const validateAndParseFunction = function () {
+  if (!props.model.function || props.model.function.trim() === '') {
     window.$message.error(t('toolspec.need_input_parameters'));
     return null;
   }
   
   try {
-    let parametersObj;
+    let functionObj;
     
-    if (props.model.parametersFormat === 'json') {
-      parametersObj = JSON.parse(props.model.parameters);
+    if (props.model.functionFormat === 'json') {
+      functionObj = JSON.parse(props.model.function);
     } else {
       // For YAML format, try parsing as JSON first (simplified handling)
       // In actual projects, might need to introduce YAML parsing library
       try {
-        parametersObj = JSON.parse(props.model.parameters);
+        functionObj = JSON.parse(props.model.function);
       } catch (jsonError) {
         window.$message.error(t('toolspec.yaml_parse_not_supported'));
         return null;
       }
     }
     
-    // Validate basic structure of parameters object
-    if (typeof parametersObj !== 'object' || parametersObj === null) {
+    // Validate basic structure of function object
+    if (typeof functionObj !== 'object' || functionObj === null) {
       window.$message.error(t('toolspec.invalid_parameters_structure'));
       return null;
     }
     
-    return parametersObj;
+    return functionObj;
   } catch (error) {
-    console.error('Parameters parsing error:', error);
+    console.error('Function parsing error:', error);
     window.$message.error(t('toolspec.invalid_parameters_format'));
     return null;
   }
@@ -517,9 +517,9 @@ const buildSubmitData = function () {
     return null;
   }
   
-  // Validate and parse parameters
-  const parametersObj = validateAndParseParameters();
-  if (!parametersObj) {
+  // Validate and parse function
+  const functionObj = validateAndParseFunction();
+  if (!functionObj) {
     return null;
   }
   
@@ -528,10 +528,10 @@ const buildSubmitData = function () {
     namespace: props.model.namespace.trim(),
     group: props.model.group.trim(),
     toolName: props.model.toolName.trim(),
-    parameters: {
+    function: {
       name: props.model.name.trim(),
       description: props.model.description?.trim() || '',
-      parameters: parametersObj
+      parameters: functionObj
     }
   };
   
@@ -636,18 +636,18 @@ const toggleFullScreen = function () {
 };
 
 /**
- * 格式化参数内容
+ * 格式化函数内容
  */
-const formatParameters = function () {
-  if (!props.model.parameters || props.model.parameters.trim() === '') {
+const formatFunction = function () {
+  if (!props.model.function || props.model.function.trim() === '') {
     return;
   }
   
   try {
-    if (props.model.parametersFormat === 'json') {
-      const parsed = JSON.parse(props.model.parameters);
+    if (props.model.functionFormat === 'json') {
+      const parsed = JSON.parse(props.model.function);
       const formatted = JSON.stringify(parsed, null, 2);
-      emit('update-parameters', formatted);
+      emit('update-function', formatted);
       window.$message.success(t('toolspec.format_success'));
     }
   } catch (error) {
@@ -664,9 +664,9 @@ defineExpose({
 });
 
 watch(
-  () => props.model.parametersFormat,
+  () => props.model.functionFormat,
   () => {
-    doChangeLang(props.model.parametersFormat);
+    doChangeLang(props.model.functionFormat);
   }
 );
 
@@ -685,7 +685,7 @@ onMounted(() => {
   adjustCodeContainerHeight();
   window.addEventListener('resize', adjustCodeContainerHeight);
   // Initialize language
-  doChangeLang(props.model.parametersFormat || 'yaml');
+  doChangeLang(props.model.functionFormat || 'yaml');
 });
 
 onBeforeUnmount(() => {

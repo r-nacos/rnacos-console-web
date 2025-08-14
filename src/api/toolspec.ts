@@ -53,7 +53,7 @@ export interface IToolSpecParams {
   namespace: string;
   group: string;
   toolName: string;
-  parameters?: IToolFunctionValue;
+  function?: IToolFunctionValue;
 }
 
 // ToolSpec 键值接口（用于删除和获取详情）
@@ -104,7 +104,7 @@ class ToolSpecApi {
 
   /**
    * 创建或更新 ToolSpec
-   * @param toolSpecParams ToolSpec 参数
+   * @param toolSpecParams ToolSpec 参数，包含 function 字段定义工具函数
    * @returns Promise<AxiosResponse<IApiResult<boolean>>>
    */
   addOrUpdateToolSpec(
@@ -198,48 +198,48 @@ export const toolSpecApi = new ToolSpecApi();
 // 工具函数：验证 ToolSpec 参数
 export const validateToolSpecParams = (params: IToolSpecParams): string[] => {
   const errors: string[] = [];
-  
+
   if (!params.namespace?.trim()) {
     errors.push('Namespace cannot be empty');
   }
-  
+
   if (!params.group?.trim()) {
     errors.push('Group cannot be empty');
   }
-  
+
   if (!params.toolName?.trim()) {
     errors.push('Tool name cannot be empty');
   }
-  
-  if (params.parameters) {
-    if (!params.parameters.name?.trim()) {
+
+  if (params.function) {
+    if (!params.function.name?.trim()) {
       errors.push('Function name cannot be empty');
     }
-    
-    if (!params.parameters.description?.trim()) {
+
+    if (!params.function.description?.trim()) {
       errors.push('Function description cannot be empty');
     }
   }
-  
+
   return errors;
 };
 
 // 工具函数：验证查询参数
 export const validateQueryParams = (params: IToolSpecQueryParam): string[] => {
   const errors: string[] = [];
-  
+
   if (params.pageNo <= 0) {
     errors.push('Page number must be greater than 0');
   }
-  
+
   if (params.pageSize <= 0) {
     errors.push('Page size must be greater than 0');
   }
-  
+
   if (params.pageSize > 1000) {
     errors.push('Page size cannot exceed 1000');
   }
-  
+
   return errors;
 };
 
@@ -249,26 +249,43 @@ export const formatToolSpecForDisplay = (toolSpec: IToolSpec) => {
     ...toolSpec,
     createTimeFormatted: new Date(toolSpec.createTime).toLocaleString(),
     lastModifiedFormatted: new Date(toolSpec.lastModifiedMillis).toLocaleString(),
-    parametersJson: JSON.stringify(toolSpec.function.parameters, null, 2)
+    functionParametersJson: JSON.stringify(toolSpec.function.parameters, null, 2)
   };
 };
 
-// 工具函数：从 JSON 字符串解析参数
-export const parseParametersFromJson = (jsonString: string): Record<string, IJsonSchema> | null => {
+// 工具函数：从 JSON 字符串解析函数参数
+export const parseFunctionParametersFromJson = (jsonString: string): Record<string, IJsonSchema> | null => {
   try {
     return JSON.parse(jsonString);
   } catch (error) {
-    console.error('Failed to parse parameters JSON:', error);
+    console.error('Failed to parse function parameters JSON:', error);
     return null;
   }
 };
 
-// 工具函数：将参数转换为 JSON 字符串
-export const stringifyParameters = (parameters: Record<string, IJsonSchema>): string => {
+// 工具函数：将函数参数转换为 JSON 字符串
+export const stringifyFunctionParameters = (parameters: Record<string, IJsonSchema>): string => {
   try {
     return JSON.stringify(parameters, null, 2);
   } catch (error) {
-    console.error('Failed to stringify parameters:', error);
+    console.error('Failed to stringify function parameters:', error);
     return '{}';
   }
+};
+
+// 向后兼容：保留旧的函数名作为别名
+export const parseParametersFromJson = parseFunctionParametersFromJson;
+export const stringifyParameters = stringifyFunctionParameters;
+
+// 工具函数：标准化 ToolSpec 参数（向后兼容性处理）
+export const normalizeToolSpecParams = (params: any): IToolSpecParams => {
+  // 如果存在旧的 parameters 字段，将其映射到 function
+  if (params.parameters && !params.function) {
+    return {
+      ...params,
+      function: params.parameters,
+      parameters: undefined
+    };
+  }
+  return params;
 };

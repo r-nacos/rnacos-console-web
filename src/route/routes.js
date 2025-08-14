@@ -103,6 +103,26 @@ export const routes = [
   },
   {
     path: '/manage',
+    name: 'mcp',
+    meta: { title: 'mcp title' },
+    component: MainLayout,
+    children: [
+      {
+        path: '/manage/toolspec',
+        name: 'toolspec',
+        meta: { title: t('toolspec.toolspec_list') },
+        component: () => import('@/pages/McpToolSpecListPage.vue')
+      },
+      {
+        path: '/manage/toolspec/detail',
+        name: 'toolspec-detail',
+        meta: { title: t('toolspec.toolspec_detail') },
+        component: () => import('@/pages/McpToolSpecDetail.vue')
+      }
+    ]
+  },
+  {
+    path: '/manage',
     name: 'app',
     meta: { title: 'config title' },
     component: MainLayout,
@@ -186,6 +206,18 @@ export const sideAllMenu = [
         label: t('menu.subscriber_list'),
         key: 'subscriber',
         path: '/manage/subscriber'
+      }
+    ]
+  },
+  {
+    label: t('toolspec.toolspec_management'),
+    key: 'toolspec-management',
+    icon: renderIcon(CubeOutline),
+    children: [
+      {
+        label: t('toolspec.toolspec_list'),
+        key: 'toolspec',
+        path: '/manage/toolspec'
       }
     ]
   },

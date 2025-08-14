@@ -37,6 +37,7 @@ declare module 'vue' {
     NSelect: typeof import('naive-ui')['NSelect']
     NSpace: typeof import('naive-ui')['NSpace']
     NSwitch: typeof import('naive-ui')['NSwitch']
+    NTag: typeof import('naive-ui')['NTag']
     NUpload: typeof import('naive-ui')['NUpload']
     ResetPassword: typeof import('./src/components/user/ResetPassword.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']

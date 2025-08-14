@@ -352,7 +352,7 @@ export default defineComponent({
               .then(handleApiResult)
               .then((list) => {
                 const firstNamespace = list[0];
-                if (firstNamespace) {
+                if (firstNamespace && namespaceStore.current.value.namespaceId !== firstNamespace.namespaceId) {
                   namespaceStore.setCurrent({
                     namespaceId: firstNamespace.namespaceId,
                     namespaceName: firstNamespace.namespaceName

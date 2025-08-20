@@ -36,7 +36,9 @@ const message = {
     submitSuccess: '提交成功',
     success: '成功',
     home: '首页',
-    batch: '批量'
+    batch: '批量',
+    detail: '详情',
+    no_config: '无配置'
   },
   cluster: {
     node: '节点',
@@ -331,6 +333,67 @@ const message = {
     detail_page_coming_soon: '详情页面即将推出',
     edit_page_coming_soon: '编辑页面即将推出',
     create_page_coming_soon: '创建页面即将推出'
+  },
+  mcpserver: {
+    mcpserver_management: 'MCP服务器管理',
+    mcpserver_list: 'MCP服务器列表',
+    mcpserver_detail: 'MCP服务器详情',
+    
+    // 表单字段
+    server_name: '服务器名称',
+    server_description: '服务器描述',
+    auth_keys: '认证密钥',
+    tools: '关联工具',
+    
+    // 操作按钮
+    create_mcpserver: '创建MCP服务器',
+    edit_mcpserver: '编辑MCP服务器',
+    delete_mcpserver: '删除MCP服务器',
+    
+    // 表单提示
+    input_server_name: '请输入服务器名称',
+    input_description: '请输入服务器描述',
+    add_auth_key: '添加认证密钥',
+    add_tool: '添加工具',
+    select_toolspec: '选择工具规范',
+    
+    // 工具配置
+    tool_name: '工具名称',
+    tool_group: '工具组',
+    tool_version: '工具版本',
+    route_rule: '路由规则',
+    input_route_rule_config: '请输入路由规则配置(JSON格式)',
+    
+    // 状态信息
+    no_tools: '暂无关联工具',
+    loading_tools: '加载工具信息中...',
+    
+    // 验证信息
+    name_required: '服务器名称不能为空',
+    auth_keys_required: '至少需要一个认证密钥',
+    auth_key_empty: '认证密钥不能为空',
+    tool_config_invalid: '工具配置无效',
+    
+    // 操作确认
+    confirm_delete_mcpserver: '确认删除MCP服务器 "{name}"？此操作不可恢复。',
+    delete_success: 'MCP服务器删除成功',
+    create_success: 'MCP服务器创建成功',
+    update_success: 'MCP服务器更新成功',
+    
+    // 详情页面
+    basic_info: '基础信息',
+    tool_info: '工具信息',
+    server_id: '服务器ID',
+    create_time: '创建时间',
+    update_time: '更新时间',
+    edit_mode: '编辑模式',
+    view_mode: '查看模式',
+    save_changes: '保存修改',
+    cancel_edit: '取消编辑',
+    back_to_list: '返回列表',
+    form_validation_error: '表单验证失败，请检查输入',
+    create_failed: '创建失败',
+    update_failed: '更新失败'
   },
   error: {
     NO_PERMISSION: '没有权限',

@@ -118,6 +118,18 @@ export const routes = [
         name: 'toolspec-detail',
         meta: { title: t('toolspec.toolspec_detail') },
         component: () => import('@/pages/McpToolSpecDetail.vue')
+      },
+      {
+        path: '/manage/mcpserver',
+        name: 'mcpserver',
+        meta: { title: t('mcpserver.mcpserver_list') },
+        component: () => import('@/pages/McpServerListPage.vue')
+      },
+      {
+        path: '/manage/mcpserver/detail',
+        name: 'mcpserver-detail',
+        meta: { title: t('mcpserver.mcpserver_detail') },
+        component: () => import('@/pages/McpServerDetail.vue')
       }
     ]
   },
@@ -210,14 +222,19 @@ export const sideAllMenu = [
     ]
   },
   {
-    label: t('toolspec.toolspec_management'),
-    key: 'toolspec-management',
+    label: t('mcpserver.mcpserver_management'),
+    key: 'mcpserver-management',
     icon: renderIcon(CubeOutline),
     children: [
       {
         label: t('toolspec.toolspec_list'),
         key: 'toolspec',
         path: '/manage/toolspec'
+      },
+      {
+        label: t('mcpserver.mcpserver_list'),
+        key: 'mcpserver',
+        path: '/manage/mcpserver'
       }
     ]
   },

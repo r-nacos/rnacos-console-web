@@ -112,10 +112,11 @@
 </template>
 
 <script>
-import { ref, reactive, defineComponent, computed, h } from 'vue';
+import { ref, reactive, defineComponent, computed } from 'vue';
 import { toolSpecApi } from '@/api/toolspec';
 import { namespaceStore } from '@/data/namespace';
 import { useWebResources } from '@/data/resources';
+import { createColumns } from '@/components/mcptoolspec/McpToolSpecColumns';
 import NamespacePopSelect from '@/components/namespace/NamespacePopSelect.vue';
 import SubContentFullPage from '@/components/common/SubContentFullPage.vue';
 import McpToolSpecDetail from './McpToolSpecDetail.vue';
@@ -427,122 +428,12 @@ export default defineComponent({
     });
 
     // Create columns for the data table
-    const columns = computed(() => [
-      {
-        title: t('toolspec.namespace'),
-        key: 'namespace',
-        width: 120,
-        ellipsis: {
-          tooltip: true
-        }
-      },
-      {
-        title: t('toolspec.group'),
-        key: 'group',
-        width: 150,
-        ellipsis: {
-          tooltip: true
-        }
-      },
-      {
-        title: t('toolspec.tool_name'),
-        key: 'toolName',
-        width: 180,
-        ellipsis: {
-          tooltip: true
-        }
-      },
-      {
-        title: t('toolspec.name'),
-        key: 'name',
-        width: 150,
-        ellipsis: {
-          tooltip: true
-        },
-        render(row) {
-          return row.name || '-';
-        }
-      },
-      {
-        title: t('toolspec.description'),
-        key: 'description',
-        width: 200,
-        ellipsis: {
-          tooltip: true
-        },
-        render(row) {
-          return row.description || '-';
-        }
-      },
-      {
-        title: t('toolspec.version'),
-        key: 'version',
-        width: 80,
-        render(row) {
-          return row.version !== undefined ? row.version : '-';
-        }
-      },
-      {
-        title: t('toolspec.create_time'),
-        key: 'createTime',
-        width: 160,
-        render(row) {
-          return row.createTime
-            ? new Date(row.createTime).toLocaleString()
-            : '-';
-        }
-      },
-      {
-        title: t('toolspec.last_modified'),
-        key: 'lastModifiedMillis',
-        width: 160,
-        render(row) {
-          return row.lastModifiedMillis
-            ? new Date(row.lastModifiedMillis).toLocaleString()
-            : '-';
-        }
-      },
-      {
-        title: t('toolspec.actions'),
-        key: 'actions',
-        width: 180,
-        render(row) {
-          return [
-            h(
-              'n-button',
-              {
-                size: 'small',
-                type: 'info',
-                style: { marginRight: '8px' },
-                onClick: () => detailItem(row)
-              },
-              { default: () => t('common.detail') }
-            ),
-            h(
-              'n-button',
-              {
-                size: 'small',
-                type: 'primary',
-                style: { marginRight: '8px' },
-                onClick: () => updateItem(row),
-                disabled: !webResources.canUpdateConfig
-              },
-              { default: () => t('common.edit') }
-            ),
-            h(
-              'n-button',
-              {
-                size: 'small',
-                type: 'error',
-                onClick: () => removeItem(row),
-                disabled: !webResources.canUpdateConfig
-              },
-              { default: () => t('common.delete') }
-            )
-          ];
-        }
-      }
-    ]);
+    const columns = createColumns(
+      detailItem,
+      updateItem,
+      removeItem,
+      webResources
+    );
 
     return {
       webResources,

@@ -31,6 +31,9 @@
                 </n-form-item>
               </n-gi>
               <n-gi>
+                <!-- 占位符，使按钮靠右对齐 -->
+              </n-gi>
+              <n-gi>
                 <n-space justify="end" class="ml-2">
                   <n-button tertiary @click="queryList">{{
                     t('common.query')
@@ -102,6 +105,7 @@ import { useWebResources } from '@/data/resources';
 import NamespacePopSelect from '@/components/namespace/NamespacePopSelect.vue';
 import SubContentFullPage from '@/components/common/SubContentFullPage.vue';
 import McpServerDetail from './McpServerDetail.vue';
+import { createMcpServerColumns } from '@/components/mcpserver/McpServerColumns';
 import { useI18n } from 'vue-i18n';
 import { printApiError, handleApiResult } from '@/utils/request';
 import { useProjectSettingStore } from '@/store/modules/projectSetting';
@@ -410,115 +414,12 @@ export default defineComponent({
     });
 
     // Create columns for the data table
-    const columns = computed(() => [
-      {
-        title: t('mcpserver.server_id'),
-        key: 'id',
-        width: 80,
-        ellipsis: {
-          tooltip: true
-        }
-      },
-      {
-        title: t('mcpserver.server_name'),
-        key: 'name',
-        width: 150,
-        ellipsis: {
-          tooltip: true
-        }
-      },
-      {
-        title: t('namespace.namespace'),
-        key: 'namespace',
-        width: 120,
-        ellipsis: {
-          tooltip: true
-        }
-      },
-      {
-        title: t('mcpserver.server_description'),
-        key: 'description',
-        width: 200,
-        ellipsis: {
-          tooltip: true
-        },
-        render(row) {
-          return row.description || '-';
-        }
-      },
-      {
-        title: t('mcpserver.auth_keys'),
-        key: 'authKeysDisplay',
-        width: 150,
-        ellipsis: {
-          tooltip: true
-        }
-      },
-      {
-        title: t('mcpserver.tools'),
-        key: 'toolsCount',
-        width: 80,
-        render(row) {
-          return row.toolsCount || 0;
-        }
-      },
-      {
-        title: t('mcpserver.create_time'),
-        key: 'createTimeFormatted',
-        width: 160,
-        ellipsis: {
-          tooltip: true
-        }
-      },
-      {
-        title: t('mcpserver.update_time'),
-        key: 'updateTimeFormatted',
-        width: 160,
-        ellipsis: {
-          tooltip: true
-        }
-      },
-      {
-        title: t('common.operation'),
-        key: 'actions',
-        width: 180,
-        render(row) {
-          return [
-            h(
-              'n-button',
-              {
-                size: 'small',
-                type: 'info',
-                style: { marginRight: '8px' },
-                onClick: () => detailItem(row)
-              },
-              { default: () => t('common.detail') }
-            ),
-            h(
-              'n-button',
-              {
-                size: 'small',
-                type: 'primary',
-                style: { marginRight: '8px' },
-                onClick: () => updateItem(row),
-                disabled: !webResources.canUpdateConfig
-              },
-              { default: () => t('common.edit') }
-            ),
-            h(
-              'n-button',
-              {
-                size: 'small',
-                type: 'error',
-                onClick: () => removeItem(row),
-                disabled: !webResources.canUpdateConfig
-              },
-              { default: () => t('common.delete') }
-            )
-          ];
-        }
-      }
-    ]);
+    const columns = createMcpServerColumns(
+      detailItem,
+      updateItem,
+      removeItem,
+      webResources
+    );
 
     return {
       webResources,

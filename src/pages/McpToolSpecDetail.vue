@@ -67,38 +67,6 @@
         />
       </n-form-item>
 
-      <n-form-item
-        v-show="!isReadonly"
-        path="functionFormat"
-        :label="t('toolspec.parameters_format')"
-      >
-        <n-space align="center">
-          <n-radio-group
-            :disabled="isReadonly"
-            v-model:value="model.functionFormat"
-            name="functionFormat"
-          >
-            <n-space>
-              <n-radio value="yaml" @change="formatChange"> YAML </n-radio>
-              <n-radio value="json" @change="formatChange"> JSON </n-radio>
-            </n-space>
-          </n-radio-group>
-          <n-tag
-            v-if="model.function && model.function.trim()"
-            :type="validationResult.isValid ? 'success' : 'error'"
-            size="small"
-          >
-            {{
-              validationResult.isValid
-                ? t('toolspec.format_valid')
-                : t('toolspec.format_invalid')
-            }}
-          </n-tag>
-          <n-tag v-if="isConverting" type="info" size="small">
-            {{ t('toolspec.converting') }}
-          </n-tag>
-        </n-space>
-      </n-form-item>
 
       <!-- Validation error display -->
       <n-form-item v-if="!isReadonly && validationResult.errors.length > 0">
@@ -135,7 +103,7 @@
         >
           <div class="absolute right-0 top-0 z-10 flex">
             <div
-              v-if="!isReadonly && model.functionFormat === 'json'"
+              v-if="!isReadonly"
               class="h-10 w-10 bg-[#103b46] bg-opacity-70 p-2.5 cursor-pointer"
               @click="formatFunction"
               :title="t('toolspec.format_parameters')"
@@ -187,7 +155,6 @@ import CodeMirror from '@/components/config/CodeMirror';
 import { Resize } from '@vicons/ionicons5';
 import { solarizedDark } from '@/components/config/cm6theme';
 import { json } from '@codemirror/lang-json';
-import { yaml } from '@codemirror/lang-yaml';
 import * as constant from '@/types/constant';
 import {
   ref,
@@ -200,12 +167,10 @@ import {
 import { useI18n } from 'vue-i18n';
 import { toolSpecApi } from '@/api/toolspec';
 import {
-  formatConverter,
   formatValidator,
   objectToString,
   stringToObject,
   isValidFormat as validateFormat,
-  convertFormat,
   handleError,
   ERROR_TYPES
 } from '@/utils/parameterTransform';
@@ -217,18 +182,11 @@ const emit = defineEmits([
   'close',
   'submit-success',
   'update-function',
-  'update-format',
   'reset-form'
 ]);
 const extensions = [solarizedDark];
 
-const yamlLang = yaml();
-const langMap = {
-  json: json(),
-  yaml: yamlLang
-};
-
-const lang = ref();
+const lang = json();
 const focusValue = ref(0);
 
 // Validation state for real-time feedback
@@ -238,130 +196,17 @@ const validationResult = ref({
   warnings: []
 });
 
-const isConverting = ref(false); // Format conversion state
 
-const doChangeLang = function (v) {
-  if (v) {
-    lang.value = langMap[v];
-    props.model.functionFormat = v;
-  }
-};
 
-/**
- * 简单的JSON到YAML转换（基础实现）
- * @param {object} obj - JSON对象
- * @param {number} indent - 缩进级别
- * @returns {string} YAML字符串
- */
-const jsonToYaml = function (obj, indent = 0) {
-  const spaces = '  '.repeat(indent);
 
-  if (obj === null) return 'null';
-  if (typeof obj === 'boolean') return obj.toString();
-  if (typeof obj === 'number') return obj.toString();
-  if (typeof obj === 'string') {
-    // Simple string handling, add quotes if contains special characters
-    if (
-      obj.includes('\n') ||
-      obj.includes(':') ||
-      obj.includes('#') ||
-      obj.includes('[') ||
-      obj.includes(']')
-    ) {
-      return `"${obj.replace(/"/g, '\\"')}"`;
-    }
-    return obj;
-  }
-
-  if (Array.isArray(obj)) {
-    if (obj.length === 0) return '[]';
-    return obj
-      .map((item) => `${spaces}- ${jsonToYaml(item, indent + 1)}`)
-      .join('\n');
-  }
-
-  if (typeof obj === 'object') {
-    const keys = Object.keys(obj);
-    if (keys.length === 0) return '{}';
-    return keys
-      .map((key) => {
-        const value = obj[key];
-        if (
-          typeof value === 'object' &&
-          value !== null &&
-          !Array.isArray(value)
-        ) {
-          return `${spaces}${key}:\n${jsonToYaml(value, indent + 1)}`;
-        } else if (Array.isArray(value) && value.length > 0) {
-          return `${spaces}${key}:\n${jsonToYaml(value, indent + 1)}`;
-        } else {
-          return `${spaces}${key}: ${jsonToYaml(value, indent)}`;
-        }
-      })
-      .join('\n');
-  }
-
-  return obj.toString();
-};
-
-/**
- * 转换函数格式
- * @param {string} fromFormat - 源格式 (yaml/json)
- * @param {string} toFormat - 目标格式 (yaml/json)
- * @param {string} content - 内容
- * @returns {string} 转换后的内容
- */
-const convertFunctionFormat = function (fromFormat, toFormat, content) {
-  if (!content || content.trim() === '' || fromFormat === toFormat) {
-    return content;
-  }
-
-  try {
-    // Use the new format converter for bidirectional conversion
-    return convertFormat(content, fromFormat, toFormat);
-  } catch (error) {
-    console.warn('Format conversion failed:', error);
-
-    // Log error for debugging
-    handleError(error, 'convertFunctionFormat', {
-      fromFormat,
-      toFormat,
-      contentLength: content.length,
-      logError: true
-    });
-
-    return content; // Return original content when conversion fails
-  }
-};
-
-/**
- * 验证函数格式
- * @param {string} format - 格式类型 (yaml/json)
- * @param {string} content - 内容
- * @returns {boolean} 是否有效
- */
-const validateFunctionFormat = function (format, content) {
-  if (!content || content.trim() === '') {
-    return false;
-  }
-
-  try {
-    // Use the new format validator
-    return validateFormat(content, format);
-  } catch (error) {
-    console.error('Format validation error:', error);
-    return false;
-  }
-};
 
 /**
  * 初始化参数显示
  * 从 IToolSpec.function.parameters 转换为显示字符串
  * @param {Object} parametersObj - 参数对象
- * @param {string} format - 目标格式 ('json' | 'yaml')
  * @returns {string} 格式化字符串
  */
-const initializeParameterDisplay = function (parametersObj, format = 'json') {
+const initializeParameterDisplay = function (parametersObj) {
   try {
     // Handle null, undefined, or empty cases
     if (
@@ -369,21 +214,21 @@ const initializeParameterDisplay = function (parametersObj, format = 'json') {
       (typeof parametersObj === 'object' &&
         Object.keys(parametersObj).length === 0)
     ) {
-      return objectToString({}, format);
+      return objectToString({}, 'json');
     }
 
     // Convert object to formatted string
-    return objectToString(parametersObj, format);
+    return objectToString(parametersObj, 'json');
   } catch (error) {
     console.error('Parameter initialization error:', error);
 
     // Error fallback - return empty object representation
-    const fallbackContent = format === 'yaml' ? '{}' : '{}';
+    const fallbackContent = '{}';
 
     // Log error for debugging
     handleError(error, 'initializeParameterDisplay', {
       parametersObj,
-      format,
+      format: 'json',
       logError: true
     });
 
@@ -394,12 +239,11 @@ const initializeParameterDisplay = function (parametersObj, format = 'json') {
 /**
  * 实时验证参数格式（防抖处理）
  * @param {string} content - 待验证内容
- * @param {string} format - 格式类型
  */
-const validateParametersRealtime = function (content, format) {
+const validateParametersRealtime = function (content) {
   try {
     // Use the format validator for detailed validation
-    const result = formatValidator.validate(content, format);
+    const result = formatValidator.validate(content, 'json');
 
     // Update validation result
     validationResult.value = {
@@ -429,13 +273,13 @@ const validateParametersRealtime = function (content, format) {
 
 // Create debounced version of the validation function
 let validationTimeout = null;
-const validateParametersRealtimeDebounced = function (content, format) {
+const validateParametersRealtimeDebounced = function (content) {
   if (validationTimeout) {
     clearTimeout(validationTimeout);
   }
 
   validationTimeout = setTimeout(() => {
-    validateParametersRealtime(content, format);
+    validateParametersRealtime(content);
   }, 300); // 300ms debounce delay
 };
 
@@ -469,10 +313,7 @@ const isValidFormat = computed(() => {
   }
 
   // Trigger real-time validation
-  validateParametersRealtimeDebounced(
-    props.model.function,
-    props.model.functionFormat
-  );
+  validateParametersRealtimeDebounced(props.model.function);
 
   // Return current validation state
   return validationResult.value.isValid;
@@ -527,6 +368,18 @@ const rules = {
       trigger: ['input', 'blur']
     }
   ],
+  description: [
+    {
+      required: true,
+      validator(_, value) {
+        if (!value || !value.trim()) {
+          return new Error(t('toolspec.need_input_description'));
+        }
+        return true;
+      },
+      trigger: ['input', 'blur']
+    }
+  ],
   function: [
     {
       required: true,
@@ -537,10 +390,7 @@ const rules = {
 
         // Use the format validator for comprehensive validation
         try {
-          const validation = formatValidator.validate(
-            value,
-            props.model.functionFormat
-          );
+          const validation = formatValidator.validate(value, 'json');
           if (!validation.isValid) {
             return new Error(
               t('toolspec.invalid_parameters_format') +
@@ -550,7 +400,7 @@ const rules = {
           }
 
           // Additional check to ensure the result can be converted to object
-          const converted = stringToObject(value, props.model.functionFormat);
+          const converted = stringToObject(value, 'json');
           if (
             typeof converted !== 'object' ||
             converted === null ||
@@ -571,89 +421,6 @@ const rules = {
   ]
 };
 
-/**
- * 处理格式切换
- * 增强现有的 formatChange 方法，支持双向格式转换
- * @param {Event} event - 格式切换事件
- */
-const formatChange = function (event) {
-  const newFormat = event.target.value;
-  const oldFormat = props.model.functionFormat;
-
-  // If no content or same format, just update format
-  if (
-    !props.model.function ||
-    !props.model.function.trim() ||
-    oldFormat === newFormat
-  ) {
-    emit('update-format', newFormat);
-    doChangeLang(newFormat);
-    return;
-  }
-
-  // Set converting state
-  isConverting.value = true;
-
-  try {
-    // Attempt bidirectional format conversion
-    const convertedContent = convertFunctionFormat(
-      oldFormat,
-      newFormat,
-      props.model.function
-    );
-
-    if (convertedContent !== props.model.function) {
-      // Emit event to parent to update the model instead of direct mutation
-      emit('update-function', convertedContent);
-      window.$message.success(t('toolspec.format_converted_successfully'));
-
-      // Clear any previous validation errors since we have new content
-      validationResult.value = {
-        isValid: true,
-        errors: [],
-        warnings: []
-      };
-
-      // Trigger validation for the new content
-      setTimeout(() => {
-        validateParametersRealtimeDebounced(convertedContent, newFormat);
-      }, 100);
-    } else {
-      // Content didn't change, might be already in correct format or conversion not needed
-      window.$message.info(t('toolspec.format_no_change_needed'));
-    }
-  } catch (error) {
-    console.error('Format conversion failed:', error);
-
-    // Handle conversion failure with user-friendly message
-    const errorInfo = handleError(error, 'formatChange', {
-      oldFormat,
-      newFormat,
-      contentLength: props.model.function.length,
-      logError: true
-    });
-
-    let errorMessage = t('toolspec.format_conversion_failed');
-    if (errorInfo.type === ERROR_TYPES.SYNTAX_ERROR) {
-      errorMessage = t('toolspec.format_conversion_syntax_error');
-    } else if (errorInfo.type === ERROR_TYPES.UNSUPPORTED_FORMAT) {
-      errorMessage = t('toolspec.format_conversion_unsupported');
-    }
-
-    window.$message.error(errorMessage);
-
-    // Don't change format if conversion fails, revert to old format
-    // Note: We don't emit update-format here to keep the old format
-    return;
-  } finally {
-    // Clear converting state
-    isConverting.value = false;
-  }
-
-  // Emit event to parent to update the format
-  emit('update-format', newFormat);
-  doChangeLang(newFormat);
-};
 
 const formRef = ref();
 
@@ -715,6 +482,11 @@ const buildSubmitData = function () {
       return null;
     }
 
+    if (!props.model.description?.trim()) {
+      window.$message.error(t('toolspec.need_input_description'));
+      return null;
+    }
+
     // Validate function parameters field
     if (!props.model.function || props.model.function.trim() === '') {
       window.$message.error(t('toolspec.need_input_parameters'));
@@ -725,7 +497,7 @@ const buildSubmitData = function () {
     console.log('Performing final validation before submission...');
     const finalValidation = formatValidator.validate(
       props.model.function,
-      props.model.functionFormat
+      'json'
     );
 
     if (!finalValidation.isValid) {
@@ -755,14 +527,14 @@ const buildSubmitData = function () {
     try {
       parametersObject = stringToObject(
         props.model.function,
-        props.model.functionFormat
+        'json'
       );
     } catch (conversionError) {
       console.error('Parameter conversion error:', conversionError);
 
       // Handle conversion errors with detailed error information
       const errorInfo = handleError(conversionError, 'buildSubmitData', {
-        format: props.model.functionFormat,
+        format: 'json',
         contentLength: props.model.function.length,
         logError: true
       });
@@ -825,7 +597,7 @@ const buildSubmitData = function () {
 
     // Log successful conversion for debugging
     console.log('Parameters successfully converted:', {
-      format: props.model.functionFormat,
+      format: 'json',
       originalLength: props.model.function.length,
       convertedKeys: Object.keys(parametersObject),
       hasValidation: finalValidation.isValid
@@ -1027,12 +799,10 @@ const formatFunction = function () {
   }
 
   try {
-    if (props.model.functionFormat === 'json') {
-      const parsed = JSON.parse(props.model.function);
-      const formatted = JSON.stringify(parsed, null, 2);
-      emit('update-function', formatted);
-      window.$message.success(t('toolspec.format_success'));
-    }
+    const parsed = JSON.parse(props.model.function);
+    const formatted = JSON.stringify(parsed, null, 2);
+    emit('update-function', formatted);
+    window.$message.success(t('toolspec.format_success'));
   } catch (error) {
     window.$message.error(t('toolspec.format_failed'));
   }
@@ -1046,35 +816,16 @@ defineExpose({
   submitFormData
 });
 
-watch(
-  () => props.model.functionFormat,
-  () => {
-    doChangeLang(props.model.functionFormat);
-  }
-);
 
 // Watch for function content changes to trigger real-time validation
 watch(
   () => props.model.function,
   (newContent) => {
     if (newContent !== undefined && newContent !== null) {
-      validateParametersRealtimeDebounced(
-        newContent,
-        props.model.functionFormat || 'json'
-      );
+      validateParametersRealtimeDebounced(newContent);
     }
   },
   { immediate: false }
-);
-
-// Watch for format changes to re-validate content
-watch(
-  () => props.model.functionFormat,
-  (newFormat) => {
-    if (props.model.function && newFormat) {
-      validateParametersRealtimeDebounced(props.model.function, newFormat);
-    }
-  }
 );
 
 const adjustCodeContainerHeight = () => {
@@ -1091,8 +842,6 @@ const adjustCodeContainerHeight = () => {
 onMounted(() => {
   adjustCodeContainerHeight();
   window.addEventListener('resize', adjustCodeContainerHeight);
-  // Initialize language
-  doChangeLang(props.model.functionFormat || 'yaml');
 });
 
 onBeforeUnmount(() => {

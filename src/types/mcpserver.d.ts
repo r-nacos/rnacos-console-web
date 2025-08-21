@@ -152,4 +152,35 @@ export interface McpServerValueDto {
   tools: McpTool[];
   opUser: string;
   updateTime: number;
+  isRelease?: boolean; // 是否为发布版本
+  createTime?: number; // 创建时间，用于历史版本显示
+}
+
+// 工具组件Props接口
+export interface McpToolComponentProps {
+  tool: McpTool;
+  disabled?: boolean;
+  showActions?: boolean;
+}
+
+// 工具编辑表单模型
+export interface McpToolEditModel {
+  id?: number;
+  toolName: string;
+  toolKey: ToolKey;
+  toolVersion: number;
+  routeRule?: ToolRouteRule;
+  spec?: ToolFunctionValue;
+}
+
+// McpServer值展示组件Props
+export interface McpServerValueDisplayProps {
+  valueData: McpServerValue | McpServerValueDto;
+  editMode?: boolean;
+  allowEdit?: boolean;
+  allowPublish?: boolean;
+  allowRollback?: boolean;
+  showVersionInfo?: boolean;
+  showActions?: boolean;
+  namespace?: string;
 }

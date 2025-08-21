@@ -12,7 +12,11 @@ import {
   McpServerFormModel,
   McpServerHistoryQueryParams,
   McpServerHistoryPublishParams,
-  McpServerValueDto
+  McpServerValueDto,
+  McpServerValue,
+  McpToolComponentProps,
+  McpToolEditModel,
+  McpServerValueDisplayProps
 } from '@/types/mcpserver';
 
 const axios = request;
@@ -148,6 +152,21 @@ class McpServerApi {
     });
   }
 
+  /**
+   * 获取服务的currentValue
+   * @param serverId McpServer ID
+   * @returns Promise<AxiosResponse<IApiResult<McpServerValue>>>
+   */
+  getMcpServerCurrentValue(
+    serverId: number
+  ): Promise<AxiosResponse<IApiResult<McpServerValue>>> {
+    return axios.request({
+      method: 'get',
+      url: '/rnacos/api/console/v2/mcp/server/current-value',
+      params: { id: serverId }
+    });
+  }
+
   // 便捷方法：带错误处理的查询列表
   async queryMcpServerPageWithErrorHandling(
     params: McpServerQueryParams
@@ -269,6 +288,19 @@ class McpServerApi {
       return false;
     }
   }
+
+  // 便捷方法：带错误处理的获取currentValue
+  async getMcpServerCurrentValueWithErrorHandling(
+    serverId: number
+  ): Promise<McpServerValue | null> {
+    try {
+      const response = await this.getMcpServerCurrentValue(serverId);
+      return handleApiResult(response);
+    } catch (error) {
+      printApiError(error);
+      return null;
+    }
+  }
 }
 
 export const mcpServerApi = new McpServerApi();
@@ -387,6 +419,27 @@ export const validateMcpServerHistoryPublishParams = (
   return errors;
 };
 
+// 工具函数：验证McpServer值显示组件Props
+export const validateMcpServerValueDisplayProps = (
+  props: McpServerValueDisplayProps
+): string[] => {
+  const errors: string[] = [];
+
+  if (!props.valueData) {
+    errors.push('Value data is required');
+  }
+
+  if (props.editMode && !props.allowEdit) {
+    errors.push('Edit mode requires allowEdit to be true');
+  }
+
+  if (props.namespace && typeof props.namespace !== 'string') {
+    errors.push('Namespace must be a string');
+  }
+
+  return errors;
+};
+
 // 工具函数：转换 McpServer 为显示格式
 export const formatMcpServerForDisplay = (server: McpServerDto) => {
   console.log('Formatting server data:', server); // 添加日志以查看原始数据
@@ -467,4 +520,72 @@ export const createDefaultHistoryQueryParams = (
     pageNo: 1,
     pageSize: 20
   };
+};
+
+// 工具函数：验证工具编辑模型
+export const validateMcpToolEditModel = (
+  model: McpToolEditModel
+): string[] => {
+  const errors: string[] = [];
+
+  if (!model.toolName?.trim()) {
+    errors.push('工具名称不能为空');
+  }
+
+  if (!model.toolKey?.namespace?.trim()) {
+    errors.push('工具命名空间不能为空');
+  }
+
+  if (!model.toolKey?.group?.trim()) {
+    errors.push('工具组不能为空');
+  }
+
+  if (!model.toolVersion || model.toolVersion <= 0) {
+    errors.push('工具版本必须大于0');
+  }
+
+  return errors;
+};
+
+// 工具函数：创建默认的工具编辑模型
+export const createDefaultMcpToolEditModel = (): McpToolEditModel => {
+  return {
+    toolName: '',
+    toolKey: {
+      namespace: '',
+      group: '',
+      toolName: ''
+    },
+    toolVersion: 1,
+    routeRule: {
+      protocol: 'HTTP',
+      url: '',
+      method: 'POST',
+      additionHeaders: {},
+      convertType: 'NONE',
+      serviceNamespace: '',
+      serviceGroup: '',
+      serviceName: ''
+    }
+  };
+};
+
+// 工具函数：检查版本数据是否为发布版本
+export const isReleaseVersion = (valueData: McpServerValue | McpServerValueDto): boolean => {
+  if ('isRelease' in valueData) {
+    return valueData.isRelease || false;
+  }
+  return false;
+};
+
+// 工具函数：格式化版本创建时间
+export const formatVersionTime = (timestamp: number): string => {
+  return new Date(timestamp).toLocaleString('zh-CN', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit'
+  });
 };

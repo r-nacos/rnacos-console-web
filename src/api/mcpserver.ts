@@ -247,13 +247,13 @@ export const formatMcpServerForDisplay = (server: McpServerDto) => {
     createTimeFormatted: server.createTime
       ? new Date(server.createTime).toLocaleString()
       : '-',
-    updateTimeFormatted: server.updateTime
-      ? new Date(server.updateTime).toLocaleString()
+    updateTimeFormatted: server.lastModifiedMillis
+      ? new Date(server.lastModifiedMillis).toLocaleString()
       : '-',
     authKeysDisplay: Array.isArray(server.authKeys)
       ? server.authKeys.join(', ')
       : '',
-    toolsCount: Array.isArray(server.tools) ? server.tools.length : 0
+    toolsCount: server.currentValue?.tools?.length || 0
   };
   console.log('Formatted server data:', formatted); // 添加日志以查看格式化后的数据
   return formatted;
@@ -272,20 +272,24 @@ export const convertApiDataToFormModel = (
   apiData: McpServerDto,
   mode: 'create' | 'edit' | 'detail' = 'detail'
 ): McpServerFormModel => {
+  // 从 currentValue 中提取工具信息
+  const tools =
+    apiData.currentValue?.tools?.map((tool) => ({
+      id: tool.id,
+      toolName: tool.toolName,
+      namespace: tool.toolKey.namespace,
+      group: tool.toolKey.group,
+      toolVersion: tool.toolVersion,
+      routeRule: tool.routeRule
+    })) || [];
+
   return {
     id: apiData.id,
     namespace: apiData.namespace,
     name: apiData.name,
-    description: apiData.description || '',
+    description: apiData.description,
     authKeys: [...apiData.authKeys],
-    tools: apiData.tools.map((tool) => ({
-      id: tool.id,
-      toolName: tool.toolName,
-      namespace: tool.namespace,
-      group: tool.group,
-      toolVersion: tool.toolVersion,
-      routeRule: tool.routeRule
-    })),
+    tools,
     mode
   };
 };

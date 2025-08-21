@@ -1,31 +1,55 @@
 // McpServer相关类型定义
 
+// MCP 服务器值
+export interface McpServerValue {
+  id: number;
+  description: string;
+  tools: McpTool[];
+  opUser: string;
+  updateTime: number;
+}
+
 // McpServer基础信息DTO
 export interface McpServerDto {
   id: number;
   namespace: string;
   name: string;
-  description?: string;
+  description: string;
   authKeys: string[];
-  tools: McpToolInfo[];
   createTime: number;
-  updateTime: number;
+  lastModifiedMillis: number;
+  currentValue?: McpServerValue;
+  releaseValue?: McpServerValue;
+  histories?: McpServerValue[];
 }
 
-// 工具信息
-export interface McpToolInfo {
+// MCP 工具
+export interface McpTool {
   id: number;
   toolName: string;
+  toolKey: ToolKey;
+  toolVersion: number;
+  spec: ToolFunctionValue;
+  routeRule: ToolRouteRule;
+}
+
+// 工具键
+export interface ToolKey {
   namespace: string;
   group: string;
-  toolVersion: number;
-  routeRule?: ToolRouteRule;
+  toolName: string;
 }
 
 // 工具路由规则
 export interface ToolRouteRule {
-  ruleType: 'direct' | 'weighted' | 'conditional';
-  config: Record<string, any>;
+  protocol: string;
+  url: string;
+  method: string;
+  additionHeaders: Record<string, string>;
+  convertType: 'NONE' | 'FORM_TO_JSON' | 'CUSTOM';
+  serviceNamespace: string;
+  serviceGroup: string;
+  serviceName: string;
 }
 
 // McpServer查询参数
@@ -56,6 +80,15 @@ export interface McpSimpleToolParams {
   routeRule?: ToolRouteRule;
 }
 
+// JSON Schema类型
+export interface JsonSchema {
+  type?: string;
+  description?: string;
+  properties?: Record<string, JsonSchema>;
+  required?: string[];
+  [key: string]: any;
+}
+
 // 表单模型
 export interface McpServerFormModel {
   id?: number;
@@ -82,16 +115,7 @@ export interface ToolSpecInfo {
 export interface ToolFunctionValue {
   name: string;
   description: string;
-  parameters: Record<string, JsonSchema>;
-}
-
-// JSON Schema类型
-export interface JsonSchema {
-  type?: string;
-  description?: string;
-  properties?: Record<string, JsonSchema>;
-  required?: string[];
-  [key: string]: any;
+  parameters: JsonSchema;
 }
 
 // 分页结果

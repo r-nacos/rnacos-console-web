@@ -346,6 +346,70 @@ const message = {
     edit_page_coming_soon: 'Edit page coming soon',
     create_page_coming_soon: 'Create page coming soon'
   },
+  mcpserver: {
+    mcpserver_management: 'MCP Server Management',
+    mcpserver_list: 'MCP Server List',
+    mcpserver_detail: 'MCP Server Detail',
+
+    // Form fields
+    server_name: 'Server Name',
+    server_description: 'Server Description',
+    auth_keys: 'Auth Keys',
+    tools: 'Associated Tools',
+
+    // Action buttons
+    create_mcpserver: 'Create MCP Server',
+    edit_mcpserver: 'Edit MCP Server',
+    delete_mcpserver: 'Delete MCP Server',
+
+    // Form hints
+    input_server_name: 'Please input server name',
+    input_description: 'Please input server description',
+    add_auth_key: 'Add Auth Key',
+    add_tool: 'Add Tool',
+    select_toolspec: 'Select Tool Spec',
+
+    // Tool configuration
+    tool_name: 'Tool Name',
+    tool_group: 'Tool Group',
+    tool_version: 'Tool Version',
+    route_rule: 'Route Rule',
+    input_route_rule_config:
+      'Please input route rule configuration (JSON format)',
+
+    // Status information
+    no_tools: 'No associated tools',
+    loading_tools: 'Loading tool information...',
+
+    // Validation information
+    name_required: 'Server name cannot be empty',
+    auth_keys_required: 'At least one auth key is required',
+    auth_key_empty: 'Auth key cannot be empty',
+    tool_config_invalid: 'Tool configuration is invalid',
+
+    // Operation confirmation
+    confirm_delete_mcpserver:
+      'Are you sure to delete MCP server "{name}"? This operation cannot be undone.',
+    confirm_delete_server_action: 'Are you sure you want to delete the server?',
+    delete_success: 'MCP server deleted successfully',
+    create_success: 'MCP server created successfully',
+    update_success: 'MCP server updated successfully',
+
+    // Detail page
+    basic_info: 'Basic Information',
+    tool_info: 'Tool Information',
+    server_id: 'Server ID',
+    create_time: 'Create Time',
+    update_time: 'Update Time',
+    edit_mode: 'Edit Mode',
+    view_mode: 'View Mode',
+    save_changes: 'Save Changes',
+    cancel_edit: 'Cancel Edit',
+    back_to_list: 'Back to List',
+    form_validation_error: 'Form validation failed, please check your input',
+    create_failed: 'Create failed',
+    update_failed: 'Update failed'
+  },
   error: {
     NO_PERMISSION: 'NO_PERMISSION',
     NO_NAMESPACE_PERMISSION: 'NO_NAMESPACE_PERMISSION',

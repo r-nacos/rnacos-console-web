@@ -43,9 +43,7 @@ class McpServerApi {
    * @param id McpServer ID
    * @returns Promise<AxiosResponse<IApiResult<McpServerDto>>>
    */
-  getMcpServer(
-    id: number
-  ): Promise<AxiosResponse<IApiResult<McpServerDto>>> {
+  getMcpServer(id: number): Promise<AxiosResponse<IApiResult<McpServerDto>>> {
     return axios.request({
       method: 'get',
       url: '/rnacos/api/console/v2/mcp/server/info',
@@ -90,9 +88,7 @@ class McpServerApi {
    * @param id McpServer ID
    * @returns Promise<AxiosResponse<IApiResult<boolean>>>
    */
-  removeMcpServer(
-    id: number
-  ): Promise<AxiosResponse<IApiResult<boolean>>> {
+  removeMcpServer(id: number): Promise<AxiosResponse<IApiResult<boolean>>> {
     return axios.requestJSON({
       method: 'post',
       url: '/rnacos/api/console/v2/mcp/server/remove',
@@ -161,9 +157,7 @@ class McpServerApi {
   }
 
   // 便捷方法：带错误处理的删除
-  async removeMcpServerWithErrorHandling(
-    id: number
-  ): Promise<boolean> {
+  async removeMcpServerWithErrorHandling(id: number): Promise<boolean> {
     try {
       const response = await this.removeMcpServer(id);
       const result = handleApiResult(response);
@@ -181,7 +175,9 @@ class McpServerApi {
 export const mcpServerApi = new McpServerApi();
 
 // 工具函数：验证 McpServer 参数
-export const validateMcpServerParams = (params: McpServerFormModel): string[] => {
+export const validateMcpServerParams = (
+  params: McpServerFormModel
+): string[] => {
   const errors: string[] = [];
 
   if (!params.name?.trim()) {
@@ -223,7 +219,9 @@ export const validateMcpServerParams = (params: McpServerFormModel): string[] =>
 };
 
 // 工具函数：验证查询参数
-export const validateMcpServerQueryParams = (params: McpServerQueryParams): string[] => {
+export const validateMcpServerQueryParams = (
+  params: McpServerQueryParams
+): string[] => {
   const errors: string[] = [];
 
   if (params.pageNo <= 0) {
@@ -243,30 +241,44 @@ export const validateMcpServerQueryParams = (params: McpServerQueryParams): stri
 
 // 工具函数：转换 McpServer 为显示格式
 export const formatMcpServerForDisplay = (server: McpServerDto) => {
-  return {
+  console.log('Formatting server data:', server); // 添加日志以查看原始数据
+  const formatted = {
     ...server,
-    createTimeFormatted: new Date(server.createTime).toLocaleString(),
-    updateTimeFormatted: new Date(server.updateTime).toLocaleString(),
-    authKeysDisplay: server.authKeys.join(', '),
-    toolsCount: server.tools.length
+    createTimeFormatted: server.createTime
+      ? new Date(server.createTime).toLocaleString()
+      : '-',
+    updateTimeFormatted: server.updateTime
+      ? new Date(server.updateTime).toLocaleString()
+      : '-',
+    authKeysDisplay: Array.isArray(server.authKeys)
+      ? server.authKeys.join(', ')
+      : '',
+    toolsCount: Array.isArray(server.tools) ? server.tools.length : 0
   };
+  console.log('Formatted server data:', formatted); // 添加日志以查看格式化后的数据
+  return formatted;
 };
 
 // 工具函数：将表单模型转换为 API 参数
-export const convertFormModelToApiParams = (formModel: McpServerFormModel): McpServerParams => {
+export const convertFormModelToApiParams = (
+  formModel: McpServerFormModel
+): McpServerParams => {
   const { mode, ...apiParams } = formModel;
   return apiParams as McpServerParams;
 };
 
 // 工具函数：将 API 数据转换为表单模型
-export const convertApiDataToFormModel = (apiData: McpServerDto, mode: 'create' | 'edit' | 'detail' = 'detail'): McpServerFormModel => {
+export const convertApiDataToFormModel = (
+  apiData: McpServerDto,
+  mode: 'create' | 'edit' | 'detail' = 'detail'
+): McpServerFormModel => {
   return {
     id: apiData.id,
     namespace: apiData.namespace,
     name: apiData.name,
     description: apiData.description || '',
     authKeys: [...apiData.authKeys],
-    tools: apiData.tools.map(tool => ({
+    tools: apiData.tools.map((tool) => ({
       id: tool.id,
       toolName: tool.toolName,
       namespace: tool.namespace,

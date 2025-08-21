@@ -170,7 +170,7 @@ export default defineComponent({
 
     const doQueryList = () => {
       return mcpServerApi.queryMcpServerPage({
-        namespaceFilter: namespaceStore.current.value.namespaceId,
+        namespaceId: namespaceStore.current.value.namespaceId,
         nameFilter: paramRef.value.nameFilter,
         pageNo: paginationReactive.page,
         pageSize: paginationReactive.pageSize
@@ -187,7 +187,9 @@ export default defineComponent({
             loadingRef.value = false;
             const count = page.total || 0;
             const pageSize = paginationReactive.pageSize;
-            dataRef.value = (page.data || []).map(item => formatMcpServerForDisplay(item));
+            dataRef.value = (page.list || []).map((item) =>
+              formatMcpServerForDisplay(item)
+            );
             paginationReactive.itemCount = count;
             paginationReactive.pageCount = Math.max(
               1,
@@ -223,9 +225,7 @@ export default defineComponent({
                   );
                   doHandlePageChange(1);
                 } else {
-                  message.error(
-                    t('namespace.no_permission_and_no_namespaces')
-                  );
+                  message.error(t('namespace.no_permission_and_no_namespaces'));
                 }
               })
               .catch((namespaceError) => {
@@ -251,7 +251,7 @@ export default defineComponent({
             name: server.name,
             description: server.description || '',
             authKeys: [...server.authKeys],
-            tools: server.tools.map(tool => ({
+            tools: server.tools.map((tool) => ({
               id: tool.id,
               toolName: tool.toolName,
               namespace: tool.namespace,
@@ -279,7 +279,7 @@ export default defineComponent({
             name: server.name,
             description: server.description || '',
             authKeys: [...server.authKeys],
-            tools: server.tools.map(tool => ({
+            tools: server.tools.map((tool) => ({
               id: tool.id,
               toolName: tool.toolName,
               namespace: tool.namespace,
@@ -309,8 +309,10 @@ export default defineComponent({
         negativeText: t('common.cancel'),
         onPositiveClick: async () => {
           try {
-            const success = await mcpServerApi.removeMcpServerWithErrorHandling(row.id);
-            
+            const success = await mcpServerApi.removeMcpServerWithErrorHandling(
+              row.id
+            );
+
             if (success) {
               message.success(t('mcpserver.delete_success'));
               doHandlePageChange(1);
@@ -359,11 +361,12 @@ export default defineComponent({
                 namespace: modelRef.value.namespace,
                 name: modelRef.value.name,
                 description: modelRef.value.description,
-                authKeys: modelRef.value.authKeys.filter(key => key.trim()),
+                authKeys: modelRef.value.authKeys.filter((key) => key.trim()),
                 tools: modelRef.value.tools
               };
-              
-              const success = await mcpServerApi.addMcpServerWithErrorHandling(apiParams);
+
+              const success =
+                await mcpServerApi.addMcpServerWithErrorHandling(apiParams);
               if (success) {
                 message.success(t('mcpserver.create_success'));
                 handleSubmitSuccess();
@@ -375,11 +378,12 @@ export default defineComponent({
                 namespace: modelRef.value.namespace,
                 name: modelRef.value.name,
                 description: modelRef.value.description,
-                authKeys: modelRef.value.authKeys.filter(key => key.trim()),
+                authKeys: modelRef.value.authKeys.filter((key) => key.trim()),
                 tools: modelRef.value.tools
               };
-              
-              const success = await mcpServerApi.updateMcpServerWithErrorHandling(apiParams);
+
+              const success =
+                await mcpServerApi.updateMcpServerWithErrorHandling(apiParams);
               if (success) {
                 message.success(t('mcpserver.update_success'));
                 handleSubmitSuccess();

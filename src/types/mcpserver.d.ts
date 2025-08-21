@@ -32,7 +32,7 @@ export interface ToolRouteRule {
 export interface McpServerQueryParams {
   pageNo: number;
   pageSize: number;
-  namespaceFilter?: string;
+  namespaceId?: string;
   nameFilter?: string;
 }
 

@@ -9,7 +9,7 @@ export const createColumns = function (
   webResources
 ) {
   const { t } = useI18n();
-  
+
   const columns = [
     {
       title: t('toolspec.namespace'),
@@ -70,9 +70,7 @@ export const createColumns = function (
       key: 'createTime',
       width: 160,
       render(row) {
-        return row.createTime
-          ? new Date(row.createTime).toLocaleString()
-          : '-';
+        return row.createTime ? new Date(row.createTime).toLocaleString() : '-';
       }
     },
     {

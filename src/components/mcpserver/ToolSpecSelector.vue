@@ -39,7 +39,7 @@
           </n-form-item-gi>
         </n-grid>
       </n-form>
-      
+
       <!-- ToolSpec 列表 -->
       <n-spin :show="loading">
         <n-data-table
@@ -51,7 +51,7 @@
         />
       </n-spin>
     </n-space>
-    
+
     <template #footer>
       <n-space justify="end">
         <n-button @click="handleCancel">{{ t('common.cancel') }}</n-button>
@@ -171,11 +171,12 @@ const columns = [
     width: 100,
     render: (row: IToolSpec) => {
       const isSelected = props.selectedToolSpecs.some(
-        spec => spec.namespace === row.namespace && 
-               spec.group === row.group && 
-               spec.toolName === row.toolName
+        (spec) =>
+          spec.namespace === row.namespace &&
+          spec.group === row.group &&
+          spec.toolName === row.toolName
       );
-      
+
       return h(
         NButton,
         {
@@ -184,7 +185,10 @@ const columns = [
           disabled: isSelected,
           onClick: () => handleSelect(row)
         },
-        { default: () => isSelected ? t('common.selected') : t('common.select') }
+        {
+          default: () =>
+            isSelected ? t('common.selected') : t('common.select')
+        }
       );
     }
   }
@@ -200,7 +204,7 @@ const loadToolSpecs = async () => {
       groupFilter: searchForm.value.groupFilter || undefined,
       toolNameFilter: searchForm.value.toolNameFilter || undefined
     };
-    
+
     const result = await toolSpecApi.queryToolSpecPageWithErrorHandling(params);
     if (result) {
       toolSpecs.value = result.list;
@@ -230,7 +234,7 @@ const handleSelect = (toolSpec: IToolSpec) => {
     version: toolSpec.version,
     function: toolSpec.function
   };
-  
+
   emit('select', selectedToolSpec);
 };
 

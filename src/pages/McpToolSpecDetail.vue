@@ -67,7 +67,6 @@
         />
       </n-form-item>
 
-
       <!-- Validation error display -->
       <n-form-item v-if="!isReadonly && validationResult.errors.length > 0">
         <n-alert type="error" :show-icon="false" style="margin-bottom: 8px">
@@ -195,10 +194,6 @@ const validationResult = ref({
   errors: [],
   warnings: []
 });
-
-
-
-
 
 /**
  * 初始化参数显示
@@ -421,7 +416,6 @@ const rules = {
   ]
 };
 
-
 const formRef = ref();
 
 /**
@@ -525,10 +519,7 @@ const buildSubmitData = function () {
     let parametersObject;
 
     try {
-      parametersObject = stringToObject(
-        props.model.function,
-        'json'
-      );
+      parametersObject = stringToObject(props.model.function, 'json');
     } catch (conversionError) {
       console.error('Parameter conversion error:', conversionError);
 
@@ -815,7 +806,6 @@ defineExpose({
   handleCancel,
   submitFormData
 });
-
 
 // Watch for function content changes to trigger real-time validation
 watch(

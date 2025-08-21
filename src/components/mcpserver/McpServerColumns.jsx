@@ -1,5 +1,4 @@
-import { h } from 'vue';
-import { NButton } from 'naive-ui';
+import { NButton, NPopconfirm } from 'naive-ui';
 import { useI18n } from 'vue-i18n';
 import template from 'template_js';
 
@@ -10,6 +9,16 @@ export const createMcpServerColumns = function (
   webResources
 ) {
   const { t } = useI18n();
+
+  const removeConfirmSlots = {
+    trigger: () => {
+      return (
+        <NButton size="tiny" quaternary type="error">
+          {t('common.delete')}
+        </NButton>
+      );
+    }
+  };
 
   const columns = [
     {
@@ -84,39 +93,50 @@ export const createMcpServerColumns = function (
       key: 'actions',
       width: 180,
       render(row) {
-        return [
-          h(
-            NButton,
-            {
-              size: 'small',
-              type: 'info',
-              style: { marginRight: '8px' },
-              onClick: () => detailItem(row)
-            },
-            { default: () => t('common.detail') }
-          ),
-          h(
-            NButton,
-            {
-              size: 'small',
-              type: 'primary',
-              style: { marginRight: '8px' },
-              onClick: () => updateItem(row),
-              disabled: !webResources.canUpdateConfig
-            },
-            { default: () => t('common.edit') }
-          ),
-          h(
-            NButton,
-            {
-              size: 'small',
-              type: 'error',
-              onClick: () => removeItem(row),
-              disabled: !webResources.canUpdateConfig
-            },
-            { default: () => t('common.delete') }
-          )
-        ];
+        let editButton;
+        let removePopconfirm;
+        if (webResources.canUpdateConfig) {
+          editButton = (
+            <NButton
+              size="tiny"
+              text
+              type="info"
+              onClick={() => updateItem(row)}
+            >
+              {t('common.edit')}
+            </NButton>
+          );
+          removePopconfirm = (
+            <NPopconfirm
+              onPositiveClick={() => removeItem(row)}
+              v-slots={removeConfirmSlots}
+            >
+              <span>
+                {template(t('mcpserver.confirm_delete_server_action'), {
+                  name: row.name,
+                  id: row.id
+                })}
+              </span>
+            </NPopconfirm>
+          );
+        } else {
+          editButton = <span></span>;
+          removePopconfirm = editButton;
+        }
+        return (
+          <div class="flex gap-1">
+            <NButton
+              size="tiny"
+              quaternary
+              type="info"
+              onClick={() => detailItem(row)}
+            >
+              {t('common.detail')}
+            </NButton>
+            {editButton}
+            {removePopconfirm}
+          </div>
+        );
       }
     }
   ];

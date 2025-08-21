@@ -12,16 +12,19 @@
         </template>
         {{ t('mcpserver.add_tool') }}
       </n-button>
-      
+
       <div v-if="tools.length === 0" class="empty-state">
         <n-empty :description="t('mcpserver.no_tools')" />
       </div>
-      
+
       <div v-else class="tools-container">
         <n-card
           v-for="(tool, index) in tools"
           :key="index"
-          :class="['tool-card', { editing: editingIndex === index, error: hasError(index) }]"
+          :class="[
+            'tool-card',
+            { editing: editingIndex === index, error: hasError(index) }
+          ]"
         >
           <template #header>
             <n-space align="center">
@@ -30,7 +33,7 @@
               <n-tag size="small" type="info">{{ tool.namespace }}</n-tag>
             </n-space>
           </template>
-          
+
           <template #header-extra>
             <n-space v-if="!disabled">
               <n-button
@@ -43,7 +46,7 @@
                   <n-icon><edit-outline /></n-icon>
                 </template>
               </n-button>
-              
+
               <n-button
                 v-if="editingIndex === index"
                 size="small"
@@ -55,7 +58,7 @@
                   <n-icon><checkmark-outline /></n-icon>
                 </template>
               </n-button>
-              
+
               <n-button
                 v-if="editingIndex === index"
                 size="small"
@@ -67,7 +70,7 @@
                   <n-icon><close-outline /></n-icon>
                 </template>
               </n-button>
-              
+
               <n-button
                 size="small"
                 quaternary
@@ -80,32 +83,42 @@
               </n-button>
             </n-space>
           </template>
-          
+
           <div v-if="editingIndex === index" class="tool-edit-form">
-            <n-form :model="editingTool" label-placement="left" label-width="80">
+            <n-form
+              :model="editingTool"
+              label-placement="left"
+              label-width="80"
+            >
               <n-form-item :label="t('mcpserver.tool_name')">
                 <n-input v-model:value="editingTool.toolName" />
               </n-form-item>
-              
+
               <n-form-item :label="t('mcpserver.tool_group')">
                 <n-input v-model:value="editingTool.group" />
               </n-form-item>
-              
+
               <n-form-item :label="t('namespace.namespace')">
                 <n-input v-model:value="editingTool.namespace" />
               </n-form-item>
-              
+
               <n-form-item :label="t('mcpserver.tool_version')">
-                <n-input-number v-model:value="editingTool.toolVersion" :min="1" />
+                <n-input-number
+                  v-model:value="editingTool.toolVersion"
+                  :min="1"
+                />
               </n-form-item>
-              
+
               <n-form-item :label="t('mcpserver.route_rule')">
                 <n-select
                   :value="editingTool.routeRule?.ruleType"
                   :options="routeRuleOptions"
                   @update:value="updateRouteRuleType"
                 />
-                <div v-if="editingTool.routeRule?.ruleType" class="route-rule-config">
+                <div
+                  v-if="editingTool.routeRule?.ruleType"
+                  class="route-rule-config"
+                >
                   <n-input
                     v-model:value="routeRuleConfig"
                     type="textarea"
@@ -115,9 +128,13 @@
               </n-form-item>
             </n-form>
           </div>
-          
+
           <div v-else class="tool-info">
-            <n-descriptions :column="3" label-placement="left" :label-align="'right'">
+            <n-descriptions
+              :column="3"
+              label-placement="left"
+              :label-align="'right'"
+            >
               <n-descriptions-item :label="t('mcpserver.tool_name')">
                 {{ tool.toolName }}
               </n-descriptions-item>
@@ -146,7 +163,7 @@
         </n-card>
       </div>
     </n-space>
-    
+
     <tool-spec-selector
       v-model:visible="showToolSpecSelector"
       :selected-tool-specs="selectedToolSpecs"
@@ -182,7 +199,11 @@ import {
   TrashOutline
 } from '@vicons/ionicons5';
 import ToolSpecSelector from './ToolSpecSelector.vue';
-import { McpSimpleToolParams, ToolRouteRule, ToolSpecInfo } from '@/types/mcpserver';
+import {
+  McpSimpleToolParams,
+  ToolRouteRule,
+  ToolSpecInfo
+} from '@/types/mcpserver';
 
 interface Props {
   tools: McpSimpleToolParams[];
@@ -225,7 +246,7 @@ function defaultTool(): McpSimpleToolParams {
 
 // 已选择的 ToolSpec
 const selectedToolSpecs = computed(() => {
-  return props.tools.map(tool => ({
+  return props.tools.map((tool) => ({
     namespace: tool.namespace,
     group: tool.group,
     toolName: tool.toolName,
@@ -265,7 +286,7 @@ const startEdit = (index: number) => {
   editingIndex.value = index;
   editingTool.value = { ...props.tools[index] };
   originalTool.value = { ...props.tools[index] };
-  routeRuleConfig.value = editingTool.value.routeRule 
+  routeRuleConfig.value = editingTool.value.routeRule
     ? JSON.stringify(editingTool.value.routeRule.config, null, 2)
     : '{}';
 };
@@ -274,7 +295,7 @@ const startEdit = (index: number) => {
 const saveEdit = (index: number) => {
   const updatedTools = [...props.tools];
   updatedTools[index] = { ...editingTool.value };
-  
+
   // 解析路由规则配置
   if (routeRuleConfig.value.trim()) {
     try {
@@ -291,7 +312,7 @@ const saveEdit = (index: number) => {
       console.error('Failed to parse route rule config:', error);
     }
   }
-  
+
   emit('update:tools', updatedTools);
   editingIndex.value = -1;
 };
@@ -319,7 +340,10 @@ const updateRouteRuleType = (value: string) => {
       config: {}
     };
   } else {
-    editingTool.value.routeRule.ruleType = value as 'direct' | 'weighted' | 'conditional';
+    editingTool.value.routeRule.ruleType = value as
+      | 'direct'
+      | 'weighted'
+      | 'conditional';
   }
 };
 
@@ -332,7 +356,7 @@ const handleToolSpecSelect = (toolSpec: ToolSpecInfo) => {
     toolVersion: toolSpec.version,
     routeRule: undefined
   };
-  
+
   emit('update:tools', [...props.tools, newTool]);
   showToolSpecSelector.value = false;
 };
@@ -373,7 +397,9 @@ watch(routeRuleConfig, (newValue) => {
 
 .tool-card.editing {
   border-color: #bfdbfe;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
 .tool-card.error {

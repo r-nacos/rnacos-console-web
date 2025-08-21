@@ -18,6 +18,8 @@ export interface McpServerDto {
   authKeys: string[];
   createTime: number;
   lastModifiedMillis: number;
+  updateTime?: number; // 添加 updateTime 属性用于兼容
+  tools?: McpTool[]; // 添加 tools 属性用于兼容
   currentValue?: McpServerValue;
   releaseValue?: McpServerValue;
   histories?: McpServerValue[];
@@ -50,6 +52,8 @@ export interface ToolRouteRule {
   serviceNamespace: string;
   serviceGroup: string;
   serviceName: string;
+  ruleType?: string; // 添加 ruleType 属性用于兼容
+  config?: any; // 添加 config 属性用于兼容
 }
 
 // McpServer查询参数
@@ -124,4 +128,28 @@ export interface PageResult<T> {
   pageNo: number;
   pageSize: number;
   data: T[];
+}
+
+// McpServer历史版本查询参数
+export interface McpServerHistoryQueryParams {
+  id: number;
+  pageNo?: number;
+  pageSize?: number;
+  startTime?: number;
+  endTime?: number;
+}
+
+// McpServer历史版本发布参数
+export interface McpServerHistoryPublishParams {
+  id: number;
+  historyValueId: number;
+}
+
+// McpServer值DTO（用于历史版本展示）
+export interface McpServerValueDto {
+  id: number;
+  description: string;
+  tools: McpTool[];
+  opUser: string;
+  updateTime: number;
 }

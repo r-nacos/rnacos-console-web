@@ -515,6 +515,7 @@ const initializeData = () => {
         authKeys: [...props.model.authKeys],
         tools: [...props.model.tools],
         createTime: Date.now(), // 这些字段在 props 中可能不存在
+        lastModifiedMillis: Date.now(), // 添加必需的 lastModifiedMillis 属性
         updateTime: Date.now()
       } as McpServerDto;
     }

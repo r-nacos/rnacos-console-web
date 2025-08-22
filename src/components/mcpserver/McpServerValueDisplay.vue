@@ -33,7 +33,7 @@
           
           <div class="tools-grid">
             <mcp-tool-component
-              v-for="tool in valueData?.tools || []"
+              v-for="tool in (valueData?.tools || [])"
               :key="tool.id || tool.toolName"
               :tool="tool"
               :disabled="true"
@@ -258,18 +258,20 @@ const confirmDialog = ref({
 
 // 计算属性
 const hasTools = computed(() => {
-  return (props.valueData?.tools?.length || 0) > 0;
+  const tools = props.valueData?.tools || [];
+  return tools.length > 0;
 });
 
 const toolsCount = computed(() => {
-  return props.valueData?.tools?.length || 0;
+  const tools = props.valueData?.tools || [];
+  return tools.length;
 });
 
 // 监听valueData变化，同步到editableTools
 watch(
   () => props.valueData?.tools,
   (newTools) => {
-    if (newTools) {
+    if (newTools && Array.isArray(newTools)) {
       editableTools.value = [...newTools];
     } else {
       editableTools.value = [];
@@ -522,11 +524,8 @@ const getCurrentTools = () => {
 
 // 重置编辑状态
 const resetEditState = () => {
-  if (props.valueData?.tools) {
-    editableTools.value = [...props.valueData.tools];
-  } else {
-    editableTools.value = [];
-  }
+  const tools = props.valueData?.tools || [];
+  editableTools.value = [...tools];
 };
 
 // 暴露方法给父组件

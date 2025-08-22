@@ -376,10 +376,11 @@ const getModeTagType = computed(() => {
 const currentValueData = computed(() => {
   if (isEditMode.value || isCreateMode.value) {
     // 编辑模式下，构造临时的值数据
+    const tools = formModel.value.tools || [];
     return {
       id: 0,
       description: formModel.value.description,
-      tools: formModel.value.tools.map(tool => ({
+      tools: tools.map(tool => ({
         id: tool.id || Date.now(),
         toolName: tool.toolName,
         toolKey: {
@@ -869,13 +870,14 @@ const initializeData = () => {
     formModel.value = { ...props.model };
     // 如果 props.model 有完整的服务器数据，也设置 serverData
     if (props.model.id && props.model.name) {
+      const tools = props.model.tools || [];
       serverData.value = {
         id: props.model.id,
         namespace: props.model.namespace,
         name: props.model.name,
         description: props.model.description || '',
         authKeys: [...props.model.authKeys],
-        tools: props.model.tools.map(tool => ({
+        tools: tools.map(tool => ({
           id: tool.id || Date.now(),
           toolName: tool.toolName,
           toolKey: {

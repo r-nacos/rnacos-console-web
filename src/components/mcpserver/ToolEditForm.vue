@@ -12,20 +12,34 @@
         <!-- 基本信息 -->
         <n-card title="基本信息" size="small">
           <n-grid :cols="24" :x-gap="12">
-            <n-form-item-gi :span="12" label="工具名称" path="toolName" :validation-status="validationErrors.toolName ? 'error' : undefined">
+            <n-form-item-gi
+              :span="12"
+              label="工具名称"
+              path="toolName"
+              :validation-status="
+                validationErrors.toolName ? 'error' : undefined
+              "
+            >
               <n-input
                 v-model:value="formModel.toolName"
                 placeholder="请输入工具名称"
                 :status="validationErrors.toolName ? 'error' : undefined"
               />
               <template #feedback v-if="validationErrors.toolName">
-                <n-text type="error" depth="3" style="font-size: 12px;">
+                <n-text type="error" depth="3" style="font-size: 12px">
                   {{ validationErrors.toolName }}
                 </n-text>
               </template>
             </n-form-item-gi>
 
-            <n-form-item-gi :span="12" label="工具版本" path="toolVersion" :validation-status="validationErrors.toolVersion ? 'error' : undefined">
+            <n-form-item-gi
+              :span="12"
+              label="工具版本"
+              path="toolVersion"
+              :validation-status="
+                validationErrors.toolVersion ? 'error' : undefined
+              "
+            >
               <n-input-number
                 v-model:value="formModel.toolVersion"
                 :min="1"
@@ -33,33 +47,45 @@
                 :status="validationErrors.toolVersion ? 'error' : undefined"
               />
               <template #feedback v-if="validationErrors.toolVersion">
-                <n-text type="error" depth="3" style="font-size: 12px;">
+                <n-text type="error" depth="3" style="font-size: 12px">
                   {{ validationErrors.toolVersion }}
                 </n-text>
               </template>
             </n-form-item-gi>
 
-            <n-form-item-gi :span="12" label="命名空间" path="toolKey.namespace" :validation-status="validationErrors.namespace ? 'error' : undefined">
+            <n-form-item-gi
+              :span="12"
+              label="命名空间"
+              path="toolKey.namespace"
+              :validation-status="
+                validationErrors.namespace ? 'error' : undefined
+              "
+            >
               <n-input
                 v-model:value="formModel.toolKey.namespace"
                 placeholder="请输入命名空间"
                 :status="validationErrors.namespace ? 'error' : undefined"
               />
               <template #feedback v-if="validationErrors.namespace">
-                <n-text type="error" depth="3" style="font-size: 12px;">
+                <n-text type="error" depth="3" style="font-size: 12px">
                   {{ validationErrors.namespace }}
                 </n-text>
               </template>
             </n-form-item-gi>
 
-            <n-form-item-gi :span="12" label="工具组" path="toolKey.group" :validation-status="validationErrors.group ? 'error' : undefined">
+            <n-form-item-gi
+              :span="12"
+              label="工具组"
+              path="toolKey.group"
+              :validation-status="validationErrors.group ? 'error' : undefined"
+            >
               <n-input
                 v-model:value="formModel.toolKey.group"
                 placeholder="请输入工具组"
                 :status="validationErrors.group ? 'error' : undefined"
               />
               <template #feedback v-if="validationErrors.group">
-                <n-text type="error" depth="3" style="font-size: 12px;">
+                <n-text type="error" depth="3" style="font-size: 12px">
                   {{ validationErrors.group }}
                 </n-text>
               </template>
@@ -70,7 +96,14 @@
         <!-- 路由规则 -->
         <n-card title="路由规则" size="small">
           <n-grid :cols="24" :x-gap="12">
-            <n-form-item-gi :span="8" label="协议" path="routeRule.protocol" :validation-status="validationErrors.protocol ? 'error' : undefined">
+            <n-form-item-gi
+              :span="8"
+              label="协议"
+              path="routeRule.protocol"
+              :validation-status="
+                validationErrors.protocol ? 'error' : undefined
+              "
+            >
               <n-select
                 v-model:value="formModel.routeRule!.protocol"
                 :options="protocolOptions"
@@ -78,13 +111,18 @@
                 :status="validationErrors.protocol ? 'error' : undefined"
               />
               <template #feedback v-if="validationErrors.protocol">
-                <n-text type="error" depth="3" style="font-size: 12px;">
+                <n-text type="error" depth="3" style="font-size: 12px">
                   {{ validationErrors.protocol }}
                 </n-text>
               </template>
             </n-form-item-gi>
 
-            <n-form-item-gi :span="8" label="方法" path="routeRule.method" :validation-status="validationErrors.method ? 'error' : undefined">
+            <n-form-item-gi
+              :span="8"
+              label="方法"
+              path="routeRule.method"
+              :validation-status="validationErrors.method ? 'error' : undefined"
+            >
               <n-select
                 v-model:value="formModel.routeRule!.method"
                 :options="methodOptions"
@@ -92,13 +130,17 @@
                 :status="validationErrors.method ? 'error' : undefined"
               />
               <template #feedback v-if="validationErrors.method">
-                <n-text type="error" depth="3" style="font-size: 12px;">
+                <n-text type="error" depth="3" style="font-size: 12px">
                   {{ validationErrors.method }}
                 </n-text>
               </template>
             </n-form-item-gi>
 
-            <n-form-item-gi :span="8" label="转换类型" path="routeRule.convertType">
+            <n-form-item-gi
+              :span="8"
+              label="转换类型"
+              path="routeRule.convertType"
+            >
               <n-select
                 v-model:value="formModel.routeRule!.convertType"
                 :options="convertTypeOptions"
@@ -106,34 +148,51 @@
               />
             </n-form-item-gi>
 
-            <n-form-item-gi :span="24" label="URL" path="routeRule.url" :validation-status="validationErrors.url ? 'error' : undefined">
+            <n-form-item-gi
+              :span="24"
+              label="URL"
+              path="routeRule.url"
+              :validation-status="validationErrors.url ? 'error' : undefined"
+            >
               <n-input
                 v-model:value="formModel.routeRule!.url"
                 placeholder="请输入URL"
                 :status="validationErrors.url ? 'error' : undefined"
               />
               <template #feedback v-if="validationErrors.url">
-                <n-text type="error" depth="3" style="font-size: 12px;">
+                <n-text type="error" depth="3" style="font-size: 12px">
                   {{ validationErrors.url }}
                 </n-text>
               </template>
             </n-form-item-gi>
 
-            <n-form-item-gi :span="8" label="服务命名空间" path="routeRule.serviceNamespace">
+            <n-form-item-gi
+              :span="8"
+              label="服务命名空间"
+              path="routeRule.serviceNamespace"
+            >
               <n-input
                 v-model:value="formModel.routeRule!.serviceNamespace"
                 placeholder="请输入服务命名空间"
               />
             </n-form-item-gi>
 
-            <n-form-item-gi :span="8" label="服务组" path="routeRule.serviceGroup">
+            <n-form-item-gi
+              :span="8"
+              label="服务组"
+              path="routeRule.serviceGroup"
+            >
               <n-input
                 v-model:value="formModel.routeRule!.serviceGroup"
                 placeholder="请输入服务组"
               />
             </n-form-item-gi>
 
-            <n-form-item-gi :span="8" label="服务名" path="routeRule.serviceName">
+            <n-form-item-gi
+              :span="8"
+              label="服务名"
+              path="routeRule.serviceName"
+            >
               <n-input
                 v-model:value="formModel.routeRule!.serviceName"
                 placeholder="请输入服务名"
@@ -150,12 +209,12 @@
                     <n-input
                       v-model:value="value.key"
                       placeholder="头部名称"
-                      style="width: 200px;"
+                      style="width: 200px"
                     />
                     <n-input
                       v-model:value="value.value"
                       placeholder="头部值"
-                      style="width: 200px;"
+                      style="width: 200px"
                     />
                   </n-space>
                 </template>
@@ -167,14 +226,21 @@
         <!-- 工具规范 -->
         <n-card title="工具规范" size="small">
           <n-grid :cols="24" :x-gap="12">
-            <n-form-item-gi :span="12" label="函数名称" path="spec.name" :validation-status="validationErrors.functionName ? 'error' : undefined">
+            <n-form-item-gi
+              :span="12"
+              label="函数名称"
+              path="spec.name"
+              :validation-status="
+                validationErrors.functionName ? 'error' : undefined
+              "
+            >
               <n-input
                 v-model:value="formModel.spec!.name"
                 placeholder="请输入函数名称"
                 :status="validationErrors.functionName ? 'error' : undefined"
               />
               <template #feedback v-if="validationErrors.functionName">
-                <n-text type="error" depth="3" style="font-size: 12px;">
+                <n-text type="error" depth="3" style="font-size: 12px">
                   {{ validationErrors.functionName }}
                 </n-text>
               </template>
@@ -195,7 +261,12 @@
                 placeholder="请输入JSON格式的参数规范"
                 @blur="validateParametersJson"
               />
-              <n-text v-if="parametersError" type="error" depth="3" style="font-size: 12px;">
+              <n-text
+                v-if="parametersError"
+                type="error"
+                depth="3"
+                style="font-size: 12px"
+              >
                 {{ parametersError }}
               </n-text>
             </n-form-item-gi>
@@ -208,9 +279,9 @@
     <div class="form-actions">
       <n-space justify="end">
         <n-button @click="handleCancel">取消</n-button>
-        <n-button 
-          type="primary" 
-          @click="handleSave" 
+        <n-button
+          type="primary"
+          @click="handleSave"
           :loading="saving"
           :disabled="!isFormValid && Object.keys(validationErrors).length > 0"
         >
@@ -218,9 +289,12 @@
         </n-button>
       </n-space>
     </div>
-    
+
     <!-- 验证错误汇总 -->
-    <div v-if="Object.keys(validationErrors).length > 0" class="validation-summary">
+    <div
+      v-if="Object.keys(validationErrors).length > 0"
+      class="validation-summary"
+    >
       <n-alert type="error" title="表单验证错误" :show-icon="false">
         <ul class="error-list">
           <li v-for="(error, field) in validationErrors" :key="field">
@@ -249,7 +323,12 @@ import {
   NAlert,
   useMessage
 } from 'naive-ui';
-import { McpToolEditModel, ToolRouteRule, ToolFunctionValue, JsonSchema } from '@/types/mcpserver';
+import {
+  McpToolEditModel,
+  ToolRouteRule,
+  ToolFunctionValue,
+  JsonSchema
+} from '@/types/mcpserver';
 
 interface Props {
   modelValue: McpToolEditModel;
@@ -375,14 +454,18 @@ const initializeData = () => {
 
   // 初始化头部数组
   if (formModel.value.routeRule?.additionHeaders) {
-    headersArray.value = Object.entries(formModel.value.routeRule.additionHeaders).map(
-      ([key, value]) => ({ key, value: String(value) })
-    );
+    headersArray.value = Object.entries(
+      formModel.value.routeRule.additionHeaders
+    ).map(([key, value]) => ({ key, value: String(value) }));
   }
 
   // 初始化参数JSON
   if (formModel.value.spec?.parameters) {
-    parametersJson.value = JSON.stringify(formModel.value.spec.parameters, null, 2);
+    parametersJson.value = JSON.stringify(
+      formModel.value.spec.parameters,
+      null,
+      2
+    );
   }
 
   // 确保toolKey存在
@@ -413,7 +496,7 @@ const updateHeaders = (headers: Array<{ key: string; value: string }>) => {
       headersObj[key] = value;
     }
   });
-  
+
   if (formModel.value.routeRule) {
     formModel.value.routeRule.additionHeaders = headersObj;
   }
@@ -422,7 +505,7 @@ const updateHeaders = (headers: Array<{ key: string; value: string }>) => {
 // 验证参数JSON
 const validateParametersJson = () => {
   parametersError.value = '';
-  
+
   if (!parametersJson.value.trim()) {
     parametersJson.value = '{}';
     return;
@@ -445,7 +528,7 @@ const isFormValid = ref(false);
 // 实时验证函数
 const validateField = (field: string, value: any) => {
   const errors = { ...validationErrors.value };
-  
+
   switch (field) {
     case 'toolName':
       if (!value?.trim()) {
@@ -490,9 +573,11 @@ const validateField = (field: string, value: any) => {
       }
       break;
     case 'url':
-      if (formModel.value.routeRule?.protocol && 
-          ['HTTP', 'HTTPS'].includes(formModel.value.routeRule.protocol) && 
-          !value?.trim()) {
+      if (
+        formModel.value.routeRule?.protocol &&
+        ['HTTP', 'HTTPS'].includes(formModel.value.routeRule.protocol) &&
+        !value?.trim()
+      ) {
         errors.url = 'HTTP/HTTPS协议需要指定URL';
       } else {
         delete errors.url;
@@ -506,7 +591,7 @@ const validateField = (field: string, value: any) => {
       }
       break;
   }
-  
+
   validationErrors.value = errors;
   isFormValid.value = Object.keys(errors).length === 0;
 };
@@ -517,7 +602,7 @@ const handleSave = async () => {
 
   try {
     await formRef.value.validate();
-    
+
     // 验证参数JSON
     validateParametersJson();
     if (parametersError.value) {
@@ -541,7 +626,7 @@ const handleSave = async () => {
     }
 
     saving.value = true;
-    
+
     // 同步toolName到toolKey
     if (formModel.value.toolKey) {
       formModel.value.toolKey.toolName = formModel.value.toolName;
@@ -638,7 +723,7 @@ watch(headersArray, updateHeaders, { deep: true });
 // 组件挂载时初始化数据
 onMounted(() => {
   initializeData();
-  
+
   // 初始化验证状态
   validateField('toolName', formModel.value.toolName);
   validateField('toolVersion', formModel.value.toolVersion);

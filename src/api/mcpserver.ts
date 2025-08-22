@@ -273,15 +273,7 @@ export const convertApiDataToFormModel = (
   mode: 'create' | 'edit' | 'detail' = 'detail'
 ): McpServerFormModel => {
   // 从 currentValue 中提取工具信息
-  const tools =
-    apiData.currentValue?.tools?.map((tool) => ({
-      id: tool.id,
-      toolName: tool.toolName,
-      namespace: tool.toolKey.namespace,
-      group: tool.toolKey.group,
-      toolVersion: tool.toolVersion,
-      routeRule: tool.routeRule
-    })) || [];
+  const tools = apiData.currentValue?.tools || [];
 
   return {
     id: apiData.id,
@@ -290,6 +282,7 @@ export const convertApiDataToFormModel = (
     description: apiData.description,
     authKeys: [...apiData.authKeys],
     tools,
+    currentValue: apiData.currentValue,
     mode
   };
 };

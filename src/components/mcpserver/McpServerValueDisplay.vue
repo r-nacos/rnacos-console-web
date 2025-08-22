@@ -1,13 +1,19 @@
 <template>
   <div class="mcpserver-value-display">
+    <span>mcpserver-value-display</span>
     <!-- 版本信息头部 -->
     <div v-if="showVersionInfo" class="version-info">
       <n-space align="center" class="version-header">
         <n-tag :type="valueData?.isRelease ? 'success' : 'info'" size="medium">
-          {{ valueData?.isRelease ? t('mcpserver.release_version') : t('mcpserver.draft_version') }}
+          {{
+            valueData?.isRelease
+              ? t('mcpserver.release_version')
+              : t('mcpserver.draft_version')
+          }}
         </n-tag>
         <n-text depth="2" class="version-meta">
-          {{ t('mcpserver.create_time') }}: {{ formatTime(valueData?.createTime || valueData?.updateTime) }}
+          {{ t('mcpserver.create_time') }}:
+          {{ formatTime(valueData?.createTime || valueData?.updateTime) }}
         </n-text>
         <n-text depth="2" v-if="valueData?.opUser" class="version-meta">
           {{ t('mcpserver.operator') }}: {{ valueData.opUser }}
@@ -27,13 +33,15 @@
               <n-icon size="20" color="#18a058">
                 <construct-outline />
               </n-icon>
-              <n-text strong>{{ t('mcpserver.tools') }} ({{ toolsCount }})</n-text>
+              <n-text strong
+                >{{ t('mcpserver.tools') }} ({{ toolsCount }})</n-text
+              >
             </n-space>
           </div>
-          
+
           <div class="tools-grid">
             <mcp-tool-component
-              v-for="tool in (valueData?.tools || [])"
+              v-for="tool in valueData?.tools || []"
               :key="tool.id || tool.toolName"
               :tool="tool"
               :disabled="true"
@@ -42,8 +50,12 @@
           </div>
         </n-space>
       </div>
-      
-      <n-empty v-else :description="t('mcpserver.no_tools')" class="empty-tools">
+
+      <n-empty
+        v-else
+        :description="t('mcpserver.no_tools')"
+        class="empty-tools"
+      >
         <template #icon>
           <n-icon size="48" color="#d1d5db">
             <construct-outline />
@@ -69,13 +81,15 @@
               <create-outline />
             </n-icon>
             <n-text strong>{{ t('mcpserver.edit_mode') }}</n-text>
-            <n-tag type="warning" size="small">{{ t('mcpserver.editing') }}</n-tag>
+            <n-tag type="warning" size="small">{{
+              t('mcpserver.editing')
+            }}</n-tag>
           </n-space>
         </div>
 
-        <n-button 
-          type="primary" 
-          dashed 
+        <n-button
+          type="primary"
+          dashed
           block
           @click="showToolSpecSelector = true"
           class="add-tool-button"
@@ -92,10 +106,14 @@
               <n-icon size="18" color="#18a058">
                 <construct-outline />
               </n-icon>
-              <n-text>{{ t('mcpserver.configured_tools') }} ({{ editableTools.length }})</n-text>
+              <n-text
+                >{{ t('mcpserver.configured_tools') }} ({{
+                  editableTools.length
+                }})</n-text
+              >
             </n-space>
           </div>
-          
+
           <div class="tools-grid">
             <mcp-tool-component
               v-for="(tool, index) in editableTools"
@@ -110,7 +128,11 @@
           </div>
         </div>
 
-        <n-empty v-else :description="t('mcpserver.no_configured_tools')" class="empty-tools-edit">
+        <n-empty
+          v-else
+          :description="t('mcpserver.no_configured_tools')"
+          class="empty-tools-edit"
+        >
           <template #icon>
             <n-icon size="48" color="#d1d5db">
               <construct-outline />
@@ -132,9 +154,9 @@
     <!-- 操作按钮区域 -->
     <div v-if="showActions" class="actions-area">
       <n-space justify="end">
-        <n-button 
-          v-if="!valueData?.isRelease && allowPublish" 
-          type="primary" 
+        <n-button
+          v-if="!valueData?.isRelease && allowPublish"
+          type="primary"
           @click="$emit('publish-version')"
           :loading="publishLoading"
         >
@@ -143,10 +165,10 @@
           </template>
           {{ t('mcpserver.publish_version') }}
         </n-button>
-        
-        <n-button 
-          v-if="valueData?.isRelease && allowRollback" 
-          type="warning" 
+
+        <n-button
+          v-if="valueData?.isRelease && allowRollback"
+          type="warning"
           @click="handleRollback"
           :loading="rollbackLoading"
         >
@@ -176,15 +198,7 @@
 import { ref, computed, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useMessage } from 'naive-ui';
-import {
-  NSpace,
-  NTag,
-  NText,
-  NIcon,
-  NButton,
-  NEmpty,
-  NModal
-} from 'naive-ui';
+import { NSpace, NTag, NText, NIcon, NButton, NEmpty, NModal } from 'naive-ui';
 import {
   ConstructOutline,
   AddOutline,
@@ -194,10 +208,10 @@ import {
 } from '@vicons/ionicons5';
 import McpToolComponent from './McpToolComponent.vue';
 import ToolSpecSelector from './ToolSpecSelector.vue';
-import { 
-  McpServerValue, 
-  McpServerValueDto, 
-  McpTool, 
+import {
+  McpServerValue,
+  McpServerValueDto,
+  McpTool,
   ToolSpecInfo,
   McpToolEditModel
 } from '@/types/mcpserver';
@@ -267,6 +281,8 @@ const toolsCount = computed(() => {
   return tools.length;
 });
 
+console.log('props.valueData', JSON.stringify(props.valueData));
+
 // 监听valueData变化，同步到editableTools
 watch(
   () => props.valueData?.tools,
@@ -298,7 +314,9 @@ const formatTime = (timestamp?: number) => {
 };
 
 // 工具配置验证
-const validateToolConfiguration = (tool: McpTool): { isValid: boolean; errors: string[] } => {
+const validateToolConfiguration = (
+  tool: McpTool
+): { isValid: boolean; errors: string[] } => {
   const errors: string[] = [];
 
   // 验证基本信息
@@ -329,7 +347,10 @@ const validateToolConfiguration = (tool: McpTool): { isValid: boolean; errors: s
     }
 
     // HTTP/HTTPS协议需要URL
-    if (['HTTP', 'HTTPS'].includes(tool.routeRule.protocol) && !tool.routeRule.url?.trim()) {
+    if (
+      ['HTTP', 'HTTPS'].includes(tool.routeRule.protocol) &&
+      !tool.routeRule.url?.trim()
+    ) {
       errors.push('HTTP/HTTPS协议需要指定URL');
     }
 
@@ -375,7 +396,10 @@ const validateToolConfiguration = (tool: McpTool): { isValid: boolean; errors: s
 };
 
 // 验证所有工具配置
-const validateAllTools = (): { isValid: boolean; errors: Record<number, string[]> } => {
+const validateAllTools = (): {
+  isValid: boolean;
+  errors: Record<number, string[]>;
+} => {
   const allErrors: Record<number, string[]> = {};
   let hasErrors = false;
 
@@ -397,9 +421,10 @@ const validateAllTools = (): { isValid: boolean; errors: Record<number, string[]
 const handleToolSpecSelect = (toolSpec: ToolSpecInfo) => {
   // 检查是否已存在相同的工具
   const existingTool = editableTools.value.find(
-    tool => tool.toolName === toolSpec.toolName && 
-            tool.toolKey.namespace === toolSpec.namespace &&
-            tool.toolKey.group === toolSpec.group
+    (tool) =>
+      tool.toolName === toolSpec.toolName &&
+      tool.toolKey.namespace === toolSpec.namespace &&
+      tool.toolKey.group === toolSpec.group
   );
 
   if (existingTool) {
@@ -461,7 +486,9 @@ const handleToolUpdate = (updatedTool: McpTool) => {
   }
 
   // 更新editableTools中的工具
-  const index = editableTools.value.findIndex(tool => tool.id === updatedTool.id);
+  const index = editableTools.value.findIndex(
+    (tool) => tool.id === updatedTool.id
+  );
   if (index !== -1) {
     editableTools.value[index] = { ...updatedTool };
     message.success('工具配置更新成功');
@@ -476,13 +503,13 @@ const handleToolUpdate = (updatedTool: McpTool) => {
     routeRule: updatedTool.routeRule,
     spec: updatedTool.spec
   };
-  
+
   emit('tool-edit', updatedTool.id, editModel);
 };
 
 const handleToolDelete = (tool: McpTool) => {
   // 从editableTools中移除工具
-  const index = editableTools.value.findIndex(t => t.id === tool.id);
+  const index = editableTools.value.findIndex((t) => t.id === tool.id);
   if (index !== -1) {
     editableTools.value.splice(index, 1);
     message.success('工具删除成功');
@@ -557,7 +584,8 @@ defineExpose({
   font-size: 13px;
 }
 
-.view-mode, .edit-mode {
+.view-mode,
+.edit-mode {
   min-height: 120px;
 }
 
@@ -578,7 +606,8 @@ defineExpose({
   margin-top: 12px;
 }
 
-.empty-tools, .empty-tools-edit {
+.empty-tools,
+.empty-tools-edit {
   margin: 32px 0;
   padding: 24px;
 }
@@ -615,13 +644,13 @@ defineExpose({
     grid-template-columns: 1fr;
     gap: 12px;
   }
-  
+
   .version-header {
     flex-direction: column;
     align-items: flex-start !important;
     gap: 8px;
   }
-  
+
   .version-meta {
     font-size: 12px;
   }
@@ -633,17 +662,17 @@ defineExpose({
     background: #1f2937;
     border-left-color: #60a5fa;
   }
-  
+
   .edit-header {
     background: #451a03;
     border-left-color: #f59e0b;
   }
-  
+
   .add-tool-button {
     background: #374151;
     border-color: #4b5563;
   }
-  
+
   .add-tool-button:hover {
     background: #1f2937;
     border-color: #60a5fa;

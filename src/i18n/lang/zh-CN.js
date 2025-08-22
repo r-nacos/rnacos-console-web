@@ -408,7 +408,7 @@ const message = {
     create_mode: '创建模式',
     create_server: '创建MCP服务器',
     server_not_found: '服务器不存在或已被删除',
-    
+
     // 发布相关
     confirm_publish_title: '确认发布版本',
     confirm_publish_content: '确认要发布当前版本吗？发布后将成为正式版本。',
@@ -416,12 +416,13 @@ const message = {
     publish_failed: '版本发布失败',
     publish_history_success: '历史版本发布成功',
     publish_history_failed: '历史版本发布失败',
-    
+
     // 编辑确认
     confirm_cancel_edit_title: '确认取消编辑',
-    confirm_cancel_edit_content: '取消编辑将丢失所有未保存的修改，确认要取消吗？',
+    confirm_cancel_edit_content:
+      '取消编辑将丢失所有未保存的修改，确认要取消吗？',
     edit_cancelled: '已取消编辑',
-    
+
     // 工具验证消息
     unnamed_tool: '未命名工具',
     tool_name_required: '工具 {name} 缺少工具名称',
@@ -431,7 +432,7 @@ const message = {
     tool_method_required: '工具 {name} 缺少HTTP方法配置',
     tool_route_rule_required: '工具 {name} 缺少路由规则配置',
     tool_validation_failed: '工具配置验证失败',
-    
+
     // 工具配置验证
     tool_config_incomplete: '工具 "{name}" 配置不完整',
     tool_route_rule_incomplete: '工具 "{name}" 路由规则不完整',
@@ -441,11 +442,12 @@ const message = {
     tool_updated_success: '工具配置更新成功',
     tool_deleted_success: '工具删除成功',
     tool_not_found: '工具不存在',
-    
+
     // 工具删除确认
     confirm_delete_tool_title: '确认删除工具',
-    confirm_delete_tool_content: '确认要删除工具 "{name}" (组: {group}) 吗？此操作不可恢复。',
-    
+    confirm_delete_tool_content:
+      '确认要删除工具 "{name}" (组: {group}) 吗？此操作不可恢复。',
+
     // 版本相关
     release_version: '发布版本',
     draft_version: '草稿版本',
@@ -458,7 +460,7 @@ const message = {
     rollback_version: '回滚版本',
     confirm_rollback_title: '确认回滚版本',
     confirm_rollback_content: '确认要回滚到此版本吗？当前版本将被替换。',
-    
+
     // 操作结果
     create_failed: 'MCP服务器创建失败',
     update_failed: 'MCP服务器更新失败',
@@ -486,14 +488,15 @@ const message = {
     tool_deleted_success: '工具删除成功',
     tool_not_found: '工具不存在',
     editing: '编辑中',
-    
+
     // 工具配置验证
     tool_config_incomplete: '工具 "{name}" 配置不完整，请检查必填字段',
     tool_route_rule_incomplete: '工具 "{name}" 路由规则配置不完整',
     tool_url_required: '工具 "{name}" 需要配置URL',
-    
+
     // 工具删除确认
-    confirm_delete_tool_content: '确认要删除工具 "{name}" (分组: {group}) 吗？此操作不可恢复。'
+    confirm_delete_tool_content:
+      '确认要删除工具 "{name}" (分组: {group}) 吗？此操作不可恢复。'
   },
   error: {
     NO_PERMISSION: '没有权限',

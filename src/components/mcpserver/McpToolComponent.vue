@@ -1,7 +1,10 @@
 <template>
   <div class="mcp-tool-component">
-    <n-card 
-      :class="['tool-card', { 'tool-card--editing': isEditing, 'tool-card--disabled': disabled }]"
+    <n-card
+      :class="[
+        'tool-card',
+        { 'tool-card--editing': isEditing, 'tool-card--disabled': disabled }
+      ]"
       hoverable
       @click="handleCardClick"
     >
@@ -12,7 +15,9 @@
           </n-icon>
           <span class="tool-name">{{ tool.toolName }}</span>
           <n-tag size="small" type="info">{{ tool.toolKey.group }}</n-tag>
-          <n-tag size="small" type="success">{{ tool.toolKey.namespace }}</n-tag>
+          <n-tag size="small" type="success">{{
+            tool.toolKey.namespace
+          }}</n-tag>
           <n-tag size="small" type="warning">v{{ tool.toolVersion }}</n-tag>
         </n-space>
       </template>
@@ -20,10 +25,19 @@
       <template #header-extra v-if="!disabled && showActions">
         <n-space>
           <n-button size="small" quaternary @click.stop="handleEdit">
-            <template #icon><n-icon><edit-outline /></n-icon></template>
+            <template #icon
+              ><n-icon><edit-outline /></n-icon
+            ></template>
           </n-button>
-          <n-button size="small" quaternary type="error" @click.stop="handleDelete">
-            <template #icon><n-icon><trash-outline /></n-icon></template>
+          <n-button
+            size="small"
+            quaternary
+            type="error"
+            @click.stop="handleDelete"
+          >
+            <template #icon
+              ><n-icon><trash-outline /></n-icon
+            ></template>
           </n-button>
         </n-space>
       </template>
@@ -51,20 +65,28 @@
     </n-card>
 
     <!-- 详细信息弹窗 -->
-    <n-modal v-model:show="showDetailModal" preset="card" style="width: 80%; max-width: 800px;">
+    <n-modal
+      v-model:show="showDetailModal"
+      preset="card"
+      style="width: 80%; max-width: 800px"
+    >
       <template #header>
         <span>{{ t('mcpserver.tool_detail') }} - {{ tool.toolName }}</span>
       </template>
-      
+
       <tool-detail-display :tool="tool" />
     </n-modal>
 
     <!-- 编辑弹窗 -->
-    <n-modal v-model:show="showEditModal" preset="card" style="width: 80%; max-width: 600px;">
+    <n-modal
+      v-model:show="showEditModal"
+      preset="card"
+      style="width: 80%; max-width: 600px"
+    >
       <template #header>
         <span>{{ t('mcpserver.edit_tool') }} - {{ tool.toolName }}</span>
       </template>
-      
+
       <tool-edit-form
         v-model="editingTool"
         @save="handleSave"
@@ -154,7 +176,7 @@ const handleEdit = () => {
       routeRule: props.tool.routeRule ? { ...props.tool.routeRule } : undefined,
       spec: props.tool.spec ? { ...props.tool.spec } : undefined
     };
-    
+
     showEditModal.value = true;
     isEditing.value = true;
   }
@@ -176,7 +198,7 @@ const handleSave = (updatedTool: McpToolEditModel) => {
     routeRule: updatedTool.routeRule || props.tool.routeRule,
     spec: updatedTool.spec || props.tool.spec
   };
-  
+
   emit('update', savedTool);
   showEditModal.value = false;
   isEditing.value = false;

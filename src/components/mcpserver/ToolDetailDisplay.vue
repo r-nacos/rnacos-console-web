@@ -72,13 +72,19 @@
           <!-- 额外头部信息 -->
           <div v-if="hasAdditionalHeaders" class="additional-headers">
             <n-divider title-placement="left">额外头部</n-divider>
-            <n-code :code="formatHeaders(tool.routeRule.additionHeaders)" language="json" />
+            <n-code
+              :code="formatHeaders(tool.routeRule.additionHeaders)"
+              language="json"
+            />
           </div>
 
           <!-- 规则配置 -->
           <div v-if="tool.routeRule.config" class="rule-config">
             <n-divider title-placement="left">规则配置</n-divider>
-            <n-code :code="formatConfig(tool.routeRule.config)" language="json" />
+            <n-code
+              :code="formatConfig(tool.routeRule.config)"
+              language="json"
+            />
           </div>
         </div>
         <n-empty v-else description="未配置路由规则" />
@@ -99,7 +105,10 @@
           <!-- 参数规范 -->
           <div v-if="tool.spec.parameters" class="parameters-spec">
             <n-divider title-placement="left">参数规范</n-divider>
-            <n-code :code="formatParameters(tool.spec.parameters)" language="json" />
+            <n-code
+              :code="formatParameters(tool.spec.parameters)"
+              language="json"
+            />
           </div>
         </div>
         <n-empty v-else description="未配置工具规范" />
@@ -134,16 +143,19 @@ const { t } = useI18n();
 
 // 计算属性
 const hasServiceInfo = computed(() => {
-  return props.tool.routeRule && (
-    props.tool.routeRule.serviceNamespace ||
-    props.tool.routeRule.serviceGroup ||
-    props.tool.routeRule.serviceName
+  return (
+    props.tool.routeRule &&
+    (props.tool.routeRule.serviceNamespace ||
+      props.tool.routeRule.serviceGroup ||
+      props.tool.routeRule.serviceName)
   );
 });
 
 const hasAdditionalHeaders = computed(() => {
-  return props.tool.routeRule?.additionHeaders && 
-    Object.keys(props.tool.routeRule.additionHeaders).length > 0;
+  return (
+    props.tool.routeRule?.additionHeaders &&
+    Object.keys(props.tool.routeRule.additionHeaders).length > 0
+  );
 });
 
 // 工具函数

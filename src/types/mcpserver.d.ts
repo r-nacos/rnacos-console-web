@@ -102,7 +102,8 @@ export interface McpServerFormModel {
   name: string;
   description: string;
   authKeys: string[];
-  tools: McpSimpleToolParams[];
+  tools: McpTool[];
+  currentValue?: McpServerValue;
   mode: 'create' | 'edit' | 'detail';
 }
 

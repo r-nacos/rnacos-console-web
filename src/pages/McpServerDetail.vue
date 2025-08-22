@@ -15,19 +15,16 @@
       </n-space>
 
       <n-space>
-        <n-button 
-          v-if="!isEditMode && !isCreateMode" 
-          @click="enterEditMode"
-        >
+        <n-button v-if="!isEditMode && !isCreateMode" @click="enterEditMode">
           <template #icon>
             <n-icon><edit-outline /></n-icon>
           </template>
           {{ t('common.edit') }}
         </n-button>
-        
-        <n-button 
-          v-if="!isEditMode && !isCreateMode" 
-          type="primary" 
+
+        <n-button
+          v-if="!isEditMode && !isCreateMode"
+          type="primary"
           @click="publishCurrentVersion"
           :loading="publishLoading"
         >
@@ -36,25 +33,22 @@
           </template>
           {{ t('mcpserver.publish_current_version') }}
         </n-button>
-        
-        <n-button 
-          v-if="!isEditMode && !isCreateMode" 
-          @click="showHistoryList"
-        >
+
+        <n-button v-if="!isEditMode && !isCreateMode" @click="showHistoryList">
           <template #icon>
             <n-icon><time-outline /></n-icon>
           </template>
           {{ t('mcpserver.view_history') }}
         </n-button>
-        
+
         <n-button v-if="isEditMode || isCreateMode" @click="cancelEdit">
           {{ t('common.cancel') }}
         </n-button>
-        
-        <n-button 
-          v-if="isEditMode || isCreateMode" 
-          type="primary" 
-          :loading="submitting" 
+
+        <n-button
+          v-if="isEditMode || isCreateMode"
+          type="primary"
+          :loading="submitting"
           @click="saveChanges"
         >
           <template #icon>
@@ -77,7 +71,7 @@
               @validate="handleFormValidate"
             />
           </template>
-          
+
           <template v-else>
             <n-descriptions
               :column="3"
@@ -114,14 +108,21 @@
                 {{ formatTime(serverData?.createTime) }}
               </n-descriptions-item>
               <n-descriptions-item :label="t('mcpserver.update_time')">
-                {{ formatTime(serverData?.updateTime || serverData?.lastModifiedMillis) }}
+                {{
+                  formatTime(
+                    serverData?.updateTime || serverData?.lastModifiedMillis
+                  )
+                }}
               </n-descriptions-item>
             </n-descriptions>
           </template>
         </n-card>
 
         <!-- 当前服务内容卡片 -->
-        <n-card :title="t('mcpserver.current_service_content')" class="info-card">
+        <n-card
+          :title="t('mcpserver.current_service_content')"
+          class="info-card"
+        >
           <mcpserver-value-display
             ref="mcpServerValueDisplayRef"
             :value-data="currentValueData"
@@ -140,7 +141,10 @@
         </n-card>
       </div>
 
-      <div v-else-if="!loading && !serverData && !isCreateMode" class="error-state">
+      <div
+        v-else-if="!loading && !serverData && !isCreateMode"
+        class="error-state"
+      >
         <n-result
           status="error"
           :title="t('error.data_not_found')"
@@ -173,8 +177,15 @@
     </n-drawer>
 
     <!-- 版本内容查看弹窗 -->
-    <n-modal v-model:show="showVersionModal" style="width: 90%; max-width: 1200px;">
-      <n-card :title="t('mcpserver.version_content')" :bordered="false" size="huge">
+    <n-modal
+      v-model:show="showVersionModal"
+      style="width: 90%; max-width: 1200px"
+    >
+      <n-card
+        :title="t('mcpserver.version_content')"
+        :bordered="false"
+        size="huge"
+      >
         <template #header-extra>
           <n-button quaternary circle @click="showVersionModal = false">
             <template #icon>
@@ -182,7 +193,7 @@
             </template>
           </n-button>
         </template>
-        
+
         <mcpserver-value-display
           v-if="selectedVersionData"
           :value-data="selectedVersionData"
@@ -252,9 +263,9 @@ import {
   convertApiDataToFormModel,
   convertFormModelToApiParams
 } from '@/api/mcpserver';
-import { 
-  McpServerDto, 
-  McpServerFormModel, 
+import {
+  McpServerDto,
+  McpServerFormModel,
   McpServerValue,
   McpServerValueDto,
   McpTool,
@@ -304,6 +315,7 @@ const formModel = ref<McpServerFormModel>({
   description: '',
   authKeys: [],
   tools: [],
+  currentValue: undefined,
   mode: 'detail'
 });
 const formValid = ref(false);
@@ -374,44 +386,23 @@ const getModeTagType = computed(() => {
 
 // 当前值数据
 const currentValueData = computed(() => {
-  if (isEditMode.value || isCreateMode.value) {
-    // 编辑模式下，构造临时的值数据
-    const tools = formModel.value.tools || [];
-    return {
-      id: 0,
-      description: formModel.value.description,
-      tools: tools.map(tool => ({
-        id: tool.id || Date.now(),
-        toolName: tool.toolName,
-        toolKey: {
-          namespace: tool.namespace,
-          group: tool.group,
-          toolName: tool.toolName
-        },
-        toolVersion: tool.toolVersion || 1,
-        spec: {
-          name: tool.toolName,
-          description: '',
-          parameters: { type: 'object', properties: {} }
-        },
-        routeRule: tool.routeRule || {
-          protocol: 'HTTP',
-          url: '',
-          method: 'POST',
-          additionHeaders: {},
-          convertType: 'NONE',
-          serviceNamespace: tool.namespace,
-          serviceGroup: tool.group,
-          serviceName: tool.toolName
-        }
-      })) as McpTool[],
-      opUser: 'current',
-      updateTime: Date.now(),
-      isRelease: false
-    } as McpServerValue;
+  // 查看模式下，如果有serverData，使用currentValue；否则尝试从props.model构造
+  if (formModel.value?.currentValue) {
+    console.log('currentValueData:', formModel.value.currentValue);
+    return formModel.value.currentValue;
   }
-  
-  return serverData.value?.currentValue || null;
+
+  console.log('currentValueData: default');
+
+  return {
+    id: 0,
+    description: formModel.value.description || '',
+    tools: [],
+    opUser: '',
+    updateTime: Date.now(),
+    createTime: Date.now(),
+    isRelease: false
+  } as McpServerValue;
 });
 
 // 权限检查
@@ -433,7 +424,10 @@ const loadServerData = async () => {
 
   loading.value = true;
   try {
-    const data = await mcpServerApi.getMcpServerWithErrorHandling(serverId.value);
+    const data = await mcpServerApi.getMcpServerWithErrorHandling(
+      serverId.value
+    );
+    console.log('McpServer data:', data);
     if (data) {
       serverData.value = data;
       formModel.value = convertApiDataToFormModel(data, 'detail');
@@ -472,7 +466,7 @@ const cancelEdit = () => {
     }
     return;
   }
-  
+
   // 编辑模式下显示确认对话框，防止意外丢失编辑内容
   confirmDialog.value = {
     title: t('mcpserver.confirm_cancel_edit_title'),
@@ -481,18 +475,18 @@ const cancelEdit = () => {
       // 重置编辑状态
       isEditMode.value = false;
       formModel.value.mode = 'detail';
-      
+
       // 重置表单数据为原始数据
       if (serverData.value) {
         formModel.value = convertApiDataToFormModel(serverData.value, 'detail');
       }
-      
+
       // 重置McpServerValueDisplay组件的编辑状态
       const valueDisplayRef = mcpServerValueDisplayRef.value;
       if (valueDisplayRef) {
         valueDisplayRef.resetEditState();
       }
-      
+
       showConfirmDialog.value = false;
       message.info(t('mcpserver.edit_cancelled'));
     },
@@ -511,7 +505,7 @@ const handleFormValidate = (isValid: boolean) => {
 // 处理工具更新
 const handleToolsUpdate = (tools: McpTool[]) => {
   // 将工具数据转换为表单模型格式
-  formModel.value.tools = tools.map(tool => ({
+  formModel.value.tools = tools.map((tool) => ({
     id: tool.id,
     toolName: tool.toolName,
     namespace: tool.toolKey.namespace,
@@ -525,9 +519,10 @@ const handleToolsUpdate = (tools: McpTool[]) => {
 const handleToolAdd = (toolSpec: ToolSpecInfo) => {
   // 检查是否已存在相同的工具
   const existingTool = formModel.value.tools.find(
-    tool => tool.toolName === toolSpec.toolName && 
-            tool.namespace === toolSpec.namespace &&
-            tool.group === toolSpec.group
+    (tool) =>
+      tool.toolName === toolSpec.toolName &&
+      tool.namespace === toolSpec.namespace &&
+      tool.group === toolSpec.group
   );
 
   if (existingTool) {
@@ -556,7 +551,7 @@ const handleToolAdd = (toolSpec: ToolSpecInfo) => {
 
   formModel.value.tools.push(newTool);
   message.success(t('mcpserver.tool_added_success'));
-  
+
   // 触发表单验证更新
   setTimeout(() => {
     const formRef = mcpServerFormRef.value;
@@ -568,7 +563,7 @@ const handleToolAdd = (toolSpec: ToolSpecInfo) => {
 
 // 处理工具编辑
 const handleToolEdit = (toolId: number, updatedTool: McpToolEditModel) => {
-  const index = formModel.value.tools.findIndex(tool => tool.id === toolId);
+  const index = formModel.value.tools.findIndex((tool) => tool.id === toolId);
   if (index !== -1) {
     // 更新工具数据
     formModel.value.tools[index] = {
@@ -585,20 +580,22 @@ const handleToolEdit = (toolId: number, updatedTool: McpToolEditModel) => {
 
 // 处理工具删除
 const handleToolDelete = (toolId: number) => {
-  const toolIndex = formModel.value.tools.findIndex(tool => tool.id === toolId);
+  const toolIndex = formModel.value.tools.findIndex(
+    (tool) => tool.id === toolId
+  );
   if (toolIndex === -1) {
     message.error(t('mcpserver.tool_not_found'));
     return;
   }
 
   const tool = formModel.value.tools[toolIndex];
-  
+
   // 显示确认对话框
   confirmDialog.value = {
     title: t('mcpserver.confirm_delete_tool_title'),
-    content: t('mcpserver.confirm_delete_tool_content', { 
+    content: t('mcpserver.confirm_delete_tool_content', {
       name: tool.toolName,
-      group: tool.group 
+      group: tool.group
     }),
     onConfirm: () => {
       // 执行删除
@@ -623,13 +620,15 @@ const validateToolConfiguration = (): boolean => {
       // 显示详细的验证错误信息
       const errorMessages: string[] = [];
       Object.entries(validation.errors).forEach(([toolId, errors]) => {
-        const tool = formModel.value.tools.find(t => t.id?.toString() === toolId);
+        const tool = formModel.value.tools.find(
+          (t) => t.id?.toString() === toolId
+        );
         const toolName = tool?.toolName || `工具ID: ${toolId}`;
         if (Array.isArray(errors)) {
           errorMessages.push(`${toolName}: ${errors.join(', ')}`);
         }
       });
-      
+
       message.error(`工具配置验证失败：\n${errorMessages.join('\n')}`);
       return false;
     }
@@ -638,44 +637,65 @@ const validateToolConfiguration = (): boolean => {
 
   // 回退到原有的验证逻辑
   const validationErrors: string[] = [];
-  
+
   for (const tool of formModel.value.tools) {
     const toolName = tool.toolName || t('mcpserver.unnamed_tool');
-    
+
     // 检查必填字段
     if (!tool.toolName?.trim()) {
-      validationErrors.push(t('mcpserver.tool_name_required', { name: toolName }));
+      validationErrors.push(
+        t('mcpserver.tool_name_required', { name: toolName })
+      );
     }
-    
+
     if (!tool.namespace?.trim()) {
-      validationErrors.push(t('mcpserver.tool_namespace_required', { name: toolName }));
+      validationErrors.push(
+        t('mcpserver.tool_namespace_required', { name: toolName })
+      );
     }
-    
+
     if (!tool.group?.trim()) {
-      validationErrors.push(t('mcpserver.tool_group_required', { name: toolName }));
+      validationErrors.push(
+        t('mcpserver.tool_group_required', { name: toolName })
+      );
     }
 
     // 检查路由规则
     if (tool.routeRule) {
       if (!tool.routeRule.protocol?.trim()) {
-        validationErrors.push(t('mcpserver.tool_protocol_required', { name: toolName }));
+        validationErrors.push(
+          t('mcpserver.tool_protocol_required', { name: toolName })
+        );
       }
-      
+
       if (!tool.routeRule.method?.trim()) {
-        validationErrors.push(t('mcpserver.tool_method_required', { name: toolName }));
+        validationErrors.push(
+          t('mcpserver.tool_method_required', { name: toolName })
+        );
       }
-      
+
       // 如果是HTTP/HTTPS协议，URL是必填的
-      if (['HTTP', 'HTTPS'].includes(tool.routeRule.protocol) && !tool.routeRule.url?.trim()) {
-        validationErrors.push(t('mcpserver.tool_url_required', { name: toolName }));
+      if (
+        ['HTTP', 'HTTPS'].includes(tool.routeRule.protocol) &&
+        !tool.routeRule.url?.trim()
+      ) {
+        validationErrors.push(
+          t('mcpserver.tool_url_required', { name: toolName })
+        );
       }
     } else {
-      validationErrors.push(t('mcpserver.tool_route_rule_required', { name: toolName }));
+      validationErrors.push(
+        t('mcpserver.tool_route_rule_required', { name: toolName })
+      );
     }
   }
 
   if (validationErrors.length > 0) {
-    message.error(t('mcpserver.tool_validation_failed') + ':\n' + validationErrors.join('\n'));
+    message.error(
+      t('mcpserver.tool_validation_failed') +
+        ':\n' +
+        validationErrors.join('\n')
+    );
     return false;
   }
 
@@ -710,8 +730,11 @@ const saveChanges = async () => {
     return;
   }
 
-  if (!formModel.value.authKeys || formModel.value.authKeys.length === 0 || 
-      formModel.value.authKeys.some(key => !key?.trim())) {
+  if (
+    !formModel.value.authKeys ||
+    formModel.value.authKeys.length === 0 ||
+    formModel.value.authKeys.some((key) => !key?.trim())
+  ) {
     message.error(t('mcpserver.auth_keys_required'));
     return;
   }
@@ -725,7 +748,7 @@ const saveChanges = async () => {
   const valueDisplayRef = mcpServerValueDisplayRef.value;
   if (valueDisplayRef && (isEditMode.value || isCreateMode.value)) {
     const currentTools = valueDisplayRef.getCurrentTools();
-    
+
     // 将工具数据同步到表单模型
     formModel.value.tools = currentTools.map((tool: McpTool) => ({
       id: tool.id,
@@ -749,7 +772,7 @@ const saveChanges = async () => {
       success = createdId !== null;
       if (success) {
         message.success(t('mcpserver.create_success'));
-        
+
         // 创建成功后的处理
         if (route.name === 'McpServerDetail') {
           // 如果是直接访问详情页创建，跳转到列表页
@@ -792,14 +815,17 @@ const saveChanges = async () => {
 // 发布当前版本
 const publishCurrentVersion = () => {
   if (!serverId.value) return;
-  
+
   confirmDialog.value = {
     title: t('mcpserver.confirm_publish_title'),
     content: t('mcpserver.confirm_publish_content'),
     onConfirm: async () => {
       publishLoading.value = true;
       try {
-        const success = await mcpServerApi.publishCurrentMcpServerWithErrorHandling(serverId.value!);
+        const success =
+          await mcpServerApi.publishCurrentMcpServerWithErrorHandling(
+            serverId.value!
+          );
         if (success) {
           message.success(t('mcpserver.publish_success'));
           await loadServerData(); // 重新加载数据
@@ -829,13 +855,15 @@ const showHistoryList = () => {
 // 处理发布历史版本
 const handlePublishHistoryVersion = async (versionId: number) => {
   if (!serverId.value) return;
-  
+
   try {
-    const success = await mcpServerApi.publishHistoryMcpServerWithErrorHandling({
-      id: serverId.value,
-      historyValueId: versionId
-    });
-    
+    const success = await mcpServerApi.publishHistoryMcpServerWithErrorHandling(
+      {
+        id: serverId.value,
+        historyValueId: versionId
+      }
+    );
+
     if (success) {
       message.success(t('mcpserver.publish_history_success'));
       await loadServerData(); // 重新加载数据
@@ -858,7 +886,7 @@ const handleViewHistoryVersion = (version: McpServerValueDto) => {
 // 处理回滚版本
 const handleRollbackVersion = () => {
   if (!selectedVersionData.value) return;
-  
+
   handlePublishHistoryVersion(selectedVersionData.value.id);
   showVersionModal.value = false;
 };
@@ -871,37 +899,44 @@ const initializeData = () => {
     // 如果 props.model 有完整的服务器数据，也设置 serverData
     if (props.model.id && props.model.name) {
       const tools = props.model.tools || [];
+      // 将 McpSimpleToolParams[] 转换为 McpTool[]
+      const convertedTools: McpTool[] = tools.map((tool) => ({
+        id: tool.id || Date.now(),
+        toolName: tool.toolName,
+        toolKey: {
+          namespace: tool.namespace,
+          group: tool.group,
+          toolName: tool.toolName
+        },
+        toolVersion: tool.toolVersion || 1,
+        spec: {
+          name: tool.toolName,
+          description: tool.toolName,
+          parameters: {
+            type: 'object',
+            properties: {},
+            description: `Parameters for ${tool.toolName}`
+          }
+        },
+        routeRule: tool.routeRule || {
+          protocol: 'HTTP',
+          url: '',
+          method: 'POST',
+          additionHeaders: {},
+          convertType: 'NONE',
+          serviceNamespace: tool.namespace,
+          serviceGroup: tool.group,
+          serviceName: tool.toolName
+        }
+      }));
+
       serverData.value = {
         id: props.model.id,
         namespace: props.model.namespace,
         name: props.model.name,
         description: props.model.description || '',
         authKeys: [...props.model.authKeys],
-        tools: tools.map(tool => ({
-          id: tool.id || Date.now(),
-          toolName: tool.toolName,
-          toolKey: {
-            namespace: tool.namespace,
-            group: tool.group,
-            toolName: tool.toolName
-          },
-          toolVersion: tool.toolVersion || 1,
-          spec: {
-            name: tool.toolName,
-            description: '',
-            parameters: { type: 'object', properties: {} }
-          },
-          routeRule: tool.routeRule || {
-            protocol: 'HTTP',
-            url: '',
-            method: 'POST',
-            additionHeaders: {},
-            convertType: 'NONE',
-            serviceNamespace: tool.namespace,
-            serviceGroup: tool.group,
-            serviceName: tool.toolName
-          }
-        })) as McpTool[],
+        tools: convertedTools,
         createTime: Date.now(),
         lastModifiedMillis: Date.now(),
         updateTime: Date.now()
@@ -920,7 +955,7 @@ const initializeData = () => {
 const initializeCreateMode = () => {
   // 获取当前命名空间作为默认值
   const currentNamespace = namespaceStore?.current?.value?.namespaceId || '';
-  
+
   formModel.value = {
     id: 0,
     namespace: currentNamespace,
@@ -930,19 +965,19 @@ const initializeCreateMode = () => {
     tools: [],
     mode: 'create'
   };
-  
+
   // 清空服务器数据
   serverData.value = null;
-  
+
   // 重置验证状态
   formValid.value = false;
-  
+
   // 重置UI状态
   isEditMode.value = false;
   showHistory.value = false;
   showVersionModal.value = false;
   selectedVersionData.value = null;
-  
+
   // 重置确认对话框状态
   showConfirmDialog.value = false;
 };
@@ -959,13 +994,13 @@ watch(
 // 重置表单到创建模式
 const resetToCreateMode = () => {
   initializeCreateMode();
-  
+
   // 重置子组件状态
   const valueDisplayRef = mcpServerValueDisplayRef.value;
   if (valueDisplayRef) {
     valueDisplayRef.resetEditState();
   }
-  
+
   const formRef = mcpServerFormRef.value;
   if (formRef) {
     // 延迟重置表单验证状态

@@ -149,7 +149,11 @@
               </n-descriptions-item>
               <n-descriptions-item :label="t('mcpserver.route_rule')" :span="2">
                 <div v-if="tool.routeRule" class="route-rule-display">
-                  <n-tag :type="getRouteRuleTagType(tool.routeRule.ruleType || 'direct')">
+                  <n-tag
+                    :type="
+                      getRouteRuleTagType(tool.routeRule.ruleType || 'direct')
+                    "
+                  >
                     {{ tool.routeRule.ruleType || 'direct' }}
                   </n-tag>
                   <n-text depth="3" v-if="tool.routeRule.config">

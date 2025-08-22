@@ -140,7 +140,12 @@ import {
 } from 'naive-ui';
 import { SearchOutline, FunnelOutline } from '@vicons/ionicons5';
 import { toolSpecApi, IToolSpecQueryParam, IToolSpec } from '@/api/toolspec';
-import { ToolSpecInfo, McpToolEditModel, ToolKey, ToolRouteRule } from '@/types/mcpserver';
+import {
+  ToolSpecInfo,
+  McpToolEditModel,
+  ToolKey,
+  ToolRouteRule
+} from '@/types/mcpserver';
 
 interface Props {
   visible: boolean;
@@ -202,82 +207,79 @@ const visible = computed({
 });
 
 // 表格列定义
-const columns = computed(() => [
-  {
-    title: t('namespace.namespace'),
-    key: 'namespace',
-    width: props.namespace ? 0 : 120, // 如果指定了命名空间，隐藏此列
-    render: (row: IToolSpec) => props.namespace ? null : row.namespace
-  },
-  {
-    title: t('toolspec.group'),
-    key: 'group',
-    width: 120,
-    render: (row: IToolSpec) => h(
-      NTag,
-      { type: 'info', size: 'small' },
-      { default: () => row.group }
-    )
-  },
-  {
-    title: t('toolspec.tool_name'),
-    key: 'toolName',
-    width: 150,
-    render: (row: IToolSpec) => h(
-      'span',
-      { style: 'font-weight: 500; color: #18a058;' },
-      row.toolName
-    )
-  },
-  {
-    title: t('toolspec.name'),
-    key: 'name',
-    width: 180,
-    ellipsis: true
-  },
-  {
-    title: t('toolspec.description'),
-    key: 'description',
-    ellipsis: true
-  },
-  {
-    title: t('toolspec.version'),
-    key: 'version',
-    width: 80,
-    render: (row: IToolSpec) => h(
-      NTag,
-      { type: 'success', size: 'small' },
-      { default: () => `v${row.version}` }
-    )
-  },
-  {
-    title: t('common.operation'),
-    key: 'actions',
-    width: 120,
-    render: (row: IToolSpec) => {
-      const isSelected = props.selectedToolSpecs?.some(
-        (spec) =>
-          spec.namespace === row.namespace &&
-          spec.group === row.group &&
-          spec.toolName === row.toolName
-      );
+const columns = computed(() =>
+  [
+    {
+      title: t('namespace.namespace'),
+      key: 'namespace',
+      width: props.namespace ? 0 : 120, // 如果指定了命名空间，隐藏此列
+      render: (row: IToolSpec) => (props.namespace ? null : row.namespace)
+    },
+    {
+      title: t('toolspec.group'),
+      key: 'group',
+      width: 120,
+      render: (row: IToolSpec) =>
+        h(NTag, { type: 'info', size: 'small' }, { default: () => row.group })
+    },
+    {
+      title: t('toolspec.tool_name'),
+      key: 'toolName',
+      width: 150,
+      render: (row: IToolSpec) =>
+        h('span', { style: 'font-weight: 500; color: #18a058;' }, row.toolName)
+    },
+    {
+      title: t('toolspec.name'),
+      key: 'name',
+      width: 180,
+      ellipsis: true
+    },
+    {
+      title: t('toolspec.description'),
+      key: 'description',
+      ellipsis: true
+    },
+    {
+      title: t('toolspec.version'),
+      key: 'version',
+      width: 80,
+      render: (row: IToolSpec) =>
+        h(
+          NTag,
+          { type: 'success', size: 'small' },
+          { default: () => `v${row.version}` }
+        )
+    },
+    {
+      title: t('common.operation'),
+      key: 'actions',
+      width: 120,
+      render: (row: IToolSpec) => {
+        const isSelected = props.selectedToolSpecs?.some(
+          (spec) =>
+            spec.namespace === row.namespace &&
+            spec.group === row.group &&
+            spec.toolName === row.toolName
+        );
 
-      return h(
-        NButton,
-        {
-          size: 'small',
-          type: isSelected ? 'default' : 'primary',
-          disabled: isSelected,
-          onClick: () => handleSelect(row)
-        },
-        {
-          default: () =>
-            isSelected ? t('common.selected') : t('common.select')
-        }
-      );
+        return h(
+          NButton,
+          {
+            size: 'small',
+            type: isSelected ? 'default' : 'primary',
+            disabled: isSelected,
+            onClick: () => handleSelect(row)
+          },
+          {
+            default: () =>
+              isSelected ? t('common.selected') : t('common.select')
+          }
+        );
+      }
     }
-  }
-].filter(col => col.width !== 0)); // 过滤掉隐藏的列
+  ].filter((col) => col.width !== 0)
+); // 过滤掉隐藏的列
 
 // 加载 ToolSpec 列表
 const loadToolSpecs = async () => {
@@ -287,7 +289,8 @@ const loadToolSpecs = async () => {
       pageNo: pagination.value.page,
       pageSize: pagination.value.pageSize,
       // 如果指定了命名空间，优先使用指定的命名空间
-      namespaceId: props.namespace || searchForm.value.namespaceFilter || undefined,
+      namespaceId:
+        props.namespace || searchForm.value.namespaceFilter || undefined,
       groupFilter: searchForm.value.groupFilter || undefined,
       toolNameFilter: searchForm.value.toolNameFilter || undefined
     };
@@ -296,7 +299,7 @@ const loadToolSpecs = async () => {
     if (result) {
       toolSpecs.value = result.list;
       pagination.value.itemCount = result.totalCount;
-      
+
       // 更新可用的组列表
       updateAvailableGroups(result.list);
     }
@@ -311,7 +314,7 @@ const loadToolSpecs = async () => {
 // 更新可用的组列表
 const updateAvailableGroups = (specs: IToolSpec[]) => {
   const groups = new Set<string>();
-  specs.forEach(spec => {
+  specs.forEach((spec) => {
     if (spec.group) {
       groups.add(spec.group);
     }
@@ -339,9 +342,9 @@ const handleSelect = (toolSpec: IToolSpec) => {
 
   // 显示选择成功的消息
   message.success(`已选择工具: ${toolSpec.toolName} (${toolSpec.group})`);
-  
+
   emit('select', selectedToolSpec);
-  
+
   // 选择后自动关闭弹窗
   visible.value = false;
 };
@@ -391,13 +394,16 @@ watch(visible, (newValue) => {
 });
 
 // 监听命名空间变化
-watch(() => props.namespace, (newNamespace) => {
-  if (newNamespace && visible.value) {
-    // 如果命名空间发生变化且弹窗是打开的，重新加载数据
-    pagination.value.page = 1;
-    loadToolSpecs();
+watch(
+  () => props.namespace,
+  (newNamespace) => {
+    if (newNamespace && visible.value) {
+      // 如果命名空间发生变化且弹窗是打开的，重新加载数据
+      pagination.value.page = 1;
+      loadToolSpecs();
+    }
   }
-});
+);
 
 // 组件挂载时加载数据
 onMounted(() => {
@@ -437,7 +443,7 @@ const convertToolSpecToMcpTool = (toolSpec: ToolSpecInfo): McpToolEditModel => {
 
 // 工具函数：验证 ToolSpec 是否已被选择
 const isToolSpecSelected = (
-  toolSpec: IToolSpec, 
+  toolSpec: IToolSpec,
   selectedSpecs: ToolSpecInfo[]
 ): boolean => {
   return selectedSpecs.some(
@@ -502,11 +508,11 @@ const isToolSpecSelected = (
   .n-modal {
     max-width: 95vw !important;
   }
-  
+
   .n-form .n-grid {
     grid-template-columns: 1fr !important;
   }
-  
+
   .n-form .n-form-item-gi {
     grid-column: span 24 !important;
     margin-bottom: 12px;

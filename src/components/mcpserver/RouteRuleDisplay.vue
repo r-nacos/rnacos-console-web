@@ -12,20 +12,23 @@
           {{ routeRule.url || '-' }}
         </n-text>
       </n-space>
-      
-      <div v-if="routeRule.convertType && routeRule.convertType !== 'NONE'" class="convert-type">
+
+      <div
+        v-if="routeRule.convertType && routeRule.convertType !== 'NONE'"
+        class="convert-type"
+      >
         <n-tag size="small" type="info">
           {{ routeRule.convertType }}
         </n-tag>
       </div>
-      
+
       <div v-if="hasServiceInfo" class="service-info">
-        <n-text depth="3" style="font-size: 12px;">
+        <n-text depth="3" style="font-size: 12px">
           {{ formatServiceInfo(routeRule) }}
         </n-text>
       </div>
     </div>
-    
+
     <n-text v-else depth="3">-</n-text>
   </div>
 </template>
@@ -43,10 +46,11 @@ const props = defineProps<Props>();
 
 // 计算属性
 const hasServiceInfo = computed(() => {
-  return props.routeRule && (
-    props.routeRule.serviceNamespace ||
-    props.routeRule.serviceGroup ||
-    props.routeRule.serviceName
+  return (
+    props.routeRule &&
+    (props.routeRule.serviceNamespace ||
+      props.routeRule.serviceGroup ||
+      props.routeRule.serviceName)
   );
 });
 

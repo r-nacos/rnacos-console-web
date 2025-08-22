@@ -416,12 +416,13 @@ const message = {
     confirm_delete_tool: 'Are you sure to delete tool "{name}"?',
     confirm_delete_tool_title: 'Confirm Delete Tool',
     update_failed: 'Update failed',
-    
+
     // Edit confirmation
     confirm_cancel_edit_title: 'Confirm Cancel Edit',
-    confirm_cancel_edit_content: 'Canceling edit will lose all unsaved changes. Are you sure you want to cancel?',
+    confirm_cancel_edit_content:
+      'Canceling edit will lose all unsaved changes. Are you sure you want to cancel?',
     edit_cancelled: 'Edit cancelled',
-    
+
     // Tool validation messages
     unnamed_tool: 'Unnamed Tool',
     tool_name_required: 'Tool name is required for {name}',
@@ -441,15 +442,16 @@ const message = {
     create_mode: 'Create Mode',
     create_server: 'Create MCP Server',
     server_not_found: 'Server not found or has been deleted',
-    
+
     // Publish related
     confirm_publish_title: 'Confirm Publish Version',
-    confirm_publish_content: 'Are you sure to publish the current version? It will become the official version after publishing.',
+    confirm_publish_content:
+      'Are you sure to publish the current version? It will become the official version after publishing.',
     publish_success: 'Version published successfully',
     publish_failed: 'Version publish failed',
     publish_history_success: 'History version published successfully',
     publish_history_failed: 'History version publish failed',
-    
+
     // Operation results
     create_failed: 'MCP server creation failed',
     release_version: 'Release Version',
@@ -459,7 +461,8 @@ const message = {
     publish_version: 'Publish Version',
     rollback_version: 'Rollback Version',
     confirm_rollback_title: 'Confirm Rollback Version',
-    confirm_rollback_content: 'Are you sure to rollback to this version? Current version will be replaced.',
+    confirm_rollback_content:
+      'Are you sure to rollback to this version? Current version will be replaced.',
 
     // Tool management related
     configured_tools: 'Configured Tools',
@@ -470,14 +473,17 @@ const message = {
     tool_deleted_success: 'Tool deleted successfully',
     tool_not_found: 'Tool not found',
     editing: 'Editing',
-    
+
     // Tool configuration validation
-    tool_config_incomplete: 'Tool "{name}" configuration is incomplete, please check required fields',
-    tool_route_rule_incomplete: 'Tool "{name}" route rule configuration is incomplete',
+    tool_config_incomplete:
+      'Tool "{name}" configuration is incomplete, please check required fields',
+    tool_route_rule_incomplete:
+      'Tool "{name}" route rule configuration is incomplete',
     tool_url_required: 'Tool "{name}" requires URL configuration',
-    
+
     // Tool deletion confirmation
-    confirm_delete_tool_content: 'Are you sure to delete tool "{name}" (group: {group})? This operation cannot be undone.'
+    confirm_delete_tool_content:
+      'Are you sure to delete tool "{name}" (group: {group})? This operation cannot be undone.'
   },
   error: {
     NO_PERMISSION: 'NO_PERMISSION',

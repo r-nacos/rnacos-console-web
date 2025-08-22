@@ -145,7 +145,8 @@ export default defineComponent({
       description: '',
       authKeys: [],
       tools: [],
-      mode: ''
+      mode: '',
+      currentValue: undefined
     });
 
     const paginationReactive = reactive({
@@ -243,27 +244,27 @@ export default defineComponent({
     const detailItem = async (row) => {
       try {
         const server = await mcpServerApi.getMcpServerWithErrorHandling(row.id);
+        console.log('detailItem', server);
 
         if (server) {
+          // 从 currentValue.tools 或 tools 中获取工具数据，如果都不存在则使用空数组
+          const tools = server.currentValue?.tools || server.tools || [];
+
           modelRef.value = {
             id: server.id,
             namespace: server.namespace,
             name: server.name,
             description: server.description || '',
-            authKeys: [...server.authKeys],
-            tools: server.tools.map((tool) => ({
-              id: tool.id,
-              toolName: tool.toolName,
-              namespace: tool.namespace,
-              group: tool.group,
-              toolVersion: tool.toolVersion,
-              routeRule: tool.routeRule
-            })),
+            authKeys: [...(server.authKeys || [])],
+            tools: tools,
+            currentValue: server.currentValue,
             mode: constant.FORM_MODE_DETAIL
           };
           useFormRef.value = true;
+          console.log('detailItem 001', JSON.stringify(modelRef.value));
         }
       } catch (error) {
+        console.log('detailItem error:' + error);
         printApiError(error);
       }
     };
@@ -273,20 +274,17 @@ export default defineComponent({
         const server = await mcpServerApi.getMcpServerWithErrorHandling(row.id);
 
         if (server) {
+          // 从 currentValue.tools 或 tools 中获取工具数据，如果都不存在则使用空数组
+          const tools = server.currentValue?.tools || server.tools || [];
+
           modelRef.value = {
             id: server.id,
             namespace: server.namespace,
             name: server.name,
             description: server.description || '',
-            authKeys: [...server.authKeys],
-            tools: server.tools.map((tool) => ({
-              id: tool.id,
-              toolName: tool.toolName,
-              namespace: tool.namespace,
-              group: tool.group,
-              toolVersion: tool.toolVersion,
-              routeRule: tool.routeRule
-            })),
+            authKeys: [...(server.authKeys || [])],
+            tools: tools,
+            currentValue: server.currentValue,
             mode: constant.FORM_MODE_UPDATE
           };
           useFormRef.value = true;
@@ -332,6 +330,7 @@ export default defineComponent({
         description: '',
         authKeys: [''],
         tools: [],
+        currentValue: undefined,
         mode: constant.FORM_MODE_CREATE
       };
       useFormRef.value = true;

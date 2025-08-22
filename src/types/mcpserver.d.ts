@@ -7,6 +7,8 @@ export interface McpServerValue {
   tools: McpTool[];
   opUser: string;
   updateTime: number;
+  createTime?: number;
+  isRelease?: boolean;
 }
 
 // McpServer基础信息DTO

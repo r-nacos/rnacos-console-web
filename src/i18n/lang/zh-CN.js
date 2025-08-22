@@ -393,8 +393,107 @@ const message = {
     cancel_edit: '取消编辑',
     back_to_list: '返回列表',
     form_validation_error: '表单验证失败，请检查输入',
+
+    // 工具组件相关
+    tool_detail: '工具详情',
+    edit_tool: '编辑工具',
+    delete_tool: '删除工具',
+
+    // 版本管理相关
+    current_service_content: '当前服务内容 (currentValue)',
+    publish_current_version: '发布当前版本',
+    view_history: '查看历史版本',
+    history_versions: '历史版本记录',
+    version_content: '版本内容',
+    create_mode: '创建模式',
+    create_server: '创建MCP服务器',
+    server_not_found: '服务器不存在或已被删除',
+    
+    // 发布相关
+    confirm_publish_title: '确认发布版本',
+    confirm_publish_content: '确认要发布当前版本吗？发布后将成为正式版本。',
+    publish_success: '版本发布成功',
+    publish_failed: '版本发布失败',
+    publish_history_success: '历史版本发布成功',
+    publish_history_failed: '历史版本发布失败',
+    
+    // 编辑确认
+    confirm_cancel_edit_title: '确认取消编辑',
+    confirm_cancel_edit_content: '取消编辑将丢失所有未保存的修改，确认要取消吗？',
+    edit_cancelled: '已取消编辑',
+    
+    // 工具验证消息
+    unnamed_tool: '未命名工具',
+    tool_name_required: '工具 {name} 缺少工具名称',
+    tool_namespace_required: '工具 {name} 缺少命名空间',
+    tool_group_required: '工具 {name} 缺少分组',
+    tool_protocol_required: '工具 {name} 缺少协议配置',
+    tool_method_required: '工具 {name} 缺少HTTP方法配置',
+    tool_route_rule_required: '工具 {name} 缺少路由规则配置',
+    tool_validation_failed: '工具配置验证失败',
+    
+    // 工具配置验证
+    tool_config_incomplete: '工具 "{name}" 配置不完整',
+    tool_route_rule_incomplete: '工具 "{name}" 路由规则不完整',
+    tool_url_required: '工具 "{name}" 需要配置URL',
+    tool_already_exists: '该工具已存在，请勿重复添加',
+    tool_added_success: '工具添加成功',
+    tool_updated_success: '工具配置更新成功',
+    tool_deleted_success: '工具删除成功',
+    tool_not_found: '工具不存在',
+    
+    // 工具删除确认
+    confirm_delete_tool_title: '确认删除工具',
+    confirm_delete_tool_content: '确认要删除工具 "{name}" (组: {group}) 吗？此操作不可恢复。',
+    
+    // 版本相关
+    release_version: '发布版本',
+    draft_version: '草稿版本',
+    operator: '操作人',
+    description: '描述',
+    configured_tools: '已配置工具',
+    no_configured_tools: '暂无配置的工具',
+    editing: '编辑中',
+    publish_version: '发布版本',
+    rollback_version: '回滚版本',
+    confirm_rollback_title: '确认回滚版本',
+    confirm_rollback_content: '确认要回滚到此版本吗？当前版本将被替换。',
+    
+    // 操作结果
+    create_failed: 'MCP服务器创建失败',
+    update_failed: 'MCP服务器更新失败',
+    confirm_delete_tool: '确认删除工具 "{name}"？',
+    confirm_delete_tool_title: '确认删除工具',
     create_failed: '创建失败',
-    update_failed: '更新失败'
+    update_failed: '更新失败',
+
+    // 版本管理相关
+    release_version: '发布版本',
+    draft_version: '草稿版本',
+    operator: '操作人',
+    description: '描述',
+    publish_version: '发布版本',
+    rollback_version: '回滚版本',
+    confirm_rollback_title: '确认回滚版本',
+    confirm_rollback_content: '确认要回滚到此版本吗？当前版本将被替换。',
+
+    // 工具管理相关
+    configured_tools: '已配置工具',
+    no_configured_tools: '暂无配置的工具',
+    tool_already_exists: '工具已存在',
+    tool_added_success: '工具添加成功',
+    tool_updated_success: '工具更新成功',
+    tool_deleted_success: '工具删除成功',
+    tool_not_found: '工具不存在',
+    editing: '编辑中',
+    
+    // 工具配置验证
+    tool_config_incomplete: '工具 "{name}" 配置不完整，请检查必填字段',
+    tool_route_rule_incomplete: '工具 "{name}" 路由规则配置不完整',
+    tool_url_required: '工具 "{name}" 需要配置URL',
+    
+    // 工具删除确认
+    confirm_delete_tool_content: '确认要删除工具 "{name}" (分组: {group}) 吗？此操作不可恢复。'
   },
   error: {
     NO_PERMISSION: '没有权限',

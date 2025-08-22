@@ -149,8 +149,8 @@
               </n-descriptions-item>
               <n-descriptions-item :label="t('mcpserver.route_rule')" :span="2">
                 <div v-if="tool.routeRule" class="route-rule-display">
-                  <n-tag :type="getRouteRuleTagType(tool.routeRule.ruleType)">
-                    {{ tool.routeRule.ruleType }}
+                  <n-tag :type="getRouteRuleTagType(tool.routeRule.ruleType || 'direct')">
+                    {{ tool.routeRule.ruleType || 'direct' }}
                   </n-tag>
                   <n-text depth="3" v-if="tool.routeRule.config">
                     {{ JSON.stringify(tool.routeRule.config) }}
@@ -304,6 +304,14 @@ const saveEdit = (index: number) => {
         editingTool.value.routeRule.config = config;
       } else {
         editingTool.value.routeRule = {
+          protocol: 'HTTP',
+          url: '',
+          method: 'POST',
+          additionHeaders: {},
+          convertType: 'NONE',
+          serviceNamespace: editingTool.value.namespace,
+          serviceGroup: editingTool.value.group,
+          serviceName: editingTool.value.toolName,
           ruleType: 'direct',
           config
         };
@@ -336,6 +344,14 @@ const removeTool = (index: number) => {
 const updateRouteRuleType = (value: string) => {
   if (!editingTool.value.routeRule) {
     editingTool.value.routeRule = {
+      protocol: 'HTTP',
+      url: '',
+      method: 'POST',
+      additionHeaders: {},
+      convertType: 'NONE',
+      serviceNamespace: editingTool.value.namespace,
+      serviceGroup: editingTool.value.group,
+      serviceName: editingTool.value.toolName,
       ruleType: value as 'direct' | 'weighted' | 'conditional',
       config: {}
     };

@@ -21,15 +21,79 @@
         />
       </div>
     </n-card>
+
+    <!-- ToolSpecSelector 测试验证区域 -->
+    <n-card
+      title="ToolSpecSelector 测试验证区域"
+      :bordered="false"
+      class="toolspec-selector-test-area"
+    >
+      <template #header-extra>
+        <n-space>
+          <n-text depth="3"
+            >已选择:
+            {{ selectedToolSpec ? selectedToolSpec.toolName : '无' }}</n-text
+          >
+          <n-button size="small" @click="showToolSpecSelector = true">
+            <template #icon>
+              <n-icon><add-outline /></n-icon>
+            </template>
+            选择 ToolSpec
+          </n-button>
+        </n-space>
+      </template>
+
+      <div class="toolspec-selector-content">
+        <n-space vertical>
+          <n-alert v-if="selectedToolSpec" type="success" :show-icon="false">
+            <template #header>
+              <n-space align="center">
+                <n-icon><checkmark-circle-outline /></n-icon>
+                <span>已选择的 ToolSpec</span>
+              </n-space>
+            </template>
+            <div>
+              <p><strong>命名空间:</strong> {{ selectedToolSpec.namespace }}</p>
+              <p><strong>组:</strong> {{ selectedToolSpec.group }}</p>
+              <p><strong>工具名称:</strong> {{ selectedToolSpec.toolName }}</p>
+              <p><strong>名称:</strong> {{ selectedToolSpec.name }}</p>
+              <p><strong>描述:</strong> {{ selectedToolSpec.description }}</p>
+              <p><strong>版本:</strong> {{ selectedToolSpec.version }}</p>
+            </div>
+          </n-alert>
+
+          <n-empty v-else description="请点击上方按钮选择 ToolSpec">
+            <template #extra>
+              <n-button type="primary" @click="showToolSpecSelector = true">
+                选择 ToolSpec
+              </n-button>
+            </template>
+          </n-empty>
+        </n-space>
+      </div>
+    </n-card>
+
+    <!-- ToolSpecSelector 组件 -->
+    <tool-spec-selector
+      v-model:visible="showToolSpecSelector"
+      :selected-tool-specs="selectedToolSpecs"
+      @select="handleToolSpecSelect"
+      @cancel="handleToolSpecCancel"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import { NCard, NSpace, NText, NButton, NIcon } from 'naive-ui';
-import { RefreshOutline } from '@vicons/ionicons5';
+import { NCard, NSpace, NText, NButton, NIcon, NAlert, NEmpty } from 'naive-ui';
+import {
+  RefreshOutline,
+  AddOutline,
+  CheckmarkCircleOutline
+} from '@vicons/ionicons5';
 import McpServerToolItem from '@/components/mcpserver/McpServerToolItem.vue';
-import { McpTool } from '@/types/mcpserver';
+import ToolSpecSelector from '@/components/mcpserver/ToolSpecSelector.vue';
+import { McpTool, ToolSpecInfo } from '@/types/mcpserver';
 
 // Mock 数据
 const mockTools = ref<McpTool[]>([
@@ -66,7 +130,7 @@ const mockTools = ref<McpTool[]>([
       url: 'https://api.example.com/user/{userId}',
       method: 'GET',
       additionHeaders: {
-        'Authorization': 'Bearer {token}',
+        Authorization: 'Bearer {token}',
         'Content-Type': 'application/json'
       },
       convertType: 'NONE',
@@ -140,7 +204,7 @@ const mockTools = ref<McpTool[]>([
       url: 'https://api.example.com/orders',
       method: 'POST',
       additionHeaders: {
-        'Authorization': 'Bearer {token}',
+        Authorization: 'Bearer {token}',
         'Content-Type': 'application/json',
         'X-Request-Source': 'web'
       },
@@ -192,7 +256,7 @@ const mockTools = ref<McpTool[]>([
       url: 'https://api.example.com/payment/process',
       method: 'POST',
       additionHeaders: {
-        'Authorization': 'Bearer {token}',
+        Authorization: 'Bearer {token}',
         'Content-Type': 'application/json',
         'X-Payment-Provider': 'stripe'
       },
@@ -247,7 +311,7 @@ const mockTools = ref<McpTool[]>([
       url: 'https://api.example.com/notification/send',
       method: 'POST',
       additionHeaders: {
-        'Authorization': 'Bearer {token}',
+        Authorization: 'Bearer {token}',
         'Content-Type': 'application/json',
         'X-Notification-Priority': 'high'
       },
@@ -301,7 +365,7 @@ const mockTools = ref<McpTool[]>([
       url: 'https://api.example.com/file/upload',
       method: 'POST',
       additionHeaders: {
-        'Authorization': 'Bearer {token}',
+        Authorization: 'Bearer {token}',
         'Content-Type': 'multipart/form-data'
       },
       convertType: 'NONE',
@@ -311,6 +375,23 @@ const mockTools = ref<McpTool[]>([
     }
   }
 ]);
+
+// ToolSpecSelector 相关变量和函数
+const showToolSpecSelector = ref(false);
+const selectedToolSpec = ref<ToolSpecInfo | null>(null);
+const selectedToolSpecs = ref<ToolSpecInfo[]>([]);
+
+// 处理 ToolSpec 选择
+const handleToolSpecSelect = (toolSpec: ToolSpecInfo) => {
+  selectedToolSpec.value = toolSpec;
+  selectedToolSpecs.value = [toolSpec];
+  showToolSpecSelector.value = false;
+};
+
+// 处理 ToolSpec 选择取消
+const handleToolSpecCancel = () => {
+  showToolSpecSelector.value = false;
+};
 
 // 刷新工具列表
 const refreshTools = () => {
@@ -330,6 +411,27 @@ const refreshTools = () => {
   gap: 16px;
 }
 
+/* ToolSpecSelector 测试验证区域样式 */
+.toolspec-selector-test-area {
+  margin-top: 24px;
+}
+
+.toolspec-selector-content {
+  min-height: 200px;
+}
+
+.toolspec-selector-content .n-alert {
+  margin-bottom: 16px;
+}
+
+.toolspec-selector-content .n-alert p {
+  margin: 4px 0;
+}
+
+.toolspec-selector-content .n-empty {
+  padding: 40px 0;
+}
+
 /* 响应式设计 */
 @media (min-width: 768px) {
   .tools-container {
@@ -342,6 +444,10 @@ const refreshTools = () => {
 @media (max-width: 767px) {
   .mcp-server-tool-demo {
     padding: 8px;
+  }
+
+  .toolspec-selector-test-area {
+    margin-top: 16px;
   }
 }
 </style>

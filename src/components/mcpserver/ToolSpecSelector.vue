@@ -12,27 +12,19 @@
     }"
   >
     <n-space vertical>
-      <!-- 命名空间筛选提示 -->
-      <n-alert v-if="namespace" type="info" :show-icon="false">
-        <template #header>
-          <n-space align="center">
-            <n-icon><funnel-outline /></n-icon>
-            <span>当前筛选命名空间: {{ namespace }}</span>
-          </n-space>
-        </template>
-        只显示命名空间为 "{{ namespace }}" 的 ToolSpec
-      </n-alert>
-
       <!-- 搜索表单 -->
       <n-form :model="searchForm" label-placement="left" :show-label="false">
         <n-grid :cols="24" :x-gap="12">
           <n-form-item-gi :span="6">
             <n-input
-              v-model:value="searchForm.namespaceFilter"
+              :value="namespace || namespaceStore.current.value.namespaceId"
               :placeholder="t('namespace.namespace')"
-              :disabled="!!namespace"
-              clearable
-            />
+              readonly
+            >
+              <template #prefix>
+                <n-icon size="14"><funnel-outline /></n-icon>
+              </template>
+            </n-input>
           </n-form-item-gi>
           <n-form-item-gi :span="6">
             <n-input
@@ -53,7 +45,7 @@
               <template #icon>
                 <n-icon><search-outline /></n-icon>
               </template>
-              {{ t('common.search') }}
+              {{ t('common.query') }}
             </n-button>
           </n-form-item-gi>
         </n-grid>
@@ -146,11 +138,12 @@ import {
   ToolKey,
   ToolRouteRule
 } from '@/types/mcpserver';
+import { namespaceStore } from '@/data/namespace';
 
 interface Props {
   visible: boolean;
   selectedToolSpecs?: ToolSpecInfo[];
-  namespace?: string; // 新增：指定命名空间筛选
+  namespace?: string; // 可选：指定命名空间筛选，如果不指定则使用namespaceStore.current.value.namespaceId
 }
 
 interface Emits {
@@ -170,7 +163,6 @@ const message = useMessage();
 
 // 搜索表单
 const searchForm = ref({
-  namespaceFilter: '',
   groupFilter: '',
   toolNameFilter: ''
 });
@@ -288,9 +280,11 @@ const loadToolSpecs = async () => {
     const params: IToolSpecQueryParam = {
       pageNo: pagination.value.page,
       pageSize: pagination.value.pageSize,
-      // 如果指定了命名空间，优先使用指定的命名空间
+      // 直接使用 namespaceStore.current.value.namespaceId
       namespaceId:
-        props.namespace || searchForm.value.namespaceFilter || undefined,
+        props.namespace ||
+        namespaceStore.current.value.namespaceId ||
+        undefined,
       groupFilter: searchForm.value.groupFilter || undefined,
       toolNameFilter: searchForm.value.toolNameFilter || undefined
     };
@@ -373,7 +367,6 @@ const clearGroupFilter = () => {
 
 // 清除所有筛选条件
 const handleClearFilters = () => {
-  searchForm.value.namespaceFilter = '';
   searchForm.value.groupFilter = '';
   searchForm.value.toolNameFilter = '';
   handleSearch();
@@ -382,10 +375,7 @@ const handleClearFilters = () => {
 // 监听 visible 变化
 watch(visible, (newValue) => {
   if (newValue) {
-    // 重置搜索表单（但保留命名空间筛选）
-    if (!props.namespace) {
-      searchForm.value.namespaceFilter = '';
-    }
+    // 重置搜索表单
     searchForm.value.groupFilter = '';
     searchForm.value.toolNameFilter = '';
     pagination.value.page = 1;
@@ -395,9 +385,9 @@ watch(visible, (newValue) => {
 
 // 监听命名空间变化
 watch(
-  () => props.namespace,
-  (newNamespace) => {
-    if (newNamespace && visible.value) {
+  [() => props.namespace, () => namespaceStore.current.value.namespaceId],
+  ([newNamespace, newStoreNamespace]) => {
+    if (visible.value) {
       // 如果命名空间发生变化且弹窗是打开的，重新加载数据
       pagination.value.page = 1;
       loadToolSpecs();
@@ -490,11 +480,6 @@ const isToolSpecSelected = (
   background-color: #fafafa;
   padding: 16px;
   border-radius: 6px;
-  margin-bottom: 16px;
-}
-
-/* 命名空间筛选提示样式 */
-.n-alert {
   margin-bottom: 16px;
 }
 

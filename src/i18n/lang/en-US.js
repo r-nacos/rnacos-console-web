@@ -2,6 +2,7 @@ import enUS from 'naive-ui/lib/locales/common/enUS.js';
 const message = {
   common: {
     query: 'Query',
+    search: 'Search',
     status: 'Status',
     yes: 'Yes',
     no: 'No',
@@ -36,7 +37,9 @@ const message = {
     submitSuccess: 'Submit success',
     success: 'Success',
     home: 'Home',
-    batch: 'Batch'
+    batch: 'Batch',
+    select: 'Select',
+    selected: 'Selected'
   },
   cluster: {
     node: 'Node',

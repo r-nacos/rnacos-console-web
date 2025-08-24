@@ -2,6 +2,7 @@ import zhCN from 'naive-ui/lib/locales/common/zhCN.js';
 const message = {
   common: {
     query: '查询',
+    search: '搜索',
     status: '状态',
     yes: '是',
     no: '否',
@@ -38,7 +39,9 @@ const message = {
     home: '首页',
     batch: '批量',
     detail: '详情',
-    no_config: '无配置'
+    no_config: '无配置',
+    select: '选择',
+    selected: '已选择'
   },
   cluster: {
     node: '节点',

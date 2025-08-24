@@ -15,10 +15,7 @@
 
       <!-- 工具参数信息部分 - 默认只显示标题，可点击展开 -->
       <div class="tool-spec-section">
-        <div
-          class="section-header clickable"
-          @click="toggleToolSpecExpanded"
-        >
+        <div class="section-header clickable" @click="toggleToolSpecExpanded">
           <n-space align="center" :size="8">
             <n-icon size="16" :color="isToolSpecExpanded ? '#18a058' : '#999'">
               <chevron-down v-if="isToolSpecExpanded" />
@@ -27,7 +24,7 @@
             <n-text strong>工具参数信息</n-text>
           </n-space>
         </div>
-        
+
         <n-collapse-transition :show="isToolSpecExpanded">
           <div class="tool-spec-content">
             <n-space vertical :size="8">
@@ -55,10 +52,7 @@
 
       <!-- 路由工具部分 - 默认只显示标题，可点击展开 -->
       <div class="route-rule-section">
-        <div
-          class="section-header clickable"
-          @click="toggleRouteRuleExpanded"
-        >
+        <div class="section-header clickable" @click="toggleRouteRuleExpanded">
           <n-space align="center" :size="8">
             <n-icon size="16" :color="isRouteRuleExpanded ? '#18a058' : '#999'">
               <chevron-down v-if="isRouteRuleExpanded" />
@@ -67,7 +61,7 @@
             <n-text strong>路由工具</n-text>
           </n-space>
         </div>
-        
+
         <n-collapse-transition :show="isRouteRuleExpanded">
           <div class="route-rule-content">
             <n-space vertical :size="8">
@@ -81,7 +75,10 @@
               </div>
               <div class="info-item">
                 <n-text depth="3" class="label">方法:</n-text>
-                <n-tag size="small" :type="getMethodTagType(tool.routeRule.method)">
+                <n-tag
+                  size="small"
+                  :type="getMethodTagType(tool.routeRule.method)"
+                >
                   {{ tool.routeRule.method }}
                 </n-tag>
               </div>
@@ -102,7 +99,10 @@
                   </div>
                 </n-space>
               </div>
-              <div v-if="Object.keys(tool.routeRule.additionHeaders).length > 0" class="info-item">
+              <div
+                v-if="Object.keys(tool.routeRule.additionHeaders).length > 0"
+                class="info-item"
+              >
                 <n-text depth="3" class="label">附加头:</n-text>
                 <n-space vertical :size="2">
                   <div
@@ -125,14 +125,14 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import { 
-  NSpace, 
-  NCard, 
-  NText, 
-  NIcon, 
-  NTag, 
-  NCollapseTransition, 
-  NCode 
+import {
+  NSpace,
+  NCard,
+  NText,
+  NIcon,
+  NTag,
+  NCollapseTransition,
+  NCode
 } from 'naive-ui';
 import {
   ConstructOutline,
@@ -277,7 +277,7 @@ const formatJson = (data: any) => {
     flex-direction: column;
     align-items: flex-start;
   }
-  
+
   .label {
     min-width: auto;
     margin-right: 0;
@@ -292,15 +292,15 @@ const formatJson = (data: any) => {
     background: #1f2937;
     border-color: #374151;
   }
-  
+
   .basic-info {
     border-bottom-color: #374151;
   }
-  
+
   .tool-name {
     color: #f3f4f6;
   }
-  
+
   .params-code {
     background: #374151;
   }

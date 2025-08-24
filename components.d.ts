@@ -12,6 +12,7 @@ declare module 'vue' {
     LangSwitch: typeof import('./src/components/LangSwitch.vue')['default']
     McpServerForm: typeof import('./src/components/mcpserver/McpServerForm.vue')['default']
     McpServerHistoryList: typeof import('./src/components/mcpserver/McpServerHistoryList.vue')['default']
+    McpServerToolItem: typeof import('./src/components/mcpserver/McpServerToolItem.vue')['default']
     McpServerValueDisplay: typeof import('./src/components/mcpserver/McpServerValueDisplay.vue')['default']
     McpToolComponent: typeof import('./src/components/mcpserver/McpToolComponent.vue')['default']
     MoreSetting: typeof import('./src/components/MoreSetting.vue')['default']

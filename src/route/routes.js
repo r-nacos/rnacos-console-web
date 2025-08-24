@@ -130,6 +130,12 @@ export const routes = [
         name: 'mcpserver-detail',
         meta: { title: t('mcpserver.mcpserver_detail') },
         component: () => import('@/pages/McpServerDetail.vue')
+      },
+      {
+        path: '/manage/mcpserver/tool-demo',
+        name: 'mcpserver-tool-demo',
+        meta: { title: 'McpServerTool 组件演示' },
+        component: () => import('@/pages/McpServerToolDemo.vue')
       }
     ]
   },
@@ -235,6 +241,11 @@ export const sideAllMenu = [
         label: t('mcpserver.mcpserver_list'),
         key: 'mcpserver',
         path: '/manage/mcpserver'
+      },
+      {
+        label: 'McpServerTool 组件演示',
+        key: 'mcpserver-tool-demo',
+        path: '/manage/mcpserver/tool-demo'
       }
     ]
   },

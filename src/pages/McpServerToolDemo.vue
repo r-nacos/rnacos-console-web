@@ -13,13 +13,62 @@
         </n-space>
       </template>
 
-      <div class="tools-container">
-        <mcp-server-tool-item
-          v-for="tool in mockTools"
-          :key="tool.id"
-          :tool="tool"
-        />
-      </div>
+      <n-space vertical :size="16">
+        <!-- 模式选择器 -->
+        <n-card title="模式选择" size="small">
+          <n-radio-group v-model:value="currentMode" name="mode-select">
+            <n-radio-button value="detail">详情模式</n-radio-button>
+            <n-radio-button value="update">编辑模式</n-radio-button>
+            <n-radio-button value="create">创建模式</n-radio-button>
+          </n-radio-group>
+        </n-card>
+
+        <!-- 工具列表 -->
+        <div class="tools-container">
+          <mcp-server-tool-item
+            v-for="tool in mockTools"
+            :key="tool.id"
+            :tool="tool"
+            :mode="currentMode"
+            @update:tool="handleToolUpdate"
+            @save="handleToolSave"
+          />
+        </div>
+
+        <!-- 创建新工具示例 -->
+        <n-card
+          v-if="currentMode === 'create'"
+          title="创建新工具示例"
+          size="small"
+        >
+          <n-alert type="info" :show-icon="false">
+            <template #header>
+              <n-space align="center">
+                <n-icon><information-circle-outline /></n-icon>
+                <span>创建模式说明</span>
+              </n-space>
+            </template>
+            <p>
+              在创建模式下，您可以点击任意工具卡片上的编辑图标来创建新的工具副本。
+            </p>
+            <p>编辑完成后，参数将显示在下方控制台输出区域。</p>
+          </n-alert>
+        </n-card>
+      </n-space>
+    </n-card>
+
+    <!-- 控制台输出区域 -->
+    <n-card title="控制台输出" :bordered="false" class="console-output">
+      <template #header-extra>
+        <n-button size="small" @click="clearConsole">
+          <template #icon>
+            <n-icon><trash-outline /></n-icon>
+          </template>
+          清空
+        </n-button>
+      </template>
+
+      <n-log :lines="consoleOutput" :rows="10" :trim="false" language="json" />
     </n-card>
 
     <!-- ToolSpecSelector 测试验证区域 -->
@@ -84,16 +133,35 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import { NCard, NSpace, NText, NButton, NIcon, NAlert, NEmpty } from 'naive-ui';
+import { ref, watch } from 'vue';
+import {
+  NCard,
+  NSpace,
+  NText,
+  NButton,
+  NIcon,
+  NAlert,
+  NEmpty,
+  NRadioGroup,
+  NRadioButton,
+  NLog
+} from 'naive-ui';
 import {
   RefreshOutline,
   AddOutline,
-  CheckmarkCircleOutline
+  CheckmarkCircleOutline,
+  InformationCircleOutline,
+  TrashOutline
 } from '@vicons/ionicons5';
 import McpServerToolItem from '@/components/mcpserver/McpServerToolItem.vue';
 import ToolSpecSelector from '@/components/mcpserver/ToolSpecSelector.vue';
-import { McpTool, ToolSpecInfo } from '@/types/mcpserver';
+import { McpTool, ToolSpecInfo, McpSimpleToolParams } from '@/types/mcpserver';
+
+// 当前模式
+const currentMode = ref<'detail' | 'update' | 'create'>('detail');
+
+// 控制台输出
+const consoleOutput = ref<string[]>([]);
 
 // Mock 数据
 const mockTools = ref<McpTool[]>([
@@ -381,6 +449,31 @@ const showToolSpecSelector = ref(false);
 const selectedToolSpec = ref<ToolSpecInfo | null>(null);
 const selectedToolSpecs = ref<ToolSpecInfo[]>([]);
 
+// 处理工具更新
+const handleToolUpdate = (updatedTool: McpTool) => {
+  const index = mockTools.value.findIndex((tool) => tool.id === updatedTool.id);
+  if (index !== -1) {
+    mockTools.value[index] = updatedTool;
+  }
+};
+
+// 处理工具保存
+const handleToolSave = (params: McpSimpleToolParams) => {
+  // 添加到控制台输出
+  const timestamp = new Date().toLocaleTimeString();
+  consoleOutput.value.unshift(`[${timestamp}] 保存工具参数:`);
+  consoleOutput.value.unshift(JSON.stringify(params, null, 2));
+  consoleOutput.value.unshift('---');
+
+  // 在浏览器控制台也输出
+  console.log('McpSimpleToolParams:', params);
+};
+
+// 清空控制台
+const clearConsole = () => {
+  consoleOutput.value = [];
+};
+
 // 处理 ToolSpec 选择
 const handleToolSpecSelect = (toolSpec: ToolSpecInfo) => {
   selectedToolSpec.value = toolSpec;
@@ -398,6 +491,15 @@ const refreshTools = () => {
   // 这里可以添加刷新逻辑，目前只是简单的重新赋值以触发响应式更新
   mockTools.value = [...mockTools.value];
 };
+
+// 监听模式变化
+watch(currentMode, (newMode) => {
+  consoleOutput.value.unshift(
+    `[${new Date().toLocaleTimeString()}] 切换到${
+      newMode === 'detail' ? '详情' : newMode === 'update' ? '编辑' : '创建'
+    }模式`
+  );
+});
 </script>
 
 <style scoped>
@@ -411,7 +513,10 @@ const refreshTools = () => {
   gap: 16px;
 }
 
-/* ToolSpecSelector 测试验证区域样式 */
+.console-output {
+  margin-top: 24px;
+}
+
 .toolspec-selector-test-area {
   margin-top: 24px;
 }

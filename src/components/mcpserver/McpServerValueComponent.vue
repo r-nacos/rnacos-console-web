@@ -1,57 +1,40 @@
 <template>
   <div class="mcp-server-value-component">
-    <n-card :bordered="false" class="value-card">
-      <!-- 基础信息部分 -->
-      <div class="basic-info-section">
-        <n-card title="基础信息" size="small" class="info-card">
-          <n-space vertical :size="12">
-            <div class="info-item">
-              <n-text depth="3" class="label">ID:</n-text>
-              <n-text>{{ serverValue.id }}</n-text>
-            </div>
-            <div class="info-item">
-              <n-text depth="3" class="label">更新时间:</n-text>
-              <n-text>{{ formatUpdateTime(serverValue.updateTime) }}</n-text>
-            </div>
-            <div class="info-item">
-              <n-text depth="3" class="label">发布状态:</n-text>
-              <n-tag :type="serverValue.isRelease ? 'success' : 'warning'">
-                {{ serverValue.isRelease ? '已发布' : '未发布' }}
-              </n-tag>
-            </div>
-          </n-space>
-        </n-card>
+    <!-- 工具列表标题和基础信息 -->
+    <div class="tools-header">
+      <div class="tools-title">
+        <n-text class="title-text">工具列表</n-text>
+        <n-text depth="3" class="tools-count">共 {{ serverValue.tools.length }} 个工具</n-text>
       </div>
-
-      <!-- 工具列表部分 -->
-      <div class="tools-section">
-        <n-card title="工具列表" size="small" class="tools-card">
-          <template #header-extra>
-            <n-text depth="3">共 {{ serverValue.tools.length }} 个工具</n-text>
-          </template>
-          
-          <div class="tools-container">
-            <mcp-server-tool-item
-              v-for="tool in serverValue.tools"
-              :key="tool.id"
-              :tool="tool"
-              mode="detail"
-            />
-            
-            <n-empty v-if="serverValue.tools.length === 0" description="暂无工具" />
-          </div>
-        </n-card>
+      <div class="basic-info-inline">
+        <n-text depth="3" class="info-item">ID: {{ serverValue.id }}</n-text>
+        <n-text depth="3" class="info-item">更新: {{ formatUpdateTime(serverValue.updateTime) }}</n-text>
+        <n-tag :type="serverValue.isRelease ? 'success' : 'warning'" size="small">
+          {{ serverValue.isRelease ? '已发布' : '未发布' }}
+        </n-tag>
       </div>
-    </n-card>
+    </div>
+    
+    <!-- 工具列表内容 -->
+    <div class="tools-container">
+      <mcp-server-tool-item
+        v-for="tool in serverValue.tools"
+        :key="tool.id"
+        :tool="tool"
+        mode="detail"
+      />
+      
+      <n-empty v-if="serverValue.tools.length === 0" description="暂无工具" />
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { McpServerValue } from '@/types/mcpserver';
 import {
-  NCard,
   NText,
-  NEmpty
+  NEmpty,
+  NTag
 } from 'naive-ui';
 import McpServerToolItem from './McpServerToolItem.vue';
 
@@ -74,34 +57,44 @@ const formatUpdateTime = (timestamp: number) => {
   padding: 16px;
 }
 
-.value-card {
-  background: #f8f9fa;
-}
-
-.basic-info-section,
-.tools-section {
+.tools-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--n-border-color);
 }
 
-.info-card,
-.tools-card {
-  background: #ffffff;
-}
-
-.info-item {
+.tools-title {
   display: flex;
   align-items: center;
+  gap: 12px;
 }
 
-.label {
-  min-width: 80px;
-  margin-right: 12px;
+.title-text {
+  font-size: 16px;
   font-weight: 500;
 }
 
-.tools-container {
+.tools-count {
+  font-size: 14px;
+}
+
+.basic-info-inline {
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  font-size: 12px;
+}
+
+.info-item {
+  opacity: 0.7;
+}
+
+.tools-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   gap: 16px;
 }
 
@@ -111,29 +104,15 @@ const formatUpdateTime = (timestamp: number) => {
     padding: 8px;
   }
   
-  .info-item {
+  .tools-header {
     flex-direction: column;
     align-items: flex-start;
+    gap: 8px;
   }
   
-  .label {
-    min-width: auto;
-    margin-right: 0;
-    margin-bottom: 4px;
+  .basic-info-inline {
+    flex-wrap: wrap;
+    gap: 8px;
   }
-  
-}
-
-/* 深色模式支持 */
-@media (prefers-color-scheme: dark) {
-  .value-card {
-    background: #1f2937;
-  }
-  
-  .info-card,
-  .tools-card {
-    background: #374151;
-  }
-  
 }
 </style>

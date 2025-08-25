@@ -129,6 +129,31 @@
       @select="handleToolSpecSelect"
       @cancel="handleToolSpecCancel"
     />
+
+    <!-- McpServerValue 组件演示区域 -->
+    <n-card
+      title="McpServerValue 组件演示"
+      :bordered="false"
+      class="mcp-server-value-demo-area"
+    >
+      <template #header-extra>
+        <n-space>
+          <n-text depth="3"
+            >工具数量: {{ mockServerValue.tools.length }}</n-text
+          >
+          <n-button size="small" @click="refreshServerValue">
+            <template #icon>
+              <n-icon><refresh-outline /></n-icon>
+            </template>
+            刷新
+          </n-button>
+        </n-space>
+      </template>
+
+      <div class="server-value-container">
+        <mcp-server-value-component :server-value="mockServerValue" />
+      </div>
+    </n-card>
   </div>
 </template>
 
@@ -155,7 +180,8 @@ import {
 } from '@vicons/ionicons5';
 import McpServerToolItem from '@/components/mcpserver/McpServerToolItem.vue';
 import ToolSpecSelector from '@/components/mcpserver/ToolSpecSelector.vue';
-import { McpTool, ToolSpecInfo, McpSimpleToolParams } from '@/types/mcpserver';
+import McpServerValueComponent from '@/components/mcpserver/McpServerValueComponent.vue';
+import { McpTool, ToolSpecInfo, McpSimpleToolParams, McpServerValue } from '@/types/mcpserver';
 
 // 当前模式
 const currentMode = ref<'detail' | 'update' | 'create'>('detail');
@@ -444,6 +470,178 @@ const mockTools = ref<McpTool[]>([
   }
 ]);
 
+// McpServerValue mock数据
+const mockServerValue = ref<McpServerValue>({
+  id: 1,
+  description: '数学运算服务器',
+  tools: [
+    {
+      id: 101,
+      toolName: '加法工具',
+      toolKey: {
+        namespace: 'math',
+        group: 'operation',
+        toolName: 'add'
+      },
+      toolVersion: 1,
+      spec: {
+        name: 'add',
+        description: '执行两个数字的加法运算',
+        parameters: {
+          type: 'object',
+          properties: {
+            a: {
+              type: 'number',
+              description: '第一个数字'
+            },
+            b: {
+              type: 'number',
+              description: '第二个数字'
+            }
+          },
+          required: ['a', 'b']
+        }
+      },
+      routeRule: {
+        protocol: 'HTTP',
+        url: 'https://api.example.com/math/add',
+        method: 'POST',
+        additionHeaders: {
+          'Content-Type': 'application/json'
+        },
+        convertType: 'NONE',
+        serviceNamespace: 'math',
+        serviceGroup: 'operation',
+        serviceName: 'MathService'
+      }
+    },
+    {
+      id: 102,
+      toolName: '减法工具',
+      toolKey: {
+        namespace: 'math',
+        group: 'operation',
+        toolName: 'subtract'
+      },
+      toolVersion: 1,
+      spec: {
+        name: 'subtract',
+        description: '执行两个数字的减法运算',
+        parameters: {
+          type: 'object',
+          properties: {
+            a: {
+              type: 'number',
+              description: '被减数'
+            },
+            b: {
+              type: 'number',
+              description: '减数'
+            }
+          },
+          required: ['a', 'b']
+        }
+      },
+      routeRule: {
+        protocol: 'HTTP',
+        url: 'https://api.example.com/math/subtract',
+        method: 'POST',
+        additionHeaders: {
+          'Content-Type': 'application/json'
+        },
+        convertType: 'NONE',
+        serviceNamespace: 'math',
+        serviceGroup: 'operation',
+        serviceName: 'MathService'
+      }
+    },
+    {
+      id: 103,
+      toolName: '乘法工具',
+      toolKey: {
+        namespace: 'math',
+        group: 'operation',
+        toolName: 'multiply'
+      },
+      toolVersion: 1,
+      spec: {
+        name: 'multiply',
+        description: '执行两个数字的乘法运算',
+        parameters: {
+          type: 'object',
+          properties: {
+            a: {
+              type: 'number',
+              description: '第一个乘数'
+            },
+            b: {
+              type: 'number',
+              description: '第二个乘数'
+            }
+          },
+          required: ['a', 'b']
+        }
+      },
+      routeRule: {
+        protocol: 'HTTP',
+        url: 'https://api.example.com/math/multiply',
+        method: 'POST',
+        additionHeaders: {
+          'Content-Type': 'application/json'
+        },
+        convertType: 'NONE',
+        serviceNamespace: 'math',
+        serviceGroup: 'operation',
+        serviceName: 'MathService'
+      }
+    },
+    {
+      id: 104,
+      toolName: '除法工具',
+      toolKey: {
+        namespace: 'math',
+        group: 'operation',
+        toolName: 'divide'
+      },
+      toolVersion: 1,
+      spec: {
+        name: 'divide',
+        description: '执行两个数字的除法运算',
+        parameters: {
+          type: 'object',
+          properties: {
+            a: {
+              type: 'number',
+              description: '被除数'
+            },
+            b: {
+              type: 'number',
+              description: '除数'
+            }
+          },
+          required: ['a', 'b']
+        }
+      },
+      routeRule: {
+        protocol: 'HTTP',
+        url: 'https://api.example.com/math/divide',
+        method: 'POST',
+        additionHeaders: {
+          'Content-Type': 'application/json'
+        },
+        convertType: 'NONE',
+        serviceNamespace: 'math',
+        serviceGroup: 'operation',
+        serviceName: 'MathService'
+      }
+    }
+  ],
+  opUser: 'admin',
+  updateTime: Date.now(),
+  createTime: Date.now() - 86400000, // 创建时间为一天前
+  isRelease: true
+});
+
 // ToolSpecSelector 相关变量和函数
 const showToolSpecSelector = ref(false);
 const selectedToolSpec = ref<ToolSpecInfo | null>(null);
@@ -492,6 +690,12 @@ const refreshTools = () => {
   mockTools.value = [...mockTools.value];
 };
 
+// 刷新McpServerValue
+const refreshServerValue = () => {
+  // 这里可以添加刷新逻辑，目前只是简单的重新赋值以触发响应式更新
+  mockServerValue.value = { ...mockServerValue.value };
+};
+
 // 监听模式变化
 watch(currentMode, (newMode) => {
   consoleOutput.value.unshift(
@@ -519,6 +723,14 @@ watch(currentMode, (newMode) => {
 
 .toolspec-selector-test-area {
   margin-top: 24px;
+}
+
+.mcp-server-value-demo-area {
+  margin-top: 24px;
+}
+
+.server-value-container {
+  padding: 8px 0;
 }
 
 .toolspec-selector-content {

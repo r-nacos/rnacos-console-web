@@ -37,7 +37,9 @@
               <chevron-down v-if="isToolSpecExpanded" />
               <chevron-forward v-else />
             </n-icon>
-            <n-text strong>工具参数信息</n-text>
+            <n-text strong>{{
+              t('mcpservertollitem.tool_params_info')
+            }}</n-text>
           </n-space>
         </div>
 
@@ -45,15 +47,21 @@
           <div class="tool-spec-content">
             <n-space vertical :size="8">
               <div class="info-item">
-                <n-text depth="3" class="label">函数名:</n-text>
+                <n-text depth="3" class="label"
+                  >{{ t('mcpservertollitem.function_name') }}:</n-text
+                >
                 <n-text>{{ tool.spec.name }}</n-text>
               </div>
               <div class="info-item">
-                <n-text depth="3" class="label">描述:</n-text>
+                <n-text depth="3" class="label"
+                  >{{ t('mcpservertollitem.description') }}:</n-text
+                >
                 <n-text>{{ tool.spec.description || '-' }}</n-text>
               </div>
               <div class="info-item">
-                <n-text depth="3" class="label">参数:</n-text>
+                <n-text depth="3" class="label"
+                  >{{ t('mcpservertollitem.params') }}:</n-text
+                >
                 <n-code
                   :code="formatJson(tool.spec.parameters)"
                   language="json"
@@ -74,7 +82,7 @@
               <chevron-down v-if="isRouteRuleExpanded" />
               <chevron-forward v-else />
             </n-icon>
-            <n-text strong>路由工具</n-text>
+            <n-text strong>{{ t('mcpservertollitem.route_tool') }}</n-text>
           </n-space>
         </div>
 
@@ -82,33 +90,52 @@
           <div class="route-rule-content">
             <n-space vertical :size="8">
               <div class="info-item">
-                <n-text depth="3" class="label">协议:</n-text>
+                <n-text depth="3" class="label"
+                  >{{ t('mcpservertollitem.protocol') }}:</n-text
+                >
                 <n-text>{{ tool.routeRule.protocol }}</n-text>
               </div>
               <div class="info-item">
-                <n-text depth="3" class="label">URL:</n-text>
+                <n-text depth="3" class="label"
+                  >{{ t('mcpservertollitem.url') }}:</n-text
+                >
                 <n-space align="center" :size="4">
                   <n-text>{{ tool.routeRule.url || '-' }}</n-text>
-                  <n-tooltip trigger="hover" :style="{ backgroundColor: '#f0f9ff', color: '#1e40af' }">
+                  <n-tooltip
+                    trigger="hover"
+                    :style="{ backgroundColor: '#f0f9ff', color: '#333333' }"
+                  >
                     <template #trigger>
-                      <n-icon size="16" color="#666" style="cursor: help;">
+                      <n-icon size="16" color="#999999" style="cursor: help">
                         <information-circle-outline />
                       </n-icon>
                     </template>
-                    <div style="padding: 8px;">
-                      <n-text strong style="color: #1e40af;">支持模板变量：</n-text>
+                    <div style="padding: 8px">
+                      <n-text strong style="color: #1e40af">{{
+                        t('mcpservertollitem.support_template_vars')
+                      }}</n-text>
                       <br />
-                      <n-text style="color: #1e3a8a;">• {IP} - IP地址</n-text>
+                      <n-text
+                        >• {IP} -
+                        {{ t('mcpservertollitem.ip_address') }}</n-text
+                      >
                       <br />
-                      <n-text style="color: #1e3a8a;">• {PORT} - 端口</n-text>
+                      <n-text
+                        >• {PORT} - {{ t('mcpservertollitem.port') }}</n-text
+                      >
                       <br />
-                      <n-text style="color: #1e3a8a;">• {IP_PORT} - IP:端口</n-text>
+                      <n-text
+                        >• {IP_PORT} -
+                        {{ t('mcpservertollitem.ip_port') }}</n-text
+                      >
                     </div>
                   </n-tooltip>
                 </n-space>
               </div>
               <div class="info-item">
-                <n-text depth="3" class="label">方法:</n-text>
+                <n-text depth="3" class="label"
+                  >{{ t('mcpservertollitem.method') }}:</n-text
+                >
                 <n-tag
                   size="small"
                   :type="getMethodTagType(tool.routeRule.method)"
@@ -117,18 +144,26 @@
                 </n-tag>
               </div>
               <div class="info-item">
-                <n-text depth="3" class="label">转换类型:</n-text>
+                <n-text depth="3" class="label"
+                  >{{ t('mcpservertollitem.convert_type') }}:</n-text
+                >
                 <n-text>{{ tool.routeRule.convertType }}</n-text>
               </div>
               <div class="info-item">
-                <n-text depth="3" class="label">服务信息:</n-text>
+                <n-text depth="3" class="label"
+                  >{{ t('mcpservertollitem.service_info') }}:</n-text
+                >
                 <n-space vertical :size="2">
                   <div class="service-info-item">
-                    <n-text depth="3" class="sub-label">服务名:</n-text>
+                    <n-text depth="3" class="sub-label"
+                      >{{ t('mcpservertollitem.service_name') }}:</n-text
+                    >
                     <n-text>{{ tool.routeRule.serviceName }}</n-text>
                   </div>
                   <div class="service-info-item">
-                    <n-text depth="3" class="sub-label">服务分组:</n-text>
+                    <n-text depth="3" class="sub-label"
+                      >{{ t('mcpservertollitem.service_group') }}:</n-text
+                    >
                     <n-text>{{ tool.routeRule.serviceGroup }}</n-text>
                   </div>
                 </n-space>
@@ -137,7 +172,9 @@
                 v-if="Object.keys(tool.routeRule.additionHeaders).length > 0"
                 class="info-item"
               >
-                <n-text depth="3" class="label">附加头:</n-text>
+                <n-text depth="3" class="label"
+                  >{{ t('mcpservertollitem.additional_headers') }}:</n-text
+                >
                 <n-space vertical :size="2">
                   <div
                     v-for="(value, key) in tool.routeRule.additionHeaders"
@@ -175,7 +212,10 @@
           label-width="100"
         >
           <!-- 工具选择部分 -->
-          <n-form-item label="工具选择" path="toolSpec">
+          <n-form-item
+            :label="t('mcpservertollitem.tool_selection')"
+            path="toolSpec"
+          >
             <n-space vertical style="width: 100%">
               <n-button
                 @click="showToolSpecSelector = true"
@@ -185,27 +225,39 @@
                 <template #icon>
                   <n-icon><add-outline /></n-icon>
                 </template>
-                {{ selectedToolSpecName || '选择工具规范' }}
+                {{
+                  selectedToolSpecName ||
+                  t('mcpservertollitem.select_tool_spec')
+                }}
               </n-button>
 
               <n-alert v-if="selectedToolSpec" type="info" :show-icon="false">
                 <template #header>
                   <n-space align="center">
                     <n-icon><information-circle-outline /></n-icon>
-                    <span>已选择的工具</span>
+                    <span>{{ t('mcpservertollitem.selected_tool') }}</span>
                   </n-space>
                 </template>
                 <div>
                   <p>
-                    <strong>命名空间:</strong> {{ selectedToolSpec.namespace }}
+                    <strong>{{ t('mcpservertollitem.namespace') }}:</strong>
+                    {{ selectedToolSpec.namespace }}
                   </p>
-                  <p><strong>组:</strong> {{ selectedToolSpec.group }}</p>
                   <p>
-                    <strong>工具名称:</strong> {{ selectedToolSpec.toolName }}
+                    <strong>{{ t('mcpservertollitem.group') }}:</strong>
+                    {{ selectedToolSpec.group }}
                   </p>
-                  <p><strong>版本:</strong> {{ selectedToolSpec.version }}</p>
                   <p>
-                    <strong>描述:</strong> {{ selectedToolSpec.description }}
+                    <strong>{{ t('mcpservertollitem.tool_name') }}:</strong>
+                    {{ selectedToolSpec.toolName }}
+                  </p>
+                  <p>
+                    <strong>{{ t('mcpservertollitem.version') }}:</strong>
+                    {{ selectedToolSpec.version }}
+                  </p>
+                  <p>
+                    <strong>{{ t('mcpservertollitem.description') }}:</strong>
+                    {{ selectedToolSpec.description }}
                   </p>
                 </div>
               </n-alert>
@@ -213,80 +265,109 @@
           </n-form-item>
 
           <!-- 路由规则配置 -->
-          <n-divider>路由规则配置</n-divider>
+          <n-divider>{{ t('mcpservertollitem.route_rule_config') }}</n-divider>
 
-          <n-form-item label="协议" path="routeRule.protocol">
+          <n-form-item
+            :label="t('mcpservertollitem.protocol')"
+            path="routeRule.protocol"
+          >
             <n-select
               v-model:value="editForm.routeRule.protocol"
               :options="protocolOptions"
-              placeholder="请选择协议"
+              :placeholder="t('mcpservertollitem.select_protocol')"
             />
           </n-form-item>
 
-          <n-form-item label="URL" path="routeRule.url">
+          <n-form-item :label="t('mcpservertollitem.url')" path="routeRule.url">
             <n-input
               v-model:value="editForm.routeRule.url"
-              placeholder="请输入URL"
+              :placeholder="t('mcpservertollitem.input_url')"
             />
             <template #feedback>
-              <n-text depth="3" style="font-size: 12px; line-height: 1.4;">
-                支持模板变量：{IP}（IP地址）、{PORT}（端口）、{IP_PORT}（IP:端口）
+              <n-text depth="3" style="font-size: 12px; line-height: 1.4">
+                {{ t('mcpservertollitem.support_template_vars') }} {IP}（{{
+                  t('mcpservertollitem.ip_address')
+                }}）、{PORT}（{{ t('mcpservertollitem.port') }}）、{IP_PORT}（{{
+                  t('mcpservertollitem.ip_port')
+                }}）
               </n-text>
             </template>
           </n-form-item>
 
-          <n-form-item label="方法" path="routeRule.method">
+          <n-form-item
+            :label="t('mcpservertollitem.method')"
+            path="routeRule.method"
+          >
             <n-select
               v-model:value="editForm.routeRule.method"
               :options="methodOptions"
-              placeholder="请选择HTTP方法"
+              :placeholder="t('mcpservertollitem.select_http_method')"
             />
           </n-form-item>
 
-          <n-form-item label="转换类型" path="routeRule.convertType">
+          <n-form-item
+            :label="t('mcpservertollitem.convert_type')"
+            path="routeRule.convertType"
+          >
             <n-select
               v-model:value="editForm.routeRule.convertType"
               :options="convertTypeOptions"
-              placeholder="请选择转换类型"
+              :placeholder="t('mcpservertollitem.select_convert_type')"
             />
           </n-form-item>
 
-          <n-form-item label="服务命名空间" path="routeRule.serviceNamespace">
+          <n-form-item
+            :label="t('mcpservertollitem.service_namespace')"
+            path="routeRule.serviceNamespace"
+          >
             <n-input
               :value="selectedToolSpec?.namespace || ''"
-              placeholder="服务命名空间"
+              :placeholder="t('mcpservertollitem.service_namespace')"
               disabled
             />
           </n-form-item>
 
-          <n-form-item label="服务分组" path="routeRule.serviceGroup">
+          <n-form-item
+            :label="t('mcpservertollitem.service_group')"
+            path="routeRule.serviceGroup"
+          >
             <n-input
               v-model:value="editForm.routeRule.serviceGroup"
-              placeholder="请输入服务分组"
+              :placeholder="t('mcpservertollitem.input_service_group')"
             />
           </n-form-item>
 
-          <n-form-item label="服务名称" path="routeRule.serviceName">
+          <n-form-item
+            :label="t('mcpservertollitem.service_name')"
+            path="routeRule.serviceName"
+          >
             <n-input
               v-model:value="editForm.routeRule.serviceName"
-              placeholder="请输入服务名称"
+              :placeholder="t('mcpservertollitem.input_service_name')"
             />
           </n-form-item>
 
-          <n-form-item label="附加头" path="routeRule.additionHeaders">
+          <n-form-item
+            :label="t('mcpservertollitem.additional_headers')"
+            path="routeRule.additionHeaders"
+          >
             <n-dynamic-input
               v-model:value="editForm.routeRule.additionHeaders"
               preset="pair"
-              key-placeholder="Header名称"
-              value-placeholder="Header值"
+              :key-placeholder="t('mcpservertollitem.header_name')"
+              :value-placeholder="t('mcpservertollitem.header_value')"
             />
           </n-form-item>
         </n-form>
 
         <template #footer>
           <n-space justify="end">
-            <n-button @click="closeEditDrawer">取消</n-button>
-            <n-button type="primary" @click="saveTool">保存</n-button>
+            <n-button @click="closeEditDrawer">{{
+              t('mcpservertollitem.cancel')
+            }}</n-button>
+            <n-button type="primary" @click="saveTool">{{
+              t('mcpservertollitem.save')
+            }}</n-button>
           </n-space>
         </template>
       </n-drawer-content>
@@ -304,6 +385,7 @@
 
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
 import {
   NSpace,
   NCard,
@@ -334,6 +416,8 @@ import {
 } from '@vicons/ionicons5';
 import { McpTool, McpSimpleToolParams, ToolSpecInfo } from '@/types/mcpserver';
 import ToolSpecSelector from '@/components/mcpserver/ToolSpecSelector.vue';
+
+const { t } = useI18n();
 
 interface Props {
   tool: McpTool;
@@ -380,27 +464,41 @@ const editForm = ref({
 // 表单验证规则
 const formRules = {
   routeRule: {
-    protocol: { required: true, message: '请选择协议', trigger: 'change' },
-    url: { required: true, message: '请输入URL', trigger: 'blur' },
-    method: { required: true, message: '请选择方法', trigger: 'change' },
+    protocol: {
+      required: true,
+      message: t('mcpservertollitem.select_protocol'),
+      trigger: 'change'
+    },
+    url: {
+      required: true,
+      message: t('mcpservertollitem.input_url'),
+      trigger: 'blur'
+    },
+    method: {
+      required: true,
+      message: t('mcpservertollitem.select_http_method'),
+      trigger: 'change'
+    },
     serviceNamespace: {
       required: true,
-      message: '请输入服务命名空间',
+      message: t('mcpservertollitem.service_namespace'),
       trigger: 'blur'
     },
     serviceGroup: {
       required: true,
-      message: '请输入服务分组',
+      message: t('mcpservertollitem.input_service_group'),
       trigger: 'blur'
     },
-    serviceName: { required: true, message: '请输入服务名称', trigger: 'blur' }
+    serviceName: {
+      required: true,
+      message: t('mcpservertollitem.input_service_name'),
+      trigger: 'blur'
+    }
   }
 };
 
 // 选项数据
-const protocolOptions = [
-  { label: 'HTTP', value: 'HTTP' }
-];
+const protocolOptions = [{ label: 'HTTP', value: 'HTTP' }];
 
 const methodOptions = [
   { label: 'GET', value: 'GET' },
@@ -411,15 +509,15 @@ const methodOptions = [
 ];
 
 const convertTypeOptions = [
-  { label: '无转换', value: 'NONE' },
-  { label: '表单转JSON', value: 'FORM_TO_JSON' },
-  { label: '自定义', value: 'CUSTOM' }
+  { label: t('mcpservertollitem.no_conversion'), value: 'NONE' },
+  { label: t('mcpservertollitem.form_to_json'), value: 'FORM_TO_JSON' },
+  { label: t('mcpservertollitem.custom'), value: 'CUSTOM' }
 ];
 
 // 计算属性
 const drawerTitle = computed(() => {
-  if (props.mode === 'create') return '创建工具';
-  return '编辑工具';
+  if (props.mode === 'create') return t('mcpservertollitem.create_tool');
+  return t('mcpservertollitem.edit_tool');
 });
 
 const selectedToolSpecName = computed(() => {
@@ -516,7 +614,7 @@ const saveTool = async () => {
     await formRef.value?.validate();
 
     if (!selectedToolSpec.value) {
-      message.error('请先选择工具规范');
+      message.error(t('mcpservertollitem.please_select_tool_spec'));
       return;
     }
 
@@ -561,11 +659,11 @@ const saveTool = async () => {
     // 触发保存事件
     emit('save', params);
 
-    message.success('保存成功');
+    message.success(t('mcpservertollitem.save_success'));
     closeEditDrawer();
   } catch (error) {
     console.error('保存失败:', error);
-    message.error('保存失败，请检查表单数据');
+    message.error(t('mcpservertollitem.save_failed'));
   }
 };
 

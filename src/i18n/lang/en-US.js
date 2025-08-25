@@ -488,6 +488,17 @@ const message = {
     confirm_delete_tool_content:
       'Are you sure to delete tool "{name}" (group: {group})? This operation cannot be undone.'
   },
+  mcpservaluecomponent: {
+    tools_list: 'Tools List',
+    tools_count: 'Total {count} tools',
+    id_label: 'ID:',
+    update_label: 'Update:',
+    published: 'Published',
+    unpublished: 'Unpublished',
+    add_tool: 'Add Tool',
+    no_tools: 'No tools',
+    tool_deleted_success: 'Tool deleted successfully'
+  },
   mcpservertollitem: {
     tool_params_info: 'Tool Parameters Info',
     function_name: 'Function Name',

@@ -501,6 +501,17 @@ const message = {
     confirm_delete_tool_content:
       '确认要删除工具 "{name}" (分组: {group}) 吗？此操作不可恢复。'
   },
+  mcpservaluecomponent: {
+    tools_list: '工具列表',
+    tools_count: '共 {count} 个工具',
+    id_label: 'ID:',
+    update_label: '更新:',
+    published: '已发布',
+    unpublished: '未发布',
+    add_tool: '添加工具',
+    no_tools: '暂无工具',
+    tool_deleted_success: '工具已删除'
+  },
   mcpservertollitem: {
     tool_params_info: '工具参数信息',
     function_name: '函数名',

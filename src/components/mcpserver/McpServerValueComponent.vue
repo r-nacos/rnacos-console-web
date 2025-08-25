@@ -3,21 +3,32 @@
     <!-- 工具列表标题和基础信息 -->
     <div class="tools-header">
       <div class="tools-title">
-        <n-text class="title-text">工具列表</n-text>
-        <n-text depth="3" class="tools-count"
-          >共 {{ serverValue.tools.length }} 个工具</n-text
-        >
+        <n-text class="title-text">{{
+          t('mcpservaluecomponent.tools_list')
+        }}</n-text>
+        <n-text depth="3" class="tools-count">{{
+          t('mcpservaluecomponent.tools_count', {
+            count: serverValue.tools.length
+          })
+        }}</n-text>
       </div>
       <div class="basic-info-inline">
-        <n-text depth="3" class="info-item">ID: {{ serverValue.id }}</n-text>
         <n-text depth="3" class="info-item"
-          >更新: {{ formatUpdateTime(serverValue.updateTime) }}</n-text
+          >{{ t('mcpservaluecomponent.id_label') }} {{ serverValue.id }}</n-text
+        >
+        <n-text depth="3" class="info-item"
+          >{{ t('mcpservaluecomponent.update_label') }}
+          {{ formatUpdateTime(serverValue.updateTime) }}</n-text
         >
         <n-tag
           :type="serverValue.isRelease ? 'success' : 'warning'"
           size="small"
         >
-          {{ serverValue.isRelease ? '已发布' : '未发布' }}
+          {{
+            serverValue.isRelease
+              ? t('mcpservaluecomponent.published')
+              : t('mcpservaluecomponent.unpublished')
+          }}
         </n-tag>
 
         <!-- 编辑模式下的操作按钮 -->
@@ -26,7 +37,7 @@
             <template #icon>
               <n-icon><add-outline /></n-icon>
             </template>
-            添加工具
+            {{ t('mcpservaluecomponent.add_tool') }}
           </n-button>
         </n-space>
       </div>
@@ -62,13 +73,17 @@
         </n-button>
       </div>
 
-      <n-empty v-if="serverValue.tools.length === 0" description="暂无工具" />
+      <n-empty
+        v-if="serverValue.tools.length === 0"
+        :description="t('mcpservaluecomponent.no_tools')"
+      />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
 import {
   McpServerValue,
   McpTool,
@@ -85,6 +100,8 @@ import {
 } from 'naive-ui';
 import McpServerToolItem from './McpServerToolItem.vue';
 import { AddOutline, TrashOutline } from '@vicons/ionicons5';
+
+const { t } = useI18n();
 
 interface Props {
   serverValue: McpServerValue;
@@ -183,7 +200,7 @@ const deleteTool = (index: number) => {
 
   emit('update:value', updatedValue);
   emit('toolDelete', index);
-  message.success('工具已删除');
+  message.success(t('mcpservaluecomponent.tool_deleted_success'));
 };
 
 // 处理工具保存

@@ -479,11 +479,13 @@ const formRules = {
       message: t('mcpservertollitem.select_http_method'),
       trigger: 'change'
     },
+    /*
     serviceNamespace: {
       required: true,
       message: t('mcpservertollitem.service_namespace'),
       trigger: 'blur'
     },
+    */
     serviceGroup: {
       required: true,
       message: t('mcpservertollitem.input_service_group'),

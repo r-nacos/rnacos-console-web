@@ -4,51 +4,191 @@
     <div class="tools-header">
       <div class="tools-title">
         <n-text class="title-text">工具列表</n-text>
-        <n-text depth="3" class="tools-count">共 {{ serverValue.tools.length }} 个工具</n-text>
+        <n-text depth="3" class="tools-count"
+          >共 {{ serverValue.tools.length }} 个工具</n-text
+        >
       </div>
       <div class="basic-info-inline">
         <n-text depth="3" class="info-item">ID: {{ serverValue.id }}</n-text>
-        <n-text depth="3" class="info-item">更新: {{ formatUpdateTime(serverValue.updateTime) }}</n-text>
-        <n-tag :type="serverValue.isRelease ? 'success' : 'warning'" size="small">
+        <n-text depth="3" class="info-item"
+          >更新: {{ formatUpdateTime(serverValue.updateTime) }}</n-text
+        >
+        <n-tag
+          :type="serverValue.isRelease ? 'success' : 'warning'"
+          size="small"
+        >
           {{ serverValue.isRelease ? '已发布' : '未发布' }}
         </n-tag>
+
+        <!-- 编辑模式下的操作按钮 -->
+        <n-space v-if="mode === 'update'" :size="8">
+          <n-button type="primary" size="small" @click="addNewTool">
+            <template #icon>
+              <n-icon><add-outline /></n-icon>
+            </template>
+            添加工具
+          </n-button>
+        </n-space>
       </div>
     </div>
-    
+
     <!-- 工具列表内容 -->
     <div class="tools-container">
-      <mcp-server-tool-item
-        v-for="tool in serverValue.tools"
-        :key="tool.id"
-        :tool="tool"
-        mode="detail"
-      />
-      
+      <div
+        v-for="(tool, index) in serverValue.tools"
+        :key="tool.id || `tool-${index}`"
+        class="tool-item-wrapper"
+      >
+        <mcp-server-tool-item
+          :tool="tool"
+          :mode="mode === 'update' ? 'update' : 'detail'"
+          @update:tool="(updatedTool) => updateTool(index, updatedTool)"
+          @save="(params) => handleToolSave(index, params)"
+        />
+
+        <!-- 编辑模式下的删除按钮 -->
+        <n-button
+          v-if="mode === 'update'"
+          class="delete-tool-btn"
+          quaternary
+          circle
+          size="small"
+          type="error"
+          @click="deleteTool(index)"
+        >
+          <template #icon>
+            <n-icon><trash-outline /></n-icon>
+          </template>
+        </n-button>
+      </div>
+
       <n-empty v-if="serverValue.tools.length === 0" description="暂无工具" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { McpServerValue } from '@/types/mcpserver';
+import { ref, watch } from 'vue';
+import {
+  McpServerValue,
+  McpTool,
+  McpSimpleToolParams
+} from '@/types/mcpserver';
 import {
   NText,
   NEmpty,
-  NTag
+  NTag,
+  NSpace,
+  NButton,
+  NIcon,
+  useMessage
 } from 'naive-ui';
 import McpServerToolItem from './McpServerToolItem.vue';
+import { AddOutline, TrashOutline } from '@vicons/ionicons5';
 
 interface Props {
   serverValue: McpServerValue;
+  mode?: 'detail' | 'update';
 }
 
-defineProps<Props>();
+const props = withDefaults(defineProps<Props>(), {
+  mode: 'detail'
+});
+
+const emit = defineEmits<{
+  (e: 'update:value', value: McpServerValue): void;
+  (e: 'toolChange', toolIndex: number, tool: McpTool): void;
+  (e: 'toolSave', toolIndex: number, params: McpSimpleToolParams): void;
+  (e: 'toolDelete', toolIndex: number): void;
+  (e: 'toolAdd', params: McpSimpleToolParams): void;
+}>();
+
+const message = useMessage();
 
 // 格式化更新时间
 const formatUpdateTime = (timestamp: number) => {
   if (!timestamp) return '-';
   const date = new Date(timestamp);
   return date.toLocaleString();
+};
+
+// 添加新工具
+const addNewTool = () => {
+  const newTool: McpTool = {
+    id: 0, // 临时ID，实际保存时由后端分配
+    toolName: '',
+    toolKey: {
+      namespace: '',
+      group: '',
+      toolName: ''
+    },
+    toolVersion: 1,
+    spec: {
+      name: '',
+      description: '',
+      parameters: {
+        type: 'object',
+        properties: {},
+        required: []
+      }
+    },
+    routeRule: {
+      protocol: 'HTTP',
+      url: '',
+      method: 'GET',
+      additionHeaders: {},
+      convertType: 'NONE',
+      serviceNamespace: '',
+      serviceGroup: '',
+      serviceName: ''
+    }
+  };
+
+  const updatedValue = {
+    ...props.serverValue,
+    tools: [...props.serverValue.tools, newTool]
+  };
+
+  emit('update:value', updatedValue);
+  emit('toolAdd', {
+    toolName: '',
+    namespace: '',
+    group: '',
+    routeRule: newTool.routeRule
+  });
+};
+
+// 更新工具
+const updateTool = (index: number, updatedTool: McpTool) => {
+  const updatedTools = [...props.serverValue.tools];
+  updatedTools[index] = updatedTool;
+
+  const updatedValue = {
+    ...props.serverValue,
+    tools: updatedTools
+  };
+
+  emit('update:value', updatedValue);
+  emit('toolChange', index, updatedTool);
+};
+
+// 删除工具
+const deleteTool = (index: number) => {
+  const updatedTools = props.serverValue.tools.filter((_, i) => i !== index);
+
+  const updatedValue = {
+    ...props.serverValue,
+    tools: updatedTools
+  };
+
+  emit('update:value', updatedValue);
+  emit('toolDelete', index);
+  message.success('工具已删除');
+};
+
+// 处理工具保存
+const handleToolSave = (index: number, params: McpSimpleToolParams) => {
+  emit('toolSave', index, params);
 };
 </script>
 
@@ -98,21 +238,42 @@ const formatUpdateTime = (timestamp: number) => {
   gap: 16px;
 }
 
+.tool-item-wrapper {
+  position: relative;
+}
+
+.delete-tool-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 10;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.tool-item-wrapper:hover .delete-tool-btn {
+  opacity: 1;
+}
+
 /* 响应式设计 */
 @media (max-width: 768px) {
   .mcp-server-value-component {
     padding: 8px;
   }
-  
+
   .tools-header {
     flex-direction: column;
     align-items: flex-start;
     gap: 8px;
   }
-  
+
   .basic-info-inline {
     flex-wrap: wrap;
     gap: 8px;
+  }
+
+  .tools-container {
+    grid-template-columns: 1fr;
   }
 }
 </style>

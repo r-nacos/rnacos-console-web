@@ -31,7 +31,7 @@
             :tool="tool"
             :mode="currentMode"
             @update:tool="handleToolUpdate"
-            @save="handleToolSave"
+            @save="handleSingleToolSave"
           />
         </div>
 
@@ -151,7 +151,27 @@
       </template>
 
       <div class="server-value-container">
-        <mcp-server-value-component :server-value="mockServerValue" />
+        <n-space vertical :size="16">
+          <n-card title="模式选择" size="small">
+            <n-radio-group
+              v-model:value="currentServerValueMode"
+              name="server-value-mode"
+            >
+              <n-radio-button value="detail">详情模式</n-radio-button>
+              <n-radio-button value="update">编辑模式</n-radio-button>
+            </n-radio-group>
+          </n-card>
+
+          <mcp-server-value-component
+            :server-value="mockServerValue"
+            :mode="currentServerValueMode"
+            @update:value="handleServerValueUpdate"
+            @tool-change="handleToolChange"
+            @tool-save="handleToolSave"
+            @tool-delete="handleToolDelete"
+            @tool-add="handleToolAdd"
+          />
+        </n-space>
       </div>
     </n-card>
   </div>
@@ -181,10 +201,16 @@ import {
 import McpServerToolItem from '@/components/mcpserver/McpServerToolItem.vue';
 import ToolSpecSelector from '@/components/mcpserver/ToolSpecSelector.vue';
 import McpServerValueComponent from '@/components/mcpserver/McpServerValueComponent.vue';
-import { McpTool, ToolSpecInfo, McpSimpleToolParams, McpServerValue } from '@/types/mcpserver';
+import {
+  McpTool,
+  ToolSpecInfo,
+  McpSimpleToolParams,
+  McpServerValue
+} from '@/types/mcpserver';
 
 // 当前模式
 const currentMode = ref<'detail' | 'update' | 'create'>('detail');
+const currentServerValueMode = ref<'detail' | 'update'>('detail');
 
 // 控制台输出
 const consoleOutput = ref<string[]>([]);
@@ -656,7 +682,7 @@ const handleToolUpdate = (updatedTool: McpTool) => {
 };
 
 // 处理工具保存
-const handleToolSave = (params: McpSimpleToolParams) => {
+const handleSingleToolSave = (params: McpSimpleToolParams) => {
   // 添加到控制台输出
   const timestamp = new Date().toLocaleTimeString();
   consoleOutput.value.unshift(`[${timestamp}] 保存工具参数:`);
@@ -704,6 +730,42 @@ watch(currentMode, (newMode) => {
     }模式`
   );
 });
+
+// 处理McpServerValue组件的事件
+const handleServerValueUpdate = (value: McpServerValue) => {
+  mockServerValue.value = value;
+  const timestamp = new Date().toLocaleTimeString();
+  consoleOutput.value.unshift(`[${timestamp}] ServerValue 已更新`);
+  consoleOutput.value.unshift(`工具数量: ${value.tools.length}`);
+  consoleOutput.value.unshift('---');
+};
+
+const handleToolChange = (toolIndex: number, tool: McpTool) => {
+  const timestamp = new Date().toLocaleTimeString();
+  consoleOutput.value.unshift(`[${timestamp}] 工具 ${toolIndex} 已变更`);
+  consoleOutput.value.unshift(`工具名称: ${tool.toolName}`);
+  consoleOutput.value.unshift('---');
+};
+
+const handleToolSave = (toolIndex: number, params: McpSimpleToolParams) => {
+  const timestamp = new Date().toLocaleTimeString();
+  consoleOutput.value.unshift(`[${timestamp}] 工具 ${toolIndex} 已保存`);
+  consoleOutput.value.unshift(JSON.stringify(params, null, 2));
+  consoleOutput.value.unshift('---');
+};
+
+const handleToolDelete = (toolIndex: number) => {
+  const timestamp = new Date().toLocaleTimeString();
+  consoleOutput.value.unshift(`[${timestamp}] 工具 ${toolIndex} 已删除`);
+  consoleOutput.value.unshift('---');
+};
+
+const handleToolAdd = (params: McpSimpleToolParams) => {
+  const timestamp = new Date().toLocaleTimeString();
+  consoleOutput.value.unshift(`[${timestamp}] 新工具已添加`);
+  consoleOutput.value.unshift(JSON.stringify(params, null, 2));
+  consoleOutput.value.unshift('---');
+};
 </script>
 
 <style scoped>

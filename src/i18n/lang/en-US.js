@@ -545,6 +545,19 @@ const message = {
     form_to_json: 'Form to JSON',
     custom: 'Custom'
   },
+  mcpserverdetailcomponent: {
+    server_info: 'Server Information',
+    id: 'ID',
+    namespace: 'Namespace',
+    name: 'Name',
+    description: 'Description',
+    auth_keys: 'Auth Keys',
+    create_time: 'Create Time',
+    last_modified: 'Last Modified',
+    current_tools: 'Current Service Tools',
+    published: 'Published',
+    unpublished: 'Unpublished'
+  },
   error: {
     NO_PERMISSION: 'NO_PERMISSION',
     NO_NAMESPACE_PERMISSION: 'NO_NAMESPACE_PERMISSION',

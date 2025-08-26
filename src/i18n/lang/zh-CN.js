@@ -558,6 +558,19 @@ const message = {
     form_to_json: '表单转JSON',
     custom: '自定义'
   },
+  mcpserverdetailcomponent: {
+    server_info: '服务器信息',
+    id: 'ID',
+    namespace: '命名空间',
+    name: '名称',
+    description: '描述',
+    auth_keys: '认证密钥',
+    create_time: '创建时间',
+    last_modified: '最后修改时间',
+    current_tools: '当前服务工具',
+    published: '已发布',
+    unpublished: '未发布'
+  },
   error: {
     NO_PERMISSION: '没有权限',
     NO_NAMESPACE_PERMISSION: '没有命名空间权限',

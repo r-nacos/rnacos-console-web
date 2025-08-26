@@ -175,6 +175,31 @@
       </div>
     </n-card>
   </div>
+
+  <!-- McpServerDetail 组件演示区域 -->
+  <n-card
+    title="McpServerDetail 组件演示"
+    :bordered="false"
+    class="mcp-server-detail-demo-area"
+  >
+    <template #header-extra>
+      <n-space>
+        <n-text depth="3"
+          >ID: {{ mockServerDto.id }} - {{ mockServerDto.name }}</n-text
+        >
+        <n-button size="small" @click="refreshServerDetail">
+          <template #icon>
+            <n-icon><refresh-outline /></n-icon>
+          </template>
+          刷新
+        </n-button>
+      </n-space>
+    </template>
+
+    <div class="server-detail-container">
+      <mcp-server-detail-component :server-data="mockServerDto" />
+    </div>
+  </n-card>
 </template>
 
 <script setup lang="ts">
@@ -201,11 +226,13 @@ import {
 import McpServerToolItem from '@/components/mcpserver/McpServerToolItem.vue';
 import ToolSpecSelector from '@/components/mcpserver/ToolSpecSelector.vue';
 import McpServerValueComponent from '@/components/mcpserver/McpServerValueComponent.vue';
+import McpServerDetailComponent from '@/components/McpServerDetailComponent.vue';
 import {
   McpTool,
   ToolSpecInfo,
   McpSimpleToolParams,
-  McpServerValue
+  McpServerValue,
+  McpServerDto
 } from '@/types/mcpserver';
 
 // 当前模式
@@ -668,6 +695,187 @@ const mockServerValue = ref<McpServerValue>({
   isRelease: true
 });
 
+// McpServerDto mock数据
+const mockServerDto = ref<McpServerDto>({
+  id: 1001,
+  namespace: 'demo',
+  name: '数学运算服务器',
+  description: '一个提供基础数学运算功能的MCP服务器，包含加减乘除四个工具',
+  authKeys: ['demo-key-001', 'demo-key-002', 'internal-key'],
+  createTime: Date.now() - 86400000 * 2, // 2天前创建
+  lastModifiedMillis: Date.now() - 3600000, // 1小时前修改
+  currentValue: {
+    id: 1,
+    description: '数学运算服务器当前版本',
+    tools: [
+      {
+        id: 101,
+        toolName: '加法工具',
+        toolKey: {
+          namespace: 'math',
+          group: 'operation',
+          toolName: 'add'
+        },
+        toolVersion: 1,
+        spec: {
+          name: 'add',
+          description: '执行两个数字的加法运算',
+          parameters: {
+            type: 'object',
+            properties: {
+              a: {
+                type: 'number',
+                description: '第一个数字'
+              },
+              b: {
+                type: 'number',
+                description: '第二个数字'
+              }
+            },
+            required: ['a', 'b']
+          }
+        },
+        routeRule: {
+          protocol: 'HTTP',
+          url: 'https://api.example.com/math/add',
+          method: 'POST',
+          additionHeaders: {
+            'Content-Type': 'application/json'
+          },
+          convertType: 'NONE',
+          serviceNamespace: 'math',
+          serviceGroup: 'operation',
+          serviceName: 'MathService'
+        }
+      },
+      {
+        id: 102,
+        toolName: '减法工具',
+        toolKey: {
+          namespace: 'math',
+          group: 'operation',
+          toolName: 'subtract'
+        },
+        toolVersion: 1,
+        spec: {
+          name: 'subtract',
+          description: '执行两个数字的减法运算',
+          parameters: {
+            type: 'object',
+            properties: {
+              a: {
+                type: 'number',
+                description: '被减数'
+              },
+              b: {
+                type: 'number',
+                description: '减数'
+              }
+            },
+            required: ['a', 'b']
+          }
+        },
+        routeRule: {
+          protocol: 'HTTP',
+          url: 'https://api.example.com/math/subtract',
+          method: 'POST',
+          additionHeaders: {
+            'Content-Type': 'application/json'
+          },
+          convertType: 'NONE',
+          serviceNamespace: 'math',
+          serviceGroup: 'operation',
+          serviceName: 'MathService'
+        }
+      },
+      {
+        id: 103,
+        toolName: '乘法工具',
+        toolKey: {
+          namespace: 'math',
+          group: 'operation',
+          toolName: 'multiply'
+        },
+        toolVersion: 1,
+        spec: {
+          name: 'multiply',
+          description: '执行两个数字的乘法运算',
+          parameters: {
+            type: 'object',
+            properties: {
+              a: {
+                type: 'number',
+                description: '第一个乘数'
+              },
+              b: {
+                type: 'number',
+                description: '第二个乘数'
+              }
+            },
+            required: ['a', 'b']
+          }
+        },
+        routeRule: {
+          protocol: 'HTTP',
+          url: 'https://api.example.com/math/multiply',
+          method: 'POST',
+          additionHeaders: {
+            'Content-Type': 'application/json'
+          },
+          convertType: 'NONE',
+          serviceNamespace: 'math',
+          serviceGroup: 'operation',
+          serviceName: 'MathService'
+        }
+      },
+      {
+        id: 104,
+        toolName: '除法工具',
+        toolKey: {
+          namespace: 'math',
+          group: 'operation',
+          toolName: 'divide'
+        },
+        toolVersion: 1,
+        spec: {
+          name: 'divide',
+          description: '执行两个数字的除法运算',
+          parameters: {
+            type: 'object',
+            properties: {
+              a: {
+                type: 'number',
+                description: '被除数'
+              },
+              b: {
+                type: 'number',
+                description: '除数'
+              }
+            },
+            required: ['a', 'b']
+          }
+        },
+        routeRule: {
+          protocol: 'HTTP',
+          url: 'https://api.example.com/math/divide',
+          method: 'POST',
+          additionHeaders: {
+            'Content-Type': 'application/json'
+          },
+          convertType: 'NONE',
+          serviceNamespace: 'math',
+          serviceGroup: 'operation',
+          serviceName: 'MathService'
+        }
+      }
+    ],
+    opUser: 'system',
+    updateTime: Date.now() - 3600000, // 1小时前更新
+    createTime: Date.now() - 86400000 * 2, // 2天前创建
+    isRelease: true
+  }
+});
+
 // ToolSpecSelector 相关变量和函数
 const showToolSpecSelector = ref(false);
 const selectedToolSpec = ref<ToolSpecInfo | null>(null);
@@ -720,6 +928,12 @@ const refreshTools = () => {
 const refreshServerValue = () => {
   // 这里可以添加刷新逻辑，目前只是简单的重新赋值以触发响应式更新
   mockServerValue.value = { ...mockServerValue.value };
+};
+
+// 刷新McpServerDetail
+const refreshServerDetail = () => {
+  // 这里可以添加刷新逻辑，目前只是简单的重新赋值以触发响应式更新
+  mockServerDto.value = { ...mockServerDto.value };
 };
 
 // 监听模式变化
@@ -792,6 +1006,14 @@ const handleToolAdd = (params: McpSimpleToolParams) => {
 }
 
 .server-value-container {
+  padding: 8px 0;
+}
+
+.mcp-server-detail-demo-area {
+  margin-top: 24px;
+}
+
+.server-detail-container {
   padding: 8px 0;
 }
 

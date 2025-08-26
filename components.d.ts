@@ -10,6 +10,7 @@ declare module 'vue' {
     DiffComponent: typeof import('./src/components/config/DiffComponent.vue')['default']
     Foo: typeof import('./src/components/Foo.vue')['default']
     LangSwitch: typeof import('./src/components/LangSwitch.vue')['default']
+    McpServerDetailComponent: typeof import('./src/components/McpServerDetailComponent.vue')['default']
     McpServerForm: typeof import('./src/components/mcpserver/McpServerForm.vue')['default']
     McpServerHistoryList: typeof import('./src/components/mcpserver/McpServerHistoryList.vue')['default']
     McpServerToolItem: typeof import('./src/components/mcpserver/McpServerToolItem.vue')['default']

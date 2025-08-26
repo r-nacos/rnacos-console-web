@@ -174,32 +174,32 @@
         </n-space>
       </div>
     </n-card>
+
+    <!-- McpServerDetail 组件演示区域 -->
+    <n-card
+      title="McpServerDetail 组件演示"
+      :bordered="false"
+      class="mcp-server-detail-demo-area"
+    >
+      <template #header-extra>
+        <n-space>
+          <n-text depth="3"
+            >ID: {{ mockServerDto.id }} - {{ mockServerDto.name }}</n-text
+          >
+          <n-button size="small" @click="refreshServerDetail">
+            <template #icon>
+              <n-icon><refresh-outline /></n-icon>
+            </template>
+            刷新
+          </n-button>
+        </n-space>
+      </template>
+
+      <div class="server-detail-container">
+        <mcp-server-detail-component :server-data="mockServerDto" />
+      </div>
+    </n-card>
   </div>
-
-  <!-- McpServerDetail 组件演示区域 -->
-  <n-card
-    title="McpServerDetail 组件演示"
-    :bordered="false"
-    class="mcp-server-detail-demo-area"
-  >
-    <template #header-extra>
-      <n-space>
-        <n-text depth="3"
-          >ID: {{ mockServerDto.id }} - {{ mockServerDto.name }}</n-text
-        >
-        <n-button size="small" @click="refreshServerDetail">
-          <template #icon>
-            <n-icon><refresh-outline /></n-icon>
-          </template>
-          刷新
-        </n-button>
-      </n-space>
-    </template>
-
-    <div class="server-detail-container">
-      <mcp-server-detail-component :server-data="mockServerDto" />
-    </div>
-  </n-card>
 </template>
 
 <script setup lang="ts">

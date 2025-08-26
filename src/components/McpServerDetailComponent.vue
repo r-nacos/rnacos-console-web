@@ -1,9 +1,19 @@
 <template>
   <div class="mcp-server-detail-component">
-    <n-card :title="t('mcpserverdetailcomponent.server_info')" :bordered="false">
+    <n-card
+      :title="t('mcpserverdetailcomponent.server_info')"
+      :bordered="false"
+    >
       <template #header-extra>
-        <n-tag :type="serverData.currentValue?.isRelease ? 'success' : 'warning'" size="small">
-          {{ serverData.currentValue?.isRelease ? t('mcpserverdetailcomponent.published') : t('mcpserverdetailcomponent.unpublished') }}
+        <n-tag
+          :type="serverData.currentValue?.isRelease ? 'success' : 'warning'"
+          size="small"
+        >
+          {{
+            serverData.currentValue?.isRelease
+              ? t('mcpserverdetailcomponent.published')
+              : t('mcpserverdetailcomponent.unpublished')
+          }}
         </n-tag>
       </template>
 
@@ -12,19 +22,19 @@
         <n-descriptions-item :label="t('mcpserverdetailcomponent.id')">
           <n-text>{{ serverData.id }}</n-text>
         </n-descriptions-item>
-        
+
         <n-descriptions-item :label="t('mcpserverdetailcomponent.namespace')">
           <n-text>{{ serverData.namespace }}</n-text>
         </n-descriptions-item>
-        
+
         <n-descriptions-item :label="t('mcpserverdetailcomponent.name')">
           <n-text>{{ serverData.name }}</n-text>
         </n-descriptions-item>
-        
+
         <n-descriptions-item :label="t('mcpserverdetailcomponent.description')">
           <n-text>{{ serverData.description }}</n-text>
         </n-descriptions-item>
-        
+
         <n-descriptions-item :label="t('mcpserverdetailcomponent.auth_keys')">
           <n-space :size="4">
             <n-tag
@@ -37,12 +47,14 @@
             </n-tag>
           </n-space>
         </n-descriptions-item>
-        
+
         <n-descriptions-item :label="t('mcpserverdetailcomponent.create_time')">
           <n-text>{{ formatTime(serverData.createTime) }}</n-text>
         </n-descriptions-item>
-        
-        <n-descriptions-item :label="t('mcpserverdetailcomponent.last_modified')">
+
+        <n-descriptions-item
+          :label="t('mcpserverdetailcomponent.last_modified')"
+        >
           <n-text>{{ formatTime(serverData.lastModifiedMillis) }}</n-text>
         </n-descriptions-item>
       </n-descriptions>
@@ -50,7 +62,9 @@
       <!-- 当前服务工具区域 -->
       <div v-if="serverData.currentValue" class="current-tools-section">
         <n-divider />
-        <h3 class="tools-title">{{ t('mcpserverdetailcomponent.current_tools') }}</h3>
+        <h3 class="tools-title">
+          {{ t('mcpserverdetailcomponent.current_tools') }}
+        </h3>
         <mcp-server-value-component
           :server-value="serverData.currentValue"
           mode="detail"

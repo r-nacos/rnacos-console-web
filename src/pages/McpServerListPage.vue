@@ -85,12 +85,13 @@
         @close="closeForm"
         @submit="submitForm"
       >
-        <McpServerDetail
+        <McpServerDetailComponent
           ref="mcpServerDetailRef"
-          :model="model"
-          @submit-success="handleSubmitSuccess"
+          :server-data="serverDataForComponent"
+          :mode="getComponentMode"
+          @save:success="handleSubmitSuccess"
+          @create:success="handleSubmitSuccess"
           @cancel="handleFormCancel"
-          @close="closeForm"
         />
       </SubContentFullPage>
     </Transition>
@@ -104,7 +105,7 @@ import { namespaceStore } from '@/data/namespace';
 import { useWebResources } from '@/data/resources';
 import NamespacePopSelect from '@/components/namespace/NamespacePopSelect.vue';
 import SubContentFullPage from '@/components/common/SubContentFullPage.vue';
-import McpServerDetail from './McpServerDetail.vue';
+import McpServerDetailComponent from '@/components/mcpserver/McpServerDetailComponent.vue';
 import { createMcpServerColumns } from '@/components/mcpserver/McpServerColumns';
 import { useI18n } from 'vue-i18n';
 import { printApiError, handleApiResult } from '@/utils/request';
@@ -119,7 +120,7 @@ export default defineComponent({
   components: {
     NamespacePopSelect,
     SubContentFullPage,
-    McpServerDetail
+    McpServerDetailComponent
   },
   setup() {
     const { t } = useI18n();
@@ -348,52 +349,9 @@ export default defineComponent({
         return;
       }
 
-      // Use the detail component's submit method
-      if (mcpServerDetailRef.value) {
-        try {
-          // Trigger form validation and submission in the detail component
-          const isValid = await mcpServerDetailRef.value.validateForm();
-          if (isValid) {
-            if (modelRef.value.mode === constant.FORM_MODE_CREATE) {
-              // Handle create operation
-              const apiParams = {
-                namespace: modelRef.value.namespace,
-                name: modelRef.value.name,
-                description: modelRef.value.description,
-                authKeys: modelRef.value.authKeys.filter((key) => key.trim()),
-                tools: modelRef.value.tools
-              };
-
-              const success =
-                await mcpServerApi.addMcpServerWithErrorHandling(apiParams);
-              if (success) {
-                message.success(t('mcpserver.create_success'));
-                handleSubmitSuccess();
-              }
-            } else if (modelRef.value.mode === constant.FORM_MODE_UPDATE) {
-              // Handle update operation
-              const apiParams = {
-                id: modelRef.value.id,
-                namespace: modelRef.value.namespace,
-                name: modelRef.value.name,
-                description: modelRef.value.description,
-                authKeys: modelRef.value.authKeys.filter((key) => key.trim()),
-                tools: modelRef.value.tools
-              };
-
-              const success =
-                await mcpServerApi.updateMcpServerWithErrorHandling(apiParams);
-              if (success) {
-                message.success(t('mcpserver.update_success'));
-                handleSubmitSuccess();
-              }
-            }
-          }
-        } catch (error) {
-          console.error('Form submission failed:', error);
-          printApiError(error);
-        }
-      }
+      // The new component handles form submission internally
+      // We just need to close the form when done
+      useFormRef.value = false;
     };
 
     // Handle form submission success from detail component
@@ -414,6 +372,65 @@ export default defineComponent({
         return t('mcpserver.create_mcpserver');
       }
       return t('mcpserver.mcpserver_detail');
+    });
+
+    // 转换model数据为新组件需要的serverData格式
+    const serverDataForComponent = computed(() => {
+      if (modelRef.value.mode === constant.FORM_MODE_CREATE) {
+        // 创建模式时提供默认的服务器数据结构
+        return {
+          id: 0,
+          namespace: modelRef.value.namespace,
+          name: modelRef.value.name,
+          description: modelRef.value.description,
+          authKeys: modelRef.value.authKeys,
+          tools: modelRef.value.tools || [],
+          createTime: Date.now(),
+          lastModifiedMillis: Date.now(),
+          updateTime: Date.now(),
+          currentValue: modelRef.value.currentValue || {
+            id: 0,
+            description: modelRef.value.description,
+            tools: modelRef.value.tools || [],
+            opUser: '',
+            updateTime: Date.now(),
+            createTime: Date.now(),
+            isRelease: false
+          }
+        };
+      }
+
+      // 编辑或详情模式时，从model构造serverData
+      return {
+        id: modelRef.value.id,
+        namespace: modelRef.value.namespace,
+        name: modelRef.value.name,
+        description: modelRef.value.description,
+        authKeys: modelRef.value.authKeys,
+        tools: modelRef.value.tools || [],
+        createTime: Date.now(),
+        lastModifiedMillis: Date.now(),
+        updateTime: Date.now(),
+        currentValue: modelRef.value.currentValue || {
+          id: modelRef.value.id,
+          description: modelRef.value.description,
+          tools: modelRef.value.tools || [],
+          opUser: '',
+          updateTime: Date.now(),
+          createTime: Date.now(),
+          isRelease: false
+        }
+      };
+    });
+
+    // 转换模式
+    const getComponentMode = computed(() => {
+      if (modelRef.value.mode === constant.FORM_MODE_CREATE) {
+        return 'create';
+      } else if (modelRef.value.mode === constant.FORM_MODE_UPDATE) {
+        return 'update';
+      }
+      return 'detail';
     });
 
     // Create columns for the data table
@@ -445,7 +462,9 @@ export default defineComponent({
       submitForm,
       handleSubmitSuccess,
       handleFormCancel,
-      getDetailTitle
+      getDetailTitle,
+      serverDataForComponent,
+      getComponentMode
     };
   },
   methods: {

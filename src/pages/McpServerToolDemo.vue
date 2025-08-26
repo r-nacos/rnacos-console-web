@@ -175,9 +175,9 @@
       </div>
     </n-card>
 
-    <!-- McpServerDetail 组件演示区域 -->
+    <!-- McpServerDetailComponent 组件演示区域 -->
     <n-card
-      title="McpServerDetail 组件演示"
+      title="McpServerDetailComponent 组件演示"
       :bordered="false"
       class="mcp-server-detail-demo-area"
     >
@@ -951,7 +951,7 @@ const refreshServerValue = () => {
   mockServerValue.value = { ...mockServerValue.value };
 };
 
-// 刷新McpServerDetail
+// 刷新McpServerDetailComponent
 const refreshServerDetail = () => {
   // 这里可以添加刷新逻辑，目前只是简单的重新赋值以触发响应式更新
   mockServerDto.value = { ...mockServerDto.value };
@@ -968,7 +968,7 @@ watch(currentMode, (newMode) => {
 
 watch(currentServerDetailMode, (newMode) => {
   consoleOutput.value.unshift(
-    `[${new Date().toLocaleTimeString()}] McpServerDetail 切换到${
+    `[${new Date().toLocaleTimeString()}] McpServerDetailComponent 切换到${
       newMode === 'detail' ? '详情' : newMode === 'update' ? '编辑' : '创建'
     }模式`
   );
@@ -1010,11 +1010,11 @@ const handleToolAdd = (params: McpSimpleToolParams) => {
   consoleOutput.value.unshift('---');
 };
 
-// 处理McpServerDetail组件的事件
+// 处理McpServerDetailComponent组件的事件
 const handleServerDetailUpdate = (data: McpServerDto) => {
   mockServerDto.value = data;
   const timestamp = new Date().toLocaleTimeString();
-  consoleOutput.value.unshift(`[${timestamp}] ServerDetail 已更新`);
+  consoleOutput.value.unshift(`[${timestamp}] ServerDetailComponent 已更新`);
   consoleOutput.value.unshift(`服务器名称: ${data.name}`);
   consoleOutput.value.unshift('---');
 };
@@ -1022,26 +1022,38 @@ const handleServerDetailUpdate = (data: McpServerDto) => {
 const handleServerDetailSave = (data: McpServerDto) => {
   const timestamp = new Date().toLocaleTimeString();
   consoleOutput.value.unshift(`[${timestamp}] 服务器已保存`);
-  consoleOutput.value.unshift(JSON.stringify({
-    id: data.id,
-    name: data.name,
-    namespace: data.namespace,
-    description: data.description,
-    authKeys: data.authKeys
-  }, null, 2));
+  consoleOutput.value.unshift(
+    JSON.stringify(
+      {
+        id: data.id,
+        name: data.name,
+        namespace: data.namespace,
+        description: data.description,
+        authKeys: data.authKeys
+      },
+      null,
+      2
+    )
+  );
   consoleOutput.value.unshift('---');
 };
 
 const handleServerDetailCreate = (data: McpServerDto) => {
   const timestamp = new Date().toLocaleTimeString();
   consoleOutput.value.unshift(`[${timestamp}] 服务器已创建`);
-  consoleOutput.value.unshift(JSON.stringify({
-    id: data.id,
-    name: data.name,
-    namespace: data.namespace,
-    description: data.description,
-    authKeys: data.authKeys
-  }, null, 2));
+  consoleOutput.value.unshift(
+    JSON.stringify(
+      {
+        id: data.id,
+        name: data.name,
+        namespace: data.namespace,
+        description: data.description,
+        authKeys: data.authKeys
+      },
+      null,
+      2
+    )
+  );
   consoleOutput.value.unshift('---');
 };
 

@@ -125,12 +125,7 @@ export const routes = [
         meta: { title: t('mcpserver.mcpserver_list') },
         component: () => import('@/pages/McpServerListPage.vue')
       },
-      {
-        path: '/manage/mcpserver/detail',
-        name: 'mcpserver-detail',
-        meta: { title: t('mcpserver.mcpserver_detail') },
-        component: () => import('@/pages/McpServerDetail.vue')
-      },
+
       {
         path: '/manage/mcpserver/tool-demo',
         name: 'mcpserver-tool-demo',

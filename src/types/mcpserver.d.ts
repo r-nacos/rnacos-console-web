@@ -95,18 +95,6 @@ export interface JsonSchema {
   [key: string]: any;
 }
 
-// 表单模型
-export interface McpServerFormModel {
-  id?: number;
-  namespace: string;
-  name: string;
-  description: string;
-  authKeys: string[];
-  tools: McpTool[];
-  currentValue?: McpServerValue;
-  mode: 'create' | 'edit' | 'detail';
-}
-
 // ToolSpec信息（用于选择器）
 export interface ToolSpecInfo {
   namespace: string;
@@ -174,16 +162,4 @@ export interface McpToolEditModel {
   toolVersion: number;
   routeRule?: ToolRouteRule;
   spec?: ToolFunctionValue;
-}
-
-// McpServer值展示组件Props
-export interface McpServerValueDisplayProps {
-  valueData: McpServerValue | McpServerValueDto;
-  editMode?: boolean;
-  allowEdit?: boolean;
-  allowPublish?: boolean;
-  allowRollback?: boolean;
-  showVersionInfo?: boolean;
-  showActions?: boolean;
-  namespace?: string;
 }

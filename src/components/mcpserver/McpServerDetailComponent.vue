@@ -36,15 +36,27 @@
           <n-input :value="formData.id.toString()" disabled />
         </n-form-item>
 
-        <n-form-item :label="t('mcpserverdetailcomponent.namespace')" path="namespace">
-          <n-input v-model:value="formData.namespace" :disabled="mode === 'update'" />
+        <n-form-item
+          :label="t('mcpserverdetailcomponent.namespace')"
+          path="namespace"
+        >
+          <n-input
+            v-model:value="formData.namespace"
+            :disabled="mode === 'update'"
+          />
         </n-form-item>
 
         <n-form-item :label="t('mcpserverdetailcomponent.name')" path="name">
-          <n-input v-model:value="formData.name" placeholder="请输入服务器名称" />
+          <n-input
+            v-model:value="formData.name"
+            placeholder="请输入服务器名称"
+          />
         </n-form-item>
 
-        <n-form-item :label="t('mcpserverdetailcomponent.description')" path="description">
+        <n-form-item
+          :label="t('mcpserverdetailcomponent.description')"
+          path="description"
+        >
           <n-input
             v-model:value="formData.description"
             type="textarea"
@@ -53,7 +65,10 @@
           />
         </n-form-item>
 
-        <n-form-item :label="t('mcpserverdetailcomponent.auth_keys')" path="authKeys">
+        <n-form-item
+          :label="t('mcpserverdetailcomponent.auth_keys')"
+          path="authKeys"
+        >
           <n-dynamic-tags v-model:value="formData.authKeys" />
         </n-form-item>
       </n-form>
@@ -92,7 +107,9 @@
           <n-text>{{ formatTime(serverData.createTime) }}</n-text>
         </n-descriptions-item>
 
-        <n-descriptions-item :label="t('mcpserverdetailcomponent.last_modified')">
+        <n-descriptions-item
+          :label="t('mcpserverdetailcomponent.last_modified')"
+        >
           <n-text>{{ formatTime(serverData.lastModifiedMillis) }}</n-text>
         </n-descriptions-item>
       </n-descriptions>
@@ -197,7 +214,10 @@ const formData = ref({
 // 表单验证规则
 const formRules: FormRules = {
   name: [
-    { required: true, message: t('validation.required', { field: '服务器名称' }) }
+    {
+      required: true,
+      message: t('validation.required', { field: '服务器名称' })
+    }
   ],
   namespace: [
     { required: true, message: t('validation.required', { field: '命名空间' }) }
@@ -206,11 +226,11 @@ const formRules: FormRules = {
     { required: true, message: t('validation.required', { field: '描述' }) }
   ],
   authKeys: [
-    { 
-      required: true, 
+    {
+      required: true,
       type: 'array',
       min: 1,
-      message: t('validation.required', { field: '认证密钥' }) 
+      message: t('validation.required', { field: '认证密钥' })
     }
   ]
 };
@@ -245,7 +265,7 @@ watch(() => props.serverData, initFormData, { deep: true });
 // 将McpServerDto转换为McpServerParams
 const convertToParams = (): McpServerParams => {
   // 转换tools从McpTool到McpSimpleToolParams
-  const tools = (props.serverData.currentValue?.tools || []).map(tool => ({
+  const tools = (props.serverData.currentValue?.tools || []).map((tool) => ({
     id: tool.id,
     toolName: tool.toolName,
     namespace: tool.toolKey.namespace,
@@ -286,13 +306,15 @@ const handleSave = async () => {
   try {
     await formRef.value?.validate();
     loading.value = true;
-    
+
     const params = convertToParams();
     const success = await mcpServerApi.updateMcpServerWithErrorHandling(params);
-    
+
     if (success) {
       // 获取最新数据
-      const updatedServer = await mcpServerApi.getMcpServerWithErrorHandling(formData.value.id);
+      const updatedServer = await mcpServerApi.getMcpServerWithErrorHandling(
+        formData.value.id
+      );
       if (updatedServer) {
         emit('update:serverData', updatedServer);
         emit('save:success', updatedServer);
@@ -310,10 +332,10 @@ const handleCreate = async () => {
   try {
     await formRef.value?.validate();
     loading.value = true;
-    
+
     const params = convertToParams();
     const newId = await mcpServerApi.addMcpServerWithErrorHandling(params);
-    
+
     if (newId) {
       // 获取新创建的服务器数据
       const newServer = await mcpServerApi.getMcpServerWithErrorHandling(newId);

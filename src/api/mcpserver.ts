@@ -9,7 +9,6 @@ import {
   McpServerDto,
   McpServerQueryParams,
   McpServerParams,
-  McpServerFormModel,
   ToolSpecInfo,
   PageResult
 } from '@/types/mcpserver';
@@ -174,50 +173,6 @@ class McpServerApi {
 
 export const mcpServerApi = new McpServerApi();
 
-// 工具函数：验证 McpServer 参数
-export const validateMcpServerParams = (
-  params: McpServerFormModel
-): string[] => {
-  const errors: string[] = [];
-
-  if (!params.name?.trim()) {
-    errors.push('Server name cannot be empty');
-  }
-
-  if (!params.namespace?.trim()) {
-    errors.push('Namespace cannot be empty');
-  }
-
-  if (!params.authKeys || params.authKeys.length === 0) {
-    errors.push('At least one auth key is required');
-  }
-
-  if (params.authKeys) {
-    for (let i = 0; i < params.authKeys.length; i++) {
-      if (!params.authKeys[i]?.trim()) {
-        errors.push(`Auth key ${i + 1} cannot be empty`);
-      }
-    }
-  }
-
-  if (params.tools) {
-    for (let i = 0; i < params.tools.length; i++) {
-      const tool = params.tools[i];
-      if (!tool.toolName?.trim()) {
-        errors.push(`Tool ${i + 1} name cannot be empty`);
-      }
-      if (!tool.namespace?.trim()) {
-        errors.push(`Tool ${i + 1} namespace cannot be empty`);
-      }
-      if (!tool.group?.trim()) {
-        errors.push(`Tool ${i + 1} group cannot be empty`);
-      }
-    }
-  }
-
-  return errors;
-};
-
 // 工具函数：验证查询参数
 export const validateMcpServerQueryParams = (
   params: McpServerQueryParams
@@ -257,32 +212,4 @@ export const formatMcpServerForDisplay = (server: McpServerDto) => {
   };
   console.log('Formatted server data:', formatted); // 添加日志以查看格式化后的数据
   return formatted;
-};
-
-// 工具函数：将表单模型转换为 API 参数
-export const convertFormModelToApiParams = (
-  formModel: McpServerFormModel
-): McpServerParams => {
-  const { mode, ...apiParams } = formModel;
-  return apiParams as McpServerParams;
-};
-
-// 工具函数：将 API 数据转换为表单模型
-export const convertApiDataToFormModel = (
-  apiData: McpServerDto,
-  mode: 'create' | 'edit' | 'detail' = 'detail'
-): McpServerFormModel => {
-  // 从 currentValue 中提取工具信息
-  const tools = apiData.currentValue?.tools || [];
-
-  return {
-    id: apiData.id,
-    namespace: apiData.namespace,
-    name: apiData.name,
-    description: apiData.description,
-    authKeys: [...apiData.authKeys],
-    tools,
-    currentValue: apiData.currentValue,
-    mode
-  };
 };

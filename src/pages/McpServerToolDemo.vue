@@ -196,7 +196,27 @@
       </template>
 
       <div class="server-detail-container">
-        <mcp-server-detail-component :server-data="mockServerDto" />
+        <n-space vertical :size="16">
+          <n-card title="模式选择" size="small">
+            <n-radio-group
+              v-model:value="currentServerDetailMode"
+              name="server-detail-mode"
+            >
+              <n-radio-button value="detail">详情模式</n-radio-button>
+              <n-radio-button value="update">编辑模式</n-radio-button>
+              <n-radio-button value="create">创建模式</n-radio-button>
+            </n-radio-group>
+          </n-card>
+
+          <mcp-server-detail-component
+            :server-data="mockServerDto"
+            :mode="currentServerDetailMode"
+            @update:server-data="handleServerDetailUpdate"
+            @save:success="handleServerDetailSave"
+            @create:success="handleServerDetailCreate"
+            @cancel="handleServerDetailCancel"
+          />
+        </n-space>
       </div>
     </n-card>
   </div>
@@ -226,7 +246,7 @@ import {
 import McpServerToolItem from '@/components/mcpserver/McpServerToolItem.vue';
 import ToolSpecSelector from '@/components/mcpserver/ToolSpecSelector.vue';
 import McpServerValueComponent from '@/components/mcpserver/McpServerValueComponent.vue';
-import McpServerDetailComponent from '@/components/McpServerDetailComponent.vue';
+import McpServerDetailComponent from '@/components/mcpserver/McpServerDetailComponent.vue';
 import {
   McpTool,
   ToolSpecInfo,
@@ -238,6 +258,7 @@ import {
 // 当前模式
 const currentMode = ref<'detail' | 'update' | 'create'>('detail');
 const currentServerValueMode = ref<'detail' | 'update'>('detail');
+const currentServerDetailMode = ref<'detail' | 'update' | 'create'>('detail');
 
 // 控制台输出
 const consoleOutput = ref<string[]>([]);
@@ -945,6 +966,14 @@ watch(currentMode, (newMode) => {
   );
 });
 
+watch(currentServerDetailMode, (newMode) => {
+  consoleOutput.value.unshift(
+    `[${new Date().toLocaleTimeString()}] McpServerDetail 切换到${
+      newMode === 'detail' ? '详情' : newMode === 'update' ? '编辑' : '创建'
+    }模式`
+  );
+});
+
 // 处理McpServerValue组件的事件
 const handleServerValueUpdate = (value: McpServerValue) => {
   mockServerValue.value = value;
@@ -978,6 +1007,47 @@ const handleToolAdd = (params: McpSimpleToolParams) => {
   const timestamp = new Date().toLocaleTimeString();
   consoleOutput.value.unshift(`[${timestamp}] 新工具已添加`);
   consoleOutput.value.unshift(JSON.stringify(params, null, 2));
+  consoleOutput.value.unshift('---');
+};
+
+// 处理McpServerDetail组件的事件
+const handleServerDetailUpdate = (data: McpServerDto) => {
+  mockServerDto.value = data;
+  const timestamp = new Date().toLocaleTimeString();
+  consoleOutput.value.unshift(`[${timestamp}] ServerDetail 已更新`);
+  consoleOutput.value.unshift(`服务器名称: ${data.name}`);
+  consoleOutput.value.unshift('---');
+};
+
+const handleServerDetailSave = (data: McpServerDto) => {
+  const timestamp = new Date().toLocaleTimeString();
+  consoleOutput.value.unshift(`[${timestamp}] 服务器已保存`);
+  consoleOutput.value.unshift(JSON.stringify({
+    id: data.id,
+    name: data.name,
+    namespace: data.namespace,
+    description: data.description,
+    authKeys: data.authKeys
+  }, null, 2));
+  consoleOutput.value.unshift('---');
+};
+
+const handleServerDetailCreate = (data: McpServerDto) => {
+  const timestamp = new Date().toLocaleTimeString();
+  consoleOutput.value.unshift(`[${timestamp}] 服务器已创建`);
+  consoleOutput.value.unshift(JSON.stringify({
+    id: data.id,
+    name: data.name,
+    namespace: data.namespace,
+    description: data.description,
+    authKeys: data.authKeys
+  }, null, 2));
+  consoleOutput.value.unshift('---');
+};
+
+const handleServerDetailCancel = () => {
+  const timestamp = new Date().toLocaleTimeString();
+  consoleOutput.value.unshift(`[${timestamp}] 服务器编辑已取消`);
   consoleOutput.value.unshift('---');
 };
 </script>

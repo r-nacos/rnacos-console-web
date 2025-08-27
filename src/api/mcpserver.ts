@@ -9,6 +9,9 @@ import {
   McpServerDto,
   McpServerQueryParams,
   McpServerParams,
+  McpServerHistoryQueryParams,
+  McpServerHistoryPublishParams,
+  McpServerValueDto,
   ToolSpecInfo,
   PageResult
 } from '@/types/mcpserver';
@@ -95,6 +98,53 @@ class McpServerApi {
     });
   }
 
+  /**
+   * 查询 McpServer 历史版本
+   * @param params 历史版本查询参数
+   * @returns Promise<AxiosResponse<IApiResult<IPageResult<McpServerValueDto>>>>
+   */
+  queryMcpServerHistory(
+    params: McpServerHistoryQueryParams
+  ): Promise<AxiosResponse<IApiResult<IPageResult<McpServerValueDto>>>> {
+    return axios.request({
+      method: 'get',
+      url: '/rnacos/api/console/v2/mcp/server/history',
+      params: {
+        ...params
+      }
+    });
+  }
+
+  /**
+   * 发布当前版本的 McpServer
+   * @param id McpServer ID
+   * @returns Promise<AxiosResponse<IApiResult<boolean>>>
+   */
+  publishCurrentMcpServer(
+    id: number
+  ): Promise<AxiosResponse<IApiResult<boolean>>> {
+    return axios.requestJSON({
+      method: 'post',
+      url: '/rnacos/api/console/v2/mcp/server/publish',
+      data: JSON.stringify({ id })
+    });
+  }
+
+  /**
+   * 发布历史版本的 McpServer
+   * @param params 历史版本发布参数
+   * @returns Promise<AxiosResponse<IApiResult<boolean>>>
+   */
+  publishHistoryMcpServer(
+    params: McpServerHistoryPublishParams
+  ): Promise<AxiosResponse<IApiResult<boolean>>> {
+    return axios.requestJSON({
+      method: 'post',
+      url: '/rnacos/api/console/v2/mcp/server/publish/history',
+      data: JSON.stringify(params)
+    });
+  }
+
   // 便捷方法：带错误处理的查询列表
   async queryMcpServerPageWithErrorHandling(
     params: McpServerQueryParams
@@ -169,6 +219,51 @@ class McpServerApi {
       return false;
     }
   }
+
+  // 便捷方法：带错误处理的查询历史版本
+  async queryMcpServerHistoryWithErrorHandling(
+    params: McpServerHistoryQueryParams
+  ): Promise<IPageResult<McpServerValueDto> | null> {
+    try {
+      const response = await this.queryMcpServerHistory(params);
+      return handleApiResult(response);
+    } catch (error) {
+      printApiError(error);
+      return null;
+    }
+  }
+
+  // 便捷方法：带错误处理的发布当前版本
+  async publishCurrentMcpServerWithErrorHandling(id: number): Promise<boolean> {
+    try {
+      const response = await this.publishCurrentMcpServer(id);
+      const result = handleApiResult(response);
+      if (result) {
+        printApiSuccess();
+      }
+      return result || false;
+    } catch (error) {
+      printApiError(error);
+      return false;
+    }
+  }
+
+  // 便捷方法：带错误处理的发布历史版本
+  async publishHistoryMcpServerWithErrorHandling(
+    params: McpServerHistoryPublishParams
+  ): Promise<boolean> {
+    try {
+      const response = await this.publishHistoryMcpServer(params);
+      const result = handleApiResult(response);
+      if (result) {
+        printApiSuccess();
+      }
+      return result || false;
+    } catch (error) {
+      printApiError(error);
+      return false;
+    }
+  }
 }
 
 export const mcpServerApi = new McpServerApi();
@@ -194,6 +289,52 @@ export const validateMcpServerQueryParams = (
   return errors;
 };
 
+// 工具函数：验证历史版本查询参数
+export const validateMcpServerHistoryQueryParams = (
+  params: McpServerHistoryQueryParams
+): string[] => {
+  const errors: string[] = [];
+
+  if (!params.id || params.id <= 0) {
+    errors.push('McpServer ID is required and must be greater than 0');
+  }
+
+  if (params.pageNo && params.pageNo <= 0) {
+    errors.push('Page number must be greater than 0');
+  }
+
+  if (params.pageSize && params.pageSize <= 0) {
+    errors.push('Page size must be greater than 0');
+  }
+
+  if (params.pageSize && params.pageSize > 1000) {
+    errors.push('Page size cannot exceed 1000');
+  }
+
+  if (params.startTime && params.endTime && params.startTime > params.endTime) {
+    errors.push('Start time cannot be later than end time');
+  }
+
+  return errors;
+};
+
+// 工具函数：验证历史版本发布参数
+export const validateMcpServerHistoryPublishParams = (
+  params: McpServerHistoryPublishParams
+): string[] => {
+  const errors: string[] = [];
+
+  if (!params.id || params.id <= 0) {
+    errors.push('McpServer ID is required and must be greater than 0');
+  }
+
+  if (!params.historyValueId || params.historyValueId <= 0) {
+    errors.push('History value ID is required and must be greater than 0');
+  }
+
+  return errors;
+};
+
 // 工具函数：转换 McpServer 为显示格式
 export const formatMcpServerForDisplay = (server: McpServerDto) => {
   console.log('Formatting server data:', server); // 添加日志以查看原始数据
@@ -212,4 +353,19 @@ export const formatMcpServerForDisplay = (server: McpServerDto) => {
   };
   console.log('Formatted server data:', formatted); // 添加日志以查看格式化后的数据
   return formatted;
+};
+
+// 工具函数：转换 McpServerValue 为显示格式
+export const formatMcpServerValueForDisplay = (value: McpServerValueDto) => {
+  return {
+    ...value,
+    updateTimeFormatted: value.updateTime
+      ? new Date(value.updateTime).toLocaleString()
+      : '-',
+    createTimeFormatted: value.createTime
+      ? new Date(value.createTime).toLocaleString()
+      : '-',
+    toolsCount: value.tools?.length || 0,
+    releaseStatusText: value.isRelease ? '已发布' : '未发布'
+  };
 };

@@ -89,6 +89,7 @@
           ref="mcpServerDetailRef"
           :server-data="serverDataForComponent"
           :mode="getComponentMode"
+          :show-actions="false"
           @update:server-data="handleServerDataUpdate"
           @save:success="handleSubmitSuccess"
           @create:success="handleSubmitSuccess"
@@ -100,7 +101,7 @@
 </template>
 
 <script>
-import { ref, reactive, defineComponent, computed, h } from 'vue';
+import { ref, reactive, defineComponent, computed } from 'vue';
 import { mcpServerApi } from '@/api/mcpserver';
 import { namespaceStore } from '@/data/namespace';
 import { useWebResources } from '@/data/resources';
@@ -350,9 +351,14 @@ export default defineComponent({
         return;
       }
 
-      // The new component handles form submission internally
-      // We just need to close the form when done
-      useFormRef.value = false;
+      // 触发详情组件的相应操作
+      if (mcpServerDetailRef.value) {
+        if (modelRef.value.mode === constant.FORM_MODE_CREATE) {
+          await mcpServerDetailRef.value.handleCreate();
+        } else if (modelRef.value.mode === constant.FORM_MODE_UPDATE) {
+          await mcpServerDetailRef.value.handleSave();
+        }
+      }
     };
 
     // Handle form submission success from detail component
@@ -369,15 +375,27 @@ export default defineComponent({
     // Handle server data update from detail component
     const handleServerDataUpdate = (updatedServerData) => {
       // 更新 modelRef 中的数据，特别是 tools 和 currentValue
+      // 确保保留 currentValue 的所有属性，包括更新后的 tools 数组
+      const updatedCurrentValue = updatedServerData.currentValue;
+
       modelRef.value = {
         ...modelRef.value,
+        /*
         id: updatedServerData.id,
         namespace: updatedServerData.namespace,
         name: updatedServerData.name,
         description: updatedServerData.description,
         authKeys: updatedServerData.authKeys,
-        tools: updatedServerData.currentValue?.tools || [],
-        currentValue: updatedServerData.currentValue
+        */
+        // 更新 tools 数组，确保使用最新的工具数据
+        tools: updatedCurrentValue?.tools || [],
+        // 完整更新 currentValue，确保包含所有属性和最新的 tools
+        currentValue: updatedCurrentValue
+          ? {
+              ...updatedCurrentValue,
+              tools: updatedCurrentValue.tools || []
+            }
+          : modelRef.value.currentValue
       };
     };
 
@@ -417,25 +435,41 @@ export default defineComponent({
       }
 
       // 编辑或详情模式时，从model构造serverData
+      // 确保 currentValue 中的 tools 数组是最新的
+      const currentValue = modelRef.value.currentValue;
+      const toolsFromCurrentValue = currentValue?.tools || [];
+      const toolsFromModel = modelRef.value.tools || [];
+
+      // 优先使用 currentValue 中的 tools，因为它是最新的
+      const latestTools =
+        toolsFromCurrentValue.length > 0
+          ? toolsFromCurrentValue
+          : toolsFromModel;
+
       return {
         id: modelRef.value.id,
         namespace: modelRef.value.namespace,
         name: modelRef.value.name,
         description: modelRef.value.description,
         authKeys: modelRef.value.authKeys,
-        tools: modelRef.value.tools || [],
+        tools: latestTools,
         createTime: Date.now(),
         lastModifiedMillis: Date.now(),
         updateTime: Date.now(),
-        currentValue: modelRef.value.currentValue || {
-          id: modelRef.value.id,
-          description: modelRef.value.description,
-          tools: modelRef.value.tools || [],
-          opUser: '',
-          updateTime: Date.now(),
-          createTime: Date.now(),
-          isRelease: false
-        }
+        currentValue: currentValue
+          ? {
+              ...currentValue,
+              tools: latestTools
+            }
+          : {
+              id: modelRef.value.id,
+              description: modelRef.value.description,
+              tools: latestTools,
+              opUser: '',
+              updateTime: Date.now(),
+              createTime: Date.now(),
+              isRelease: false
+            }
       };
     });
 

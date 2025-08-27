@@ -42,7 +42,7 @@
         >
           <n-input
             v-model:value="formData.namespace"
-            :disabled="mode === 'update'"
+            :disabled="mode === 'update' || mode === 'create'"
           />
         </n-form-item>
 
@@ -161,7 +161,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted } from 'vue';
+import { ref, watch, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import {
   NCard,
@@ -182,6 +182,7 @@ import {
 import McpServerValueComponent from '@/components/mcpserver/McpServerValueComponent.vue';
 import { McpServerDto, McpServerParams } from '@/types/mcpserver';
 import { mcpServerApi } from '@/api/mcpserver';
+import { namespaceStore } from '@/data/namespace';
 
 const { t } = useI18n();
 
@@ -244,7 +245,7 @@ const initFormData = () => {
   if (props.mode === 'create') {
     formData.value = {
       id: 0,
-      namespace: 'default',
+      namespace: namespaceStore.current.value.namespaceId,
       name: '',
       description: '',
       authKeys: []
@@ -298,9 +299,13 @@ const formatTime = (timestamp: number) => {
 
 // 处理服务器值更新
 const handleServerValueUpdate = (value: any) => {
+  // 确保只更新 currentValue，保留 McpServerDto 中的其他信息
   const updatedData = {
     ...props.serverData,
-    currentValue: value
+    currentValue: {
+      ...props.serverData.currentValue,
+      ...value
+    }
   };
   emit('update:serverData', updatedData);
 };
@@ -312,12 +317,12 @@ const handleToolChange = (toolIndex: number, tool: any) => {
   if (props.serverData.currentValue) {
     const updatedTools = [...props.serverData.currentValue.tools];
     updatedTools[toolIndex] = tool;
-    
+
     const updatedValue = {
       ...props.serverData.currentValue,
       tools: updatedTools
     };
-    
+
     handleServerValueUpdate(updatedValue);
   }
 };
@@ -333,13 +338,15 @@ const handleToolDelete = (toolIndex: number) => {
   console.log('工具删除:', toolIndex);
   // 工具删除时自动更新服务器数据
   if (props.serverData.currentValue) {
-    const updatedTools = props.serverData.currentValue.tools.filter((_, i) => i !== toolIndex);
-    
+    const updatedTools = props.serverData.currentValue.tools.filter(
+      (_, i) => i !== toolIndex
+    );
+
     const updatedValue = {
       ...props.serverData.currentValue,
       tools: updatedTools
     };
-    
+
     handleServerValueUpdate(updatedValue);
   }
 };
@@ -347,8 +354,46 @@ const handleToolDelete = (toolIndex: number) => {
 // 处理工具添加
 const handleToolAdd = (params: any) => {
   console.log('工具添加:', params);
-  // 工具添加时的逻辑已经在 McpServerValueComponent 中处理了
-  // 这里主要用于日志记录或其他副作用
+  // 工具添加时确保只更新 tools 数组，保留 currentValue 的其他属性
+  if (props.serverData.currentValue) {
+    // 从 params 中创建新工具对象
+    const newTool: any = {
+      id: 0, // 临时ID，实际保存时由后端分配
+      toolName: params.toolName || '',
+      toolKey: {
+        namespace: params.namespace || '',
+        group: params.group || '',
+        toolName: params.toolName || ''
+      },
+      toolVersion: 0,
+      spec: {
+        name: '',
+        description: '',
+        parameters: {
+          type: 'object',
+          properties: {},
+          required: []
+        }
+      },
+      routeRule: params.routeRule || {
+        protocol: 'HTTP',
+        url: '',
+        method: 'GET',
+        additionHeaders: {},
+        convertType: 'NONE',
+        serviceNamespace: '',
+        serviceGroup: '',
+        serviceName: ''
+      }
+    };
+
+    const updatedValue = {
+      ...props.serverData.currentValue,
+      tools: [...props.serverData.currentValue.tools, newTool]
+    };
+
+    handleServerValueUpdate(updatedValue);
+  }
 };
 
 // 处理保存
@@ -409,6 +454,13 @@ const handleCancel = () => {
 
 onMounted(() => {
   initFormData();
+});
+
+// 暴露方法给父组件
+defineExpose({
+  handleSave,
+  handleCreate,
+  handleCancel
 });
 </script>
 

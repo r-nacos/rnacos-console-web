@@ -82,7 +82,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import {
   McpServerValue,
@@ -161,6 +161,7 @@ const addNewTool = () => {
     }
   };
 
+  // 只更新 tools 数组，保留 serverValue 的其他属性
   const updatedValue = {
     ...props.serverValue,
     tools: [...props.serverValue.tools, newTool]
@@ -180,6 +181,7 @@ const updateTool = (index: number, updatedTool: McpTool) => {
   const updatedTools = [...props.serverValue.tools];
   updatedTools[index] = updatedTool;
 
+  // 只更新 tools 数组，保留 serverValue 的其他属性
   const updatedValue = {
     ...props.serverValue,
     tools: updatedTools
@@ -193,6 +195,7 @@ const updateTool = (index: number, updatedTool: McpTool) => {
 const deleteTool = (index: number) => {
   const updatedTools = props.serverValue.tools.filter((_, i) => i !== index);
 
+  // 只更新 tools 数组，保留 serverValue 的其他属性
   const updatedValue = {
     ...props.serverValue,
     tools: updatedTools

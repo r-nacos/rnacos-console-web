@@ -89,6 +89,7 @@
           ref="mcpServerDetailRef"
           :server-data="serverDataForComponent"
           :mode="getComponentMode"
+          @update:server-data="handleServerDataUpdate"
           @save:success="handleSubmitSuccess"
           @create:success="handleSubmitSuccess"
           @cancel="handleFormCancel"
@@ -365,6 +366,21 @@ export default defineComponent({
       useFormRef.value = false;
     };
 
+    // Handle server data update from detail component
+    const handleServerDataUpdate = (updatedServerData) => {
+      // 更新 modelRef 中的数据，特别是 tools 和 currentValue
+      modelRef.value = {
+        ...modelRef.value,
+        id: updatedServerData.id,
+        namespace: updatedServerData.namespace,
+        name: updatedServerData.name,
+        description: updatedServerData.description,
+        authKeys: updatedServerData.authKeys,
+        tools: updatedServerData.currentValue?.tools || [],
+        currentValue: updatedServerData.currentValue
+      };
+    };
+
     const getDetailTitle = computed(() => {
       if (modelRef.value.mode === constant.FORM_MODE_UPDATE) {
         return t('mcpserver.edit_mcpserver');
@@ -462,6 +478,7 @@ export default defineComponent({
       submitForm,
       handleSubmitSuccess,
       handleFormCancel,
+      handleServerDataUpdate,
       getDetailTitle,
       serverDataForComponent,
       getComponentMode

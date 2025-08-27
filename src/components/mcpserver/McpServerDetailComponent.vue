@@ -124,6 +124,10 @@
           :server-value="serverData.currentValue"
           :mode="mode === 'detail' ? 'detail' : 'update'"
           @update:value="handleServerValueUpdate"
+          @tool-change="handleToolChange"
+          @tool-save="handleToolSave"
+          @tool-delete="handleToolDelete"
+          @tool-add="handleToolAdd"
         />
       </div>
 
@@ -299,6 +303,52 @@ const handleServerValueUpdate = (value: any) => {
     currentValue: value
   };
   emit('update:serverData', updatedData);
+};
+
+// 处理工具变更
+const handleToolChange = (toolIndex: number, tool: any) => {
+  console.log('工具变更:', toolIndex, tool);
+  // 工具变更时自动更新服务器数据
+  if (props.serverData.currentValue) {
+    const updatedTools = [...props.serverData.currentValue.tools];
+    updatedTools[toolIndex] = tool;
+    
+    const updatedValue = {
+      ...props.serverData.currentValue,
+      tools: updatedTools
+    };
+    
+    handleServerValueUpdate(updatedValue);
+  }
+};
+
+// 处理工具保存
+const handleToolSave = (toolIndex: number, params: any) => {
+  console.log('工具保存:', toolIndex, params);
+  // 工具保存时的逻辑可以在这里处理
+};
+
+// 处理工具删除
+const handleToolDelete = (toolIndex: number) => {
+  console.log('工具删除:', toolIndex);
+  // 工具删除时自动更新服务器数据
+  if (props.serverData.currentValue) {
+    const updatedTools = props.serverData.currentValue.tools.filter((_, i) => i !== toolIndex);
+    
+    const updatedValue = {
+      ...props.serverData.currentValue,
+      tools: updatedTools
+    };
+    
+    handleServerValueUpdate(updatedValue);
+  }
+};
+
+// 处理工具添加
+const handleToolAdd = (params: any) => {
+  console.log('工具添加:', params);
+  // 工具添加时的逻辑已经在 McpServerValueComponent 中处理了
+  // 这里主要用于日志记录或其他副作用
 };
 
 // 处理保存

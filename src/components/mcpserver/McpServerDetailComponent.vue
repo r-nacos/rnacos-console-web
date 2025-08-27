@@ -524,13 +524,13 @@ const areToolsEqual = (tools1: any[], tools2: any[]): boolean => {
   if (tools1.length !== tools2.length) {
     return false;
   }
-  
+
   // 按id排序后比较
   const sortedTools1 = [...tools1].sort((a, b) => a.id - b.id);
   const sortedTools2 = [...tools2].sort((a, b) => a.id - b.id);
-  
-  return sortedTools1.every((tool, index) =>
-    tool.id === sortedTools2[index].id
+
+  return sortedTools1.every(
+    (tool, index) => tool.id === sortedTools2[index].id
   );
 };
 
@@ -542,27 +542,27 @@ const handlePublishServer = async () => {
       message.warning('当前没有可发布的版本');
       return;
     }
-    
+
     // 检查是否有已发布版本
     if (props.serverData.releaseValue) {
       // 比较当前版本和已发布版本的tools是否相同
       const currentTools = props.serverData.currentValue.tools || [];
       const releaseTools = props.serverData.releaseValue.tools || [];
-      
+
       if (areToolsEqual(currentTools, releaseTools)) {
         message.warning('工具没有变化，无需发布');
         return;
       }
     }
-    
+
     // 调用发布API
     const success = await mcpServerApi.publishCurrentMcpServerWithErrorHandling(
       props.serverData.id
     );
-    
+
     if (success) {
       message.success('发布成功');
-      
+
       // 获取最新数据
       const updatedServer = await mcpServerApi.getMcpServerWithErrorHandling(
         props.serverData.id

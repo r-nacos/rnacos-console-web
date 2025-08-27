@@ -149,7 +149,8 @@ export default defineComponent({
       authKeys: [],
       tools: [],
       mode: '',
-      currentValue: undefined
+      currentValue: undefined,
+      releaseValue: undefined
     });
 
     const paginationReactive = reactive({
@@ -261,6 +262,7 @@ export default defineComponent({
             authKeys: [...(server.authKeys || [])],
             tools: tools,
             currentValue: server.currentValue,
+            releaseValue: server.releaseValue,
             mode: constant.FORM_MODE_DETAIL
           };
           useFormRef.value = true;
@@ -288,6 +290,7 @@ export default defineComponent({
             authKeys: [...(server.authKeys || [])],
             tools: tools,
             currentValue: server.currentValue,
+            releaseValue: server.releaseValue,
             mode: constant.FORM_MODE_UPDATE
           };
           useFormRef.value = true;
@@ -334,6 +337,7 @@ export default defineComponent({
         authKeys: [''],
         tools: [],
         currentValue: undefined,
+        releaseValue: undefined,
         mode: constant.FORM_MODE_CREATE
       };
       useFormRef.value = true;
@@ -374,9 +378,10 @@ export default defineComponent({
 
     // Handle server data update from detail component
     const handleServerDataUpdate = (updatedServerData) => {
-      // 更新 modelRef 中的数据，特别是 tools 和 currentValue
+      // 更新 modelRef 中的数据，特别是 tools、currentValue 和 releaseValue
       // 确保保留 currentValue 的所有属性，包括更新后的 tools 数组
       const updatedCurrentValue = updatedServerData.currentValue;
+      const updatedReleaseValue = updatedServerData.releaseValue;
 
       modelRef.value = {
         ...modelRef.value,
@@ -395,7 +400,9 @@ export default defineComponent({
               ...updatedCurrentValue,
               tools: updatedCurrentValue.tools || []
             }
-          : modelRef.value.currentValue
+          : modelRef.value.currentValue,
+        // 更新 releaseValue
+        releaseValue: updatedReleaseValue || modelRef.value.releaseValue
       };
     };
 
@@ -430,7 +437,8 @@ export default defineComponent({
             updateTime: Date.now(),
             createTime: Date.now(),
             isRelease: false
-          }
+          },
+          releaseValue: modelRef.value.releaseValue
         };
       }
 
@@ -469,7 +477,8 @@ export default defineComponent({
               updateTime: Date.now(),
               createTime: Date.now(),
               isRelease: false
-            }
+            },
+        releaseValue: modelRef.value.releaseValue
       };
     });
 

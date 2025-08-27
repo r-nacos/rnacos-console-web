@@ -105,7 +105,11 @@ import {
   useMessage
 } from 'naive-ui';
 import McpServerToolItem from './McpServerToolItem.vue';
-import { AddOutline, TrashOutline, CloudUploadOutline } from '@vicons/ionicons5';
+import {
+  AddOutline,
+  TrashOutline,
+  CloudUploadOutline
+} from '@vicons/ionicons5';
 
 const { t } = useI18n();
 

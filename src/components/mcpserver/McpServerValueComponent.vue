@@ -39,6 +39,12 @@
             </template>
             {{ t('mcpservaluecomponent.add_tool') }}
           </n-button>
+          <n-button type="success" size="small" @click="publishServer">
+            <template #icon>
+              <n-icon><cloud-upload-outline /></n-icon>
+            </template>
+            {{ t('mcpservaluecomponent.publish_server') }}
+          </n-button>
         </n-space>
       </div>
     </div>
@@ -99,7 +105,7 @@ import {
   useMessage
 } from 'naive-ui';
 import McpServerToolItem from './McpServerToolItem.vue';
-import { AddOutline, TrashOutline } from '@vicons/ionicons5';
+import { AddOutline, TrashOutline, CloudUploadOutline } from '@vicons/ionicons5';
 
 const { t } = useI18n();
 
@@ -118,6 +124,7 @@ const emit = defineEmits<{
   (e: 'toolSave', toolIndex: number, params: McpSimpleToolParams): void;
   (e: 'toolDelete', toolIndex: number): void;
   (e: 'toolAdd', params: McpSimpleToolParams): void;
+  (e: 'publishServer'): void;
 }>();
 
 const message = useMessage();
@@ -209,6 +216,11 @@ const deleteTool = (index: number) => {
 // 处理工具保存
 const handleToolSave = (index: number, params: McpSimpleToolParams) => {
   emit('toolSave', index, params);
+};
+
+// 发布服务
+const publishServer = () => {
+  emit('publishServer');
 };
 </script>
 

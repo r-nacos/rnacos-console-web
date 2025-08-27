@@ -510,7 +510,8 @@ const message = {
     unpublished: '未发布',
     add_tool: '添加工具',
     no_tools: '暂无工具',
-    tool_deleted_success: '工具已删除'
+    tool_deleted_success: '工具已删除',
+    publish_server: '发布服务'
   },
   mcpservertollitem: {
     tool_params_info: '工具参数信息',

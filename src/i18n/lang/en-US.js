@@ -497,7 +497,8 @@ const message = {
     unpublished: 'Unpublished',
     add_tool: 'Add Tool',
     no_tools: 'No tools',
-    tool_deleted_success: 'Tool deleted successfully'
+    tool_deleted_success: 'Tool deleted successfully',
+    publish_server: 'Publish Server'
   },
   mcpservertollitem: {
     tool_params_info: 'Tool Parameters Info',

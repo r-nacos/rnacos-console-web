@@ -114,21 +114,54 @@
         </n-descriptions-item>
       </n-descriptions>
 
-      <!-- 当前服务工具区域 -->
-      <div v-if="serverData.currentValue" class="current-tools-section">
+      <!-- 服务工具区域 -->
+      <div class="server-tools-section">
         <n-divider />
-        <h3 class="tools-title">
-          {{ t('mcpserverdetailcomponent.current_tools') }}
-        </h3>
-        <mcp-server-value-component
-          :server-value="serverData.currentValue"
-          :mode="mode === 'detail' ? 'detail' : 'update'"
-          @update:value="handleServerValueUpdate"
-          @tool-change="handleToolChange"
-          @tool-save="handleToolSave"
-          @tool-delete="handleToolDelete"
-          @tool-add="handleToolAdd"
-        />
+        <n-tabs
+          v-model:value="activeTab"
+          type="line"
+          animated
+          :default-value="defaultTab"
+        >
+          <n-tab-pane
+            name="release"
+            :tab="t('mcpserverdetailcomponent.release_tools')"
+          >
+            <div v-if="serverData.releaseValue" class="tools-content">
+              <mcp-server-value-component
+                :server-value="serverData.releaseValue"
+                mode="detail"
+              />
+            </div>
+            <div v-else class="no-release-content">
+              <n-empty
+                :description="t('mcpserverdetailcomponent.no_release_version')"
+              />
+            </div>
+          </n-tab-pane>
+
+          <n-tab-pane
+            name="current"
+            :tab="t('mcpserverdetailcomponent.current_tools')"
+          >
+            <div v-if="serverData.currentValue" class="tools-content">
+              <mcp-server-value-component
+                :server-value="serverData.currentValue"
+                :mode="mode === 'detail' ? 'detail' : 'update'"
+                @update:value="handleServerValueUpdate"
+                @tool-change="handleToolChange"
+                @tool-save="handleToolSave"
+                @tool-delete="handleToolDelete"
+                @tool-add="handleToolAdd"
+              />
+            </div>
+            <div v-else class="no-current-content">
+              <n-empty
+                :description="t('mcpserverdetailcomponent.no_current_version')"
+              />
+            </div>
+          </n-tab-pane>
+        </n-tabs>
       </div>
 
       <!-- 操作按钮区域 -->
@@ -161,7 +194,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, onMounted } from 'vue';
+import { ref, watch, onMounted, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import {
   NCard,
@@ -176,6 +209,9 @@ import {
   NInput,
   NDynamicTags,
   NButton,
+  NTabs,
+  NTabPane,
+  NEmpty,
   type FormInst,
   type FormRules
 } from 'naive-ui';
@@ -208,12 +244,24 @@ const emit = defineEmits<Emits>();
 
 const formRef = ref<FormInst | null>(null);
 const loading = ref(false);
+const activeTab = ref('');
 const formData = ref({
   id: 0,
   namespace: '',
   name: '',
   description: '',
   authKeys: [] as string[]
+});
+
+// 计算默认显示的tab
+const defaultTab = computed(() => {
+  if (props.mode === 'detail') {
+    // 查看模式默认显示已发布版本，如果没有则显示当前版本
+    return props.serverData.releaseValue ? 'release' : 'current';
+  } else {
+    // 编辑模式默认显示当前版本
+    return 'current';
+  }
 });
 
 // 表单验证规则
@@ -262,10 +310,26 @@ const initFormData = () => {
 };
 
 // 监听模式变化
-watch(() => props.mode, initFormData, { immediate: true });
+watch(
+  () => props.mode,
+  () => {
+    initFormData();
+    // 根据模式设置默认tab
+    activeTab.value = defaultTab.value;
+  },
+  { immediate: true }
+);
 
 // 监听serverData变化
-watch(() => props.serverData, initFormData, { deep: true });
+watch(
+  () => props.serverData,
+  () => {
+    initFormData();
+    // 根据数据设置默认tab
+    activeTab.value = defaultTab.value;
+  },
+  { deep: true }
+);
 
 // 将McpServerDto转换为McpServerParams
 const convertToParams = (): McpServerParams => {
@@ -454,6 +518,8 @@ const handleCancel = () => {
 
 onMounted(() => {
   initFormData();
+  // 设置初始tab
+  activeTab.value = defaultTab.value;
 });
 
 // 暴露方法给父组件
@@ -469,15 +535,18 @@ defineExpose({
   width: 100%;
 }
 
-.current-tools-section {
+.server-tools-section {
   margin-top: 16px;
 }
 
-.tools-title {
-  font-size: 16px;
-  font-weight: 500;
-  margin-bottom: 16px;
-  color: var(--n-text-color);
+.tools-content {
+  padding-top: 8px;
+}
+
+.no-release-content,
+.no-current-content {
+  padding: 32px 0;
+  text-align: center;
 }
 
 .action-buttons {

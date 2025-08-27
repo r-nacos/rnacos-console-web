@@ -567,9 +567,12 @@ const message = {
     auth_keys: '认证密钥',
     create_time: '创建时间',
     last_modified: '最后修改时间',
-    current_tools: '当前服务工具',
+    current_tools: '当前工具',
+    release_tools: '已发布工具',
     published: '已发布',
-    unpublished: '未发布'
+    unpublished: '未发布',
+    no_release_version: '暂无已发布版本',
+    no_current_version: '暂无当前版本'
   },
   error: {
     NO_PERMISSION: '没有权限',

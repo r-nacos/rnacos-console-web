@@ -554,9 +554,12 @@ const message = {
     auth_keys: 'Auth Keys',
     create_time: 'Create Time',
     last_modified: 'Last Modified',
-    current_tools: 'Current Service Tools',
+    current_tools: 'Current Tools',
+    release_tools: 'Released Tools',
     published: 'Published',
-    unpublished: 'Unpublished'
+    unpublished: 'Unpublished',
+    no_release_version: 'No released version',
+    no_current_version: 'No current version'
   },
   error: {
     NO_PERMISSION: 'NO_PERMISSION',

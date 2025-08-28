@@ -20,16 +20,6 @@
           >{{ t('mcpservaluecomponent.update_label') }}
           {{ formatUpdateTime(serverValue.updateTime) }}</n-text
         >
-        <n-tag
-          :type="serverValue.isRelease ? 'success' : 'warning'"
-          size="small"
-        >
-          {{
-            serverValue.isRelease
-              ? t('mcpservaluecomponent.published')
-              : t('mcpservaluecomponent.unpublished')
-          }}
-        </n-tag>
 
         <!-- 编辑模式下的操作按钮 -->
         <n-space v-if="mode === 'update'" :size="8">
@@ -78,11 +68,9 @@
           </template>
         </n-button>
       </div>
-
-      <n-empty
-        v-if="serverValue.tools.length === 0"
-        :description="t('mcpservaluecomponent.no_tools')"
-      />
+    </div>
+    <div class="tools-container-empty" v-if="serverValue.tools.length === 0">
+      <n-empty :description="t('mcpservaluecomponent.no_tools')" />
     </div>
   </div>
 </template>
@@ -308,7 +296,7 @@ const publishServer = () => {
     gap: 8px;
   }
 
-  .tools-container {
+  .tools-container-empty {
     grid-template-columns: 1fr;
   }
 }

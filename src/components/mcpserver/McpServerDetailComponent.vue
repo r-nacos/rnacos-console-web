@@ -7,11 +7,11 @@
       <template #header-extra>
         <n-space>
           <n-tag
-            :type="serverData.currentValue?.isRelease ? 'success' : 'warning'"
+            :type="serverData.releaseValue?.id !== 0 ? 'success' : 'warning'"
             size="small"
           >
             {{
-              serverData.currentValue?.isRelease
+              serverData.releaseValue?.id !== 0
                 ? t('mcpserverdetailcomponent.published')
                 : t('mcpserverdetailcomponent.unpublished')
             }}

@@ -570,10 +570,27 @@ const message = {
     last_modified: '最后修改时间',
     current_tools: '当前工具',
     release_tools: '已发布工具',
+    history_tools: '历史记录',
     published: '已发布',
     unpublished: '未发布',
     no_release_version: '暂无已发布版本',
-    no_current_version: '暂无当前版本'
+    no_current_version: '暂无当前版本',
+    no_history_version: '暂无历史记录',
+    history_id: '历史ID',
+    history_name: '历史名称',
+    history_description: '历史描述',
+    history_create_time: '创建时间',
+    history_last_modified: '最后修改时间',
+    history_tools_count: '工具数量',
+    view_history_detail: '查看详情',
+    publish_history: '重新发布',
+    confirm_publish_history: '确认重新发布历史版本',
+    confirm_publish_history_content:
+      '确认要重新发布此历史版本吗？发布后将替换当前的已发布版本。',
+    publish_history_success: '历史版本重新发布成功',
+    publish_history_failed: '历史版本重新发布失败',
+    history_detail: '历史记录详情',
+    close: '关闭'
   },
   error: {
     NO_PERMISSION: '没有权限',

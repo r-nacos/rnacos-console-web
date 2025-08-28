@@ -557,10 +557,27 @@ const message = {
     last_modified: 'Last Modified',
     current_tools: 'Current Tools',
     release_tools: 'Released Tools',
+    history_tools: 'History',
     published: 'Published',
     unpublished: 'Unpublished',
     no_release_version: 'No released version',
-    no_current_version: 'No current version'
+    no_current_version: 'No current version',
+    no_history_version: 'No history records',
+    history_id: 'History ID',
+    history_name: 'History Name',
+    history_description: 'History Description',
+    history_create_time: 'Create Time',
+    history_last_modified: 'Last Modified',
+    history_tools_count: 'Tools Count',
+    view_history_detail: 'View Detail',
+    publish_history: 'Republish',
+    confirm_publish_history: 'Confirm Republish History Version',
+    confirm_publish_history_content:
+      'Are you sure to republish this history version? It will replace the current released version after publishing.',
+    publish_history_success: 'History version republished successfully',
+    publish_history_failed: 'History version republish failed',
+    history_detail: 'History Detail',
+    close: 'Close'
   },
   error: {
     NO_PERMISSION: 'NO_PERMISSION',

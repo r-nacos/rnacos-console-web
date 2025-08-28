@@ -150,7 +150,8 @@ export default defineComponent({
       tools: [],
       mode: '',
       currentValue: undefined,
-      releaseValue: undefined
+      releaseValue: undefined,
+      histories: undefined
     });
 
     const paginationReactive = reactive({
@@ -263,6 +264,7 @@ export default defineComponent({
             tools: tools,
             currentValue: server.currentValue,
             releaseValue: server.releaseValue,
+            histories: server.histories,
             mode: constant.FORM_MODE_DETAIL
           };
           useFormRef.value = true;
@@ -291,6 +293,7 @@ export default defineComponent({
             tools: tools,
             currentValue: server.currentValue,
             releaseValue: server.releaseValue,
+            histories: server.histories,
             mode: constant.FORM_MODE_UPDATE
           };
           useFormRef.value = true;
@@ -338,6 +341,7 @@ export default defineComponent({
         tools: [],
         currentValue: undefined,
         releaseValue: undefined,
+        histories: undefined,
         mode: constant.FORM_MODE_CREATE
       };
       useFormRef.value = true;
@@ -402,7 +406,8 @@ export default defineComponent({
             }
           : modelRef.value.currentValue,
         // 更新 releaseValue
-        releaseValue: updatedReleaseValue || modelRef.value.releaseValue
+        releaseValue: updatedReleaseValue || modelRef.value.releaseValue,
+        histories: updatedReleaseValue || modelRef.value.histories
       };
     };
 
@@ -438,7 +443,8 @@ export default defineComponent({
             createTime: Date.now(),
             isRelease: false
           },
-          releaseValue: modelRef.value.releaseValue
+          releaseValue: modelRef.value.releaseValue || { id: 0 },
+          histories: modelRef.value.histories || []
         };
       }
 
@@ -478,7 +484,8 @@ export default defineComponent({
               createTime: Date.now(),
               isRelease: false
             },
-        releaseValue: modelRef.value.releaseValue
+        releaseValue: modelRef.value.releaseValue,
+        histories: modelRef.value.histories
       };
     });
 

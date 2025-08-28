@@ -162,6 +162,28 @@
               />
             </div>
           </n-tab-pane>
+
+          <n-tab-pane
+            name="history"
+            :tab="t('mcpserverdetailcomponent.history_tools')"
+          >
+            <div
+              v-if="serverData.histories && serverData.histories.length > 0"
+              class="tools-content"
+            >
+              <mcp-server-history-list
+                :histories="serverData.histories"
+                :server-id="serverData.id"
+                @view-detail="handleViewHistoryDetail"
+                @publish-history="handlePublishHistory"
+              />
+            </div>
+            <div v-else class="no-history-content">
+              <n-empty
+                :description="t('mcpserverdetailcomponent.no_history_version')"
+              />
+            </div>
+          </n-tab-pane>
         </n-tabs>
       </div>
 
@@ -218,7 +240,12 @@ import {
 } from 'naive-ui';
 import { useMessage } from 'naive-ui';
 import McpServerValueComponent from '@/components/mcpserver/McpServerValueComponent.vue';
-import { McpServerDto, McpServerParams } from '@/types/mcpserver';
+import McpServerHistoryList from '@/components/mcpserver/McpServerHistoryList.vue';
+import {
+  McpServerDto,
+  McpServerParams,
+  McpServerValue
+} from '@/types/mcpserver';
 import { mcpServerApi } from '@/api/mcpserver';
 import { namespaceStore } from '@/data/namespace';
 
@@ -577,6 +604,41 @@ const handlePublishServer = async () => {
   }
 };
 
+// 处理查看历史记录详情
+const handleViewHistoryDetail = (history: McpServerValue) => {
+  console.log('查看历史记录详情:', history);
+  // 这里可以添加打开详情抽屉的逻辑
+};
+
+// 处理发布历史版本
+const handlePublishHistory = async (history: McpServerValue) => {
+  try {
+    const success = await mcpServerApi.publishHistoryMcpServerWithErrorHandling(
+      {
+        id: props.serverData.id,
+        historyValueId: history.id
+      }
+    );
+
+    if (success) {
+      message.success(t('mcpserverdetailcomponent.publish_history_success'));
+
+      // 获取最新数据
+      const updatedServer = await mcpServerApi.getMcpServerWithErrorHandling(
+        props.serverData.id
+      );
+      if (updatedServer) {
+        emit('update:serverData', updatedServer);
+      }
+    } else {
+      message.error(t('mcpserverdetailcomponent.publish_history_failed'));
+    }
+  } catch (error) {
+    console.error('发布历史版本失败:', error);
+    message.error(t('mcpserverdetailcomponent.publish_history_failed'));
+  }
+};
+
 onMounted(() => {
   initFormData();
   // 设置初始tab
@@ -605,7 +667,8 @@ defineExpose({
 }
 
 .no-release-content,
-.no-current-content {
+.no-current-content,
+.no-history-content {
   padding: 32px 0;
   text-align: center;
 }

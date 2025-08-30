@@ -244,7 +244,8 @@ import McpServerHistoryList from '@/components/mcpserver/McpServerHistoryList.vu
 import {
   McpServerDto,
   McpServerParams,
-  McpServerValue
+  McpServerValue,
+  McpTool
 } from '@/types/mcpserver';
 import { mcpServerApi } from '@/api/mcpserver';
 import { namespaceStore } from '@/data/namespace';
@@ -546,8 +547,8 @@ const handleCancel = () => {
   emit('cancel');
 };
 
-// 比较工具是否相同（通过id判断）
-const areToolsEqual = (tools1: any[], tools2: any[]): boolean => {
+// 比较工具是否相同（通过id判断工具是否一样，另外还需要对比工具的路由信息内容是否完全一样）
+const areToolsEqual = (tools1: McpTool[], tools2: McpTool[]): boolean => {
   if (tools1.length !== tools2.length) {
     return false;
   }
@@ -556,9 +557,60 @@ const areToolsEqual = (tools1: any[], tools2: any[]): boolean => {
   const sortedTools1 = [...tools1].sort((a, b) => a.id - b.id);
   const sortedTools2 = [...tools2].sort((a, b) => a.id - b.id);
 
-  return sortedTools1.every(
-    (tool, index) => tool.id === sortedTools2[index].id
-  );
+  return sortedTools1.every((tool, index) => {
+    const otherTool = sortedTools2[index];
+
+    // 比较工具ID
+    if (tool.id !== otherTool.id) {
+      return false;
+    }
+
+    // 比较路由信息
+    const route1 = tool.routeRule;
+    const route2 = otherTool.routeRule;
+
+    // 比较基本路由字段
+    if (
+      route1.protocol !== route2.protocol ||
+      route1.url !== route2.url ||
+      route1.method !== route2.method ||
+      route1.convertType !== route2.convertType ||
+      route1.serviceNamespace !== route2.serviceNamespace ||
+      route1.serviceGroup !== route2.serviceGroup ||
+      route1.serviceName !== route2.serviceName
+    ) {
+      return false;
+    }
+
+    // 比较可选字段
+    if (route1.ruleType !== route2.ruleType) {
+      return false;
+    }
+
+    // 比较additionHeaders对象
+    const headers1 = route1.additionHeaders || {};
+    const headers2 = route2.additionHeaders || {};
+    const headerKeys1 = Object.keys(headers1);
+    const headerKeys2 = Object.keys(headers2);
+
+    if (headerKeys1.length !== headerKeys2.length) {
+      return false;
+    }
+
+    for (const key of headerKeys1) {
+      if (headers1[key] !== headers2[key]) {
+        return false;
+      }
+    }
+
+    // 比较config对象（如果存在）
+    if (route1.config !== route2.config) {
+      // 使用JSON字符串化比较，确保对象内容一致
+      return JSON.stringify(route1.config) === JSON.stringify(route2.config);
+    }
+
+    return true;
+  });
 };
 
 // 处理发布服务

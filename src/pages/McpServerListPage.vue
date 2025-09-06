@@ -86,11 +86,11 @@
         @submit="submitForm"
       >
         <McpServerDetailComponent
+          v-if="useForm"
           ref="mcpServerDetailRef"
-          :server-data="serverDataForComponent"
+          :server-data="model"
           :mode="getComponentMode"
           :show-actions="false"
-          @update:server-data="handleServerDataUpdate"
           @save:success="handleSubmitSuccess"
           @create:success="handleSubmitSuccess"
           @cancel="handleFormCancel"
@@ -118,6 +118,30 @@ import namespaceApi from '@/api/namespace';
 import * as constant from '@/types/constant';
 import { formatMcpServerForDisplay } from '@/api/mcpserver';
 
+const defaultModelValue = {
+  id: 0,
+  namespace: namespaceStore.current.value.namespaceId,
+  name: '',
+  description: '',
+  authKeys: [],
+  tools: [],
+  currentValue: {
+    id: 0,
+    description: '',
+    tools: [],
+    opUser: '',
+    updateTime: Date.now(),
+    createTime: Date.now(),
+    isRelease: false
+  },
+  releaseValue: { id: 0 },
+  histories: [],
+  mode: constant.FORM_MODE_CREATE,
+  createTime: Date.now(),
+  lastModifiedMillis: Date.now(),
+  updateTime: Date.now()
+};
+
 export default defineComponent({
   components: {
     NamespacePopSelect,
@@ -141,18 +165,7 @@ export default defineComponent({
       pageSize: 20
     });
 
-    const modelRef = ref({
-      id: 0,
-      namespace: '',
-      name: '',
-      description: '',
-      authKeys: [],
-      tools: [],
-      mode: '',
-      currentValue: undefined,
-      releaseValue: undefined,
-      histories: undefined
-    });
+    const modelRef = ref({ ...defaultModelValue });
 
     const paginationReactive = reactive({
       page: 1,
@@ -255,7 +268,8 @@ export default defineComponent({
           // 从 currentValue.tools 或 tools 中获取工具数据，如果都不存在则使用空数组
           const tools = server.currentValue?.tools || server.tools || [];
 
-          modelRef.value = {
+          // 直接更新 modelRef.value 的属性
+          Object.assign(modelRef.value, {
             id: server.id,
             namespace: server.namespace,
             name: server.name,
@@ -265,8 +279,11 @@ export default defineComponent({
             currentValue: server.currentValue,
             releaseValue: server.releaseValue,
             histories: server.histories,
-            mode: constant.FORM_MODE_DETAIL
-          };
+            mode: constant.FORM_MODE_DETAIL,
+            createTime: server.createTime,
+            lastModifiedMillis: server.lastModifiedMillis,
+            updateTime: server.updateTime
+          });
           useFormRef.value = true;
           console.log('detailItem 001', JSON.stringify(modelRef.value));
         }
@@ -284,7 +301,8 @@ export default defineComponent({
           // 从 currentValue.tools 或 tools 中获取工具数据，如果都不存在则使用空数组
           const tools = server.currentValue?.tools || server.tools || [];
 
-          modelRef.value = {
+          // 直接更新 modelRef.value 的属性
+          Object.assign(modelRef.value, {
             id: server.id,
             namespace: server.namespace,
             name: server.name,
@@ -294,8 +312,11 @@ export default defineComponent({
             currentValue: server.currentValue,
             releaseValue: server.releaseValue,
             histories: server.histories,
-            mode: constant.FORM_MODE_UPDATE
-          };
+            mode: constant.FORM_MODE_UPDATE,
+            createTime: server.createTime,
+            lastModifiedMillis: server.lastModifiedMillis,
+            updateTime: server.updateTime
+          });
           useFormRef.value = true;
         }
       } catch (error) {
@@ -332,18 +353,8 @@ export default defineComponent({
     };
 
     const showCreate = () => {
-      modelRef.value = {
-        id: 0,
-        namespace: namespaceStore.current.value.namespaceId,
-        name: '',
-        description: '',
-        authKeys: [''],
-        tools: [],
-        currentValue: undefined,
-        releaseValue: undefined,
-        histories: undefined,
-        mode: constant.FORM_MODE_CREATE
-      };
+      // 直接更新 modelRef.value 的属性
+      Object.assign(modelRef.value, defaultModelValue);
       useFormRef.value = true;
     };
 
@@ -380,37 +391,6 @@ export default defineComponent({
       useFormRef.value = false;
     };
 
-    // Handle server data update from detail component
-    const handleServerDataUpdate = (updatedServerData) => {
-      // 更新 modelRef 中的数据，特别是 tools、currentValue 和 releaseValue
-      // 确保保留 currentValue 的所有属性，包括更新后的 tools 数组
-      const updatedCurrentValue = updatedServerData.currentValue;
-      const updatedReleaseValue = updatedServerData.releaseValue;
-
-      modelRef.value = {
-        ...modelRef.value,
-        /*
-        id: updatedServerData.id,
-        namespace: updatedServerData.namespace,
-        name: updatedServerData.name,
-        description: updatedServerData.description,
-        authKeys: updatedServerData.authKeys,
-        */
-        // 更新 tools 数组，确保使用最新的工具数据
-        tools: updatedCurrentValue?.tools || [],
-        // 完整更新 currentValue，确保包含所有属性和最新的 tools
-        currentValue: updatedCurrentValue
-          ? {
-              ...updatedCurrentValue,
-              tools: updatedCurrentValue.tools || []
-            }
-          : modelRef.value.currentValue,
-        // 更新 releaseValue
-        releaseValue: updatedReleaseValue || modelRef.value.releaseValue,
-        histories: updatedReleaseValue || modelRef.value.histories
-      };
-    };
-
     const getDetailTitle = computed(() => {
       if (modelRef.value.mode === constant.FORM_MODE_UPDATE) {
         return t('mcpserver.edit_mcpserver');
@@ -418,75 +398,6 @@ export default defineComponent({
         return t('mcpserver.create_mcpserver');
       }
       return t('mcpserver.mcpserver_detail');
-    });
-
-    // 转换model数据为新组件需要的serverData格式
-    const serverDataForComponent = computed(() => {
-      if (modelRef.value.mode === constant.FORM_MODE_CREATE) {
-        // 创建模式时提供默认的服务器数据结构
-        return {
-          id: 0,
-          namespace: modelRef.value.namespace,
-          name: modelRef.value.name,
-          description: modelRef.value.description,
-          authKeys: modelRef.value.authKeys,
-          tools: modelRef.value.tools || [],
-          createTime: Date.now(),
-          lastModifiedMillis: Date.now(),
-          updateTime: Date.now(),
-          currentValue: modelRef.value.currentValue || {
-            id: 0,
-            description: modelRef.value.description,
-            tools: modelRef.value.tools || [],
-            opUser: '',
-            updateTime: Date.now(),
-            createTime: Date.now(),
-            isRelease: false
-          },
-          releaseValue: modelRef.value.releaseValue || { id: 0 },
-          histories: modelRef.value.histories || []
-        };
-      }
-
-      // 编辑或详情模式时，从model构造serverData
-      // 确保 currentValue 中的 tools 数组是最新的
-      const currentValue = modelRef.value.currentValue;
-      const toolsFromCurrentValue = currentValue?.tools || [];
-      const toolsFromModel = modelRef.value.tools || [];
-
-      // 优先使用 currentValue 中的 tools，因为它是最新的
-      const latestTools =
-        toolsFromCurrentValue.length > 0
-          ? toolsFromCurrentValue
-          : toolsFromModel;
-
-      return {
-        id: modelRef.value.id,
-        namespace: modelRef.value.namespace,
-        name: modelRef.value.name,
-        description: modelRef.value.description,
-        authKeys: modelRef.value.authKeys,
-        tools: latestTools,
-        createTime: Date.now(),
-        lastModifiedMillis: Date.now(),
-        updateTime: Date.now(),
-        currentValue: currentValue
-          ? {
-              ...currentValue,
-              tools: latestTools
-            }
-          : {
-              id: modelRef.value.id,
-              description: modelRef.value.description,
-              tools: latestTools,
-              opUser: '',
-              updateTime: Date.now(),
-              createTime: Date.now(),
-              isRelease: false
-            },
-        releaseValue: modelRef.value.releaseValue,
-        histories: modelRef.value.histories
-      };
     });
 
     // 转换模式
@@ -528,9 +439,7 @@ export default defineComponent({
       submitForm,
       handleSubmitSuccess,
       handleFormCancel,
-      handleServerDataUpdate,
       getDetailTitle,
-      serverDataForComponent,
       getComponentMode
     };
   },

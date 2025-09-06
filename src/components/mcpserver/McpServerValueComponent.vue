@@ -49,8 +49,6 @@
         <mcp-server-tool-item
           :tool="tool"
           :mode="mode === 'update' ? 'update' : 'detail'"
-          @update:tool="(updatedTool) => updateTool(index, updatedTool)"
-          @save="(params) => handleToolSave(index, params)"
         />
 
         <!-- 编辑模式下的删除按钮 -->
@@ -76,22 +74,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import {
   McpServerValue,
   McpTool,
   McpSimpleToolParams
 } from '@/types/mcpserver';
-import {
-  NText,
-  NEmpty,
-  NTag,
-  NSpace,
-  NButton,
-  NIcon,
-  useMessage
-} from 'naive-ui';
+import { NText, NEmpty, NSpace, NButton, NIcon, useMessage } from 'naive-ui';
 import McpServerToolItem from './McpServerToolItem.vue';
 import {
   AddOutline,
@@ -110,12 +99,8 @@ const props = withDefaults(defineProps<Props>(), {
   mode: 'detail'
 });
 
+// 只保留必要的 emit 事件
 const emit = defineEmits<{
-  (e: 'update:value', value: McpServerValue): void;
-  (e: 'toolChange', toolIndex: number, tool: McpTool): void;
-  (e: 'toolSave', toolIndex: number, params: McpSimpleToolParams): void;
-  (e: 'toolDelete', toolIndex: number): void;
-  (e: 'toolAdd', params: McpSimpleToolParams): void;
   (e: 'publishServer'): void;
 }>();
 
@@ -130,6 +115,7 @@ const formatUpdateTime = (timestamp: number) => {
 
 // 添加新工具
 const addNewTool = () => {
+  console.log('add new tool at McpServerValue');
   const newTool: McpTool = {
     id: 0, // 临时ID，实际保存时由后端分配
     toolName: '',
@@ -160,54 +146,27 @@ const addNewTool = () => {
     }
   };
 
-  // 只更新 tools 数组，保留 serverValue 的其他属性
-  const updatedValue = {
-    ...props.serverValue,
-    tools: [...props.serverValue.tools, newTool]
-  };
-
-  emit('update:value', updatedValue);
-  emit('toolAdd', {
-    toolName: '',
-    namespace: '',
-    group: '',
-    routeRule: newTool.routeRule
-  });
+  // 直接修改响应式对象
+  props.serverValue.tools.push(newTool);
 };
 
 // 更新工具
 const updateTool = (index: number, updatedTool: McpTool) => {
-  const updatedTools = [...props.serverValue.tools];
-  updatedTools[index] = updatedTool;
-
-  // 只更新 tools 数组，保留 serverValue 的其他属性
-  const updatedValue = {
-    ...props.serverValue,
-    tools: updatedTools
-  };
-
-  emit('update:value', updatedValue);
-  emit('toolChange', index, updatedTool);
+  // 直接修改响应式对象
+  props.serverValue.tools[index] = updatedTool;
 };
 
 // 删除工具
 const deleteTool = (index: number) => {
-  const updatedTools = props.serverValue.tools.filter((_, i) => i !== index);
-
-  // 只更新 tools 数组，保留 serverValue 的其他属性
-  const updatedValue = {
-    ...props.serverValue,
-    tools: updatedTools
-  };
-
-  emit('update:value', updatedValue);
-  emit('toolDelete', index);
+  // 直接修改响应式对象
+  props.serverValue.tools.splice(index, 1);
   message.success(t('mcpservaluecomponent.tool_deleted_success'));
 };
 
 // 处理工具保存
 const handleToolSave = (index: number, params: McpSimpleToolParams) => {
-  emit('toolSave', index, params);
+  // 这里可以添加保存逻辑，比如调用API保存到后端
+  //console.log('Tool saved:', index, params);
 };
 
 // 发布服务

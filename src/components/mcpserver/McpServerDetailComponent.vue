@@ -1,6 +1,7 @@
 <template>
   <div class="mcp-server-detail-component">
     <n-card
+      v-if="serverData"
       :title="t('mcpserverdetailcomponent.server_info')"
       :bordered="false"
     >
@@ -26,14 +27,14 @@
       <n-form
         v-if="mode !== 'detail'"
         ref="formRef"
-        :model="formData"
+        :model="serverData"
         :rules="formRules"
         label-placement="left"
         label-width="auto"
         require-mark-placement="right-hanging"
       >
         <n-form-item :label="t('mcpserverdetailcomponent.id')" path="id">
-          <n-input :value="formData.id.toString()" disabled />
+          <n-input :value="serverData.id.toString()" disabled />
         </n-form-item>
 
         <n-form-item
@@ -41,14 +42,14 @@
           path="namespace"
         >
           <n-input
-            v-model:value="formData.namespace"
+            v-model:value="serverData.namespace"
             :disabled="mode === 'update' || mode === 'create'"
           />
         </n-form-item>
 
         <n-form-item :label="t('mcpserverdetailcomponent.name')" path="name">
           <n-input
-            v-model:value="formData.name"
+            v-model:value="serverData.name"
             placeholder="请输入服务器名称"
           />
         </n-form-item>
@@ -58,7 +59,7 @@
           path="description"
         >
           <n-input
-            v-model:value="formData.description"
+            v-model:value="serverData.description"
             type="textarea"
             placeholder="请输入服务器描述"
             :rows="3"
@@ -69,7 +70,7 @@
           :label="t('mcpserverdetailcomponent.auth_keys')"
           path="authKeys"
         >
-          <n-dynamic-tags v-model:value="formData.authKeys" />
+          <n-dynamic-tags v-model:value="serverData.authKeys" />
         </n-form-item>
       </n-form>
 
@@ -213,6 +214,11 @@
         </n-space>
       </div>
     </n-card>
+
+    <!-- 数据加载状态 -->
+    <n-card v-else :bordered="false">
+      <n-skeleton text :repeat="5" />
+    </n-card>
   </div>
 </template>
 
@@ -235,6 +241,7 @@ import {
   NTabs,
   NTabPane,
   NEmpty,
+  NSkeleton,
   type FormInst,
   type FormRules
 } from 'naive-ui';
@@ -248,8 +255,6 @@ import {
   McpTool
 } from '@/types/mcpserver';
 import { mcpServerApi } from '@/api/mcpserver';
-import { namespaceStore } from '@/data/namespace';
-
 const { t } = useI18n();
 const message = useMessage();
 
@@ -260,7 +265,6 @@ interface Props {
 }
 
 interface Emits {
-  (e: 'update:serverData', data: McpServerDto): void;
   (e: 'save:success', data: McpServerDto): void;
   (e: 'create:success', data: McpServerDto): void;
   (e: 'cancel'): void;
@@ -276,16 +280,13 @@ const emit = defineEmits<Emits>();
 const formRef = ref<FormInst | null>(null);
 const loading = ref(false);
 const activeTab = ref('');
-const formData = ref({
-  id: 0,
-  namespace: '',
-  name: '',
-  description: '',
-  authKeys: [] as string[]
-});
 
 // 计算默认显示的tab
 const defaultTab = computed(() => {
+  if (!props.serverData) {
+    return 'current';
+  }
+
   if (props.mode === 'detail') {
     // 查看模式默认显示已发布版本，如果没有则显示当前版本
     return props.serverData.releaseValue ? 'release' : 'current';
@@ -319,32 +320,10 @@ const formRules: FormRules = {
   ]
 };
 
-// 初始化表单数据
-const initFormData = () => {
-  if (props.mode === 'create') {
-    formData.value = {
-      id: 0,
-      namespace: namespaceStore.current.value.namespaceId,
-      name: '',
-      description: '',
-      authKeys: []
-    };
-  } else {
-    formData.value = {
-      id: props.serverData.id,
-      namespace: props.serverData.namespace,
-      name: props.serverData.name,
-      description: props.serverData.description,
-      authKeys: [...props.serverData.authKeys]
-    };
-  }
-};
-
 // 监听模式变化
 watch(
   () => props.mode,
   () => {
-    initFormData();
     // 根据模式设置默认tab
     activeTab.value = defaultTab.value;
   },
@@ -355,7 +334,6 @@ watch(
 watch(
   () => props.serverData,
   () => {
-    initFormData();
     // 根据数据设置默认tab
     activeTab.value = defaultTab.value;
   },
@@ -364,6 +342,10 @@ watch(
 
 // 将McpServerDto转换为McpServerParams
 const convertToParams = (): McpServerParams => {
+  if (!props.serverData) {
+    throw new Error('Server data is not available');
+  }
+
   // 转换tools从McpTool到McpSimpleToolParams
   const tools = (props.serverData.currentValue?.tools || []).map((tool) => ({
     id: tool.id,
@@ -375,11 +357,11 @@ const convertToParams = (): McpServerParams => {
   }));
 
   const params: McpServerParams = {
-    id: props.mode === 'create' ? undefined : formData.value.id,
-    namespace: formData.value.namespace,
-    name: formData.value.name,
-    description: formData.value.description,
-    authKeys: formData.value.authKeys,
+    id: props.mode === 'create' ? undefined : props.serverData.id,
+    namespace: props.serverData.namespace,
+    name: props.serverData.name,
+    description: props.serverData.description,
+    authKeys: props.serverData.authKeys,
     tools: tools
   };
   return params;
@@ -394,31 +376,24 @@ const formatTime = (timestamp: number) => {
 
 // 处理服务器值更新
 const handleServerValueUpdate = (value: any) => {
-  // 确保只更新 currentValue，保留 McpServerDto 中的其他信息
-  const updatedData = {
-    ...props.serverData,
-    currentValue: {
-      ...props.serverData.currentValue,
-      ...value
-    }
-  };
-  emit('update:serverData', updatedData);
+  if (!props.serverData) return;
+
+  // 直接修改 props.serverData，因为它是 ref 包装的
+  if (props.serverData.currentValue) {
+    Object.assign(props.serverData.currentValue, value);
+  } else {
+    props.serverData.currentValue = value;
+  }
 };
 
 // 处理工具变更
 const handleToolChange = (toolIndex: number, tool: any) => {
+  if (!props.serverData) return;
+
   console.log('工具变更:', toolIndex, tool);
-  // 工具变更时自动更新服务器数据
-  if (props.serverData.currentValue) {
-    const updatedTools = [...props.serverData.currentValue.tools];
-    updatedTools[toolIndex] = tool;
-
-    const updatedValue = {
-      ...props.serverData.currentValue,
-      tools: updatedTools
-    };
-
-    handleServerValueUpdate(updatedValue);
+  // 直接修改 props.serverData 中的工具
+  if (props.serverData.currentValue && props.serverData.currentValue.tools) {
+    props.serverData.currentValue.tools[toolIndex] = tool;
   }
 };
 
@@ -430,26 +405,22 @@ const handleToolSave = (toolIndex: number, params: any) => {
 
 // 处理工具删除
 const handleToolDelete = (toolIndex: number) => {
+  if (!props.serverData) return;
+
   console.log('工具删除:', toolIndex);
-  // 工具删除时自动更新服务器数据
-  if (props.serverData.currentValue) {
-    const updatedTools = props.serverData.currentValue.tools.filter(
-      (_, i) => i !== toolIndex
-    );
-
-    const updatedValue = {
-      ...props.serverData.currentValue,
-      tools: updatedTools
-    };
-
-    handleServerValueUpdate(updatedValue);
+  // 直接从 props.serverData 中删除工具
+  if (props.serverData.currentValue && props.serverData.currentValue.tools) {
+    props.serverData.currentValue.tools.splice(toolIndex, 1);
   }
 };
 
 // 处理工具添加
 const handleToolAdd = (params: any) => {
+  if (!props.serverData) return;
+
+  console.log('add new tool at McpServerValue');
   console.log('工具添加:', params);
-  // 工具添加时确保只更新 tools 数组，保留 currentValue 的其他属性
+  // 直接向 props.serverData 中添加新工具
   if (props.serverData.currentValue) {
     // 从 params 中创建新工具对象
     const newTool: any = {
@@ -482,17 +453,17 @@ const handleToolAdd = (params: any) => {
       }
     };
 
-    const updatedValue = {
-      ...props.serverData.currentValue,
-      tools: [...props.serverData.currentValue.tools, newTool]
-    };
-
-    handleServerValueUpdate(updatedValue);
+    if (!props.serverData.currentValue.tools) {
+      props.serverData.currentValue.tools = [];
+    }
+    props.serverData.currentValue.tools.push(newTool);
   }
 };
 
 // 处理保存
 const handleSave = async () => {
+  if (!props.serverData) return;
+
   try {
     await formRef.value?.validate();
     loading.value = true;
@@ -501,12 +472,12 @@ const handleSave = async () => {
     const success = await mcpServerApi.updateMcpServerWithErrorHandling(params);
 
     if (success) {
-      // 获取最新数据
+      // 获取最新数据并直接更新 props.serverData
       const updatedServer = await mcpServerApi.getMcpServerWithErrorHandling(
-        formData.value.id
+        props.serverData.id
       );
       if (updatedServer) {
-        emit('update:serverData', updatedServer);
+        Object.assign(props.serverData, updatedServer);
         emit('save:success', updatedServer);
       }
     }
@@ -519,6 +490,8 @@ const handleSave = async () => {
 
 // 处理创建
 const handleCreate = async () => {
+  if (!props.serverData) return;
+
   try {
     await formRef.value?.validate();
     loading.value = true;
@@ -527,10 +500,10 @@ const handleCreate = async () => {
     const newId = await mcpServerApi.addMcpServerWithErrorHandling(params);
 
     if (newId) {
-      // 获取新创建的服务器数据
+      // 获取新创建的服务器数据并直接更新 props.serverData
       const newServer = await mcpServerApi.getMcpServerWithErrorHandling(newId);
       if (newServer) {
-        emit('update:serverData', newServer);
+        Object.assign(props.serverData, newServer);
         emit('create:success', newServer);
       }
     }
@@ -543,7 +516,6 @@ const handleCreate = async () => {
 
 // 处理取消
 const handleCancel = () => {
-  initFormData();
   emit('cancel');
 };
 
@@ -615,6 +587,8 @@ const areToolsEqual = (tools1: McpTool[], tools2: McpTool[]): boolean => {
 
 // 处理发布服务
 const handlePublishServer = async () => {
+  if (!props.serverData) return;
+
   try {
     // 检查是否有当前值
     if (!props.serverData.currentValue) {
@@ -642,16 +616,15 @@ const handlePublishServer = async () => {
     if (success) {
       message.success('发布成功');
 
-      // 获取最新数据
+      // 获取最新数据并直接更新 props.serverData
       const updatedServer = await mcpServerApi.getMcpServerWithErrorHandling(
         props.serverData.id
       );
       if (updatedServer) {
-        emit('update:serverData', updatedServer);
+        Object.assign(props.serverData, updatedServer);
       }
     }
   } catch (error) {
-    console.error('发布失败:', error);
     message.error('发布失败');
   }
 };
@@ -675,12 +648,12 @@ const handlePublishHistory = async (history: McpServerValue) => {
     if (success) {
       message.success(t('mcpserverdetailcomponent.publish_history_success'));
 
-      // 获取最新数据
+      // 获取最新数据并直接更新 props.serverData
       const updatedServer = await mcpServerApi.getMcpServerWithErrorHandling(
         props.serverData.id
       );
       if (updatedServer) {
-        emit('update:serverData', updatedServer);
+        Object.assign(props.serverData, updatedServer);
       }
     } else {
       message.error(t('mcpserverdetailcomponent.publish_history_failed'));
@@ -692,7 +665,6 @@ const handlePublishHistory = async (history: McpServerValue) => {
 };
 
 onMounted(() => {
-  initFormData();
   // 设置初始tab
   activeTab.value = defaultTab.value;
 });

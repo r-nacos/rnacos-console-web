@@ -384,7 +384,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue';
+import { ref, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import {
   NSpace,
@@ -414,7 +414,7 @@ import {
   AddOutline,
   InformationCircleOutline
 } from '@vicons/ionicons5';
-import { McpTool, McpSimpleToolParams, ToolSpecInfo } from '@/types/mcpserver';
+import { McpTool, ToolSpecInfo } from '@/types/mcpserver';
 import ToolSpecSelector from '@/components/mcpserver/ToolSpecSelector.vue';
 
 const { t } = useI18n();
@@ -424,16 +424,9 @@ interface Props {
   mode?: 'detail' | 'update' | 'create';
 }
 
-interface Emits {
-  (e: 'update:tool', tool: McpTool): void;
-  (e: 'save', params: McpSimpleToolParams): void;
-}
-
 const props = withDefaults(defineProps<Props>(), {
   mode: 'detail'
 });
-
-const emit = defineEmits<Emits>();
 
 const message = useMessage();
 
@@ -620,9 +613,8 @@ const saveTool = async () => {
       return;
     }
 
-    // 构建McpTool对象
-    const updatedTool: McpTool = {
-      ...props.tool,
+    // 直接更新 props.tool，因为它已经是 ref 包装的
+    Object.assign(props.tool, {
       toolName: selectedToolSpec.value.toolName,
       toolKey: {
         namespace: selectedToolSpec.value.namespace,
@@ -643,59 +635,16 @@ const saveTool = async () => {
           {} as Record<string, string>
         )
       }
-    };
-
-    // 转换为McpSimpleToolParams
-    const params: McpSimpleToolParams = {
-      id: props.mode === 'create' ? undefined : props.tool.id,
-      toolName: selectedToolSpec.value.toolName,
-      namespace: selectedToolSpec.value.namespace,
-      group: selectedToolSpec.value.group,
-      toolVersion: selectedToolSpec.value.version,
-      routeRule: updatedTool.routeRule
-    };
-
-    // 更新本地工具数据
-    emit('update:tool', updatedTool);
-
-    // 触发保存事件
-    emit('save', params);
+    });
 
     message.success(t('mcpservertollitem.save_success'));
     closeEditDrawer();
   } catch (error) {
-    console.error('保存失败:', error);
     message.error(t('mcpservertollitem.save_failed'));
   }
 };
 
-// 监听工具变化
-watch(
-  () => props.tool,
-  (newTool) => {
-    if (showEditDrawer.value) {
-      // 如果抽屉打开，更新表单数据
-      editForm.value = {
-        routeRule: {
-          protocol: newTool.routeRule.protocol,
-          url: newTool.routeRule.url,
-          method: newTool.routeRule.method,
-          additionHeaders: Object.entries(
-            newTool.routeRule.additionHeaders
-          ).map(([key, value]) => ({
-            key,
-            value
-          })),
-          convertType: newTool.routeRule.convertType,
-          serviceNamespace: newTool.routeRule.serviceNamespace,
-          serviceGroup: newTool.routeRule.serviceGroup,
-          serviceName: newTool.routeRule.serviceName
-        }
-      };
-    }
-  },
-  { deep: true }
-);
+// 由于 props.tool 已经是 ref 包装的，不需要额外的监听逻辑
 </script>
 
 <style scoped>

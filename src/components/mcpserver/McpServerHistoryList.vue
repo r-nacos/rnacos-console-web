@@ -39,7 +39,6 @@ import {
   NDrawer,
   NDrawerContent,
   NButton,
-  NSpace,
   useMessage,
   useDialog
 } from 'naive-ui';
@@ -167,35 +166,35 @@ const columns = computed(() => [
   {
     title: t('common.operation'),
     key: 'actions',
-    width: 200,
+    width: 180,
     render: (row: McpServerValue) => {
       return h(
-        NSpace,
-        { size: 'small' },
-        {
-          default: () => [
-            h(
-              NButton,
-              {
-                size: 'small',
-                type: 'primary',
-                onClick: () => handleViewDetail(row)
-              },
-              {
-                default: () => t('mcpserverdetailcomponent.view_history_detail')
-              }
-            ),
-            h(
-              NButton,
-              {
-                size: 'small',
-                type: 'success',
-                onClick: () => handlePublishHistory(row)
-              },
-              { default: () => t('mcpserverdetailcomponent.publish_history') }
-            )
-          ]
-        }
+        'div',
+        { class: 'flex gap-1' },
+        [
+          h(
+            NButton,
+            {
+              size: 'tiny',
+              quaternary: true,
+              type: 'info',
+              onClick: () => handleViewDetail(row)
+            },
+            {
+              default: () => t('mcpserverdetailcomponent.view_history_detail')
+            }
+          ),
+          h(
+            NButton,
+            {
+              size: 'tiny',
+              quaternary: true,
+              type: 'success',
+              onClick: () => handlePublishHistory(row)
+            },
+            { default: () => t('mcpserverdetailcomponent.publish_history') }
+          )
+        ]
       );
     }
   }
@@ -205,10 +204,5 @@ const columns = computed(() => [
 <style scoped>
 .mcp-server-history-list {
   width: 100%;
-}
-
-.action-buttons {
-  display: flex;
-  gap: 8px;
 }
 </style>

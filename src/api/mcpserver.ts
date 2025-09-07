@@ -177,11 +177,7 @@ class McpServerApi {
   ): Promise<number | null> {
     try {
       const response = await this.addMcpServer(params);
-      const result = handleApiResult(response);
-      if (result !== null) {
-        printApiSuccess();
-      }
-      return result;
+      return handleApiResult(response);
     } catch (error) {
       printApiError(error);
       return null;
@@ -195,9 +191,6 @@ class McpServerApi {
     try {
       const response = await this.updateMcpServer(params);
       const result = handleApiResult(response);
-      if (result) {
-        printApiSuccess();
-      }
       return result || false;
     } catch (error) {
       printApiError(error);
@@ -210,9 +203,6 @@ class McpServerApi {
     try {
       const response = await this.removeMcpServer(id);
       const result = handleApiResult(response);
-      if (result) {
-        printApiSuccess();
-      }
       return result || false;
     } catch (error) {
       printApiError(error);
@@ -238,9 +228,6 @@ class McpServerApi {
     try {
       const response = await this.publishCurrentMcpServer(id);
       const result = handleApiResult(response);
-      if (result) {
-        printApiSuccess();
-      }
       return result || false;
     } catch (error) {
       printApiError(error);
@@ -255,9 +242,6 @@ class McpServerApi {
     try {
       const response = await this.publishHistoryMcpServer(params);
       const result = handleApiResult(response);
-      if (result) {
-        printApiSuccess();
-      }
       return result || false;
     } catch (error) {
       printApiError(error);

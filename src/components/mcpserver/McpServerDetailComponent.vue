@@ -149,6 +149,7 @@
               <mcp-server-value-component
                 :server-value="serverData.currentValue"
                 :mode="mode === 'detail' ? 'detail' : 'update'"
+                :show-publish-button="mode === 'update'"
                 @update:value="handleServerValueUpdate"
                 @tool-change="handleToolChange"
                 @tool-save="handleToolSave"
@@ -608,12 +609,23 @@ const handlePublishServer = async () => {
       }
     }
 
-    // 调用发布API
-    const success = await mcpServerApi.publishCurrentMcpServerWithErrorHandling(
-      props.serverData.id
-    );
+    // 先调用更新服务接口，确保发布的是当前最新内容
+    const params = convertToParams();
+    const updateSuccess =
+      await mcpServerApi.updateMcpServerWithErrorHandling(params);
 
-    if (success) {
+    if (!updateSuccess) {
+      message.error('更新服务失败，无法发布');
+      return;
+    }
+
+    // 调用发布API
+    const publishSuccess =
+      await mcpServerApi.publishCurrentMcpServerWithErrorHandling(
+        props.serverData.id
+      );
+
+    if (publishSuccess) {
       message.success('发布成功');
 
       // 获取最新数据并直接更新 props.serverData

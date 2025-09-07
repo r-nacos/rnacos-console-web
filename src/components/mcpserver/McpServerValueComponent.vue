@@ -29,7 +29,12 @@
             </template>
             {{ t('mcpservaluecomponent.add_tool') }}
           </n-button>
-          <n-button type="success" size="small" @click="publishServer">
+          <n-button
+            v-if="showPublishButton"
+            type="success"
+            size="small"
+            @click="publishServer"
+          >
             <template #icon>
               <n-icon><cloud-upload-outline /></n-icon>
             </template>
@@ -93,10 +98,12 @@ const { t } = useI18n();
 interface Props {
   serverValue: McpServerValue;
   mode?: 'detail' | 'update';
+  showPublishButton?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  mode: 'detail'
+  mode: 'detail',
+  showPublishButton: false
 });
 
 // 只保留必要的 emit 事件

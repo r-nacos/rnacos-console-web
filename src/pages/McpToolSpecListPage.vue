@@ -275,7 +275,7 @@ export default defineComponent({
             description: toolSpec.description || '',
             version: toolSpec.version,
             function: toolSpec.function
-              ? JSON.stringify(toolSpec.function.parameters, null, 2)
+              ? JSON.stringify(toolSpec.function.inputSchema, null, 2)
               : '{}',
             functionFormat: 'json',
             mode: constant.FORM_MODE_DETAIL
@@ -304,7 +304,7 @@ export default defineComponent({
             description: toolSpec.description || '',
             version: toolSpec.version,
             function: toolSpec.function
-              ? JSON.stringify(toolSpec.function.parameters, null, 2)
+              ? JSON.stringify(toolSpec.function.inputSchema, null, 2)
               : '{}',
             functionFormat: 'json',
             mode: constant.FORM_MODE_UPDATE

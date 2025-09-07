@@ -277,7 +277,7 @@ const mockTools = ref<McpTool[]>([
     spec: {
       name: 'getUserInfo',
       description: '获取用户信息',
-      parameters: {
+      inputSchema: {
         type: 'object',
         properties: {
           userId: {
@@ -319,7 +319,7 @@ const mockTools = ref<McpTool[]>([
     spec: {
       name: 'createOrder',
       description: '创建订单',
-      parameters: {
+      inputSchema: {
         type: 'object',
         properties: {
           userId: {
@@ -394,7 +394,7 @@ const mockTools = ref<McpTool[]>([
     spec: {
       name: 'processPayment',
       description: '处理支付',
-      parameters: {
+      inputSchema: {
         type: 'object',
         properties: {
           orderId: {
@@ -446,7 +446,7 @@ const mockTools = ref<McpTool[]>([
     spec: {
       name: 'sendNotification',
       description: '发送通知',
-      parameters: {
+      inputSchema: {
         type: 'object',
         properties: {
           recipient: {
@@ -501,7 +501,7 @@ const mockTools = ref<McpTool[]>([
     spec: {
       name: 'uploadFile',
       description: '上传文件',
-      parameters: {
+      inputSchema: {
         type: 'object',
         properties: {
           file: {
@@ -561,7 +561,7 @@ const mockServerValue = ref<McpServerValue>({
       spec: {
         name: 'add',
         description: '执行两个数字的加法运算',
-        parameters: {
+        inputSchema: {
           type: 'object',
           properties: {
             a: {
@@ -601,7 +601,7 @@ const mockServerValue = ref<McpServerValue>({
       spec: {
         name: 'subtract',
         description: '执行两个数字的减法运算',
-        parameters: {
+        inputSchema: {
           type: 'object',
           properties: {
             a: {
@@ -641,7 +641,7 @@ const mockServerValue = ref<McpServerValue>({
       spec: {
         name: 'multiply',
         description: '执行两个数字的乘法运算',
-        parameters: {
+        inputSchema: {
           type: 'object',
           properties: {
             a: {
@@ -681,7 +681,7 @@ const mockServerValue = ref<McpServerValue>({
       spec: {
         name: 'divide',
         description: '执行两个数字的除法运算',
-        parameters: {
+        inputSchema: {
           type: 'object',
           properties: {
             a: {
@@ -741,7 +741,7 @@ const mockServerDto = ref<McpServerDto>({
         spec: {
           name: 'add',
           description: '执行两个数字的加法运算',
-          parameters: {
+          inputSchema: {
             type: 'object',
             properties: {
               a: {
@@ -781,7 +781,7 @@ const mockServerDto = ref<McpServerDto>({
         spec: {
           name: 'subtract',
           description: '执行两个数字的减法运算',
-          parameters: {
+          inputSchema: {
             type: 'object',
             properties: {
               a: {
@@ -821,7 +821,7 @@ const mockServerDto = ref<McpServerDto>({
         spec: {
           name: 'multiply',
           description: '执行两个数字的乘法运算',
-          parameters: {
+          inputSchema: {
             type: 'object',
             properties: {
               a: {
@@ -861,7 +861,7 @@ const mockServerDto = ref<McpServerDto>({
         spec: {
           name: 'divide',
           description: '执行两个数字的除法运算',
-          parameters: {
+          inputSchema: {
             type: 'object',
             properties: {
               a: {

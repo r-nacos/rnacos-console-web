@@ -436,7 +436,7 @@ const handleToolAdd = (params: any) => {
       spec: {
         name: '',
         description: '',
-        parameters: {
+        inputSchema: {
           type: 'object',
           properties: {},
           required: []

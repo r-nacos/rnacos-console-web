@@ -34,7 +34,7 @@ export interface IJsonSchema {
 export interface IToolFunctionValue {
   name: string;
   description: string;
-  parameters: Record<string, IJsonSchema>;
+  inputSchema: Record<string, IJsonSchema>;
 }
 
 // ToolSpec DTO 接口定义
@@ -263,7 +263,7 @@ export const formatToolSpecForDisplay = (toolSpec: IToolSpec) => {
       toolSpec.lastModifiedMillis
     ).toLocaleString(),
     functionParametersJson: JSON.stringify(
-      toolSpec.function.parameters,
+      toolSpec.function.inputSchema,
       null,
       2
     )
@@ -284,10 +284,10 @@ export const parseFunctionParametersFromJson = (
 
 // 工具函数：将函数参数转换为 JSON 字符串
 export const stringifyFunctionParameters = (
-  parameters: Record<string, IJsonSchema>
+  inputSchema: Record<string, IJsonSchema>
 ): string => {
   try {
-    return JSON.stringify(parameters, null, 2);
+    return JSON.stringify(inputSchema, null, 2);
   } catch (error) {
     console.error('Failed to stringify function parameters:', error);
     return '{}';
@@ -300,12 +300,19 @@ export const stringifyParameters = stringifyFunctionParameters;
 
 // 工具函数：标准化 ToolSpec 参数（向后兼容性处理）
 export const normalizeToolSpecParams = (params: any): IToolSpecParams => {
-  // 如果存在旧的 parameters 字段，将其映射到 function
-  if (params.parameters && !params.function) {
+  // 如果存在旧的 parameters 字段，将其映射到 function.inputSchema
+  if (
+    params.function &&
+    params.function.parameters &&
+    !params.function.inputSchema
+  ) {
     return {
       ...params,
-      function: params.parameters,
-      parameters: undefined
+      function: {
+        ...params.function,
+        inputSchema: params.function.parameters,
+        parameters: undefined
+      }
     };
   }
   return params;

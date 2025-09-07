@@ -168,34 +168,30 @@ const columns = computed(() => [
     key: 'actions',
     width: 180,
     render: (row: McpServerValue) => {
-      return h(
-        'div',
-        { class: 'flex gap-1' },
-        [
-          h(
-            NButton,
-            {
-              size: 'tiny',
-              quaternary: true,
-              type: 'info',
-              onClick: () => handleViewDetail(row)
-            },
-            {
-              default: () => t('mcpserverdetailcomponent.view_history_detail')
-            }
-          ),
-          h(
-            NButton,
-            {
-              size: 'tiny',
-              quaternary: true,
-              type: 'success',
-              onClick: () => handlePublishHistory(row)
-            },
-            { default: () => t('mcpserverdetailcomponent.publish_history') }
-          )
-        ]
-      );
+      return h('div', { class: 'flex gap-1' }, [
+        h(
+          NButton,
+          {
+            size: 'tiny',
+            quaternary: true,
+            type: 'info',
+            onClick: () => handleViewDetail(row)
+          },
+          {
+            default: () => t('mcpserverdetailcomponent.view_history_detail')
+          }
+        ),
+        h(
+          NButton,
+          {
+            size: 'tiny',
+            quaternary: true,
+            type: 'success',
+            onClick: () => handlePublishHistory(row)
+          },
+          { default: () => t('mcpserverdetailcomponent.publish_history') }
+        )
+      ]);
     }
   }
 ]);

@@ -260,7 +260,7 @@ const selectedToolSpecs = computed(() => {
     function: {
       name: '',
       description: '',
-      parameters: {}
+      inputSchema: {}
     }
   }));
 });

@@ -63,7 +63,7 @@
                   >{{ t('mcpservertollitem.params') }}:</n-text
                 >
                 <n-code
-                  :code="formatJson(tool.spec.parameters)"
+                  :code="formatJson(tool.spec.inputSchema)"
                   language="json"
                   :word-wrap="true"
                   class="params-code"

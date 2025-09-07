@@ -197,7 +197,7 @@ const validationResult = ref({
 
 /**
  * 初始化参数显示
- * 从 IToolSpec.function.parameters 转换为显示字符串
+ * 从 IToolSpec.function.inputSchema 转换为显示字符串
  * @param {Object} parametersObj - 参数对象
  * @returns {string} 格式化字符串
  */
@@ -450,7 +450,7 @@ const resetForm = function () {
 /**
  * 构建提交数据
  * 增强版本，使用 stringToObject 转换用户输入，实现提交前的最终格式验证和错误处理
- * 确保转换后的对象正确设置到 IToolSpecParams.function.parameters
+ * 确保转换后的对象正确设置到 IToolSpecParams.function.inputSchema
  * @returns {Object|null} 提交数据对象，失败返回null
  */
 const buildSubmitData = function () {
@@ -481,7 +481,7 @@ const buildSubmitData = function () {
       return null;
     }
 
-    // Validate function parameters field
+    // Validate function inputSchema field
     if (!props.model.function || props.model.function.trim() === '') {
       window.$message.error(t('toolspec.need_input_parameters'));
       return null;
@@ -515,13 +515,13 @@ const buildSubmitData = function () {
     }
 
     // Use stringToObject to convert user input to object
-    console.log('Converting parameters from string to object...');
+    console.log('Converting inputSchema from string to object...');
     let parametersObject;
 
     try {
       parametersObject = stringToObject(props.model.function, 'json');
     } catch (conversionError) {
-      console.error('Parameter conversion error:', conversionError);
+      console.error('Input schema conversion error:', conversionError);
 
       // Handle conversion errors with detailed error information
       const errorInfo = handleError(conversionError, 'buildSubmitData', {
@@ -571,8 +571,8 @@ const buildSubmitData = function () {
       return null;
     }
 
-    // Additional validation for parameters structure
-    // The parameters object should be a valid JSON Schema or parameter definition
+    // Additional validation for inputSchema structure
+    // The inputSchema object should be a valid JSON Schema or parameter definition
     if (Array.isArray(parametersObject)) {
       const errorMessage = t('toolspec.parameters_should_be_object');
       window.$message.error(errorMessage);
@@ -587,7 +587,7 @@ const buildSubmitData = function () {
     }
 
     // Log successful conversion for debugging
-    console.log('Parameters successfully converted:', {
+    console.log('Input schema successfully converted:', {
       format: 'json',
       originalLength: props.model.function.length,
       convertedKeys: Object.keys(parametersObject),
@@ -602,12 +602,12 @@ const buildSubmitData = function () {
       function: {
         name: props.model.name.trim(),
         description: props.model.description?.trim() || '',
-        parameters: parametersObject // Correctly set converted object to parameters
+        inputSchema: parametersObject // Correctly set converted object to inputSchema
       }
     };
 
     // Final validation of the complete submission data structure
-    if (!submitData.function || !submitData.function.parameters) {
+    if (!submitData.function || !submitData.function.inputSchema) {
       const errorMessage = t('toolspec.invalid_submission_data');
       window.$message.error(errorMessage);
       return null;
@@ -625,7 +625,7 @@ const buildSubmitData = function () {
       group: submitData.group,
       toolName: submitData.toolName,
       functionName: submitData.function.name,
-      parametersKeys: Object.keys(submitData.function.parameters)
+      parametersKeys: Object.keys(submitData.function.inputSchema)
     });
 
     return submitData;
@@ -672,8 +672,8 @@ const submitFormData = async function () {
       group: submitData.group,
       toolName: submitData.toolName,
       functionName: submitData.function.name,
-      parametersStructure: typeof submitData.function.parameters,
-      parametersKeys: Object.keys(submitData.function.parameters || {})
+      parametersStructure: typeof submitData.function.inputSchema,
+      parametersKeys: Object.keys(submitData.function.inputSchema || {})
     });
 
     // Call API to submit data

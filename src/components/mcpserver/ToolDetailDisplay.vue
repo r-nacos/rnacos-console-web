@@ -103,10 +103,10 @@
           </n-descriptions>
 
           <!-- 参数规范 -->
-          <div v-if="tool.spec.parameters" class="parameters-spec">
+          <div v-if="tool.spec.inputSchema" class="parameters-spec">
             <n-divider title-placement="left">参数规范</n-divider>
             <n-code
-              :code="formatParameters(tool.spec.parameters)"
+              :code="formatParameters(tool.spec.inputSchema)"
               language="json"
             />
           </div>
@@ -202,8 +202,8 @@ const formatConfig = (config: any) => {
   return JSON.stringify(config, null, 2);
 };
 
-const formatParameters = (parameters: JsonSchema) => {
-  return JSON.stringify(parameters, null, 2);
+const formatParameters = (inputSchema: JsonSchema) => {
+  return JSON.stringify(inputSchema, null, 2);
 };
 </script>
 

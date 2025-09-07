@@ -448,7 +448,7 @@ const initializeData = () => {
     formModel.value.spec = {
       name: formModel.value.toolName || '',
       description: '',
-      parameters: {}
+      inputSchema: {}
     };
   }
 
@@ -460,9 +460,9 @@ const initializeData = () => {
   }
 
   // 初始化参数JSON
-  if (formModel.value.spec?.parameters) {
+  if (formModel.value.spec?.inputSchema) {
     parametersJson.value = JSON.stringify(
-      formModel.value.spec.parameters,
+      formModel.value.spec.inputSchema,
       null,
       2
     );
@@ -514,7 +514,7 @@ const validateParametersJson = () => {
   try {
     const parsed = JSON.parse(parametersJson.value);
     if (formModel.value.spec) {
-      formModel.value.spec.parameters = parsed;
+      formModel.value.spec.inputSchema = parsed;
     }
   } catch (error) {
     parametersError.value = 'JSON格式错误，请检查语法';

@@ -135,7 +135,7 @@ const addNewTool = () => {
     spec: {
       name: '',
       description: '',
-      parameters: {
+      inputSchema: {
         type: 'object',
         properties: {},
         required: []

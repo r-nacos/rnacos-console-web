@@ -110,7 +110,7 @@ export interface ToolSpecInfo {
 export interface ToolFunctionValue {
   name: string;
   description: string;
-  parameters: JsonSchema;
+  inputSchema: JsonSchema;
 }
 
 // 分页结果

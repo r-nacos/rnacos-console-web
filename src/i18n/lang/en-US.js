@@ -356,6 +356,7 @@ const message = {
 
     // Form fields
     server_name: 'Server Name',
+    unique_key: 'Unique Key',
     server_description: 'Server Description',
     auth_keys: 'Auth Keys',
     tools: 'Associated Tools',
@@ -549,6 +550,7 @@ const message = {
   mcpserverdetailcomponent: {
     server_info: 'Server Information',
     id: 'ID',
+    unique_key: 'Unique Key',
     namespace: 'Namespace',
     name: 'Name',
     description: 'Description',

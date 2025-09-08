@@ -89,7 +89,7 @@ class ToolSpecApi {
   ): Promise<AxiosResponse<IApiResult<IPageResult<IToolSpec>>>> {
     return axios.request({
       method: 'get',
-      url: '/rnacos/api/console/v2/toolspec/list',
+      url: '/rnacos/api/console/v2/mcp/toolspec/list',
       params: {
         ...queryParam
       }
@@ -106,7 +106,7 @@ class ToolSpecApi {
   ): Promise<AxiosResponse<IApiResult<IToolSpec>>> {
     return axios.request({
       method: 'get',
-      url: '/rnacos/api/console/v2/toolspec/info',
+      url: '/rnacos/api/console/v2/mcp/toolspec/info',
       params: {
         ...toolSpecKey
       }
@@ -123,7 +123,7 @@ class ToolSpecApi {
   ): Promise<AxiosResponse<IApiResult<boolean>>> {
     return axios.requestJSON({
       method: 'post',
-      url: '/rnacos/api/console/v2/toolspec/update',
+      url: '/rnacos/api/console/v2/mcp/toolspec/update',
       data: JSON.stringify(toolSpecParams)
     });
   }
@@ -138,7 +138,7 @@ class ToolSpecApi {
   ): Promise<AxiosResponse<IApiResult<boolean>>> {
     return axios.requestJSON({
       method: 'post',
-      url: '/rnacos/api/console/v2/toolspec/remove',
+      url: '/rnacos/api/console/v2/mcp/toolspec/remove',
       data: JSON.stringify(toolSpecKey)
     });
   }
@@ -176,9 +176,6 @@ class ToolSpecApi {
     try {
       const response = await this.addOrUpdateToolSpec(toolSpecParams);
       const result = handleApiResult(response);
-      if (result) {
-        printApiSuccess();
-      }
       return result || false;
     } catch (error) {
       printApiError(error);
@@ -193,9 +190,6 @@ class ToolSpecApi {
     try {
       const response = await this.removeToolSpec(toolSpecKey);
       const result = handleApiResult(response);
-      if (result) {
-        printApiSuccess();
-      }
       return result || false;
     } catch (error) {
       printApiError(error);

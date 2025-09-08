@@ -14,6 +14,7 @@ export interface McpServerValue {
 // McpServer基础信息DTO
 export interface McpServerDto {
   id: number;
+  uniqueKey: string;
   namespace: string;
   name: string;
   description: string;

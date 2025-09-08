@@ -30,6 +30,17 @@ export const createMcpServerColumns = function (
       }
     },
     {
+      title: t('mcpserver.unique_key'),
+      key: 'uniqueKey',
+      width: 120,
+      ellipsis: {
+        tooltip: true
+      },
+      render(row) {
+        return row.uniqueKey || '-';
+      }
+    },
+    {
       title: t('mcpserver.server_name'),
       key: 'name',
       width: 150,
@@ -56,6 +67,7 @@ export const createMcpServerColumns = function (
         return row.description || '-';
       }
     },
+    /*
     {
       title: t('mcpserver.auth_keys'),
       key: 'authKeysDisplay',
@@ -64,6 +76,7 @@ export const createMcpServerColumns = function (
         tooltip: true
       }
     },
+    */
     {
       title: t('mcpserver.tools'),
       key: 'toolsCount',

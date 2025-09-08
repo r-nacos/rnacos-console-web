@@ -110,7 +110,6 @@ import McpServerDetailComponent from '@/components/mcpserver/McpServerDetailComp
 import { createMcpServerColumns } from '@/components/mcpserver/McpServerColumns';
 import { useI18n } from 'vue-i18n';
 import { printApiError, handleApiResult } from '@/utils/request';
-import { useProjectSettingStore } from '@/store/modules/projectSetting';
 import { useDialog, useMessage } from 'naive-ui';
 // @ts-ignore
 import template from 'template_js';
@@ -121,6 +120,7 @@ import type { McpServerDto } from '@/types/mcpserver';
 
 const defaultModelValue: McpServerDto & { mode: string } = {
   id: 0,
+  uniqueKey: '',
   namespace: namespaceStore.current.value.namespaceId,
   name: '',
   description: '',
@@ -154,7 +154,6 @@ const defaultModelValue: McpServerDto & { mode: string } = {
 const { t } = useI18n();
 const dialog = useDialog();
 const message = useMessage();
-const projectSettingStore = useProjectSettingStore();
 
 const webResources = useWebResources();
 
@@ -268,6 +267,7 @@ const detailItem = async (row: any) => {
       // 直接更新 model.value 的属性
       Object.assign(model.value, {
         id: server.id,
+        uniqueKey: server.uniqueKey || '',
         namespace: server.namespace,
         name: server.name,
         description: server.description || '',
@@ -299,6 +299,7 @@ const updateItem = async (row: any) => {
       // 直接更新 model.value 的属性
       Object.assign(model.value, {
         id: server.id,
+        uniqueKey: server.uniqueKey || '',
         namespace: server.namespace,
         name: server.name,
         description: server.description || '',

@@ -38,6 +38,17 @@
         </n-form-item>
 
         <n-form-item
+          :label="t('mcpserverdetailcomponent.unique_key')"
+          path="uniqueKey"
+        >
+          <n-input
+            v-model:value="serverData.uniqueKey"
+            :disabled="mode === 'update'"
+            :placeholder="mode === 'create' ? '可选，不填时后端会自动生成' : ''"
+          />
+        </n-form-item>
+
+        <n-form-item
           :label="t('mcpserverdetailcomponent.namespace')"
           path="namespace"
         >
@@ -79,6 +90,10 @@
           <n-text>{{ serverData.id }}</n-text>
         </n-descriptions-item>
 
+        <n-descriptions-item :label="t('mcpserverdetailcomponent.unique_key')">
+          <n-text>{{ serverData.uniqueKey || '-' }}</n-text>
+        </n-descriptions-item>
+
         <n-descriptions-item :label="t('mcpserverdetailcomponent.namespace')">
           <n-text>{{ serverData.namespace }}</n-text>
         </n-descriptions-item>
@@ -114,6 +129,34 @@
           <n-text>{{ formatTime(serverData.lastModifiedMillis) }}</n-text>
         </n-descriptions-item>
       </n-descriptions>
+
+      <!-- MCP 地址规则提示 -->
+      <n-divider />
+      <div class="mcp-address-rules">
+        <h4 style="margin-bottom: 12px; color: #666">MCP 服务访问地址规则</h4>
+        <n-space vertical :size="8">
+          <div class="address-rule-item">
+            <n-text strong>HTTP Streamable 地址:</n-text>
+            <n-code style="margin-left: 8px">
+              http://&#123;nacos_api_host&#125;/rnacos/mcp/&#123;server_unique_key&#125;/&#123;auth_key&#125;
+            </n-code>
+          </div>
+          <div class="address-rule-item">
+            <n-text strong>SSE 地址:</n-text>
+            <n-text style="margin-left: 8px; color: #999"
+              >暂不支持，待补充</n-text
+            >
+          </div>
+          <div class="address-rule-note">
+            <n-text depth="3" style="font-size: 12px">
+              注意：请将 &#123;nacos_api_host&#125; 替换为实际的 Nacos API
+              地址，&#123;server_unique_key&#125;
+              替换为上述唯一标识，&#123;auth_key&#125;
+              替换为认证密钥中的任意一个
+            </n-text>
+          </div>
+        </n-space>
+      </div>
 
       <!-- 服务工具区域 -->
       <div class="server-tools-section">
@@ -243,6 +286,7 @@ import {
   NTabPane,
   NEmpty,
   NSkeleton,
+  NCode,
   type FormInst,
   type FormRules
 } from 'naive-ui';
@@ -359,6 +403,7 @@ const convertToParams = (): McpServerParams => {
 
   const params: McpServerParams = {
     id: props.mode === 'create' ? undefined : props.serverData.id,
+    uniqueKey: props.serverData.uniqueKey || undefined,
     namespace: props.serverData.namespace,
     name: props.serverData.name,
     description: props.serverData.description,
@@ -713,10 +758,42 @@ defineExpose({
   margin-top: 24px;
 }
 
+/* MCP 地址规则样式 */
+.mcp-address-rules {
+  background-color: #f8f9fa;
+  padding: 16px;
+  border-radius: 6px;
+  border: 1px solid #e9ecef;
+}
+
+.address-rule-item {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.address-rule-note {
+  margin-top: 8px;
+  padding: 8px;
+  background-color: #fff3cd;
+  border-radius: 4px;
+  border-left: 3px solid #ffc107;
+}
+
 /* 响应式设计 */
 @media (max-width: 768px) {
   .mcp-server-detail-component {
     padding: 8px;
+  }
+
+  .address-rule-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .mcp-address-rules {
+    padding: 12px;
   }
 }
 </style>

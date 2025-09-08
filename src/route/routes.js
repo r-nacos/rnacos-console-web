@@ -108,14 +108,14 @@ export const routes = [
     component: MainLayout,
     children: [
       {
-        path: '/manage/toolspec',
-        name: 'toolspec',
+        path: '/manage/mcptoolspec',
+        name: 'mcptoolspec',
         meta: { title: t('toolspec.toolspec_list') },
         component: () => import('@/pages/McpToolSpecListPage.vue')
       },
       {
-        path: '/manage/toolspec/detail',
-        name: 'toolspec-detail',
+        path: '/manage/mcptoolspec/detail',
+        name: 'mcptoolspec-detail',
         meta: { title: t('toolspec.toolspec_detail') },
         component: () => import('@/pages/McpToolSpecDetail.vue')
       },
@@ -125,7 +125,6 @@ export const routes = [
         meta: { title: t('mcpserver.mcpserver_list') },
         component: () => import('@/pages/McpServerListPage.vue')
       },
-
       {
         path: '/manage/mcpserver/tool-demo',
         name: 'mcpserver-tool-demo',
@@ -229,18 +228,13 @@ export const sideAllMenu = [
     children: [
       {
         label: t('toolspec.toolspec_list'),
-        key: 'toolspec',
-        path: '/manage/toolspec'
+        key: 'mcptoolspec',
+        path: '/manage/mcptoolspec'
       },
       {
         label: t('mcpserver.mcpserver_list'),
         key: 'mcpserver',
         path: '/manage/mcpserver'
-      },
-      {
-        label: 'McpServerTool 组件演示',
-        key: 'mcpserver-tool-demo',
-        path: '/manage/mcpserver/tool-demo'
       }
     ]
   },

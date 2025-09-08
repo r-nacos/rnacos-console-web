@@ -344,6 +344,7 @@ const message = {
 
     // 表单字段
     server_name: '服务器名称',
+    unique_key: '唯一键',
     server_description: '服务器描述',
     auth_keys: '认证密钥',
     tools: '关联工具',
@@ -562,6 +563,7 @@ const message = {
   mcpserverdetailcomponent: {
     server_info: '服务器信息',
     id: 'ID',
+    unique_key: '唯一键',
     namespace: '命名空间',
     name: '名称',
     description: '描述',

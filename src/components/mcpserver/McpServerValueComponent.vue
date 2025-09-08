@@ -143,8 +143,8 @@ const addNewTool = () => {
     },
     routeRule: {
       protocol: 'HTTP',
-      url: '',
-      method: 'GET',
+      url: 'http://{IP_PORT}/',
+      method: 'POST',
       additionHeaders: {},
       convertType: 'NONE',
       serviceNamespace: '',

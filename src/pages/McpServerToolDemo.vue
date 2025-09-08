@@ -719,6 +719,7 @@ const mockServerValue = ref<McpServerValue>({
 // McpServerDto mock数据
 const mockServerDto = ref<McpServerDto>({
   id: 1001,
+  uniqueKey: 'math-server-demo-001',
   namespace: 'demo',
   name: '数学运算服务器',
   description: '一个提供基础数学运算功能的MCP服务器，包含加减乘除四个工具',

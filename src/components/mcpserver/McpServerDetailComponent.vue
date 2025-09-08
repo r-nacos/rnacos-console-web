@@ -136,13 +136,13 @@
         <h4 style="margin-bottom: 12px; color: #666">MCP 服务访问地址规则</h4>
         <n-space vertical :size="8">
           <div class="address-rule-item">
-            <n-text strong>HTTP Streamable 地址:</n-text>
+            <n-text strong>Streamable HTTP:</n-text>
             <n-code style="margin-left: 8px">
               http://&#123;nacos_api_host&#125;/rnacos/mcp/&#123;server_unique_key&#125;/&#123;auth_key&#125;
             </n-code>
           </div>
           <div class="address-rule-item">
-            <n-text strong>SSE 地址:</n-text>
+            <n-text strong>SSE:</n-text>
             <n-text style="margin-left: 8px; color: #999"
               >暂不支持，待补充</n-text
             >
@@ -193,11 +193,6 @@
                 :server-value="serverData.currentValue"
                 :mode="mode === 'detail' ? 'detail' : 'update'"
                 :show-publish-button="mode === 'update'"
-                @update:value="handleServerValueUpdate"
-                @tool-change="handleToolChange"
-                @tool-save="handleToolSave"
-                @tool-delete="handleToolDelete"
-                @tool-add="handleToolAdd"
                 @publish-server="handlePublishServer"
               />
             </div>
@@ -403,13 +398,17 @@ const convertToParams = (): McpServerParams => {
 
   const params: McpServerParams = {
     id: props.mode === 'create' ? undefined : props.serverData.id,
-    uniqueKey: props.serverData.uniqueKey || undefined,
     namespace: props.serverData.namespace,
     name: props.serverData.name,
     description: props.serverData.description,
     authKeys: props.serverData.authKeys,
     tools: tools
   };
+
+  // 只在创建模式且uniqueKey有值时才添加uniqueKey属性
+  if (props.mode === 'create' && props.serverData.uniqueKey) {
+    params.uniqueKey = props.serverData.uniqueKey;
+  }
   return params;
 };
 
@@ -418,92 +417,6 @@ const formatTime = (timestamp: number) => {
   if (!timestamp) return '-';
   const date = new Date(timestamp);
   return date.toLocaleString();
-};
-
-// 处理服务器值更新
-const handleServerValueUpdate = (value: any) => {
-  if (!props.serverData) return;
-
-  // 直接修改 props.serverData，因为它是 ref 包装的
-  if (props.serverData.currentValue) {
-    Object.assign(props.serverData.currentValue, value);
-  } else {
-    props.serverData.currentValue = value;
-  }
-};
-
-// 处理工具变更
-const handleToolChange = (toolIndex: number, tool: any) => {
-  if (!props.serverData) return;
-
-  console.log('工具变更:', toolIndex, tool);
-  // 直接修改 props.serverData 中的工具
-  if (props.serverData.currentValue && props.serverData.currentValue.tools) {
-    props.serverData.currentValue.tools[toolIndex] = tool;
-  }
-};
-
-// 处理工具保存
-const handleToolSave = (toolIndex: number, params: any) => {
-  console.log('工具保存:', toolIndex, params);
-  // 工具保存时的逻辑可以在这里处理
-};
-
-// 处理工具删除
-const handleToolDelete = (toolIndex: number) => {
-  if (!props.serverData) return;
-
-  console.log('工具删除:', toolIndex);
-  // 直接从 props.serverData 中删除工具
-  if (props.serverData.currentValue && props.serverData.currentValue.tools) {
-    props.serverData.currentValue.tools.splice(toolIndex, 1);
-  }
-};
-
-// 处理工具添加
-const handleToolAdd = (params: any) => {
-  if (!props.serverData) return;
-
-  console.log('add new tool at McpServerValue');
-  console.log('工具添加:', params);
-  // 直接向 props.serverData 中添加新工具
-  if (props.serverData.currentValue) {
-    // 从 params 中创建新工具对象
-    const newTool: any = {
-      id: 0, // 临时ID，实际保存时由后端分配
-      toolName: params.toolName || '',
-      toolKey: {
-        namespace: params.namespace || '',
-        group: params.group || '',
-        toolName: params.toolName || ''
-      },
-      toolVersion: 0,
-      spec: {
-        name: '',
-        description: '',
-        inputSchema: {
-          type: 'object',
-          properties: {},
-          required: []
-        }
-      },
-      routeRule: params.routeRule || {
-        protocol: 'HTTP',
-        url: '',
-        method: 'GET',
-        additionHeaders: {},
-        convertType: 'NONE',
-        serviceNamespace: '',
-        serviceGroup: '',
-        serviceName: ''
-      }
-    };
-
-    if (!props.serverData.currentValue.tools) {
-      props.serverData.currentValue.tools = [];
-    }
-    props.serverData.currentValue.tools.push(newTool);
-  }
 };
 
 // 处理保存

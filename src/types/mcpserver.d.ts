@@ -70,6 +70,7 @@ export interface McpServerQueryParams {
 // McpServer操作参数
 export interface McpServerParams {
   id?: number;
+  uniqueKey?: string;
   namespace?: string;
   name?: string;
   description?: string;

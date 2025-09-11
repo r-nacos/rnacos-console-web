@@ -143,6 +143,21 @@ class ToolSpecApi {
     });
   }
 
+  /**
+   * 批量创建或更新 ToolSpec
+   * @param toolSpecParamsList ToolSpec 参数列表
+   * @returns Promise<AxiosResponse<IApiResult<boolean>>>
+   */
+  batchUpdateToolSpec(
+    toolSpecParamsList: IToolSpecParams[]
+  ): Promise<AxiosResponse<IApiResult<boolean>>> {
+    return axios.requestJSON({
+      method: 'post',
+      url: '/rnacos/api/console/v2/mcp/toolspec/batch_update',
+      data: JSON.stringify(toolSpecParamsList)
+    });
+  }
+
   // 便捷方法：带错误处理的查询列表
   async queryToolSpecPageWithErrorHandling(
     queryParam: IToolSpecQueryParam
@@ -175,6 +190,20 @@ class ToolSpecApi {
   ): Promise<boolean> {
     try {
       const response = await this.addOrUpdateToolSpec(toolSpecParams);
+      const result = handleApiResult(response);
+      return result || false;
+    } catch (error) {
+      printApiError(error);
+      return false;
+    }
+  }
+
+  // 便捷方法：带错误处理的批量创建或更新
+  async batchUpdateToolSpecWithErrorHandling(
+    toolSpecParamsList: IToolSpecParams[]
+  ): Promise<boolean> {
+    try {
+      const response = await this.batchUpdateToolSpec(toolSpecParamsList);
       const result = handleApiResult(response);
       return result || false;
     } catch (error) {
@@ -225,6 +254,26 @@ export const validateToolSpecParams = (params: IToolSpecParams): string[] => {
       errors.push('Function description cannot be empty');
     }
   }
+
+  return errors;
+};
+
+// 工具函数：验证批量更新参数
+export const validateBatchUpdateParams = (paramsList: IToolSpecParams[]): string[] => {
+  const errors: string[] = [];
+
+  if (!paramsList || paramsList.length === 0) {
+    errors.push('ToolSpec参数列表不能为空');
+    return errors;
+  }
+
+  // 验证每个参数
+  paramsList.forEach((params, index) => {
+    const paramErrors = validateToolSpecParams(params);
+    paramErrors.forEach(error => {
+      errors.push(`第${index + 1}个参数: ${error}`);
+    });
+  });
 
   return errors;
 };

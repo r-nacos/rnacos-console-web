@@ -335,7 +335,17 @@ const message = {
     yaml_parse_not_supported: '暂不支持YAML格式解析，请使用JSON格式',
     detail_page_coming_soon: '详情页面即将推出',
     edit_page_coming_soon: '编辑页面即将推出',
-    create_page_coming_soon: '创建页面即将推出'
+    create_page_coming_soon: '创建页面即将推出',
+    // 导入工具相关
+    import_tools: '导入工具列表',
+    tools_json_list: '工具JSON列表',
+    input_tools_json_placeholder: '请输入OpenAI工具JSON列表，例如：\n[{"type": "function","function": {"name": "add","description": "add","parameters": {"type": "object","properties": {"a": {"type": "number","description": "the first number"},"b": {"type": "number","description": "the second number"}},"required": ["a","b"]}}}]',
+    tools_json_must_be_array: '工具JSON必须是数组格式',
+    tool_type_must_be_function: '第{index}个工具的type必须是"function"',
+    tool_function_incomplete: '第{index}个工具的function信息不完整，需要包含name和description',
+    invalid_json_format: 'JSON格式不正确',
+    import_success: '成功导入{count}个工具',
+    import_failed: '导入失败'
   },
   mcpserver: {
     mcpserver_management: 'MCP服务器管理',
@@ -470,8 +480,6 @@ const message = {
     update_failed: 'MCP服务器更新失败',
     confirm_delete_tool: '确认删除工具 "{name}"？',
     confirm_delete_tool_title: '确认删除工具',
-    create_failed: '创建失败',
-    update_failed: '更新失败',
 
     // 版本管理相关
     release_version: '发布版本',
@@ -593,6 +601,9 @@ const message = {
     publish_history_failed: '历史版本重新发布失败',
     history_detail: '历史记录详情',
     close: '关闭'
+  },
+  validation: {
+    required: '{field}不能为空'
   },
   error: {
     NO_PERMISSION: '没有权限',

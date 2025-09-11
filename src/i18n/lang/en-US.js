@@ -347,7 +347,17 @@ const message = {
       'YAML parsing not supported yet, please use JSON format',
     detail_page_coming_soon: 'Detail page coming soon',
     edit_page_coming_soon: 'Edit page coming soon',
-    create_page_coming_soon: 'Create page coming soon'
+    create_page_coming_soon: 'Create page coming soon',
+    // Import tools related
+    import_tools: 'Import Tools List',
+    tools_json_list: 'Tools JSON List',
+    input_tools_json_placeholder: 'Please input OpenAI tools JSON list, for example:\n[{"type": "function","function": {"name": "add","description": "add","parameters": {"type": "object","properties": {"a": {"type": "number","description": "the first number"},"b": {"type": "number","description": "the second number"}},"required": ["a","b"]}}}]',
+    tools_json_must_be_array: 'Tools JSON must be an array format',
+    tool_type_must_be_function: 'Tool {index} type must be "function"',
+    tool_function_incomplete: 'Tool {index} function information is incomplete, must include name and description',
+    invalid_json_format: 'Invalid JSON format',
+    import_success: 'Successfully imported {count} tools',
+    import_failed: 'Import failed'
   },
   mcpserver: {
     mcpserver_management: 'MCP Server Management',
@@ -580,6 +590,9 @@ const message = {
     publish_history_failed: 'History version republish failed',
     history_detail: 'History Detail',
     close: 'Close'
+  },
+  validation: {
+    required: '{field} is required'
   },
   error: {
     NO_PERMISSION: 'NO_PERMISSION',

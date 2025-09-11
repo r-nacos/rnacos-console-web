@@ -108,7 +108,7 @@ export const createMcpServerColumns = function (
       render(row) {
         let editButton;
         let removePopconfirm;
-        if (webResources.canUpdateConfig) {
+        if (webResources.canUpdateMcpServer) {
           editButton = (
             <NButton
               size="tiny"

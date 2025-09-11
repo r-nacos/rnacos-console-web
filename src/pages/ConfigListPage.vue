@@ -165,7 +165,7 @@
       <SubContentFullPage
         v-if="useDiffForm"
         :title="this.$t('config.diff_content')"
-        :submitName="this.$t('config.confirm_change')"
+        :submitName="this.$t('common.confirm')"
         @close="closeDiffForm"
         @submit="submitData"
       >

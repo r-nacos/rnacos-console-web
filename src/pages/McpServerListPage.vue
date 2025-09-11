@@ -39,7 +39,7 @@
                     t('common.query')
                   }}</n-button>
                   <n-button
-                    v-if="webResources.canUpdateConfig"
+                    v-if="webResources.canUpdateMcpServer"
                     type="info"
                     @click="showCreate"
                     >{{ t('common.add') }}</n-button
@@ -74,13 +74,7 @@
       <SubContentFullPage
         v-show="useForm"
         :title="getDetailTitle"
-        :submitName="
-          model.mode === constant.FORM_MODE_CREATE
-            ? t('common.confirm')
-            : model.mode === constant.FORM_MODE_DETAIL
-              ? t('common.return')
-              : t('common.confirm')
-        "
+        :submitName="t('common.confirm')"
         @close="closeForm"
         @submit="submitForm"
       >

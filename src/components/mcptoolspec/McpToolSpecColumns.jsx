@@ -90,7 +90,7 @@ export const createColumns = function (
       render(row) {
         let editButton;
         let removePopconfirm;
-        if (webResources.canUpdateConfig) {
+        if (webResources.canUpdateMcpToolSpec) {
           editButton = (
             <NButton
               size="tiny"

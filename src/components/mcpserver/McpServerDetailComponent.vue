@@ -62,6 +62,7 @@
           <n-input
             v-model:value="serverData.name"
             placeholder="请输入服务器名称"
+            :disabled="isFormReadonly"
           />
         </n-form-item>
 
@@ -74,6 +75,7 @@
             type="textarea"
             placeholder="请输入服务器描述"
             :rows="3"
+            :disabled="isFormReadonly"
           />
         </n-form-item>
 
@@ -81,7 +83,10 @@
           :label="t('mcpserverdetailcomponent.auth_keys')"
           path="authKeys"
         >
-          <n-dynamic-tags v-model:value="serverData.authKeys" />
+          <n-dynamic-tags
+            v-model:value="serverData.authKeys"
+            :disabled="isFormReadonly"
+          />
         </n-form-item>
       </n-form>
 
@@ -192,7 +197,9 @@
               <mcp-server-value-component
                 :server-value="serverData.currentValue"
                 :mode="mode === 'detail' ? 'detail' : 'update'"
-                :show-publish-button="mode === 'update'"
+                :show-publish-button="
+                  mode === 'update' && webResources.canUpdateMcpServer
+                "
                 @publish-server="handlePublishServer"
               />
             </div>
@@ -235,7 +242,7 @@
             {{ t('common.cancel') }}
           </n-button>
           <n-button
-            v-if="mode === 'update'"
+            v-if="mode === 'update' && webResources.canUpdateMcpServer"
             type="primary"
             :loading="loading"
             @click="handleSave"
@@ -243,7 +250,7 @@
             {{ t('common.save') }}
           </n-button>
           <n-button
-            v-if="mode === 'create'"
+            v-if="mode === 'create' && webResources.canUpdateMcpServer"
             type="primary"
             :loading="loading"
             @click="handleCreate"
@@ -295,8 +302,10 @@ import {
   McpTool
 } from '@/types/mcpserver';
 import { mcpServerApi } from '@/api/mcpserver';
+import { useWebResources } from '@/data/resources';
 const { t } = useI18n();
 const message = useMessage();
+const webResources = useWebResources();
 
 interface Props {
   serverData: McpServerDto;
@@ -320,6 +329,11 @@ const emit = defineEmits<Emits>();
 const formRef = ref<FormInst | null>(null);
 const loading = ref(false);
 const activeTab = ref('');
+
+// 计算表单是否为只读模式
+const isFormReadonly = computed(() => {
+  return props.mode === 'detail' || !webResources.canUpdateMcpServer;
+});
 
 // 计算默认显示的tab
 const defaultTab = computed(() => {

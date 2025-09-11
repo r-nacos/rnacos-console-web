@@ -33,6 +33,8 @@ export const useWebResources = defineStore('webResources', {
     canUpdateConfig: true,
     canUpdateService: true,
     canUpdateNamespace: true,
+    canUpdateMcpToolSpec: true,
+    canUpdateMcpServer: true,
     sideMenu: sideMenu(new Set(), true)
   }),
   getters: {},
@@ -45,6 +47,8 @@ export const useWebResources = defineStore('webResources', {
       this.canUpdateConfig = this.resource.has('CONFIG_UPDATE');
       this.canUpdateService = this.resource.has('SERVICE_UPDATE');
       this.canUpdateNamespace = this.resource.has('NAMESPACE_UPDATE');
+      this.canUpdateMcpToolSpec = this.resource.has('MCP_TOOL_SPEC_UPDATE');
+      this.canUpdateMcpServer = this.resource.has('MCP_SERVER_UPDATE');
       this.version = 'v' + webResource.version;
       this.username = webResource.username || '';
       this.sideMenu = sideMenu(resource, this.isOldConsole);
@@ -57,6 +61,8 @@ export const useWebResources = defineStore('webResources', {
       this.canUpdateConfig = true;
       this.canUpdateService = true;
       this.canUpdateNamespace = true;
+      this.canUpdateMcpToolSpec = true;
+      this.canUpdateMcpServer = true;
       this.username = '';
       this.version = 'x';
     }

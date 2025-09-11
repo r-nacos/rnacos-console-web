@@ -138,29 +138,47 @@
       <!-- MCP 地址规则提示 -->
       <n-divider />
       <div class="mcp-address-rules">
-        <h4 style="margin-bottom: 12px; color: #666">MCP 服务访问地址规则</h4>
-        <n-space vertical :size="8">
-          <div class="address-rule-item">
-            <n-text strong>Streamable HTTP:</n-text>
-            <n-code style="margin-left: 8px">
-              http://&#123;nacos_api_host&#125;/rnacos/mcp/&#123;server_unique_key&#125;/&#123;auth_key&#125;
-            </n-code>
-          </div>
-          <div class="address-rule-item">
-            <n-text strong>SSE:</n-text>
-            <n-text style="margin-left: 8px; color: #999"
-              >暂不支持，待补充</n-text
-            >
-          </div>
-          <div class="address-rule-note">
-            <n-text depth="3" style="font-size: 12px">
-              注意：请将 &#123;nacos_api_host&#125; 替换为实际的 Nacos API
-              地址，&#123;server_unique_key&#125;
-              替换为上述唯一标识，&#123;auth_key&#125;
-              替换为认证密钥中的任意一个
-            </n-text>
-          </div>
-        </n-space>
+        <div
+          class="address-rules-header"
+          @click="toggleAddressRules"
+          style="cursor: pointer; display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;"
+        >
+          <h4 style="margin: 0; color: #666; font-size: 14px;">MCP 服务访问地址规则</h4>
+          <n-icon
+            :size="16"
+            :color="'#666'"
+            :style="{ transform: addressRulesExpanded ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }"
+          >
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M7 10l5 5 5-5z"/>
+            </svg>
+          </n-icon>
+        </div>
+        
+        <div v-show="addressRulesExpanded" class="address-rules-content">
+          <n-space vertical :size="6">
+            <div class="address-rule-item">
+              <n-text strong style="font-size: 13px;">Streamable HTTP:</n-text>
+              <n-code style="margin-left: 8px; font-size: 12px;">
+                http://&#123;nacos_api_host&#125;/rnacos/mcp/&#123;server_unique_key&#125;/&#123;auth_key&#125;
+              </n-code>
+            </div>
+            <div class="address-rule-item">
+              <n-text strong style="font-size: 13px;">SSE:</n-text>
+              <n-code style="margin-left: 8px; font-size: 12px;">
+                http://&#123;nacos_api_host&#125;/rnacos/mcp/sse/&#123;server_unique_key&#125;/&#123;auth_key&#125;
+              </n-code>
+            </div>
+            <div class="address-rule-note">
+              <n-text depth="3" style="font-size: 11px; line-height: 1.4;">
+                注意：请将 &#123;nacos_api_host&#125; 替换为实际的 Nacos API
+                地址，&#123;server_unique_key&#125;
+                替换为上述唯一标识，&#123;auth_key&#125;
+                替换为认证密钥中的任意一个
+              </n-text>
+            </div>
+          </n-space>
+        </div>
       </div>
 
       <!-- 服务工具区域 -->
@@ -289,6 +307,7 @@ import {
   NEmpty,
   NSkeleton,
   NCode,
+  NIcon,
   type FormInst,
   type FormRules
 } from 'naive-ui';
@@ -329,6 +348,12 @@ const emit = defineEmits<Emits>();
 const formRef = ref<FormInst | null>(null);
 const loading = ref(false);
 const activeTab = ref('');
+const addressRulesExpanded = ref(true);
+
+// 切换地址规则展开/收缩状态
+const toggleAddressRules = () => {
+  addressRulesExpanded.value = !addressRulesExpanded.value;
+};
 
 // 计算表单是否为只读模式
 const isFormReadonly = computed(() => {
@@ -688,9 +713,17 @@ defineExpose({
 /* MCP 地址规则样式 */
 .mcp-address-rules {
   background-color: #f8f9fa;
-  padding: 16px;
+  padding: 12px;
   border-radius: 6px;
   border: 1px solid #e9ecef;
+}
+
+.address-rules-header {
+  user-select: none;
+}
+
+.address-rules-header:hover {
+  opacity: 0.8;
 }
 
 .address-rule-item {
@@ -701,8 +734,8 @@ defineExpose({
 }
 
 .address-rule-note {
-  margin-top: 8px;
-  padding: 8px;
+  margin-top: 6px;
+  padding: 6px;
   background-color: #fff3cd;
   border-radius: 4px;
   border-left: 3px solid #ffc107;

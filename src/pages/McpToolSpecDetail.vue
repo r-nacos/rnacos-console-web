@@ -63,7 +63,6 @@
           v-model:value="model.description"
           type="textarea"
           :autosize="{ minRows: 2 }"
-          @keydown.enter.prevent
         />
       </n-form-item>
 

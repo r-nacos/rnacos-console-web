@@ -39,7 +39,15 @@ const message = {
     home: 'Home',
     batch: 'Batch',
     select: 'Select',
-    selected: 'Selected'
+    selected: 'Selected',
+    copy: 'Copy',
+    copy_success: 'Copy Success',
+    copy_failed: 'Copy Failed',
+    update: 'Update',
+    update_success: 'Update Success',
+    update_failed: 'Update Failed',
+    create: 'Create',
+    save: 'Save'
   },
   cluster: {
     node: 'Node',
@@ -589,7 +597,35 @@ const message = {
     publish_history_success: 'History version republished successfully',
     publish_history_failed: 'History version republish failed',
     history_detail: 'History Detail',
-    close: 'Close'
+    close: 'Close',
+    
+    // YAML Editor related
+    yaml_editor: 'YAML Editor',
+    yaml_validation_errors: 'YAML Validation Errors',
+    yaml_validation_failed: 'YAML validation failed',
+    yaml_parse_error: 'YAML Parse Error',
+    yaml_content_empty: 'YAML content cannot be empty',
+    yaml_content_invalid: 'YAML content is invalid',
+    yaml_content_must_be_object: 'YAML content must be an object',
+    yaml_update_success: 'YAML Update Success',
+    yaml_update_failed: 'YAML Update Failed',
+    unsaved_changes_warning: 'You have unsaved changes, are you sure you want to cancel?',
+    yaml_syntax_error: 'YAML Syntax Error',
+    yaml_validation_warnings: 'YAML Validation Warnings',
+    yaml_tool_spec_fetch_failed: 'Tool spec fetch failed',
+    yaml_tool_spec_not_found: 'Tool spec not found',
+    yaml_update_processing: 'Updating...',
+    yaml_update_complete: 'Update complete',
+    yaml_validation_in_progress: 'Validating...',
+    yaml_no_errors: 'No errors found',
+    yaml_field_required: 'Field {field} is required',
+    yaml_field_type_error: 'Field {field} type error',
+    yaml_duplicate_tool: 'Duplicate tool definition',
+    yaml_invalid_url: 'Invalid URL format',
+    yaml_invalid_method: 'Invalid HTTP method',
+    yaml_invalid_protocol: 'Invalid protocol type',
+    yaml_tool_update_summary: 'Tool update summary: updated {updated}, added {added}, removed {removed}',
+    yaml_warnings_truncated: '{count} more warnings, please check console for details'
   },
   validation: {
     required: '{field} is required'

@@ -41,7 +41,15 @@ const message = {
     detail: '详情',
     no_config: '无配置',
     select: '选择',
-    selected: '已选择'
+    selected: '已选择',
+    copy: '复制',
+    copy_success: '复制成功',
+    copy_failed: '复制失败',
+    update: '更新',
+    update_success: '更新成功',
+    update_failed: '更新失败',
+    create: '创建',
+    save: '保存'
   },
   cluster: {
     node: '节点',
@@ -600,7 +608,35 @@ const message = {
     publish_history_success: '历史版本重新发布成功',
     publish_history_failed: '历史版本重新发布失败',
     history_detail: '历史记录详情',
-    close: '关闭'
+    close: '关闭',
+    
+    // YAML 编辑器相关
+    yaml_editor: 'YAML 编辑器',
+    yaml_validation_errors: 'YAML 验证错误',
+    yaml_validation_failed: 'YAML 验证失败',
+    yaml_parse_error: 'YAML 解析错误',
+    yaml_content_empty: 'YAML 内容不能为空',
+    yaml_content_invalid: 'YAML 内容无效',
+    yaml_content_must_be_object: 'YAML 内容必须是一个对象',
+    yaml_update_success: 'YAML 更新成功',
+    yaml_update_failed: 'YAML 更新失败',
+    unsaved_changes_warning: '您有未保存的更改，确定要取消吗？',
+    yaml_syntax_error: 'YAML 语法错误',
+    yaml_validation_warnings: 'YAML 验证警告',
+    yaml_tool_spec_fetch_failed: '工具规格获取失败',
+    yaml_tool_spec_not_found: '工具规格未找到',
+    yaml_update_processing: '正在更新...',
+    yaml_update_complete: '更新完成',
+    yaml_validation_in_progress: '正在验证...',
+    yaml_no_errors: '没有发现错误',
+    yaml_field_required: '字段 {field} 是必需的',
+    yaml_field_type_error: '字段 {field} 类型错误',
+    yaml_duplicate_tool: '工具重复定义',
+    yaml_invalid_url: 'URL 格式无效',
+    yaml_invalid_method: 'HTTP 方法无效',
+    yaml_invalid_protocol: '协议类型无效',
+    yaml_tool_update_summary: '工具更新汇总：更新 {updated} 个，新增 {added} 个，删除 {removed} 个',
+    yaml_warnings_truncated: '还有 {count} 个警告，请查看控制台获取详细信息'
   },
   validation: {
     required: '{field}不能为空'

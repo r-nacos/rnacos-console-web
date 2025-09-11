@@ -545,7 +545,7 @@ const validateField = (field: string, value: any) => {
       }
       break;
     case 'namespace':
-      if (!value?.trim()) {
+      if (value == null || value == undefined) {
         errors.namespace = '命名空间不能为空';
       } else {
         delete errors.namespace;

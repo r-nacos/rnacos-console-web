@@ -1,16 +1,9 @@
 <template>
   <div class="mcp-server-detail-component">
-    <n-card
-      v-if="serverData"
-      :title="t('mcpserverdetailcomponent.server_info')"
-      :bordered="false"
-    >
+    <n-card v-if="serverData" :title="t('mcpserverdetailcomponent.server_info')" :bordered="false">
       <template #header-extra>
         <n-space>
-          <n-tag
-            :type="serverData.releaseValue?.id !== 0 ? 'success' : 'warning'"
-            size="small"
-          >
+          <n-tag :type="serverData.releaseValue?.id !== 0 ? 'success' : 'warning'" size="small">
             {{
               serverData.releaseValue?.id !== 0
                 ? t('mcpserverdetailcomponent.published')
@@ -20,73 +13,44 @@
           <n-tag v-if="mode !== 'detail'" type="info" size="small">
             {{ mode === 'update' ? '编辑模式' : '创建模式' }}
           </n-tag>
+
+          <!-- 文本编辑图标按钮 -->
+          <n-button v-if="mode !== 'detail'" text type="primary" @click="showYamlEditor = true"
+            :title="t('mcpserverdetailcomponent.yaml_editor')">
+            <n-icon size="18">
+              <EditIcon />
+            </n-icon>
+          </n-button>
         </n-space>
       </template>
 
       <!-- 基础信息区域 -->
-      <n-form
-        v-if="mode !== 'detail'"
-        ref="formRef"
-        :model="serverData"
-        :rules="formRules"
-        label-placement="left"
-        label-width="auto"
-        require-mark-placement="right-hanging"
-      >
+      <n-form v-if="mode !== 'detail'" ref="formRef" :model="serverData" :rules="formRules" label-placement="left"
+        label-width="auto" require-mark-placement="right-hanging">
         <n-form-item :label="t('mcpserverdetailcomponent.id')" path="id">
           <n-input :value="serverData.id.toString()" disabled />
         </n-form-item>
 
-        <n-form-item
-          :label="t('mcpserverdetailcomponent.unique_key')"
-          path="uniqueKey"
-        >
-          <n-input
-            v-model:value="serverData.uniqueKey"
-            :disabled="mode === 'update'"
-            :placeholder="mode === 'create' ? '可选，不填时后端会自动生成' : ''"
-          />
+        <n-form-item :label="t('mcpserverdetailcomponent.unique_key')" path="uniqueKey">
+          <n-input v-model:value="serverData.uniqueKey" :disabled="mode === 'update'"
+            :placeholder="mode === 'create' ? '可选，不填时后端会自动生成' : ''" />
         </n-form-item>
 
-        <n-form-item
-          :label="t('mcpserverdetailcomponent.namespace')"
-          path="namespace"
-        >
-          <n-input
-            v-model:value="serverData.namespace"
-            :disabled="mode === 'update' || mode === 'create'"
-          />
+        <n-form-item :label="t('mcpserverdetailcomponent.namespace')" path="namespace">
+          <n-input v-model:value="serverData.namespace" :disabled="mode === 'update' || mode === 'create'" />
         </n-form-item>
 
         <n-form-item :label="t('mcpserverdetailcomponent.name')" path="name">
-          <n-input
-            v-model:value="serverData.name"
-            placeholder="请输入服务器名称"
-            :disabled="isFormReadonly"
-          />
+          <n-input v-model:value="serverData.name" placeholder="请输入服务器名称" :disabled="isFormReadonly" />
         </n-form-item>
 
-        <n-form-item
-          :label="t('mcpserverdetailcomponent.description')"
-          path="description"
-        >
-          <n-input
-            v-model:value="serverData.description"
-            type="textarea"
-            placeholder="请输入服务器描述"
-            :rows="3"
-            :disabled="isFormReadonly"
-          />
+        <n-form-item :label="t('mcpserverdetailcomponent.description')" path="description">
+          <n-input v-model:value="serverData.description" type="textarea" placeholder="请输入服务器描述" :rows="3"
+            :disabled="isFormReadonly" />
         </n-form-item>
 
-        <n-form-item
-          :label="t('mcpserverdetailcomponent.auth_keys')"
-          path="authKeys"
-        >
-          <n-dynamic-tags
-            v-model:value="serverData.authKeys"
-            :disabled="isFormReadonly"
-          />
+        <n-form-item :label="t('mcpserverdetailcomponent.auth_keys')" path="authKeys">
+          <n-dynamic-tags v-model:value="serverData.authKeys" :disabled="isFormReadonly" />
         </n-form-item>
       </n-form>
 
@@ -113,12 +77,7 @@
 
         <n-descriptions-item :label="t('mcpserverdetailcomponent.auth_keys')">
           <n-space :size="4">
-            <n-tag
-              v-for="(key, index) in serverData.authKeys"
-              :key="index"
-              size="small"
-              type="info"
-            >
+            <n-tag v-for="(key, index) in serverData.authKeys" :key="index" size="small" type="info">
               {{ key }}
             </n-tag>
           </n-space>
@@ -128,9 +87,7 @@
           <n-text>{{ formatTime(serverData.createTime) }}</n-text>
         </n-descriptions-item>
 
-        <n-descriptions-item
-          :label="t('mcpserverdetailcomponent.last_modified')"
-        >
+        <n-descriptions-item :label="t('mcpserverdetailcomponent.last_modified')">
           <n-text>{{ formatTime(serverData.lastModifiedMillis) }}</n-text>
         </n-descriptions-item>
       </n-descriptions>
@@ -138,23 +95,17 @@
       <!-- MCP 地址规则提示 -->
       <n-divider />
       <div class="mcp-address-rules">
-        <div
-          class="address-rules-header"
-          @click="toggleAddressRules"
-          style="cursor: pointer; display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;"
-        >
+        <div class="address-rules-header" @click="toggleAddressRules"
+          style="cursor: pointer; display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
           <h4 style="margin: 0; color: #666; font-size: 14px;">MCP 服务访问地址规则</h4>
-          <n-icon
-            :size="16"
-            :color="'#666'"
-            :style="{ transform: addressRulesExpanded ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }"
-          >
+          <n-icon :size="16" :color="'#666'"
+            :style="{ transform: addressRulesExpanded ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }">
             <svg viewBox="0 0 24 24" fill="currentColor">
-              <path d="M7 10l5 5 5-5z"/>
+              <path d="M7 10l5 5 5-5z" />
             </svg>
           </n-icon>
         </div>
-        
+
         <div v-show="addressRulesExpanded" class="address-rules-content">
           <n-space vertical :size="6">
             <div class="address-rule-item">
@@ -184,69 +135,34 @@
       <!-- 服务工具区域 -->
       <div class="server-tools-section">
         <n-divider />
-        <n-tabs
-          v-model:value="activeTab"
-          type="line"
-          animated
-          :default-value="defaultTab"
-        >
-          <n-tab-pane
-            name="release"
-            :tab="t('mcpserverdetailcomponent.release_tools')"
-          >
+        <n-tabs v-model:value="activeTab" type="line" animated :default-value="defaultTab">
+          <n-tab-pane name="release" :tab="t('mcpserverdetailcomponent.release_tools')">
             <div v-if="serverData.releaseValue" class="tools-content">
-              <mcp-server-value-component
-                :server-value="serverData.releaseValue"
-                mode="detail"
-              />
+              <mcp-server-value-component :server-value="serverData.releaseValue" mode="detail" />
             </div>
             <div v-else class="no-release-content">
-              <n-empty
-                :description="t('mcpserverdetailcomponent.no_release_version')"
-              />
+              <n-empty :description="t('mcpserverdetailcomponent.no_release_version')" />
             </div>
           </n-tab-pane>
 
-          <n-tab-pane
-            name="current"
-            :tab="t('mcpserverdetailcomponent.current_tools')"
-          >
+          <n-tab-pane name="current" :tab="t('mcpserverdetailcomponent.current_tools')">
             <div v-if="serverData.currentValue" class="tools-content">
-              <mcp-server-value-component
-                :server-value="serverData.currentValue"
-                :mode="mode === 'detail' ? 'detail' : 'update'"
-                :show-publish-button="
-                  mode === 'update' && webResources.canUpdateMcpServer
-                "
-                @publish-server="handlePublishServer"
-              />
+              <mcp-server-value-component :server-value="serverData.currentValue"
+                :mode="mode === 'detail' ? 'detail' : 'update'" :show-publish-button="mode === 'update' && webResources.canUpdateMcpServer
+                  " @publish-server="handlePublishServer" />
             </div>
             <div v-else class="no-current-content">
-              <n-empty
-                :description="t('mcpserverdetailcomponent.no_current_version')"
-              />
+              <n-empty :description="t('mcpserverdetailcomponent.no_current_version')" />
             </div>
           </n-tab-pane>
 
-          <n-tab-pane
-            name="history"
-            :tab="t('mcpserverdetailcomponent.history_tools')"
-          >
-            <div
-              v-if="serverData.histories && serverData.histories.length > 0"
-              class="tools-content"
-            >
-              <mcp-server-history-list
-                :histories="serverData.histories"
-                :server-id="serverData.id"
-                @view-detail="handleViewHistoryDetail"
-                @publish-history="handlePublishHistory"
-              />
+          <n-tab-pane name="history" :tab="t('mcpserverdetailcomponent.history_tools')">
+            <div v-if="serverData.histories && serverData.histories.length > 0" class="tools-content">
+              <mcp-server-history-list :histories="serverData.histories" :server-id="serverData.id"
+                @view-detail="handleViewHistoryDetail" @publish-history="handlePublishHistory" />
             </div>
             <div v-else class="no-history-content">
-              <n-empty
-                :description="t('mcpserverdetailcomponent.no_history_version')"
-              />
+              <n-empty :description="t('mcpserverdetailcomponent.no_history_version')" />
             </div>
           </n-tab-pane>
         </n-tabs>
@@ -259,20 +175,12 @@
           <n-button v-if="mode !== 'detail'" @click="handleCancel">
             {{ t('common.cancel') }}
           </n-button>
-          <n-button
-            v-if="mode === 'update' && webResources.canUpdateMcpServer"
-            type="primary"
-            :loading="loading"
-            @click="handleSave"
-          >
+          <n-button v-if="mode === 'update' && webResources.canUpdateMcpServer" type="primary" :loading="loading"
+            @click="handleSave">
             {{ t('common.save') }}
           </n-button>
-          <n-button
-            v-if="mode === 'create' && webResources.canUpdateMcpServer"
-            type="primary"
-            :loading="loading"
-            @click="handleCreate"
-          >
+          <n-button v-if="mode === 'create' && webResources.canUpdateMcpServer" type="primary" :loading="loading"
+            @click="handleCreate">
             {{ t('common.create') }}
           </n-button>
         </n-space>
@@ -283,6 +191,10 @@
     <n-card v-else :bordered="false">
       <n-skeleton text :repeat="5" />
     </n-card>
+
+    <!-- YAML 编辑器模态窗口 -->
+    <yaml-editor-modal v-model:visible="showYamlEditor" :server-data="serverData"
+      :current-namespace="serverData?.namespace || ''" @update:success="handleYamlUpdateSuccess" />
   </div>
 </template>
 
@@ -314,6 +226,7 @@ import {
 import { useMessage } from 'naive-ui';
 import McpServerValueComponent from '@/components/mcpserver/McpServerValueComponent.vue';
 import McpServerHistoryList from '@/components/mcpserver/McpServerHistoryList.vue';
+import YamlEditorModal from '@/components/mcpserver/YamlEditorModal.vue';
 import {
   McpServerDto,
   McpServerParams,
@@ -322,6 +235,7 @@ import {
 } from '@/types/mcpserver';
 import { mcpServerApi } from '@/api/mcpserver';
 import { useWebResources } from '@/data/resources';
+import { CreateOutline as EditIcon } from '@vicons/ionicons5';
 const { t } = useI18n();
 const message = useMessage();
 const webResources = useWebResources();
@@ -349,6 +263,7 @@ const formRef = ref<FormInst | null>(null);
 const loading = ref(false);
 const activeTab = ref('');
 const addressRulesExpanded = ref(true);
+const showYamlEditor = ref(false);
 
 // 切换地址规则展开/收缩状态
 const toggleAddressRules = () => {
@@ -384,7 +299,7 @@ const formRules: FormRules = {
     }
   ],
   namespace: [
-    { required: true, message: t('validation.required', { field: '命名空间' }) }
+    { required: false, message: t('validation.required', { field: '命名空间' }) }
   ],
   description: [
     { required: true, message: t('validation.required', { field: '描述' }) }
@@ -409,6 +324,7 @@ watch(
   { immediate: true }
 );
 
+/*
 // 监听serverData变化
 watch(
   () => props.serverData,
@@ -418,6 +334,7 @@ watch(
   },
   { deep: true }
 );
+*/
 
 // 将McpServerDto转换为McpServerParams
 const convertToParams = (): McpServerParams => {
@@ -671,6 +588,17 @@ const handlePublishHistory = async (history: McpServerValue) => {
     console.error('发布历史版本失败:', error);
     message.error(t('mcpserverdetailcomponent.publish_history_failed'));
   }
+};
+
+// 处理 YAML 编辑器更新成功
+const handleYamlUpdateSuccess = (updatedData: McpServerDto) => {
+  // 直接更新 props.serverData 对象
+  Object.assign(props.serverData, updatedData);
+
+  // 触发保存成功事件，通知父组件数据已更新
+  // emit('save:success', updatedData);
+
+  console.log('YAML 编辑器更新成功，数据已同步到组件');
 };
 
 onMounted(() => {

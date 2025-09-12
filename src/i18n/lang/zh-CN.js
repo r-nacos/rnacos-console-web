@@ -347,10 +347,12 @@ const message = {
     // 导入工具相关
     import_tools: '导入工具列表',
     tools_json_list: '工具JSON列表',
-    input_tools_json_placeholder: '请输入OpenAI工具JSON列表，例如：\n[{"type": "function","function": {"name": "add","description": "add","parameters": {"type": "object","properties": {"a": {"type": "number","description": "the first number"},"b": {"type": "number","description": "the second number"}},"required": ["a","b"]}}}]',
+    input_tools_json_placeholder:
+      '请输入OpenAI工具JSON列表，例如：\n[{"type": "function","function": {"name": "add","description": "add","parameters": {"type": "object","properties": {"a": {"type": "number","description": "the first number"},"b": {"type": "number","description": "the second number"}},"required": ["a","b"]}}}]',
     tools_json_must_be_array: '工具JSON必须是数组格式',
     tool_type_must_be_function: '第{index}个工具的type必须是"function"',
-    tool_function_incomplete: '第{index}个工具的function信息不完整，需要包含name和description',
+    tool_function_incomplete:
+      '第{index}个工具的function信息不完整，需要包含name和description',
     invalid_json_format: 'JSON格式不正确',
     import_success: '成功导入{count}个工具',
     import_failed: '导入失败'
@@ -516,7 +518,11 @@ const message = {
 
     // 工具删除确认
     confirm_delete_tool_content:
-      '确认要删除工具 "{name}" (分组: {group}) 吗？此操作不可恢复。'
+      '确认要删除工具 "{name}" (分组: {group}) 吗？此操作不可恢复。',
+
+    // YAML 编辑器相关
+    yaml_editor: 'YAML 编辑器',
+    unsaved_changes_warning: '您有未保存的更改，确定要取消吗？'
   },
   mcpservaluecomponent: {
     tools_list: '工具列表',
@@ -573,7 +579,8 @@ const message = {
     save_success: '保存成功',
     save_failed: '保存失败，请检查表单数据',
     no_conversion: '无转换',
-    form_to_json: '表单转JSON',
+    json_to_form: 'JSON转表单',
+    json_to_url: 'JSON转URL',
     custom: '自定义'
   },
   mcpserverdetailcomponent: {
@@ -609,7 +616,7 @@ const message = {
     publish_history_failed: '历史版本重新发布失败',
     history_detail: '历史记录详情',
     close: '关闭',
-    
+
     // YAML 编辑器相关
     yaml_editor: 'YAML 编辑器',
     yaml_validation_errors: 'YAML 验证错误',
@@ -635,8 +642,25 @@ const message = {
     yaml_invalid_url: 'URL 格式无效',
     yaml_invalid_method: 'HTTP 方法无效',
     yaml_invalid_protocol: '协议类型无效',
-    yaml_tool_update_summary: '工具更新汇总：更新 {updated} 个，新增 {added} 个，删除 {removed} 个',
-    yaml_warnings_truncated: '还有 {count} 个警告，请查看控制台获取详细信息'
+    yaml_tool_update_summary:
+      '工具更新汇总：更新 {updated} 个，新增 {added} 个，删除 {removed} 个',
+    yaml_warnings_truncated: '还有 {count} 个警告，请查看控制台获取详细信息',
+    yaml_update_warnings_title: '更新警告',
+    yaml_warnings_found: '发现 {count} 个警告：',
+    yaml_confirm_button: '确定',
+    yaml_auth_keys_warning: '建议至少配置一个认证密钥',
+    yaml_no_tools_warning: '当前没有配置任何工具，建议至少配置一个工具',
+    yaml_too_many_tools_warning: '工具数量较多 ({count} 个)，可能影响性能',
+    yaml_tools_will_be_removed: '以下工具将被删除: {tools}',
+    yaml_unsupported_template_vars:
+      'URL 中包含不支持的模板变量: {vars}，支持的变量: {supported}',
+    yaml_convert_type_warning:
+      'convertType 值可能不正确 (当前值: {value})，建议使用: NONE, JSON_TO_FORM, JSON_TO_URL, CUSTOM',
+    yaml_error_network_hint: '提示：请检查网络连接或服务器状态',
+    yaml_error_timeout_hint: '提示：请求超时，请稍后重试',
+    yaml_error_permission_hint: '提示：权限不足，请联系管理员',
+    yaml_error_general: '工具更新过程中发生错误: {message}',
+    form_validation_error: '表单验证失败，请检查输入'
   },
   validation: {
     required: '{field}不能为空'

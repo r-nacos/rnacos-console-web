@@ -359,10 +359,12 @@ const message = {
     // Import tools related
     import_tools: 'Import Tools List',
     tools_json_list: 'Tools JSON List',
-    input_tools_json_placeholder: 'Please input OpenAI tools JSON list, for example:\n[{"type": "function","function": {"name": "add","description": "add","parameters": {"type": "object","properties": {"a": {"type": "number","description": "the first number"},"b": {"type": "number","description": "the second number"}},"required": ["a","b"]}}}]',
+    input_tools_json_placeholder:
+      'Please input OpenAI tools JSON list, for example:\n[{"type": "function","function": {"name": "add","description": "add","parameters": {"type": "object","properties": {"a": {"type": "number","description": "the first number"},"b": {"type": "number","description": "the second number"}},"required": ["a","b"]}}}]',
     tools_json_must_be_array: 'Tools JSON must be an array format',
     tool_type_must_be_function: 'Tool {index} type must be "function"',
-    tool_function_incomplete: 'Tool {index} function information is incomplete, must include name and description',
+    tool_function_incomplete:
+      'Tool {index} function information is incomplete, must include name and description',
     invalid_json_format: 'Invalid JSON format',
     import_success: 'Successfully imported {count} tools',
     import_failed: 'Import failed'
@@ -562,7 +564,8 @@ const message = {
     save_success: 'Save success',
     save_failed: 'Save failed, please check form data',
     no_conversion: 'No Conversion',
-    form_to_json: 'Form to JSON',
+    json_to_form: 'JSON to Form',
+    json_to_url: 'JSON to URL',
     custom: 'Custom'
   },
   mcpserverdetailcomponent: {
@@ -598,7 +601,7 @@ const message = {
     publish_history_failed: 'History version republish failed',
     history_detail: 'History Detail',
     close: 'Close',
-    
+
     // YAML Editor related
     yaml_editor: 'YAML Editor',
     yaml_validation_errors: 'YAML Validation Errors',
@@ -609,7 +612,8 @@ const message = {
     yaml_content_must_be_object: 'YAML content must be an object',
     yaml_update_success: 'YAML Update Success',
     yaml_update_failed: 'YAML Update Failed',
-    unsaved_changes_warning: 'You have unsaved changes, are you sure you want to cancel?',
+    unsaved_changes_warning:
+      'You have unsaved changes, are you sure you want to cancel?',
     yaml_syntax_error: 'YAML Syntax Error',
     yaml_validation_warnings: 'YAML Validation Warnings',
     yaml_tool_spec_fetch_failed: 'Tool spec fetch failed',
@@ -624,8 +628,31 @@ const message = {
     yaml_invalid_url: 'Invalid URL format',
     yaml_invalid_method: 'Invalid HTTP method',
     yaml_invalid_protocol: 'Invalid protocol type',
-    yaml_tool_update_summary: 'Tool update summary: updated {updated}, added {added}, removed {removed}',
-    yaml_warnings_truncated: '{count} more warnings, please check console for details'
+    yaml_tool_update_summary:
+      'Tool update summary: updated {updated}, added {added}, removed {removed}',
+    yaml_warnings_truncated:
+      '{count} more warnings, please check console for details',
+    yaml_update_warnings_title: 'Update Warnings',
+    yaml_warnings_found: 'Found {count} warnings:',
+    yaml_confirm_button: 'OK',
+    yaml_auth_keys_warning:
+      'It is recommended to configure at least one authentication key',
+    yaml_no_tools_warning:
+      'No tools are currently configured, it is recommended to configure at least one tool',
+    yaml_too_many_tools_warning:
+      'Too many tools ({count}), may affect performance',
+    yaml_tools_will_be_removed: 'The following tools will be removed: {tools}',
+    yaml_unsupported_template_vars:
+      'URL contains unsupported template variables: {vars}, supported variables: {supported}',
+    yaml_convert_type_warning:
+      'convertType value may be incorrect (current value: {value}), recommended: NONE, JSON_TO_FORM, JSON_TO_URL, CUSTOM',
+    yaml_error_network_hint:
+      'Hint: Please check network connection or server status',
+    yaml_error_timeout_hint: 'Hint: Request timeout, please try again later',
+    yaml_error_permission_hint:
+      'Hint: Insufficient permissions, please contact administrator',
+    yaml_error_general: 'Error occurred during tool update: {message}',
+    form_validation_error: 'Form validation failed, please check your input'
   },
   validation: {
     required: '{field} is required'

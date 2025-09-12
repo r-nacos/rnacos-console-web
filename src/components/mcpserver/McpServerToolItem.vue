@@ -436,7 +436,7 @@ const editForm = ref({
     url: '',
     method: 'GET',
     additionHeaders: [] as Array<{ key: string; value: string }>,
-    convertType: 'NONE' as 'NONE' | 'FORM_TO_JSON' | 'CUSTOM',
+    convertType: 'NONE' as 'NONE' | 'JSON_TO_FORM' | 'JSON_TO_URL' | 'CUSTOM',
     serviceNamespace: '',
     serviceGroup: '',
     serviceName: ''
@@ -494,7 +494,8 @@ const methodOptions = [
 
 const convertTypeOptions = [
   { label: t('mcpservertollitem.no_conversion'), value: 'NONE' },
-  { label: t('mcpservertollitem.form_to_json'), value: 'FORM_TO_JSON' },
+  { label: t('mcpservertollitem.json_to_form'), value: 'JSON_TO_FORM' },
+  { label: t('mcpservertollitem.json_to_url'), value: 'JSON_TO_URL' },
   { label: t('mcpservertollitem.custom'), value: 'CUSTOM' }
 ];
 

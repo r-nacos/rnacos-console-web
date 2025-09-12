@@ -1,78 +1,29 @@
 <template>
-  <n-modal v-model:show="visible" preset="card" :title="t('mcpserver.yaml_editor')" size="huge" :mask-closable="false"
-    :closable="false" style="width: 90%; max-width: 1200px; height: 80vh;">
+  <n-modal
+    v-model:show="visible"
+    preset="card"
+    :title="t('mcpserver.yaml_editor')"
+    size="huge"
+    :mask-closable="false"
+    :closable="false"
+    style="width: 90%; max-width: 1200px; height: 80vh"
+  >
     <div class="yaml-editor-container">
       <!-- 编辑器区域 -->
       <div class="editor-section">
         <div class="editor-wrapper" @click="focusEditor">
           <div @click="stopPropagation">
-            <code-mirror v-model="yamlContent" :foucsValue="focusValue" :lang="yamlLang" :extensions="extensions"
-              :readonly="false" :basic="true" :tab="true" :wrap="true" style="height: 60vh;" />
+            <code-mirror
+              v-model="yamlContent"
+              :foucsValue="focusValue"
+              :lang="yamlLang"
+              :extensions="extensions"
+              :readonly="false"
+              :basic="true"
+              :tab="true"
+              :wrap="true"
+            />
           </div>
-        </div>
-      </div>
-
-      <!-- 验证状态和错误显示 -->
-      <div class="validation-section">
-        <!-- 验证进度指示器 -->
-        <div v-if="validating" class="validation-progress">
-          <n-alert type="info" :show-icon="true" style="margin-bottom: 8px">
-            <template #icon>
-              <n-spin size="small" />
-            </template>
-            {{ t('mcpserverdetailcomponent.yaml_validation_in_progress') }}
-          </n-alert>
-        </div>
-
-        <!-- 验证错误显示 -->
-        <div v-if="validationErrors.length > 0" class="validation-errors">
-          <n-alert type="error" :show-icon="true" style="margin-bottom: 8px">
-            <template #header>
-              <n-space align="center">
-                <span>{{ t('mcpserverdetailcomponent.yaml_validation_errors') }}</span>
-                <n-tag type="error" size="small">{{ validationErrors.length }}</n-tag>
-              </n-space>
-            </template>
-            <div class="error-list">
-              <div v-for="(error, index) in validationErrors" :key="index" class="error-item">
-                <n-icon size="14" color="#d03050" style="margin-right: 6px;">
-                  <CloseCircleOutline />
-                </n-icon>
-                <span>{{ error }}</span>
-              </div>
-            </div>
-          </n-alert>
-        </div>
-
-        <!-- 验证警告显示 -->
-        <div v-if="validationWarnings.length > 0" class="validation-warnings">
-          <n-alert type="warning" :show-icon="true" style="margin-bottom: 8px">
-            <template #header>
-              <n-space align="center">
-                <span>{{ t('mcpserverdetailcomponent.yaml_validation_warnings') }}</span>
-                <n-tag type="warning" size="small">{{ validationWarnings.length }}</n-tag>
-              </n-space>
-            </template>
-            <div class="warning-list">
-              <div v-for="(warning, index) in validationWarnings" :key="index" class="warning-item">
-                <n-icon size="14" color="#f0a020" style="margin-right: 6px;">
-                  <WarningOutline />
-                </n-icon>
-                <span>{{ warning }}</span>
-              </div>
-            </div>
-          </n-alert>
-        </div>
-
-        <!-- 成功状态显示 -->
-        <div
-          v-if="validationErrors.length === 0 && validationWarnings.length === 0 && yamlContent.trim() && !validating"
-          class="validation-success">
-          <n-alert type="success" :show-icon="true" style="margin-bottom: 8px">
-            <template #header>
-              {{ t('mcpserverdetailcomponent.yaml_no_errors') }}
-            </template>
-          </n-alert>
         </div>
       </div>
 
@@ -90,7 +41,11 @@
           <n-button @click="handleCancel">
             {{ t('common.cancel') }}
           </n-button>
-          <n-button type="primary" @click="handleUpdate" :loading="updating" :disabled="!isValid">
+          <n-button
+            v-if="mode !== 'detail'"
+            type="primary"
+            @click="handleUpdate"
+          >
             {{ t('common.update') }}
           </n-button>
         </n-space>
@@ -113,7 +68,11 @@ import {
   useMessage,
   useDialog
 } from 'naive-ui';
-import { CopyOutline as CopyIcon, CloseCircleOutline, WarningOutline } from '@vicons/ionicons5';
+import {
+  CopyOutline as CopyIcon,
+  CloseCircleOutline,
+  WarningOutline
+} from '@vicons/ionicons5';
 import CodeMirror from '@/components/config/CodeMirror';
 import { solarizedDark } from '@/components/config/cm6theme';
 import { namespaceStore } from '@/data/namespace';
@@ -134,6 +93,10 @@ const props = defineProps({
   },
   serverData: {
     type: Object,
+    required: true
+  },
+  mode: {
+    type: String,
     required: true
   },
   currentNamespace: {
@@ -169,12 +132,12 @@ const isValid = computed(() => {
   if (!yamlContent.value.trim()) {
     return false;
   }
-  
+
   // 如果内容没有改变，允许更新（相当于确认操作）
   if (yamlContent.value === originalYamlContent.value) {
     return true;
   }
-  
+
   // 如果内容有改变，需要验证通过才能更新
   return validationErrors.value.length === 0;
 });
@@ -195,20 +158,22 @@ const generateYamlContent = (): string => {
     name: props.serverData.name || '',
     description: props.serverData.description || '',
     authKeys: props.serverData.authKeys || [],
-    tools: (props.serverData.currentValue?.tools || []).map((tool: McpTool) => ({
-      toolName: tool.toolKey.toolName,
-      toolGroup: tool.toolKey.group,
-      routeRule: {
-        protocol: tool.routeRule.protocol,
-        url: tool.routeRule.url,
-        method: tool.routeRule.method,
-        convertType: tool.routeRule.convertType,
-        serviceGroup: tool.routeRule.serviceGroup,
-        serviceName: tool.routeRule.serviceName,
-        ruleType: tool.routeRule.ruleType,
-        additionHeaders: tool.routeRule.additionHeaders || {}
-      }
-    }))
+    tools: (props.serverData.currentValue?.tools || []).map(
+      (tool: McpTool) => ({
+        toolName: tool.toolKey.toolName,
+        toolGroup: tool.toolKey.group,
+        routeRule: {
+          protocol: tool.routeRule.protocol,
+          url: tool.routeRule.url,
+          method: tool.routeRule.method,
+          convertType: tool.routeRule.convertType,
+          serviceGroup: tool.routeRule.serviceGroup,
+          serviceName: tool.routeRule.serviceName,
+          ruleType: tool.routeRule.ruleType,
+          additionHeaders: tool.routeRule.additionHeaders || {}
+        }
+      })
+    )
   };
 
   try {
@@ -220,7 +185,6 @@ const generateYamlContent = (): string => {
       sortKeys: false
     });
   } catch (error) {
-    console.error('生成 YAML 内容失败:', error);
     return '';
   }
 };
@@ -239,45 +203,77 @@ const validateYamlData = (data: any): ValidationResult => {
   };
 
   if (!data || typeof data !== 'object') {
-    result.errors.push(t('mcpserverdetailcomponent.yaml_content_must_be_object'));
+    result.errors.push(
+      t('mcpserverdetailcomponent.yaml_content_must_be_object')
+    );
     return result;
   }
 
   // 验证必需字段
   if (!data.uniqueKey) {
-    result.errors.push(t('mcpserverdetailcomponent.yaml_field_required', { field: 'uniqueKey' }));
+    result.errors.push(
+      t('mcpserverdetailcomponent.yaml_field_required', { field: 'uniqueKey' })
+    );
   } else if (typeof data.uniqueKey !== 'string') {
-    result.errors.push(t('mcpserverdetailcomponent.yaml_field_type_error', { field: 'uniqueKey (应为字符串)' }));
+    result.errors.push(
+      t('mcpserverdetailcomponent.yaml_field_type_error', {
+        field: 'uniqueKey (应为字符串)'
+      })
+    );
   }
 
   if (!data.name) {
-    result.errors.push(t('mcpserverdetailcomponent.yaml_field_required', { field: 'name' }));
+    result.errors.push(
+      t('mcpserverdetailcomponent.yaml_field_required', { field: 'name' })
+    );
   } else if (typeof data.name !== 'string') {
-    result.errors.push(t('mcpserverdetailcomponent.yaml_field_type_error', { field: 'name (应为字符串)' }));
+    result.errors.push(
+      t('mcpserverdetailcomponent.yaml_field_type_error', {
+        field: 'name (应为字符串)'
+      })
+    );
   }
 
   if (data.description !== undefined && typeof data.description !== 'string') {
-    result.errors.push(t('mcpserverdetailcomponent.yaml_field_type_error', { field: 'description (应为字符串)' }));
+    result.errors.push(
+      t('mcpserverdetailcomponent.yaml_field_type_error', {
+        field: 'description (应为字符串)'
+      })
+    );
   }
 
   if (data.authKeys !== undefined && !Array.isArray(data.authKeys)) {
-    result.errors.push(t('mcpserverdetailcomponent.yaml_field_type_error', { field: 'authKeys (应为数组)' }));
+    result.errors.push(
+      t('mcpserverdetailcomponent.yaml_field_type_error', {
+        field: 'authKeys (应为数组)'
+      })
+    );
   } else if (Array.isArray(data.authKeys)) {
     // 验证 authKeys 数组中的每个元素
     data.authKeys.forEach((key: any, index: number) => {
       if (typeof key !== 'string') {
-        result.errors.push(t('mcpserverdetailcomponent.yaml_field_type_error', { field: `authKeys[${index}] (应为字符串)` }));
+        result.errors.push(
+          t('mcpserverdetailcomponent.yaml_field_type_error', {
+            field: `authKeys[${index}] (应为字符串)`
+          })
+        );
       }
     });
 
     // 检查空的认证密钥
     if (data.authKeys.length === 0) {
-      result.warnings.push('建议至少配置一个认证密钥');
+      result.warnings.push(
+        t('mcpserverdetailcomponent.yaml_auth_keys_warning')
+      );
     }
   }
 
   if (!Array.isArray(data.tools)) {
-    result.errors.push(t('mcpserverdetailcomponent.yaml_field_type_error', { field: 'tools (应为数组)' }));
+    result.errors.push(
+      t('mcpserverdetailcomponent.yaml_field_type_error', {
+        field: 'tools (应为数组)'
+      })
+    );
   } else {
     // 验证工具数组中的每个工具
     const toolKeys = new Set<string>();
@@ -291,83 +287,185 @@ const validateYamlData = (data: any): ValidationResult => {
       const toolDisplayName = tool.toolName || `工具[${index}]`;
 
       if (!tool.toolName) {
-        result.errors.push(`${toolDisplayName}: ${t('mcpserverdetailcomponent.yaml_field_required', { field: 'toolName' })}`);
+        result.errors.push(
+          `${toolDisplayName}: ${t(
+            'mcpserverdetailcomponent.yaml_field_required',
+            { field: 'toolName' }
+          )}`
+        );
       } else if (typeof tool.toolName !== 'string') {
-        result.errors.push(`${toolDisplayName}: ${t('mcpserverdetailcomponent.yaml_field_type_error', { field: 'toolName (应为字符串)' })}`);
+        result.errors.push(
+          `${toolDisplayName}: ${t(
+            'mcpserverdetailcomponent.yaml_field_type_error',
+            { field: 'toolName (应为字符串)' }
+          )}`
+        );
       }
 
       if (!tool.toolGroup) {
-        result.errors.push(`${toolDisplayName}: ${t('mcpserverdetailcomponent.yaml_field_required', { field: 'toolGroup' })}`);
+        result.errors.push(
+          `${toolDisplayName}: ${t(
+            'mcpserverdetailcomponent.yaml_field_required',
+            { field: 'toolGroup' }
+          )}`
+        );
       } else if (typeof tool.toolGroup !== 'string') {
-        result.errors.push(`${toolDisplayName}: ${t('mcpserverdetailcomponent.yaml_field_type_error', { field: 'toolGroup (应为字符串)' })}`);
+        result.errors.push(
+          `${toolDisplayName}: ${t(
+            'mcpserverdetailcomponent.yaml_field_type_error',
+            { field: 'toolGroup (应为字符串)' }
+          )}`
+        );
       }
 
       // 检查工具名称和组的唯一性
       if (tool.toolName && tool.toolGroup) {
         const toolKey = `${tool.toolName}:${tool.toolGroup}`;
         if (toolKeys.has(toolKey)) {
-          result.errors.push(`${t('mcpserverdetailcomponent.yaml_duplicate_tool')}: "${tool.toolName}" (组: "${tool.toolGroup}")`);
+          result.errors.push(
+            `${t('mcpserverdetailcomponent.yaml_duplicate_tool')}: "${
+              tool.toolName
+            }" (组: "${tool.toolGroup}")`
+          );
         } else {
           toolKeys.add(toolKey);
         }
       }
 
       if (!tool.routeRule || typeof tool.routeRule !== 'object') {
-        result.errors.push(`${toolDisplayName}: ${t('mcpserverdetailcomponent.yaml_field_required', { field: 'routeRule (应为对象)' })}`);
+        result.errors.push(
+          `${toolDisplayName}: ${t(
+            'mcpserverdetailcomponent.yaml_field_required',
+            { field: 'routeRule (应为对象)' }
+          )}`
+        );
       } else {
         const routeRule = tool.routeRule;
-        const requiredFields = ['protocol', 'url', 'method', 'convertType', 'serviceGroup', 'serviceName'];
+        const requiredFields = [
+          'protocol',
+          'url',
+          'method',
+          'convertType',
+          'serviceGroup',
+          'serviceName'
+        ];
 
-        requiredFields.forEach(field => {
+        requiredFields.forEach((field) => {
           if (!routeRule[field]) {
-            result.errors.push(`${toolDisplayName}: ${t('mcpserverdetailcomponent.yaml_field_required', { field: `routeRule.${field}` })}`);
+            result.errors.push(
+              `${toolDisplayName}: ${t(
+                'mcpserverdetailcomponent.yaml_field_required',
+                { field: `routeRule.${field}` }
+              )}`
+            );
           } else if (typeof routeRule[field] !== 'string') {
-            result.errors.push(`${toolDisplayName}: ${t('mcpserverdetailcomponent.yaml_field_type_error', { field: `routeRule.${field} (应为字符串)` })}`);
+            result.errors.push(
+              `${toolDisplayName}: ${t(
+                'mcpserverdetailcomponent.yaml_field_type_error',
+                { field: `routeRule.${field} (应为字符串)` }
+              )}`
+            );
           }
         });
 
         // 验证 protocol 值
-        if (routeRule.protocol && !['http', 'https'].includes(routeRule.protocol.toLowerCase())) {
-          result.errors.push(`${toolDisplayName}: ${t('mcpserverdetailcomponent.yaml_invalid_protocol')} (当前值: ${routeRule.protocol})`);
+        if (
+          routeRule.protocol &&
+          !['http', 'https'].includes(routeRule.protocol.toLowerCase())
+        ) {
+          result.errors.push(
+            `${toolDisplayName}: ${t(
+              'mcpserverdetailcomponent.yaml_invalid_protocol'
+            )} (当前值: ${routeRule.protocol})`
+          );
         }
 
         // 验证 method 值
-        if (routeRule.method && !['GET', 'POST', 'PUT', 'DELETE', 'PATCH'].includes(routeRule.method.toUpperCase())) {
-          result.errors.push(`${toolDisplayName}: ${t('mcpserverdetailcomponent.yaml_invalid_method')} (当前值: ${routeRule.method})`);
+        if (
+          routeRule.method &&
+          !['GET', 'POST', 'PUT', 'DELETE', 'PATCH'].includes(
+            routeRule.method.toUpperCase()
+          )
+        ) {
+          result.errors.push(
+            `${toolDisplayName}: ${t(
+              'mcpserverdetailcomponent.yaml_invalid_method'
+            )} (当前值: ${routeRule.method})`
+          );
         }
 
         // 验证 URL 格式
         if (routeRule.url) {
-          const isValidUrl = routeRule.url.startsWith('/') ||
+          const isValidUrl =
+            routeRule.url.startsWith('/') ||
             routeRule.url.startsWith('http://') ||
             routeRule.url.startsWith('https://');
           if (!isValidUrl) {
-            result.errors.push(`${toolDisplayName}: ${t('mcpserverdetailcomponent.yaml_invalid_url')} - URL 必须以 '/'、'http://' 或 'https://' 开头 (当前值: ${routeRule.url})`);
+            result.errors.push(
+              `${toolDisplayName}: ${t(
+                'mcpserverdetailcomponent.yaml_invalid_url'
+              )} - URL 必须以 '/'、'http://' 或 'https://' 开头 (当前值: ${
+                routeRule.url
+              })`
+            );
           }
 
           // 检查 URL 中的模板变量
           const templateVars = routeRule.url.match(/\{\{[^}]+\}\}/g);
           if (templateVars) {
             const supportedVars = ['{{ip}}', '{{port}}', '{{ip_port}}'];
-            const unsupportedVars = templateVars.filter((v: string) => !supportedVars.includes(v));
+            const unsupportedVars = templateVars.filter(
+              (v: string) => !supportedVars.includes(v)
+            );
             if (unsupportedVars.length > 0) {
-              result.warnings.push(`${toolDisplayName}: URL 中包含不支持的模板变量: ${unsupportedVars.join(', ')}，支持的变量: ${supportedVars.join(', ')}`);
+              result.warnings.push(
+                `${toolDisplayName}: ${t(
+                  'mcpserverdetailcomponent.yaml_unsupported_template_vars',
+                  {
+                    vars: unsupportedVars.join(', '),
+                    supported: supportedVars.join(', ')
+                  }
+                )}`
+              );
             }
           }
         }
 
         // 验证 convertType 值
-        if (routeRule.convertType && !['NONE', 'FORM_TO_JSON', 'CUSTOM'].includes(routeRule.convertType)) {
-          result.warnings.push(`${toolDisplayName}: convertType 值可能不正确 (当前值: ${routeRule.convertType})，建议使用: NONE, FORM_TO_JSON, CUSTOM`);
+        if (
+          routeRule.convertType &&
+          !['NONE', 'JSON_TO_FORM', 'JSON_TO_URL', 'CUSTOM'].includes(
+            routeRule.convertType
+          )
+        ) {
+          result.warnings.push(
+            `${toolDisplayName}: ${t(
+              'mcpserverdetailcomponent.yaml_convert_type_warning',
+              { value: routeRule.convertType }
+            )}`
+          );
         }
 
-        if (routeRule.additionHeaders !== undefined && typeof routeRule.additionHeaders !== 'object') {
-          result.errors.push(`${toolDisplayName}: ${t('mcpserverdetailcomponent.yaml_field_type_error', { field: 'routeRule.additionHeaders (应为对象)' })}`);
+        if (
+          routeRule.additionHeaders !== undefined &&
+          typeof routeRule.additionHeaders !== 'object'
+        ) {
+          result.errors.push(
+            `${toolDisplayName}: ${t(
+              'mcpserverdetailcomponent.yaml_field_type_error',
+              { field: 'routeRule.additionHeaders (应为对象)' }
+            )}`
+          );
         } else if (routeRule.additionHeaders) {
           // 验证 headers 对象中的每个值
           Object.entries(routeRule.additionHeaders).forEach(([key, value]) => {
             if (typeof value !== 'string') {
-              result.errors.push(`${toolDisplayName}: ${t('mcpserverdetailcomponent.yaml_field_type_error', { field: `routeRule.additionHeaders.${key} (应为字符串)` })}`);
+              result.errors.push(
+                `${toolDisplayName}: ${t(
+                  'mcpserverdetailcomponent.yaml_field_type_error',
+                  { field: `routeRule.additionHeaders.${key} (应为字符串)` }
+                )}`
+              );
             }
           });
         }
@@ -376,9 +474,13 @@ const validateYamlData = (data: any): ValidationResult => {
 
     // 检查工具数量
     if (data.tools.length === 0) {
-      result.warnings.push('当前没有配置任何工具，建议至少配置一个工具');
+      result.warnings.push(t('mcpserverdetailcomponent.yaml_no_tools_warning'));
     } else if (data.tools.length > 50) {
-      result.warnings.push(`工具数量较多 (${data.tools.length} 个)，可能影响性能`);
+      result.warnings.push(
+        t('mcpserverdetailcomponent.yaml_too_many_tools_warning', {
+          count: data.tools.length
+        })
+      );
     }
   }
 
@@ -392,7 +494,9 @@ const parseYamlContent = (content: string): any => {
     validationWarnings.value = [];
 
     if (!content.trim()) {
-      validationErrors.value.push(t('mcpserverdetailcomponent.yaml_content_empty'));
+      const errorMsg = t('mcpserverdetailcomponent.yaml_content_empty');
+      validationErrors.value.push(errorMsg);
+      message.error(errorMsg);
       return null;
     }
 
@@ -406,7 +510,9 @@ const parseYamlContent = (content: string): any => {
 
     // 检查解析结果
     if (parsedData === null || parsedData === undefined) {
-      validationErrors.value.push('YAML 内容解析为空值');
+      const errorMsg = 'YAML 内容解析为空值';
+      validationErrors.value.push(errorMsg);
+      message.error(errorMsg);
       return null;
     }
 
@@ -415,8 +521,18 @@ const parseYamlContent = (content: string): any => {
     validationErrors.value = validationResult.errors;
     validationWarnings.value = validationResult.warnings;
 
+    // 通过message显示错误和警告
     if (validationResult.errors.length > 0) {
+      validationResult.errors.forEach((error) => {
+        message.error(error, { duration: 5000 });
+      });
       return null;
+    }
+
+    if (validationResult.warnings.length > 0) {
+      validationResult.warnings.forEach((warning) => {
+        message.warning(warning, { duration: 4000 });
+      });
     }
 
     return parsedData;
@@ -429,11 +545,14 @@ const parseYamlContent = (content: string): any => {
       errorType = t('mcpserverdetailcomponent.yaml_syntax_error');
       const mark = error.mark;
       if (mark) {
-        errorMessage = `第 ${mark.line + 1} 行，第 ${mark.column + 1} 列: ${error.reason}`;
+        errorMessage = `第 ${mark.line + 1} 行，第 ${mark.column + 1} 列: ${
+          error.reason
+        }`;
 
         // 提供更友好的错误提示
         if (error.reason?.includes('unexpected')) {
-          errorMessage += '\n提示：请检查 YAML 语法，确保缩进正确且使用空格而非制表符';
+          errorMessage +=
+            '\n提示：请检查 YAML 语法，确保缩进正确且使用空格而非制表符';
         } else if (error.reason?.includes('duplicate')) {
           errorMessage += '\n提示：发现重复的键，请检查并移除重复项';
         } else if (error.reason?.includes('mapping')) {
@@ -453,8 +572,10 @@ const parseYamlContent = (content: string): any => {
       errorMessage = String(error);
     }
 
-    validationErrors.value = [`${errorType}: ${errorMessage}`];
+    const fullErrorMsg = `${errorType}: ${errorMessage}`;
+    validationErrors.value = [fullErrorMsg];
     validationWarnings.value = [];
+    message.error(fullErrorMsg, { duration: 6000 });
     return null;
   }
 };
@@ -465,7 +586,6 @@ const copyToClipboard = async () => {
     await navigator.clipboard.writeText(yamlContent.value);
     message.success(t('common.copy_success'));
   } catch (error) {
-    console.error('复制失败:', error);
     message.error(t('common.copy_failed'));
   }
 };
@@ -477,7 +597,10 @@ const handleCancel = () => {
     // 显示确认对话框
     dialog.warning({
       title: t('common.confirm'),
-      content: t('mcpserver.unsaved_changes_warning', '您有未保存的更改，确定要取消吗？'),
+      content: t(
+        'mcpserver.unsaved_changes_warning',
+        '您有未保存的更改，确定要取消吗？'
+      ),
       positiveText: t('common.confirm'),
       negativeText: t('common.cancel'),
       onPositiveClick: () => {
@@ -539,20 +662,21 @@ const fetchToolSpecWithErrorHandling = async (
 
     if (toolSpec && toolSpec.function) {
       tool.spec = toolSpec.function;
-      console.log(`✓ 成功获取工具规格: ${toolKey}`);
     } else {
-      const warningMsg = `${t('mcpserverdetailcomponent.yaml_tool_spec_not_found')}: ${toolKey}`;
+      const warningMsg = `${t(
+        'mcpserverdetailcomponent.yaml_tool_spec_not_found'
+      )}: ${toolKey}`;
       result.warnings.push(warningMsg);
-      console.warn(`⚠ ${warningMsg}`);
 
       // 使用默认规格
       tool.spec = createDefaultToolSpec(yamlTool.toolName);
     }
   } catch (error) {
     const errorMsg = error instanceof Error ? error.message : String(error);
-    const warningMsg = `${t('mcpserverdetailcomponent.yaml_tool_spec_fetch_failed')}: ${toolKey} - ${errorMsg}`;
+    const warningMsg = `${t(
+      'mcpserverdetailcomponent.yaml_tool_spec_fetch_failed'
+    )}: ${toolKey} - ${errorMsg}`;
     result.warnings.push(warningMsg);
-    console.warn(`⚠ ${warningMsg}`, error);
 
     // 使用默认规格
     tool.spec = createDefaultToolSpec(yamlTool.toolName);
@@ -591,7 +715,7 @@ const updateToolsFromYaml = async (
     const toolMap = new Map<string, McpTool>();
 
     // 创建现有工具的映射，以 toolName + toolGroup 为联合主键
-    currentTools.forEach(tool => {
+    currentTools.forEach((tool) => {
       const key = `${tool.toolKey.toolName}:${tool.toolKey.group}`;
       toolMap.set(key, tool);
     });
@@ -615,18 +739,26 @@ const updateToolsFromYaml = async (
           routeRule: {
             ...yamlTool.routeRule,
             serviceNamespace: namespace, // 设置服务命名空间
-            convertType: yamlTool.routeRule.convertType as 'NONE' | 'FORM_TO_JSON' | 'CUSTOM',
+            convertType: yamlTool.routeRule.convertType as
+              | 'NONE'
+              | 'JSON_TO_FORM'
+              | 'JSON_TO_URL'
+              | 'CUSTOM',
             additionHeaders: yamlTool.routeRule.additionHeaders || {}
           }
         };
 
         // 尝试获取工具规格
-        await fetchToolSpecWithErrorHandling(updatedTool, yamlTool, namespace, result);
+        await fetchToolSpecWithErrorHandling(
+          updatedTool,
+          yamlTool,
+          namespace,
+          result
+        );
 
         updatedTools.push(updatedTool);
         toolMap.delete(key); // 从映射中移除，剩余的将被删除
         result.updatedTools++;
-
       } else {
         // 创建新工具
         const newTool: McpTool = {
@@ -641,7 +773,11 @@ const updateToolsFromYaml = async (
           routeRule: {
             ...yamlTool.routeRule,
             serviceNamespace: namespace, // 设置服务命名空间
-            convertType: yamlTool.routeRule.convertType as 'NONE' | 'FORM_TO_JSON' | 'CUSTOM',
+            convertType: yamlTool.routeRule.convertType as
+              | 'NONE'
+              | 'JSON_TO_FORM'
+              | 'JSON_TO_URL'
+              | 'CUSTOM',
             additionHeaders: yamlTool.routeRule.additionHeaders || {}
           },
           spec: {
@@ -652,7 +788,12 @@ const updateToolsFromYaml = async (
         };
 
         // 尝试获取工具规格
-        await fetchToolSpecWithErrorHandling(newTool, yamlTool, namespace, result);
+        await fetchToolSpecWithErrorHandling(
+          newTool,
+          yamlTool,
+          namespace,
+          result
+        );
 
         updatedTools.push(newTool);
         result.addedTools++;
@@ -665,32 +806,32 @@ const updateToolsFromYaml = async (
     // 如果有工具被删除，记录警告信息
     if (result.removedTools > 0) {
       const removedToolNames = Array.from(toolMap.keys());
-      result.warnings.push(`以下工具将被删除: ${removedToolNames.join(', ')}`);
+      result.warnings.push(
+        t('mcpserverdetailcomponent.yaml_tools_will_be_removed', {
+          tools: removedToolNames.join(', ')
+        })
+      );
     }
 
     result.updatedToolsList = updatedTools;
-
-    console.log('工具更新结果:', {
-      总工具数: updatedTools.length,
-      更新工具数: result.updatedTools,
-      新增工具数: result.addedTools,
-      删除工具数: result.removedTools,
-      警告数: result.warnings.length,
-      成功获取规格的工具数: updatedTools.filter(tool => tool.spec && tool.spec.inputSchema && typeof tool.spec.inputSchema === 'object' && Object.keys(tool.spec.inputSchema).length > 1).length
-    });
-
   } catch (error) {
     result.success = false;
     const errorMessage = error instanceof Error ? error.message : String(error);
-    result.errors.push(`工具更新过程中发生错误: ${errorMessage}`);
-    console.error('工具更新失败:', error);
+    result.errors.push(
+      t('mcpserverdetailcomponent.yaml_error_general', {
+        message: errorMessage
+      })
+    );
   }
 
   return result;
 };
 
 // 更新服务器数据对象
-const updateServerData = (parsedData: any, toolUpdateResult: ToolUpdateResult): any => {
+const updateServerData = (
+  parsedData: any,
+  toolUpdateResult: ToolUpdateResult
+): any => {
   // 创建更新后的 serverData 对象
   const updatedServerData = {
     ...props.serverData,
@@ -708,65 +849,57 @@ const updateServerData = (parsedData: any, toolUpdateResult: ToolUpdateResult): 
     }
   };
 
-  console.log('更新后的服务器数据:', {
-    主属性更新: {
-      uniqueKey: `${props.serverData.uniqueKey} -> ${updatedServerData.uniqueKey}`,
-      name: `${props.serverData.name} -> ${updatedServerData.name}`,
-      description: `${props.serverData.description} -> ${updatedServerData.description}`,
-      authKeys: `${JSON.stringify(props.serverData.authKeys)} -> ${JSON.stringify(updatedServerData.authKeys)}`,
-      namespace: `${props.serverData.namespace} -> ${updatedServerData.namespace}`
-    },
-    工具数组更新: {
-      原工具数量: props.serverData.currentValue?.tools?.length || 0,
-      新工具数量: updatedServerData.currentValue.tools.length,
-      更新统计: {
-        更新: toolUpdateResult.updatedTools,
-        新增: toolUpdateResult.addedTools,
-        删除: toolUpdateResult.removedTools
-      }
-    }
-  });
-
   return updatedServerData;
 };
 
 // 处理更新操作
 const handleUpdate = async () => {
+  parseYamlContentSilent(yamlContent.value);
+
+  let isNotify = false;
+  // 检查验证错误和警告，通过 window.$message 提示用户
+  if (validationErrors.value.length > 0) {
+    window.$message?.error(validationErrors.value.join('\n'), {
+      duration: 5000
+    });
+    isNotify = true;
+  }
+
+  if (validationWarnings.value.length > 0) {
+    window.$message?.warning(validationWarnings.value.join('\n'), {
+      duration: 4000
+    });
+    isNotify = true;
+  }
+
   if (!isValid.value) {
-    message.error(t('mcpserverdetailcomponent.yaml_content_invalid'));
+    if (!isNotify) {
+      message.error(t('mcpserverdetailcomponent.yaml_content_invalid'));
+    }
     return;
   }
 
   updating.value = true;
 
   // 显示更新进度提示
-  const loadingMessage = message.loading(t('mcpserverdetailcomponent.yaml_update_processing'), {
-    duration: 0 // 持续显示直到手动关闭
-  });
+  const loadingMessage = message.loading(
+    t('mcpserverdetailcomponent.yaml_update_processing'),
+    {
+      duration: 0 // 持续显示直到手动关闭
+    }
+  );
 
   try {
-    // 如果内容有改变但还没有验证过，先进行验证
-    if (yamlContent.value !== originalYamlContent.value && validationErrors.value.length === 0 && validationWarnings.value.length === 0) {
-      // 清除之前的定时器
-      if (validationTimer) {
-        window.clearTimeout(validationTimer);
-        validationTimer = null;
-      }
-      
-      // 立即进行验证
-      const parsedData = parseYamlContent(yamlContent.value);
-      if (!parsedData) {
-        loadingMessage.destroy();
-        message.error(t('mcpserverdetailcomponent.yaml_validation_failed'));
-        return;
-      }
+    // 清除之前的定时器
+    if (validationTimer) {
+      window.clearTimeout(validationTimer);
+      validationTimer = null;
     }
 
-    // 重新解析以确保数据是最新的
+    // 解析YAML内容
     const parsedData = parseYamlContent(yamlContent.value);
     if (!parsedData) {
       loadingMessage.destroy();
-      message.error(t('mcpserverdetailcomponent.yaml_validation_failed'));
       return;
     }
 
@@ -782,19 +915,23 @@ const handleUpdate = async () => {
 
     if (!toolUpdateResult.success) {
       const errorMsg = toolUpdateResult.errors.join('\n');
-      message.error(`${t('mcpserverdetailcomponent.yaml_update_failed')}: ${errorMsg}`, {
-        duration: 10000
-      });
+      message.error(
+        `${t('mcpserverdetailcomponent.yaml_update_failed')}: ${errorMsg}`,
+        {
+          duration: 10000
+        }
+      );
       return;
     }
 
     // 处理警告信息
     if (toolUpdateResult.warnings.length > 0) {
-      console.warn('工具更新警告:', toolUpdateResult.warnings);
-
       // 显示警告给用户，但限制数量避免过多提示
       const maxWarningsToShow = 3;
-      const warningsToShow = toolUpdateResult.warnings.slice(0, maxWarningsToShow);
+      const warningsToShow = toolUpdateResult.warnings.slice(
+        0,
+        maxWarningsToShow
+      );
 
       // 使用对话框显示警告信息，提供更好的用户体验
       if (toolUpdateResult.warnings.length <= maxWarningsToShow) {
@@ -806,11 +943,17 @@ const handleUpdate = async () => {
         });
       } else {
         // 警告数量较多，显示汇总
-        const remainingCount = toolUpdateResult.warnings.length - maxWarningsToShow;
+        const remainingCount =
+          toolUpdateResult.warnings.length - maxWarningsToShow;
         dialog.warning({
-          title: '更新警告',
-          content: `发现 ${toolUpdateResult.warnings.length} 个警告：\n\n${warningsToShow.join('\n')}\n\n${t('mcpserverdetailcomponent.yaml_warnings_truncated', { count: remainingCount })}`,
-          positiveText: '确定',
+          title: t('mcpserverdetailcomponent.yaml_update_warnings_title'),
+          content: `${t('mcpserverdetailcomponent.yaml_warnings_found', {
+            count: toolUpdateResult.warnings.length
+          })}\n\n${warningsToShow.join('\n')}\n\n${t(
+            'mcpserverdetailcomponent.yaml_warnings_truncated',
+            { count: remainingCount }
+          )}`,
+          positiveText: t('mcpserverdetailcomponent.yaml_confirm_button'),
           style: 'width: 600px; max-width: 90vw;'
         });
       }
@@ -820,31 +963,27 @@ const handleUpdate = async () => {
     const updatedServerData = updateServerData(parsedData, toolUpdateResult);
 
     // 显示更新统计信息
-    const updateSummary = t('mcpserverdetailcomponent.yaml_tool_update_summary', {
-      updated: toolUpdateResult.updatedTools,
-      added: toolUpdateResult.addedTools,
-      removed: toolUpdateResult.removedTools
-    });
-
-    console.log('✓ 更新完成:', {
-      总工具数: toolUpdateResult.updatedToolsList.length,
-      更新工具数: toolUpdateResult.updatedTools,
-      新增工具数: toolUpdateResult.addedTools,
-      删除工具数: toolUpdateResult.removedTools,
-      警告数: toolUpdateResult.warnings.length
-    });
+    const updateSummary = t(
+      'mcpserverdetailcomponent.yaml_tool_update_summary',
+      {
+        updated: toolUpdateResult.updatedTools,
+        added: toolUpdateResult.addedTools,
+        removed: toolUpdateResult.removedTools
+      }
+    );
 
     // 显示成功消息
-    message.success(`${t('mcpserverdetailcomponent.yaml_update_success')} - ${updateSummary}`, {
-      duration: 5000
-    });
+    message.success(
+      `${t('mcpserverdetailcomponent.yaml_update_success')} - ${updateSummary}`,
+      {
+        duration: 5000
+      }
+    );
 
     emit('update:success', updatedServerData);
     visible.value = false;
-
   } catch (error) {
     loadingMessage.destroy();
-    console.error('❌ 更新失败:', error);
 
     let errorMessage = '';
     if (error instanceof Error) {
@@ -852,11 +991,14 @@ const handleUpdate = async () => {
 
       // 针对常见错误提供友好提示
       if (errorMessage.includes('network') || errorMessage.includes('fetch')) {
-        errorMessage += '\n提示：请检查网络连接或服务器状态';
+        errorMessage +=
+          '\n' + t('mcpserverdetailcomponent.yaml_error_network_hint');
       } else if (errorMessage.includes('timeout')) {
-        errorMessage += '\n提示：请求超时，请稍后重试';
+        errorMessage +=
+          '\n' + t('mcpserverdetailcomponent.yaml_error_timeout_hint');
       } else if (errorMessage.includes('permission')) {
-        errorMessage += '\n提示：权限不足，请联系管理员';
+        errorMessage +=
+          '\n' + t('mcpserverdetailcomponent.yaml_error_permission_hint');
       }
     } else {
       errorMessage = String(error);
@@ -869,7 +1011,6 @@ const handleUpdate = async () => {
       positiveText: '确定',
       style: 'width: 500px; max-width: 90vw;'
     });
-
   } finally {
     updating.value = false;
   }
@@ -922,120 +1063,107 @@ watch(
   { immediate: true }
 );
 
-/*
-// 监听 YAML 内容变化，进行实时验证
-watch(
-  yamlContent,
-  (newContent) => {
-    // 清除之前的定时器
-    if (validationTimer) {
-      window.clearTimeout(validationTimer);
-      validating.value = false;
+// 静默验证YAML内容（不显示message提示）
+const parseYamlContentSilent = (content: string): any => {
+  try {
+    validationErrors.value = [];
+    validationWarnings.value = [];
+
+    if (!content.trim()) {
+      validationErrors.value.push(
+        t('mcpserverdetailcomponent.yaml_content_empty')
+      );
+      return null;
     }
 
-    // 只有当内容与原始内容不同时才进行验证（即用户实际编辑了内容）
-    if (newContent.trim() && newContent !== originalYamlContent.value) {
-      // 显示验证进度
-      validating.value = true;
+    // 使用 js-yaml 解析 YAML 内容
+    const parsedData = YAML.load(content, {
+      schema: YAML.CORE_SCHEMA,
+      json: true
+    });
 
-      // 防抖验证，500ms 后执行（稍微延长时间，避免频繁验证）
-      validationTimer = window.setTimeout(() => {
-        try {
-          parseYamlContent(newContent);
-        } finally {
-          validating.value = false;
-        }
-      }, 500);
-    } else if (newContent === originalYamlContent.value) {
-      // 如果内容恢复到原始状态，清除验证状态
-      validationErrors.value = [];
-      validationWarnings.value = [];
-      validating.value = false;
-    } else if (!newContent.trim()) {
-      // 内容为空时立即清除错误和警告
-      validationErrors.value = [];
-      validationWarnings.value = [];
-      validating.value = false;
+    if (parsedData === null || parsedData === undefined) {
+      validationErrors.value.push('YAML 内容解析为空值');
+      return null;
     }
-  }
-);
-*/
 
-// 组件卸载时清理定时器
-onUnmounted(() => {
-  if (validationTimer) {
-    window.clearTimeout(validationTimer);
-    validationTimer = null;
+    // 验证解析后的数据结构
+    const validationResult = validateYamlData(parsedData);
+    validationErrors.value = validationResult.errors;
+    validationWarnings.value = validationResult.warnings;
+
+    if (validationResult.errors.length > 0) {
+      return null;
+    }
+
+    return parsedData;
+  } catch (error) {
+    let errorMessage = '';
+    let errorType = t('mcpserverdetailcomponent.yaml_parse_error');
+
+    if (error instanceof YAML.YAMLException) {
+      errorType = t('mcpserverdetailcomponent.yaml_syntax_error');
+      const mark = error.mark;
+      if (mark) {
+        errorMessage = `第 ${mark.line + 1} 行，第 ${mark.column + 1} 列: ${
+          error.reason
+        }`;
+      } else {
+        errorMessage = error.reason || error.message;
+      }
+    } else if (error instanceof Error) {
+      errorMessage = error.message;
+    } else {
+      errorMessage = String(error);
+    }
+
+    validationErrors.value = [`${errorType}: ${errorMessage}`];
+    validationWarnings.value = [];
+    return null;
   }
-});
+};
 </script>
 
 <style scoped>
 .yaml-editor-container {
   display: flex;
   flex-direction: column;
-  height: 100%;
-  background-color: #002b36;
+  height: calc(80vh - 120px);
+  /* 减去模态框头部和边距的高度 */
 }
 
 .editor-section {
   flex: 1;
-  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  /* 允许flex子项收缩 */
 }
 
 .editor-wrapper {
-  border: 1px solid #e9ecef;
-  border-radius: 6px;
-  overflow: hidden;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  overflow-y: scroll;
   background-color: #002b36;
 }
 
-.validation-section {
-  margin-bottom: 16px;
-}
-
-.validation-progress {
-  margin-bottom: 8px;
-}
-
-.validation-errors,
-.validation-warnings,
-.validation-success {
-  margin-bottom: 8px;
-}
-
-.error-list,
-.warning-list {
-  max-height: 200px;
-  overflow-y: auto;
-  margin-top: 8px;
-}
-
-.error-item,
-.warning-item {
+.editor-wrapper > div {
+  flex: 1;
   display: flex;
-  align-items: flex-start;
-  margin-bottom: 4px;
-  padding: 4px 0;
-  line-height: 1.4;
-  word-break: break-word;
+  flex-direction: column;
 }
 
-.error-item:last-child,
-.warning-item:last-child {
-  margin-bottom: 0;
+.editor-wrapper :deep(.cm-editor) {
+  flex: 1;
+  height: auto !important;
 }
 
 .action-section {
   flex-shrink: 0;
   padding-top: 16px;
-  border-top: 1px solid #e9ecef;
-}
-
-/* 响应式设计 */
-@media (max-width: 768px) {
-  .yaml-editor-container {
-    padding: 8px;
-  }
+  border-top: 1px solid var(--n-border-color);
+  margin-top: 16px;
 }
 </style>

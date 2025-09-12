@@ -259,7 +259,9 @@ export const validateToolSpecParams = (params: IToolSpecParams): string[] => {
 };
 
 // 工具函数：验证批量更新参数
-export const validateBatchUpdateParams = (paramsList: IToolSpecParams[]): string[] => {
+export const validateBatchUpdateParams = (
+  paramsList: IToolSpecParams[]
+): string[] => {
   const errors: string[] = [];
 
   if (!paramsList || paramsList.length === 0) {
@@ -270,7 +272,7 @@ export const validateBatchUpdateParams = (paramsList: IToolSpecParams[]): string
   // 验证每个参数
   paramsList.forEach((params, index) => {
     const paramErrors = validateToolSpecParams(params);
-    paramErrors.forEach(error => {
+    paramErrors.forEach((error) => {
       errors.push(`第${index + 1}个参数: ${error}`);
     });
   });

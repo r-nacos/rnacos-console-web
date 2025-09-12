@@ -1,6 +1,8 @@
 <template>
   <div class="relative flex flex-col w-full h-full">
-    <div class="flex flex-row items-center h-10 border-b border-gray-300 bg-white pr-3">
+    <div
+      class="flex flex-row items-center h-10 border-b border-gray-300 bg-white pr-3"
+    >
       <div class="flex-1 text-sm leading-[30px] pl-4">
         <span>{{ this.$t('toolspec.toolspec_list') }}</span>
       </div>
@@ -15,60 +17,132 @@
           <n-form label-placement="left" label-width="90">
             <n-grid cols="1 s:1 m:2 l:3 xl:3 2xl:4" responsive="screen">
               <n-gi>
-                <n-form-item :label="this.$t('toolspec.group')" path="param.groupFilter">
-                  <n-input v-model:value="param.groupFilter" :placeholder="this.$t('toolspec.input_group')" clearable
-                    @keydown.enter.prevent @keyup.enter="queryList" />
+                <n-form-item
+                  :label="this.$t('toolspec.group')"
+                  path="param.groupFilter"
+                >
+                  <n-input
+                    v-model:value="param.groupFilter"
+                    :placeholder="this.$t('toolspec.input_group')"
+                    clearable
+                    @keydown.enter.prevent
+                    @keyup.enter="queryList"
+                  />
                 </n-form-item>
               </n-gi>
               <n-gi>
-                <n-form-item :label="this.$t('toolspec.tool_name')" path="param.toolNameFilter">
-                  <n-input v-model:value="param.toolNameFilter" :placeholder="this.$t('toolspec.input_tool_name')"
-                    clearable @keydown.enter.prevent @keyup.enter="queryList" />
+                <n-form-item
+                  :label="this.$t('toolspec.tool_name')"
+                  path="param.toolNameFilter"
+                >
+                  <n-input
+                    v-model:value="param.toolNameFilter"
+                    :placeholder="this.$t('toolspec.input_tool_name')"
+                    clearable
+                    @keydown.enter.prevent
+                    @keyup.enter="queryList"
+                  />
                 </n-form-item>
               </n-gi>
               <n-gi>
                 <n-space justify="end" class="ml-2">
                   <n-button tertiary @click="queryList">{{
                     this.$t('common.query')
-                    }}</n-button>
-                  <n-button v-if="webResources.canUpdateMcpToolSpec" type="info" @click="showCreate">{{
-                    this.$t('common.add') }}</n-button>
-                  <n-button v-if="webResources.canUpdateMcpToolSpec" type="primary" @click="showImport">{{
-                    this.$t('toolspec.import_tools') }}</n-button>
+                  }}</n-button>
+                  <n-button
+                    v-if="webResources.canUpdateMcpToolSpec"
+                    type="info"
+                    @click="showCreate"
+                    >{{ this.$t('common.add') }}</n-button
+                  >
+                  <n-button
+                    v-if="webResources.canUpdateMcpToolSpec"
+                    type="primary"
+                    @click="showImport"
+                    >{{ this.$t('toolspec.import_tools') }}</n-button
+                  >
                 </n-space>
               </n-gi>
             </n-grid>
           </n-form>
         </n-card>
 
-        <n-data-table remote ref="table" :scroll-x="600" :bordered="false" :columns="columns" :data="data"
-          :loading="loading" :pagination="pagination" :row-key="rowKey" @update:page="handlePageChange" />
+        <n-data-table
+          remote
+          ref="table"
+          :scroll-x="600"
+          :bordered="false"
+          :columns="columns"
+          :data="data"
+          :loading="loading"
+          :pagination="pagination"
+          :row-key="rowKey"
+          @update:page="handlePageChange"
+        />
       </div>
     </div>
 
-    <Transition class="transition-all duration-300 ease-in-out" enter-from-class="translate-x-5 opacity-0"
-      enter-to-class="translate-x-0 opacity-100" leave-from-class="translate-x-0 opacity-100"
-      leave-to-class="translate-x-5 opacity-0">
-      <SubContentFullPage v-show="useForm" :title="getDetailTitle" :submitName="t('common.confirm')" @close="closeForm"
-        @submit="submitForm">
-        <McpToolSpecDetail ref="toolSpecDetailRef" :model="model" @submit-success="handleSubmitSuccess"
-          @cancel="handleFormCancel" @close="closeForm" @update-function="handleUpdateFunction"
-          @update-format="handleUpdateFormat" @reset-form="handleResetForm" />
+    <Transition
+      class="transition-all duration-300 ease-in-out"
+      enter-from-class="translate-x-5 opacity-0"
+      enter-to-class="translate-x-0 opacity-100"
+      leave-from-class="translate-x-0 opacity-100"
+      leave-to-class="translate-x-5 opacity-0"
+    >
+      <SubContentFullPage
+        v-show="useForm"
+        :title="getDetailTitle"
+        :submitName="t('common.confirm')"
+        @close="closeForm"
+        @submit="submitForm"
+      >
+        <McpToolSpecDetail
+          ref="toolSpecDetailRef"
+          :model="model"
+          @submit-success="handleSubmitSuccess"
+          @cancel="handleFormCancel"
+          @close="closeForm"
+          @update-function="handleUpdateFunction"
+          @update-format="handleUpdateFormat"
+          @reset-form="handleResetForm"
+        />
       </SubContentFullPage>
     </Transition>
 
     <!-- 导入工具列表弹窗 -->
-    <n-modal v-model:show="showImportModal" preset="dialog" :title="t('toolspec.import_tools')"
-      :positive-text="t('common.confirm')" :negative-text="t('common.cancel')" :loading="importLoading"
-      @positive-click="handleImportConfirm" @negative-click="handleImportCancel">
-      <n-form ref="importFormRef" :model="importForm" :rules="importFormRules" label-placement="top" label-width="auto"
-        require-mark-placement="right-hanging">
+    <n-modal
+      v-model:show="showImportModal"
+      preset="dialog"
+      :title="t('toolspec.import_tools')"
+      :positive-text="t('common.confirm')"
+      :negative-text="t('common.cancel')"
+      :loading="importLoading"
+      @positive-click="handleImportConfirm"
+      @negative-click="handleImportCancel"
+    >
+      <n-form
+        ref="importFormRef"
+        :model="importForm"
+        :rules="importFormRules"
+        label-placement="top"
+        label-width="auto"
+        require-mark-placement="right-hanging"
+      >
         <n-form-item :label="t('toolspec.group')" path="group">
-          <n-input v-model:value="importForm.group" :placeholder="t('toolspec.input_group')" clearable />
+          <n-input
+            v-model:value="importForm.group"
+            :placeholder="t('toolspec.input_group')"
+            clearable
+          />
         </n-form-item>
         <n-form-item :label="t('toolspec.tools_json_list')" path="toolsJson">
-          <n-input v-model:value="importForm.toolsJson" type="textarea"
-            :placeholder="t('toolspec.input_tools_json_placeholder')" :rows="10" clearable />
+          <n-input
+            v-model:value="importForm.toolsJson"
+            type="textarea"
+            :placeholder="t('toolspec.input_tools_json_placeholder')"
+            :rows="10"
+            clearable
+          />
         </n-form-item>
       </n-form>
     </n-modal>
@@ -166,7 +240,9 @@ export default defineComponent({
       toolsJson: [
         {
           required: true,
-          message: t('validation.required', { field: t('toolspec.tools_json_list') })
+          message: t('validation.required', {
+            field: t('toolspec.tools_json_list')
+          })
         },
         {
           validator: (rule, value) => {
@@ -180,10 +256,18 @@ export default defineComponent({
               for (let i = 0; i < tools.length; i++) {
                 const tool = tools[i];
                 if (!tool.type || tool.type !== 'function') {
-                  return new Error(t('toolspec.tool_type_must_be_function', { index: i + 1 }));
+                  return new Error(
+                    t('toolspec.tool_type_must_be_function', { index: i + 1 })
+                  );
                 }
-                if (!tool.function || !tool.function.name || !tool.function.description) {
-                  return new Error(t('toolspec.tool_function_incomplete', { index: i + 1 }));
+                if (
+                  !tool.function ||
+                  !tool.function.name ||
+                  !tool.function.description
+                ) {
+                  return new Error(
+                    t('toolspec.tool_function_incomplete', { index: i + 1 })
+                  );
                 }
               }
               return true;
@@ -238,7 +322,7 @@ export default defineComponent({
                 if (
                   firstNamespace &&
                   namespaceStore.current.value.namespaceId !==
-                  firstNamespace.namespaceId
+                    firstNamespace.namespaceId
                 ) {
                   namespaceStore.setCurrent({
                     namespaceId: firstNamespace.namespaceId,
@@ -402,16 +486,22 @@ export default defineComponent({
             function: {
               name: tool.function.name,
               description: tool.function.description,
-              inputSchema: tool.function.parameters || tool.function.inputSchema || {}
+              inputSchema:
+                tool.function.parameters || tool.function.inputSchema || {}
             }
           };
         });
 
         // 调用批量更新接口
-        const success = await toolSpecApi.batchUpdateToolSpecWithErrorHandling(toolSpecParams);
+        const success =
+          await toolSpecApi.batchUpdateToolSpecWithErrorHandling(
+            toolSpecParams
+          );
 
         if (success) {
-          window.$message.success(t('toolspec.import_success', { count: toolSpecParams.length }));
+          window.$message.success(
+            t('toolspec.import_success', { count: toolSpecParams.length })
+          );
           showImportModal.value = false;
           doHandlePageChange(1); // 刷新列表
         }

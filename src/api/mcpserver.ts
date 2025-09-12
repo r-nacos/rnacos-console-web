@@ -321,7 +321,6 @@ export const validateMcpServerHistoryPublishParams = (
 
 // 工具函数：转换 McpServer 为显示格式
 export const formatMcpServerForDisplay = (server: McpServerDto) => {
-  console.log('Formatting server data:', server); // 添加日志以查看原始数据
   const formatted = {
     ...server,
     createTimeFormatted: server.createTime
@@ -335,7 +334,6 @@ export const formatMcpServerForDisplay = (server: McpServerDto) => {
       : '',
     toolsCount: server.currentValue?.tools?.length || 0
   };
-  console.log('Formatted server data:', formatted); // 添加日志以查看格式化后的数据
   return formatted;
 };
 

@@ -376,7 +376,7 @@ const mockTools = ref<McpTool[]>([
         'Content-Type': 'application/json',
         'X-Request-Source': 'web'
       },
-      convertType: 'FORM_TO_JSON',
+      convertType: 'JSON_TO_FORM',
       serviceNamespace: 'order',
       serviceGroup: 'service',
       serviceName: 'OrderService'

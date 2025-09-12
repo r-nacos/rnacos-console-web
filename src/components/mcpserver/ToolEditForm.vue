@@ -308,6 +308,7 @@
 
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from 'vue';
+import { useI18n } from 'vue-i18n';
 import {
   NForm,
   NGrid,
@@ -344,6 +345,7 @@ const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
 
 const message = useMessage();
+const { t } = useI18n();
 const formRef = ref();
 const saving = ref(false);
 const parametersError = ref('');
@@ -378,7 +380,8 @@ const methodOptions = [
 
 const convertTypeOptions = [
   { label: '无转换', value: 'NONE' },
-  { label: '表单转JSON', value: 'FORM_TO_JSON' },
+  { label: 'JSON转表单', value: 'JSON_TO_FORM' },
+  { label: 'JSON转URL', value: 'JSON_TO_URL' },
   { label: '自定义', value: 'CUSTOM' }
 ];
 
@@ -634,7 +637,7 @@ const handleSave = async () => {
 
     emit('save', formModel.value);
   } catch (error) {
-    message.error('表单验证失败，请检查输入');
+    message.error(t('mcpserverdetailcomponent.form_validation_error'));
   } finally {
     saving.value = false;
   }

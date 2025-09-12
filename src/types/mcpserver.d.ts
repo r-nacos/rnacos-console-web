@@ -51,7 +51,7 @@ export interface ToolRouteRule {
   url: string;
   method: string;
   additionHeaders: Record<string, string>;
-  convertType: 'NONE' | 'FORM_TO_JSON' | 'CUSTOM';
+  convertType: 'NONE' | 'JSON_TO_FORM' | 'JSON_TO_URL' | 'CUSTOM';
   serviceNamespace: string;
   serviceGroup: string;
   serviceName: string;

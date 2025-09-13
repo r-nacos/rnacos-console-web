@@ -258,7 +258,6 @@ export default defineComponent({
       namespace: '',
       group: '',
       toolName: '',
-      name: '',
       description: '',
       version: 0,
       function: '',
@@ -437,7 +436,6 @@ export default defineComponent({
             namespace: toolSpec.namespace,
             group: toolSpec.group,
             toolName: toolSpec.toolName,
-            name: toolSpec.name || '',
             description: toolSpec.description || '',
             version: toolSpec.version,
             function: toolSpec.function
@@ -466,7 +464,6 @@ export default defineComponent({
             namespace: toolSpec.namespace,
             group: toolSpec.group,
             toolName: toolSpec.toolName,
-            name: toolSpec.name || '',
             description: toolSpec.description || '',
             version: toolSpec.version,
             function: toolSpec.function
@@ -518,7 +515,6 @@ export default defineComponent({
         namespace: namespaceStore.current.value.namespaceId,
         group: '',
         toolName: '',
-        name: '',
         description: '',
         version: 0,
         function: '{}',
@@ -567,7 +563,7 @@ export default defineComponent({
             group: importForm.value.group,
             toolName: tool.function.name,
             function: {
-              name: tool.function.name,
+              name: tool.function.name, // 使用toolName的值设置name字段
               description: tool.function.description,
               inputSchema:
                 tool.function.parameters || tool.function.inputSchema || {}
@@ -720,7 +716,6 @@ export default defineComponent({
         modelRef.value.namespace = namespaceStore.current.value.namespaceId;
         modelRef.value.group = '';
         modelRef.value.toolName = '';
-        modelRef.value.name = '';
         modelRef.value.description = '';
         modelRef.value.function = '{}';
         modelRef.value.functionFormat = 'yaml';

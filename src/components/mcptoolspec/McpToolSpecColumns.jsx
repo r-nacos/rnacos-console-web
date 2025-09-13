@@ -36,17 +36,6 @@ export const createColumns = function (
       }
     },
     {
-      title: t('toolspec.name'),
-      key: 'name',
-      width: 150,
-      ellipsis: {
-        tooltip: true
-      },
-      render(row) {
-        return row.name || '-';
-      }
-    },
-    {
       title: t('toolspec.description'),
       key: 'description',
       width: 200,

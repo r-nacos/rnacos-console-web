@@ -47,15 +47,6 @@
         </n-gi>
       </n-grid>
 
-      <n-form-item path="name" :label="t('toolspec.name')">
-        <n-input
-          :disabled="isReadonly"
-          :placeholder="t('toolspec.input_name')"
-          v-model:value="model.name"
-          @keydown.enter.prevent
-        />
-      </n-form-item>
-
       <n-form-item path="description" :label="t('toolspec.description')">
         <n-input
           :disabled="isReadonly"
@@ -350,18 +341,7 @@ const rules = {
       trigger: ['input', 'blur']
     }
   ],
-  name: [
-    {
-      required: true,
-      validator(_, value) {
-        if (!value) {
-          return new Error(t('toolspec.need_input_name'));
-        }
-        return true;
-      },
-      trigger: ['input', 'blur']
-    }
-  ],
+
   description: [
     {
       required: true,
@@ -467,11 +447,6 @@ const buildSubmitData = function () {
 
     if (!props.model.toolName?.trim()) {
       window.$message.error(t('toolspec.need_input_tool_name'));
-      return null;
-    }
-
-    if (!props.model.name?.trim()) {
-      window.$message.error(t('toolspec.need_input_name'));
       return null;
     }
 
@@ -599,7 +574,7 @@ const buildSubmitData = function () {
       group: props.model.group.trim(),
       toolName: props.model.toolName.trim(),
       function: {
-        name: props.model.name.trim(),
+        name: props.model.toolName.trim(), // 使用toolName的值设置name字段
         description: props.model.description?.trim() || '',
         inputSchema: parametersObject // Correctly set converted object to inputSchema
       }

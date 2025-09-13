@@ -346,6 +346,7 @@ const message = {
     create_page_coming_soon: '创建页面即将推出',
     // 导入工具相关
     import_tools: '导入工具列表',
+    export_tools: '导出工具',
     tools_json_list: '工具JSON列表',
     input_tools_json_placeholder:
       '请输入OpenAI工具JSON列表，例如：\n[{"type": "function","function": {"name": "add","description": "add","parameters": {"type": "object","properties": {"a": {"type": "number","description": "the first number"},"b": {"type": "number","description": "the second number"}},"required": ["a","b"]}}}]',

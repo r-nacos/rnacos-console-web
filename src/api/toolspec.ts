@@ -158,6 +158,24 @@ class ToolSpecApi {
     });
   }
 
+  /**
+   * 下载 ToolSpec
+   * @param queryParam 查询参数
+   * @returns Promise<AxiosResponse<Blob>>
+   */
+  downloadToolSpecs(
+    queryParam: IToolSpecQueryParam
+  ): Promise<AxiosResponse<Blob>> {
+    return axios.request({
+      method: 'get',
+      url: '/rnacos/api/console/v2/mcp/toolspec/download',
+      params: {
+        ...queryParam
+      },
+      responseType: 'blob'
+    });
+  }
+
   // 便捷方法：带错误处理的查询列表
   async queryToolSpecPageWithErrorHandling(
     queryParam: IToolSpecQueryParam

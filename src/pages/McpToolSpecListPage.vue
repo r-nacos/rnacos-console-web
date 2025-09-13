@@ -49,6 +49,9 @@
                   <n-button tertiary @click="queryList">{{
                     this.$t('common.query')
                   }}</n-button>
+                  <n-button @click="download" type="info">{{
+                    this.$t('toolspec.export_tools')
+                  }}</n-button>
                   <n-button
                     v-if="webResources.canUpdateMcpToolSpec"
                     type="info"
@@ -166,6 +169,7 @@ import { useDialog } from 'naive-ui';
 import template from 'template_js';
 import namespaceApi from '@/api/namespace';
 import * as constant from '@/types/constant';
+import qs from 'qs';
 
 export default defineComponent({
   components: {
@@ -522,6 +526,25 @@ export default defineComponent({
       showImportModal.value = false;
     };
 
+    // 下载 ToolSpec
+    const download = () => {
+      const params = {
+        namespaceId: namespaceStore.current.value.namespaceId,
+        groupFilter: paramRef.value.groupFilter,
+        toolNameFilter: paramRef.value.toolNameFilter,
+        pageNo: 1,
+        pageSize: 20
+      };
+      var queryString = qs.stringify(params);
+      var url = '/rnacos/api/console/v2/mcp/toolspec/download?' + queryString;
+      const link = document.createElement('a');
+      document.body.appendChild(link);
+      link.href = url;
+      link.click();
+      document.body.removeChild(link);
+      return true;
+    };
+
     const closeForm = () => {
       useFormRef.value = false;
     };
@@ -628,7 +651,8 @@ export default defineComponent({
       importForm,
       importFormRules,
       handleImportConfirm,
-      handleImportCancel
+      handleImportCancel,
+      download
     };
   },
   methods: {

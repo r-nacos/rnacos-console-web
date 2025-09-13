@@ -358,6 +358,7 @@ const message = {
     create_page_coming_soon: 'Create page coming soon',
     // Import tools related
     import_tools: 'Import Tools List',
+    export_tools: 'Export Tools',
     tools_json_list: 'Tools JSON List',
     input_tools_json_placeholder:
       'Please input OpenAI tools JSON list, for example:\n[{"type": "function","function": {"name": "add","description": "add","parameters": {"type": "object","properties": {"a": {"type": "number","description": "the first number"},"b": {"type": "number","description": "the second number"}},"required": ["a","b"]}}}]',

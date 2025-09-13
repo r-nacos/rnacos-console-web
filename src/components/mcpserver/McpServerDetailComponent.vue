@@ -8,7 +8,11 @@
       <template #header-extra>
         <n-space>
           <n-tag v-if="mode !== 'detail'" type="info" size="small">
-            {{ mode === 'update' ? '编辑模式' : '创建模式' }}
+            {{
+              mode === 'update'
+                ? t('mcpserver.edit_mode')
+                : t('mcpserver.create_mode')
+            }}
           </n-tag>
 
           <!-- 文本编辑图标按钮 -->
@@ -47,7 +51,11 @@
           <n-input
             v-model:value="serverData.uniqueKey"
             :disabled="mode === 'update'"
-            :placeholder="mode === 'create' ? '可选，不填时后端会自动生成' : ''"
+            :placeholder="
+              mode === 'create'
+                ? t('mcpserverdetailcomponent.unique_key_optional_placeholder')
+                : ''
+            "
           />
         </n-form-item>
 
@@ -64,7 +72,9 @@
         <n-form-item :label="t('mcpserverdetailcomponent.name')" path="name">
           <n-input
             v-model:value="serverData.name"
-            placeholder="请输入服务器名称"
+            :placeholder="
+              t('mcpserverdetailcomponent.input_server_name_placeholder')
+            "
             :disabled="isFormReadonly"
           />
         </n-form-item>
@@ -76,7 +86,9 @@
           <n-input
             v-model:value="serverData.description"
             type="textarea"
-            placeholder="请输入服务器描述"
+            :placeholder="
+              t('mcpserverdetailcomponent.input_description_placeholder')
+            "
             :rows="3"
             :disabled="isFormReadonly"
           />
@@ -153,7 +165,7 @@
           "
         >
           <h4 style="margin: 0; color: #666; font-size: 14px">
-            MCP 服务访问地址规则
+            {{ t('mcpserverdetailcomponent.mcp_address_rules_title') }}
           </h4>
           <n-icon
             :size="16"
@@ -174,23 +186,30 @@
         <div v-show="addressRulesExpanded" class="address-rules-content">
           <n-space vertical :size="6">
             <div class="address-rule-item">
-              <n-text strong style="font-size: 13px">Streamable HTTP:</n-text>
+              <n-text strong style="font-size: 13px">{{
+                t('mcpserverdetailcomponent.streamable_http_label')
+              }}</n-text>
               <n-code style="margin-left: 8px; font-size: 12px">
                 http://&#123;nacos_api_host&#125;/rnacos/mcp/&#123;server_unique_key&#125;/&#123;auth_key&#125;
               </n-code>
             </div>
             <div class="address-rule-item">
-              <n-text strong style="font-size: 13px">SSE:</n-text>
+              <n-text strong style="font-size: 13px">{{
+                t('mcpserverdetailcomponent.sse_label')
+              }}</n-text>
               <n-code style="margin-left: 8px; font-size: 12px">
                 http://&#123;nacos_api_host&#125;/rnacos/mcp/sse/&#123;server_unique_key&#125;/&#123;auth_key&#125;
               </n-code>
             </div>
             <div class="address-rule-note">
               <n-text depth="3" style="font-size: 11px; line-height: 1.4">
-                注意：请将 &#123;nacos_api_host&#125; 替换为实际的 Nacos API
-                地址，&#123;server_unique_key&#125;
-                替换为上述唯一标识，&#123;auth_key&#125;
-                替换为认证密钥中的任意一个
+                {{
+                  t('mcpserverdetailcomponent.address_rules_note', {
+                    nacos_api_host: '{nacos_api_host}',
+                    server_unique_key: '{server_unique_key}',
+                    auth_key: '{auth_key}'
+                  })
+                }}
               </n-text>
             </div>
           </n-space>
@@ -408,24 +427,35 @@ const formRules: FormRules = {
   name: [
     {
       required: true,
-      message: t('validation.required', { field: '服务器名称' })
+      message: t('validation.required', {
+        field: t('mcpserverdetailcomponent.field_server_name')
+      })
     }
   ],
   namespace: [
     {
       required: false,
-      message: t('validation.required', { field: '命名空间' })
+      message: t('validation.required', {
+        field: t('mcpserverdetailcomponent.field_namespace')
+      })
     }
   ],
   description: [
-    { required: true, message: t('validation.required', { field: '描述' }) }
+    {
+      required: true,
+      message: t('validation.required', {
+        field: t('mcpserverdetailcomponent.field_description')
+      })
+    }
   ],
   authKeys: [
     {
       required: true,
       type: 'array',
       min: 1,
-      message: t('validation.required', { field: '认证密钥' })
+      message: t('validation.required', {
+        field: t('mcpserverdetailcomponent.field_auth_keys')
+      })
     }
   ]
 };
@@ -623,7 +653,7 @@ const handlePublishServer = async () => {
   try {
     // 检查是否有当前值
     if (!props.serverData.currentValue) {
-      message.warning('当前没有可发布的版本');
+      message.warning(t('mcpserverdetailcomponent.no_publishable_version'));
       return;
     }
 
@@ -634,7 +664,7 @@ const handlePublishServer = async () => {
       const releaseTools = props.serverData.releaseValue.tools || [];
 
       if (areToolsEqual(currentTools, releaseTools)) {
-        message.warning('工具没有变化，无需发布');
+        message.warning(t('mcpserverdetailcomponent.tools_no_change'));
         return;
       }
     }
@@ -645,7 +675,7 @@ const handlePublishServer = async () => {
       await mcpServerApi.updateMcpServerWithErrorHandling(params);
 
     if (!updateSuccess) {
-      message.error('更新服务失败，无法发布');
+      message.error(t('mcpserverdetailcomponent.update_service_failed'));
       return;
     }
 
@@ -656,7 +686,7 @@ const handlePublishServer = async () => {
       );
 
     if (publishSuccess) {
-      message.success('发布成功');
+      message.success(t('mcpserverdetailcomponent.publish_success'));
 
       // 获取最新数据并直接更新 props.serverData
       const updatedServer = await mcpServerApi.getMcpServerWithErrorHandling(
@@ -667,7 +697,7 @@ const handlePublishServer = async () => {
       }
     }
   } catch (error) {
-    message.error('发布失败');
+    message.error(t('mcpserverdetailcomponent.publish_failed'));
   }
 };
 

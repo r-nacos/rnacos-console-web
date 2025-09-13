@@ -639,7 +639,28 @@ const message = {
     yaml_error_timeout_hint: '提示：请求超时，请稍后重试',
     yaml_error_permission_hint: '提示：权限不足，请联系管理员',
     yaml_error_general: '工具更新过程中发生错误: {message}',
-    form_validation_error: '表单验证失败，请检查输入'
+    form_validation_error: '表单验证失败，请检查输入',
+    // 表单占位符和验证消息
+    input_server_name_placeholder: '请输入服务器名称',
+    input_description_placeholder: '请输入服务器描述',
+    unique_key_optional_placeholder: '可选，不填时后端会自动生成',
+    // MCP地址规则相关
+    mcp_address_rules_title: 'MCP 服务访问地址规则',
+    streamable_http_label: 'Streamable HTTP:',
+    sse_label: 'SSE:',
+    address_rules_note:
+      '注意：请将 {nacos_api_host} 替换为实际的 Nacos API 地址，{server_unique_key} 替换为上述唯一标识，{auth_key} 替换为认证密钥中的任意一个',
+    // 消息提示
+    no_publishable_version: '当前没有可发布的版本',
+    tools_no_change: '工具没有变化，无需发布',
+    update_service_failed: '更新服务失败，无法发布',
+    publish_success: '发布成功',
+    publish_failed: '发布失败',
+    // 字段名称用于验证
+    field_server_name: '服务器名称',
+    field_namespace: '命名空间',
+    field_description: '描述',
+    field_auth_keys: '认证密钥'
   },
   validation: {
     required: '{field}不能为空'

@@ -38,7 +38,6 @@ const message = {
     success: '成功',
     home: '首页',
     batch: '批量',
-    detail: '详情',
     no_config: '无配置',
     select: '选择',
     selected: '已选择',
@@ -49,6 +48,7 @@ const message = {
     update_success: '更新成功',
     update_failed: '更新失败',
     create: '创建',
+    import: '导入',
     save: '保存'
   },
   cluster: {
@@ -356,7 +356,12 @@ const message = {
       '第{index}个工具的function信息不完整，需要包含name和description',
     invalid_json_format: 'JSON格式不正确',
     import_success: '成功导入{count}个工具',
-    import_failed: '导入失败'
+    import_failed: '导入失败',
+    import_zip: '导入ZIP文件',
+    zip_file: 'ZIP文件',
+    select_zip_file: '选择ZIP文件',
+    import_zip_success: 'ZIP文件导入成功',
+    import_zip_failed: 'ZIP文件导入失败'
   },
   mcpserver: {
     mcpserver_management: 'MCP服务器管理',
@@ -463,10 +468,8 @@ const message = {
     tool_route_rule_incomplete: '工具 "{name}" 路由规则不完整',
     tool_url_required: '工具 "{name}" 需要配置URL',
     tool_already_exists: '该工具已存在，请勿重复添加',
-    tool_added_success: '工具添加成功',
+
     tool_updated_success: '工具配置更新成功',
-    tool_deleted_success: '工具删除成功',
-    tool_not_found: '工具不存在',
 
     // 工具删除确认
     confirm_delete_tool_title: '确认删除工具',
@@ -484,42 +487,20 @@ const message = {
     publish_version: '发布版本',
     rollback_version: '回滚版本',
     confirm_rollback_title: '确认回滚版本',
-    confirm_rollback_content: '确认要回滚到此版本吗？当前版本将被替换。',
 
     // 操作结果
     create_failed: 'MCP服务器创建失败',
     update_failed: 'MCP服务器更新失败',
     confirm_delete_tool: '确认删除工具 "{name}"？',
-    confirm_delete_tool_title: '确认删除工具',
 
     // 版本管理相关
-    release_version: '发布版本',
-    draft_version: '草稿版本',
-    operator: '操作人',
-    description: '描述',
-    publish_version: '发布版本',
-    rollback_version: '回滚版本',
-    confirm_rollback_title: '确认回滚版本',
     confirm_rollback_content: '确认要回滚到此版本吗？当前版本将被替换。',
 
     // 工具管理相关
-    configured_tools: '已配置工具',
-    no_configured_tools: '暂无配置的工具',
-    tool_already_exists: '工具已存在',
-    tool_added_success: '工具添加成功',
-    tool_updated_success: '工具更新成功',
-    tool_deleted_success: '工具删除成功',
-    tool_not_found: '工具不存在',
-    editing: '编辑中',
 
     // 工具配置验证
-    tool_config_incomplete: '工具 "{name}" 配置不完整，请检查必填字段',
-    tool_route_rule_incomplete: '工具 "{name}" 路由规则配置不完整',
-    tool_url_required: '工具 "{name}" 需要配置URL',
 
     // 工具删除确认
-    confirm_delete_tool_content:
-      '确认要删除工具 "{name}" (分组: {group}) 吗？此操作不可恢复。',
 
     // YAML 编辑器相关
     yaml_editor: 'YAML 编辑器',

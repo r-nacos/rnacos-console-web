@@ -58,12 +58,18 @@
                     @click="showCreate"
                     >{{ this.$t('common.add') }}</n-button
                   >
-                  <n-button
+                  <n-dropdown
                     v-if="webResources.canUpdateMcpToolSpec"
-                    type="primary"
-                    @click="showImport"
-                    >{{ this.$t('toolspec.import_tools') }}</n-button
+                    :options="importOptions"
+                    @select="handleImportSelect"
                   >
+                    <n-button
+                      type="info"
+                      :render-icon="renderDropdownIcon"
+                      icon-placement="right"
+                      >{{ this.$t('common.import') }}</n-button
+                    >
+                  </n-dropdown>
                 </n-space>
               </n-gi>
             </n-grid>
@@ -149,11 +155,48 @@
         </n-form-item>
       </n-form>
     </n-modal>
+
+    <!-- 导入ZIP文件弹窗 -->
+    <n-modal
+      v-model:show="showImportZipModal"
+      preset="dialog"
+      :title="t('toolspec.import_zip')"
+      :positive-text="t('common.confirm')"
+      :negative-text="t('common.cancel')"
+      :loading="importZipLoading"
+      @positive-click="handleImportZipConfirm"
+      @negative-click="handleImportZipCancel"
+    >
+      <n-form
+        ref="importZipFormRef"
+        :model="importZipForm"
+        :rules="importZipFormRules"
+        label-placement="top"
+        label-width="auto"
+        require-mark-placement="right-hanging"
+      >
+        <n-form-item path="zipFile">
+          <n-upload
+            action="/rnacos/api/console/v2/mcp/toolspec/import"
+            :headers="uploadHeader"
+            :show-file-list="true"
+            :max="1"
+            accept=".zip"
+            @before-upload="doBeforeZipUpload"
+            @finish="handleZipUploadFinish"
+          >
+            <n-button type="primary" dashed>{{
+              t('toolspec.select_zip_file')
+            }}</n-button>
+          </n-upload>
+        </n-form-item>
+      </n-form>
+    </n-modal>
   </div>
 </template>
 
 <script>
-import { ref, reactive, defineComponent, computed } from 'vue';
+import { ref, reactive, defineComponent, computed, h } from 'vue';
 import { toolSpecApi } from '@/api/toolspec';
 import { namespaceStore } from '@/data/namespace';
 import { useWebResources } from '@/data/resources';
@@ -165,11 +208,13 @@ import McpToolSpecDetail from './McpToolSpecDetail.vue';
 import { useI18n } from 'vue-i18n';
 import { printApiError, handleApiResult } from '@/utils/request';
 import { useProjectSettingStore } from '@/store/modules/projectSetting';
-import { useDialog } from 'naive-ui';
+import { useDialog, NIcon } from 'naive-ui';
 import template from 'template_js';
+import { ChevronDown } from '@vicons/ionicons5';
 import namespaceApi from '@/api/namespace';
 import * as constant from '@/types/constant';
 import qs from 'qs';
+// import axios from 'axios';
 
 export default defineComponent({
   components: {
@@ -196,11 +241,17 @@ export default defineComponent({
 
     // 导入相关状态
     const showImportModal = ref(false);
+    const showImportZipModal = ref(false);
     const importLoading = ref(false);
+    const importZipLoading = ref(false);
     const importFormRef = ref();
+    const importZipFormRef = ref();
     const importForm = ref({
       group: '',
       toolsJson: ''
+    });
+    const uploadHeaderRef = ref({
+      namespace: namespaceStore.current.value.namespaceId
     });
 
     const modelRef = ref({
@@ -232,6 +283,18 @@ export default defineComponent({
         return t('common.total') + `: ${itemCount}`;
       }
     });
+
+    // 导入选项配置
+    const importOptions = [
+      {
+        label: t('toolspec.import_tools'),
+        key: 'json'
+      },
+      {
+        label: t('toolspec.import_zip'),
+        key: 'zip'
+      }
+    ];
 
     // 导入表单验证规则
     const importFormRules = {
@@ -282,6 +345,8 @@ export default defineComponent({
         }
       ]
     };
+
+    const importZipFormRules = {};
 
     const rowKey = (rowData) =>
       `${rowData.namespace}@@${rowData.group}@@${rowData.toolName}`;
@@ -472,6 +537,20 @@ export default defineComponent({
       showImportModal.value = true;
     };
 
+    // 处理导入选项选择
+    const handleImportSelect = (key) => {
+      if (key === 'json') {
+        showImport();
+      } else if (key === 'zip') {
+        showImportZip();
+      }
+    };
+
+    // 显示ZIP导入弹窗
+    const showImportZip = () => {
+      showImportZipModal.value = true;
+    };
+
     // 处理导入确认
     const handleImportConfirm = async () => {
       try {
@@ -526,7 +605,54 @@ export default defineComponent({
       showImportModal.value = false;
     };
 
+    // ZIP文件上传前处理
+    const doBeforeZipUpload = () => {
+      uploadHeaderRef.value = {
+        namespace: namespaceStore.current.value.namespaceId
+      };
+    };
+
+    // 处理ZIP导入取消
+    const handleImportZipCancel = () => {
+      showImportZipModal.value = false;
+    };
+
+    // 处理ZIP导入确认
+    const handleImportZipConfirm = async () => {
+      try {
+        await importZipFormRef.value?.validate();
+        importZipLoading.value = true;
+        // 验证通过后，等待用户选择文件并上传
+        // 实际的上传处理在 handleZipUploadFinish 中
+        // 这里不自动关闭弹窗，让用户选择文件
+      } catch (error) {
+        console.error('ZIP导入表单验证失败:', error);
+        if (error instanceof Error) {
+          window.$message.error(error.message);
+        }
+        return false; // 阻止弹窗关闭
+      } finally {
+        importZipLoading.value = false;
+      }
+    };
+
+    // 处理ZIP文件上传完成
+    const handleZipUploadFinish = ({ event }) => {
+      if (event.target.status === 200) {
+        window.$message.success(t('toolspec.import_zip_success'));
+        showImportZipModal.value = false;
+        doHandlePageChange(1);
+      } else {
+        window.$message.error(t('toolspec.import_zip_failed'));
+      }
+    };
+
     // 下载 ToolSpec
+    // 渲染下拉图标
+    const renderDropdownIcon = () => {
+      return h(NIcon, null, { default: () => h(ChevronDown) });
+    };
+
     const download = () => {
       const params = {
         namespaceId: namespaceStore.current.value.namespaceId,
@@ -646,13 +772,26 @@ export default defineComponent({
       getDetailTitle,
       // 导入相关
       showImportModal,
+      showImportZipModal,
       importLoading,
+      importZipLoading,
       importFormRef,
+      importZipFormRef,
       importForm,
       importFormRules,
+      importZipFormRules,
+      importOptions,
       handleImportConfirm,
       handleImportCancel,
-      download
+      handleImportSelect,
+      showImportZip,
+      handleImportZipConfirm,
+      handleImportZipCancel,
+      doBeforeZipUpload,
+      handleZipUploadFinish,
+      uploadHeader: uploadHeaderRef,
+      download,
+      renderDropdownIcon
     };
   },
   methods: {

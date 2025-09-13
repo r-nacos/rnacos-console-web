@@ -47,6 +47,7 @@ const message = {
     update_success: 'Update Success',
     update_failed: 'Update Failed',
     create: 'Create',
+    import: 'Import',
     save: 'Save'
   },
   cluster: {
@@ -368,7 +369,12 @@ const message = {
       'Tool {index} function information is incomplete, must include name and description',
     invalid_json_format: 'Invalid JSON format',
     import_success: 'Successfully imported {count} tools',
-    import_failed: 'Import failed'
+    import_failed: 'Import failed',
+    import_zip: 'Import ZIP File',
+    zip_file: 'ZIP File',
+    select_zip_file: 'Select ZIP File',
+    import_zip_success: 'ZIP file imported successfully',
+    import_zip_failed: 'ZIP file import failed'
   },
   mcpserver: {
     mcpserver_management: 'MCP Server Management',

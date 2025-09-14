@@ -205,7 +205,8 @@ import NamespacePopSelect from '@/components/namespace/NamespacePopSelect.vue';
 import SubContentFullPage from '@/components/common/SubContentFullPage.vue';
 import McpToolSpecDetail from './McpToolSpecDetail.vue';
 
-import { useI18n } from 'vue-i18n';
+//import { useI18n } from 'vue-i18n';
+import { getMessage } from '@/i18n';
 import { printApiError, handleApiResult } from '@/utils/request';
 import { useProjectSettingStore } from '@/store/modules/projectSetting';
 import { useDialog, NIcon } from 'naive-ui';
@@ -223,7 +224,8 @@ export default defineComponent({
     McpToolSpecDetail
   },
   setup() {
-    const { t } = useI18n();
+    //const { t } = useI18n();
+    const t = getMessage;
     const dialog = useDialog();
     const projectSettingStore = useProjectSettingStore();
 

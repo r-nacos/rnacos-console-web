@@ -359,7 +359,7 @@ const message = {
     export_tools: 'Export Tools',
     tools_json_list: 'Tools JSON List',
     input_tools_json_placeholder:
-      'Please input OpenAI tools JSON list, for example:\n[{"type": "function","function": {"name": "add","description": "add","parameters": {"type": "object","properties": {"a": {"type": "number","description": "the first number"},"b": {"type": "number","description": "the second number"}},"required": ["a","b"]}}}]',
+      'Please input OpenAI tools JSON list, for example:\n{placeholderExample}',
     tools_json_must_be_array: 'Tools JSON must be an array format',
     tool_type_must_be_function: 'Tool {index} type must be "function"',
     tool_function_incomplete:

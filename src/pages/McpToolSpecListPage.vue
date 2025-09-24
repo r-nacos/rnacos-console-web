@@ -148,7 +148,9 @@
           <n-input
             v-model:value="importForm.toolsJson"
             type="textarea"
-            :placeholder="t('toolspec.input_tools_json_placeholder')"
+            :placeholder="
+              t('toolspec.input_tools_json_placeholder', { placeholderExample })
+            "
             :rows="10"
             clearable
           />
@@ -205,8 +207,8 @@ import NamespacePopSelect from '@/components/namespace/NamespacePopSelect.vue';
 import SubContentFullPage from '@/components/common/SubContentFullPage.vue';
 import McpToolSpecDetail from './McpToolSpecDetail.vue';
 
-//import { useI18n } from 'vue-i18n';
-import { getMessage } from '@/i18n';
+import { useI18n } from 'vue-i18n';
+//import { getMessage } from '@/i18n';
 import { printApiError, handleApiResult } from '@/utils/request';
 import { useProjectSettingStore } from '@/store/modules/projectSetting';
 import { useDialog, NIcon } from 'naive-ui';
@@ -224,8 +226,10 @@ export default defineComponent({
     McpToolSpecDetail
   },
   setup() {
-    //const { t } = useI18n();
-    const t = getMessage;
+    const { t } = useI18n();
+    const placeholderExample =
+      '[{"type": "function","function": {"name": "add","description": "add","parameters": {"type": "object","properties": {"a": {"type": "number","description": "the first number"},"b": {"type": "number","description": "the second number"}},"required": ["a","b"]}}}]';
+    //const t = getMessage;
     const dialog = useDialog();
     const projectSettingStore = useProjectSettingStore();
 
@@ -788,6 +792,7 @@ export default defineComponent({
       handleZipUploadFinish,
       uploadHeader: uploadHeaderRef,
       download,
+      placeholderExample,
       renderDropdownIcon
     };
   },

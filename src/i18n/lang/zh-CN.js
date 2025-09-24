@@ -346,7 +346,7 @@ const message = {
     export_tools: '导出工具',
     tools_json_list: '工具JSON列表',
     input_tools_json_placeholder:
-      '请输入OpenAI工具JSON列表，例如：\n[{"type": "function","function": {"name": "add","description": "add","parameters": {"type": "object","properties": {"a": {"type": "number","description": "the first number"},"b": {"type": "number","description": "the second number"}},"required": ["a","b"]}}}]',
+      '请输入OpenAI工具JSON列表，例如：\n{placeholderExample}',
     tools_json_must_be_array: '工具JSON必须是数组格式',
     tool_type_must_be_function: '第{index}个工具的type必须是"function"',
     tool_function_incomplete:

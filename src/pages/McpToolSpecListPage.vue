@@ -227,6 +227,15 @@ export default defineComponent({
   },
   setup() {
     const { t } = useI18n();
+    const defaultParams = JSON.stringify(
+      {
+        type: 'object',
+        properties: { someParam: { type: 'string', description: 'someParam' } },
+        required: ['someParam']
+      },
+      null,
+      2
+    );
     const placeholderExample =
       '[{"type": "function","function": {"name": "add","description": "add","parameters": {"type": "object","properties": {"a": {"type": "number","description": "the first number"},"b": {"type": "number","description": "the second number"}},"required": ["a","b"]}}}]';
     //const t = getMessage;
@@ -266,7 +275,7 @@ export default defineComponent({
       toolName: '',
       description: '',
       version: 0,
-      function: '',
+      function: defaultParams,
       functionFormat: 'yaml',
       mode: ''
     });
@@ -488,7 +497,7 @@ export default defineComponent({
     const removeItem = (row) => {
       dialog.warning({
         title: t('toolspec.delete_toolspec'),
-        content: template(t('toolspec.confirm_delete_toolspec'), {
+        content: t('toolspec.confirm_delete_toolspec', {
           toolName: row.toolName,
           group: row.group
         }),
@@ -523,7 +532,7 @@ export default defineComponent({
         toolName: '',
         description: '',
         version: 0,
-        function: '{}',
+        function: defaultParams,
         functionFormat: 'yaml',
         mode: constant.FORM_MODE_CREATE
       };

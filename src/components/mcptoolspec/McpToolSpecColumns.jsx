@@ -1,6 +1,6 @@
 import { NButton, NPopconfirm } from 'naive-ui';
 import { useI18n } from 'vue-i18n';
-import template from 'template_js';
+//import template from 'template_js';
 
 export const createColumns = function (
   detailItem,
@@ -102,7 +102,7 @@ export const createColumns = function (
               }}
             >
               <span>
-                {template(t('toolspec.confirm_delete_toolspec'), {
+                {t('toolspec.confirm_delete_toolspec', {
                   toolName: row.toolName,
                   group: row.group
                 })}

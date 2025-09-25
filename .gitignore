@@ -25,4 +25,5 @@ dist-ssr
 *.sw?
 yarn.lock
 dist-wrap/Cargo.lock
-
+docs/specs/
+tmp_docs/

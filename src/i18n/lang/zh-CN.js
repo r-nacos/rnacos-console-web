@@ -411,7 +411,7 @@ const message = {
     // 详情页面
     basic_info: '基础信息',
     tool_info: '工具信息',
-    server_id: '服务器ID',
+    server_id: '服务ID',
     create_time: '创建时间',
     update_time: '更新时间',
     edit_mode: '编辑模式',

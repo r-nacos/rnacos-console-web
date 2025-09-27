@@ -223,7 +223,7 @@ export const sideAllMenu = [
   },
   {
     label: t('mcpserver.mcpserver_management'),
-    key: 'mcpserver-management',
+    key: 'mcp',
     icon: renderIcon(CubeOutline),
     children: [
       {

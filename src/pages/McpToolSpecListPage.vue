@@ -494,35 +494,21 @@ export default defineComponent({
       }
     };
 
-    const removeItem = (row) => {
-      dialog.warning({
-        title: t('toolspec.delete_toolspec'),
-        content: t('toolspec.confirm_delete_toolspec', {
-          toolName: row.toolName,
-          group: row.group
-        }),
-        positiveButtonProps: {
-          type: 'primary'
-        },
-        positiveText: t('common.confirm'),
-        negativeText: t('common.cancel'),
-        onPositiveClick: async () => {
-          try {
-            await toolSpecApi
-              .removeToolSpec({
-                namespace: row.namespace,
-                group: row.group,
-                toolName: row.toolName
-              })
-              .then(handleApiResult);
+    const removeItem = async (row) => {
+      try {
+        await toolSpecApi
+          .removeToolSpec({
+            namespace: row.namespace,
+            group: row.group,
+            toolName: row.toolName
+          })
+          .then(handleApiResult);
 
-            window.$message.success(t('toolspec.delete_success'));
-            doHandlePageChange(1);
-          } catch (error) {
-            printApiError(error);
-          }
-        }
-      });
+        window.$message.success(t('toolspec.delete_success'));
+        doHandlePageChange(1);
+      } catch (error) {
+        printApiError(error);
+      }
     };
 
     const showCreate = () => {

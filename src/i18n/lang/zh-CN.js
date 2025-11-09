@@ -232,7 +232,10 @@ const message = {
     USER_CHECK_ERROR: '登录失败，用户名或密码错误！',
     CAPTCHA_CHECK_ERROR: '验证码校验不通过！',
     LOGIN_LIMITE_ERROR: '登录校验太频繁，稍后再试！',
-    LOGIN_UNKNOWN_ERROR: '登录失败，未知错误'
+    LOGIN_UNKNOWN_ERROR: '登录失败，未知错误',
+    OAUTH2_AUTH_ERROR: 'OAuth2 登录失败',
+    oauth2_processing: '正在处理 OAuth2 登录...',
+    please_wait: '请稍候'
   },
   about: {
     intro_title: '系统简介',

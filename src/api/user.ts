@@ -26,6 +26,12 @@ export interface IUserPageParam {
   isRev: boolean;
 }
 
+export interface ILoginConfig {
+  oauth2Enable: boolean;
+  oauth2Button?: string;
+  oauth2AuthorizeUrl?: string;
+}
+
 export interface IUserInfo {
   username: string;
   nickname: string;
@@ -123,6 +129,23 @@ class UserApi {
     return axios.request({
       method: 'get',
       url: '/rnacos/api/console/v2/user/info'
+    });
+  }
+  getLoginConfig(): Promise<AxiosResponse<IApiResult<ILoginConfig>>> {
+    return axios.request({
+      method: 'get',
+      url: '/rnacos/api/console/v2/login/config'
+    });
+  }
+  oauth2Login(code: string, state?: string): Promise<AxiosResponse<IApiResult<boolean>>> {
+    const data: any = { code };
+    if (state) {
+      data.state = state;
+    }
+    return axios.requestJSON({
+      method: 'post',
+      url: '/rnacos/api/console/v2/login/oauth2/login',
+      data
     });
   }
 }

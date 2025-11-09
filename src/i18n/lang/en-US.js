@@ -236,7 +236,10 @@ const message = {
     USER_CHECK_ERROR: 'User or Password Error',
     CAPTCHA_CHECK_ERROR: 'captcha error',
     LOGIN_LIMITE_ERROR: 'login error too more times',
-    LOGIN_UNKNOWN_ERROR: 'login fail unknown error'
+    LOGIN_UNKNOWN_ERROR: 'login fail unknown error',
+    OAUTH2_AUTH_ERROR: 'OAuth2 login failed',
+    oauth2_processing: 'Processing OAuth2 login...',
+    please_wait: 'Please wait'
   },
   about: {
     intro_title: 'System introduction',

@@ -1,6 +1,12 @@
 <template>
   <div class="min-h-screen w-full bg-gray-100 flex justify-center">
-    <div class="w-[300px] h-[360px] m-25 mx-4">
+    <div v-if="oauth2_loading" class="w-[300px] h-[360px] m-25 mx-4 flex items-center justify-center">
+      <div class="text-center">
+        <div class="text-lg mb-2">{{ this.$t('login.oauth2_processing') }}</div>
+        <div class="text-sm text-gray-500">{{ this.$t('login.please_wait') }}</div>
+      </div>
+    </div>
+    <div v-else class="w-[300px] h-[360px] m-25 mx-4">
       <div
         class="h-[52px] leading-[52px] text-center rounded-t-lg bg-blue-600 text-white"
       >
@@ -57,6 +63,14 @@
             {{ this.$t('login.login') }}
           </button>
         </div>
+        <div v-if="oauth2_enable && oauth2_authorize_url" class="mt-3">
+          <a
+            :href="oauth2_authorize_url"
+            class="h-[34px] w-full text-sm leading-[14px] bg-gray-600 text-white border-0 rounded cursor-pointer hover:bg-gray-700 transition-colors duration-200 flex items-center justify-center no-underline"
+          >
+            {{ oauth2_button || 'OAuth2 Login' }}
+          </a>
+        </div>
       </n-form>
     </div>
   </div>
@@ -71,6 +85,8 @@ import { useRoute } from 'vue-router';
 import { encryptAes } from '@/utils/CryptoUtils';
 import router from '@/route/router.js';
 import { useI18n } from 'vue-i18n';
+import { useOAuth2 } from '@/hooks/useOAuth2';
+
 export default defineComponent({
   setup() {
     const { t } = useI18n();
@@ -81,6 +97,19 @@ export default defineComponent({
     let redirect_url = query.redirect_url || '/';
     let captcha_img = ref('');
     let captcha_visible = ref(false);
+    
+    // OAuth2 相关逻辑
+    const {
+      oauth2_enable,
+      oauth2_button,
+      oauth2_authorize_url,
+      oauth2_loading,
+      loadLoginConfig,
+      handleOAuth2Callback
+    } = useOAuth2();
+    
+    // 检查是否是 OAuth2 回调
+    handleOAuth2Callback();
 
     var modelRef = reactive({
       username: null,
@@ -197,13 +226,18 @@ export default defineComponent({
         });
     };
     gen_captcha();
+    loadLoginConfig();
     return {
       model: modelRef,
       captcha_img,
       rules,
       gen_captcha,
       submit,
-      captcha_visible
+      captcha_visible,
+      oauth2_enable,
+      oauth2_button,
+      oauth2_authorize_url,
+      oauth2_loading
     };
   }
 });

@@ -64,7 +64,9 @@ export function useLogin() {
   const handleLoginSuccess = () => {
     userApi.getUserWebResources().then((res) => {
       if (res.status == 200 && res.data && res.data.success) {
-        webResources.update(res.data.data);
+        if (res.data.data) {
+          webResources.update(res.data.data);
+        }
         const cleanRedirect = redirect_url.value;
         if (cleanRedirect == '/') {
           router.push(cleanRedirect);
@@ -78,13 +80,13 @@ export function useLogin() {
   const handleLoginError = (res: any, genCaptcha: () => void) => {
     genCaptcha();
     if (res.data.code === 'USER_CHECK_ERROR') {
-      window.$message.error(t('login.USER_CHECK_ERROR'));
+      window?.$message?.error(t('login.USER_CHECK_ERROR'));
     } else if (res.data.code === 'CAPTCHA_CHECK_ERROR') {
-      window.$message.error(t('login.CAPTCHA_CHECK_ERROR'));
+      window?.$message?.error(t('login.CAPTCHA_CHECK_ERROR'));
     } else if (res.data.code === 'LOGIN_LIMITE_ERROR') {
-      window.$message.error(t('login.LOGIN_LIMITE_ERROR'));
+      window?.$message?.error(t('login.LOGIN_LIMITE_ERROR'));
     } else {
-      window.$message.error(t('login.LOGIN_UNKNOWN_ERROR'));
+      window?.$message?.error(t('login.LOGIN_UNKNOWN_ERROR'));
     }
   };
 
@@ -114,14 +116,14 @@ export function useLogin() {
           }
         } else {
           genCaptcha();
-          window.$message.error(
+          window?.$message?.error(
             t('common.request_fail') + '，response code' + res.status
           );
         }
       })
       .catch((err) => {
         genCaptcha();
-        window.$message.error(t('common.request_fail') + '，' + err.message);
+        window?.$message?.error(t('common.request_fail') + '，' + err.message);
       });
   };
 

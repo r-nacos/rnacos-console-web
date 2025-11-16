@@ -137,7 +137,10 @@ class UserApi {
       url: '/rnacos/api/console/v2/login/config'
     });
   }
-  oauth2Login(code: string, state?: string): Promise<AxiosResponse<IApiResult<boolean>>> {
+  oauth2Login(
+    code: string,
+    state?: string
+  ): Promise<AxiosResponse<IApiResult<boolean>>> {
     const data: any = { code };
     if (state) {
       data.state = state;

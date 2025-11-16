@@ -1,9 +1,14 @@
 <template>
   <div class="min-h-screen w-full bg-gray-100 flex justify-center">
-    <div v-if="oauth2_loading" class="w-[300px] h-[360px] m-25 mx-4 flex items-center justify-center">
+    <div
+      v-if="oauth2_loading"
+      class="w-[300px] h-[360px] m-25 mx-4 flex items-center justify-center"
+    >
       <div class="text-center">
         <div class="text-lg mb-2">{{ this.$t('login.oauth2_processing') }}</div>
-        <div class="text-sm text-gray-500">{{ this.$t('login.please_wait') }}</div>
+        <div class="text-sm text-gray-500">
+          {{ this.$t('login.please_wait') }}
+        </div>
       </div>
     </div>
     <div v-else class="w-[300px] h-[360px] m-25 mx-4">
@@ -97,7 +102,7 @@ export default defineComponent({
     let redirect_url = query.redirect_url || '/';
     let captcha_img = ref('');
     let captcha_visible = ref(false);
-    
+
     // OAuth2 相关逻辑
     const {
       oauth2_enable,
@@ -107,7 +112,7 @@ export default defineComponent({
       loadLoginConfig,
       handleOAuth2Callback
     } = useOAuth2();
-    
+
     // 检查是否是 OAuth2 回调
     handleOAuth2Callback();
 

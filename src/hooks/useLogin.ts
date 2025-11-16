@@ -14,7 +14,7 @@ export function useLogin() {
   window.$message = useMessage();
 
   const redirect_url = ref((route.query.redirect_url as string) || '/');
-  
+
   const modelRef = reactive({
     username: null as string | null,
     password: null as string | null,
@@ -133,4 +133,3 @@ export function useLogin() {
     submit
   };
 }
-

@@ -119,6 +119,11 @@
                         >• {IP_PORT} -
                         {{ t('mcpservertollitem.ip_port') }}</n-text
                       >
+                      <br />
+                      <n-text
+                        >• {{ '{' + '{REQUEST_PARAM}' + '}' }} -
+                        {{ t('mcpservertollitem.dynamic_parameters') }}
+                      </n-text>
                     </div>
                   </n-tooltip>
                 </n-space>
@@ -276,9 +281,11 @@
             />
             <template #feedback>
               <n-text depth="3" style="font-size: 12px; line-height: 1.4">
-                {{ t('mcpservertollitem.support_template_vars') }} {IP_PORT}（{{
+                {{ t('mcpservertollitem.support_template_vars') }} {IP_PORT}({{
                   t('mcpservertollitem.ip_port')
-                }}）
+                }}), {{ '{' + '{REQUEST_PARAM}' + '}' }}({{
+                  t('mcpservertollitem.dynamic_parameters')
+                }})
               </n-text>
             </template>
           </n-form-item>

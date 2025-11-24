@@ -426,6 +426,12 @@ const message = {
     create_success: 'MCP server created successfully',
     update_success: 'MCP server updated successfully',
 
+    // Import/Export
+    export_servers: 'Export MCP Services',
+    import_servers: 'Import MCP Services',
+    import_zip_success: 'MCP services imported successfully',
+    import_zip_failed: 'MCP services import failed',
+
     // Detail page
     basic_info: 'Basic Information',
     tool_info: 'Tool Information',
@@ -546,6 +552,7 @@ const message = {
     ip_address: 'IP Address of service instance',
     port: 'Port of service instance',
     ip_port: 'IP:Port of service instance',
+    dynamic_parameters: 'Dynamic parameters',
     tool_selection: 'Tool Selection',
     select_tool_spec: 'Select Tool Spec',
     selected_tool: 'Selected Tool',

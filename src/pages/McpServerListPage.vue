@@ -44,6 +44,24 @@
                     @click="showCreate"
                     >{{ t('common.add') }}</n-button
                   >
+                  <n-button @click="download" type="info">{{
+                    t('mcpserver.export_servers')
+                  }}</n-button>
+                  <n-upload
+                    v-if="webResources.canUpdateMcpServer"
+                    :key="uploadKey"
+                    action="/rnacos/api/console/v2/mcp/server/import"
+                    :headers="uploadHeader"
+                    :show-file-list="false"
+                    :max="1"
+                    accept=".zip"
+                    @before-upload="doBeforeZipUpload"
+                    @finish="handleZipUploadFinish"
+                  >
+                    <n-button type="info">{{
+                      t('mcpserver.import_servers')
+                    }}</n-button>
+                  </n-upload>
                 </n-space>
               </n-gi>
             </n-grid>
@@ -94,7 +112,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed, onMounted } from 'vue';
+import { ref, reactive, computed, onMounted, nextTick } from 'vue';
 import { mcpServerApi } from '@/api/mcpserver';
 import { namespaceStore } from '@/data/namespace';
 import { useWebResources } from '@/data/resources';
@@ -110,7 +128,8 @@ import template from 'template_js';
 import namespaceApi from '@/api/namespace';
 import * as constant from '@/types/constant';
 import { formatMcpServerForDisplay } from '@/api/mcpserver';
-import type { McpServerDto } from '@/types/mcpserver';
+import { McpServerDto } from '@/types/mcpserver';
+import qs from 'qs';
 
 const defaultModelValue: McpServerDto & { mode: string } = {
   id: 0,
@@ -161,6 +180,12 @@ const param = ref({
 });
 
 const model = ref<McpServerDto & { mode: string }>({ ...defaultModelValue });
+
+// 导入相关状态
+const uploadHeader = ref({
+  namespace: namespaceStore.current.value.namespaceId
+});
+const uploadKey = ref(0);
 
 const pagination = reactive({
   page: 1,
@@ -414,6 +439,43 @@ const handlePageChange = (page: number) => {
 
 const queryList = () => {
   doHandlePageChange(1);
+};
+
+// 导出 McpServer
+const download = () => {
+  const params = {
+    namespaceId: namespaceStore.current.value.namespaceId,
+    nameFilter: param.value.nameFilter,
+    pageNo: 1,
+    pageSize: 20
+  };
+  const queryString = qs.stringify(params);
+  const url = '/rnacos/api/console/v2/mcp/server/download?' + queryString;
+  const link = document.createElement('a');
+  document.body.appendChild(link);
+  link.href = url;
+  link.click();
+  document.body.removeChild(link);
+  return true;
+};
+
+// ZIP文件上传前处理
+const doBeforeZipUpload = () => {
+  uploadHeader.value = {
+    namespace: namespaceStore.current.value.namespaceId
+  };
+};
+
+// 处理ZIP文件上传完成
+const handleZipUploadFinish = ({ file, event }: { file: any; event?: any }) => {
+  if (event?.target?.status === 200) {
+    message.success(t('mcpserver.import_zip_success'));
+    doHandlePageChange(1);
+  } else {
+    message.error(t('mcpserver.import_zip_failed'));
+  }
+  // 通过改变 key 来强制重新渲染上传组件，重置其状态
+  uploadKey.value += 1;
 };
 
 onMounted(() => {

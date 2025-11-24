@@ -411,6 +411,12 @@ const message = {
     create_success: 'MCP服务器创建成功',
     update_success: 'MCP服务器更新成功',
 
+    // 导入导出
+    export_servers: '导出MCP服务',
+    import_servers: '导入MCP服务',
+    import_zip_success: 'MCP服务导入成功',
+    import_zip_failed: 'MCP服务导入失败',
+
     // 详情页面
     basic_info: '基础信息',
     tool_info: '工具信息',
@@ -533,9 +539,10 @@ const message = {
     service_group: '服务分组',
     additional_headers: '附加头',
     support_template_vars: '支持模板变量：',
-    ip_address: '关联服务实例的IP地址',
-    port: '关联服务实例的端口',
-    ip_port: '关联服务实例的IP:端口',
+    ip_address: '服务实例的IP地址',
+    port: '服务实例的端口',
+    ip_port: '服务实例的IP:端口',
+    dynamic_parameters: '动态参数',
     tool_selection: '工具选择',
     select_tool_spec: '选择工具规范',
     selected_tool: '已选择的工具',

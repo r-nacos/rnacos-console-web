@@ -46,6 +46,7 @@
     "@rushstack/eslint-patch": "1.5.1",
     "@types/js-yaml": "^4.0.9",
     "@types/node": "^18.16.1",
+    "@types/qs": "^6.14.0",
     "@vicons/antd": "^0.13.0",
     "@vicons/ionicons5": "^0.12.0",
     "@vitejs/plugin-vue": "^5.2.1",

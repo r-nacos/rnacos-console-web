@@ -32,6 +32,7 @@ export const useWebResources = defineStore('webResources', {
     version: 'x',
     canUpdateConfig: true,
     canUpdateService: true,
+    canUpdateInstance: true,
     canUpdateNamespace: true,
     canUpdateMcpToolSpec: true,
     canUpdateMcpServer: true,
@@ -46,6 +47,7 @@ export const useWebResources = defineStore('webResources', {
       this.fromRequest = true;
       this.canUpdateConfig = this.resource.has('CONFIG_UPDATE');
       this.canUpdateService = this.resource.has('SERVICE_UPDATE');
+      this.canUpdateInstance = this.resource.has('SERVICE_UPDATE');
       this.canUpdateNamespace = this.resource.has('NAMESPACE_UPDATE');
       this.canUpdateMcpToolSpec = this.resource.has('MCP_TOOL_SPEC_UPDATE');
       this.canUpdateMcpServer = this.resource.has('MCP_SERVER_UPDATE');
@@ -60,6 +62,7 @@ export const useWebResources = defineStore('webResources', {
       this.fromRequest = false;
       this.canUpdateConfig = true;
       this.canUpdateService = true;
+      this.canUpdateInstance = true;
       this.canUpdateNamespace = true;
       this.canUpdateMcpToolSpec = true;
       this.canUpdateMcpServer = true;

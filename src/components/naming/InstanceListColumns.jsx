@@ -1,4 +1,4 @@
-import { NButton, NSwitch } from 'naive-ui';
+import { NButton, NSwitch, NPopconfirm } from 'naive-ui';
 import { useI18n } from 'vue-i18n';
 import { toDatetime } from '@/utils/date';
 /*
@@ -16,9 +16,19 @@ export const createColumns = function (
   showUpdate,
   onLine,
   offLine,
+  removeInstance,
   webResources
 ) {
   const { t } = useI18n();
+  const removeConfirmSlots = {
+    trigger: () => {
+      return (
+        <NButton size="tiny" quaternary type="error">
+          {t('common.delete')}
+        </NButton>
+      );
+    }
+  };
   const columns = [
     {
       title: 'IP',
@@ -71,7 +81,7 @@ export const createColumns = function (
     title: t('common.operation'),
     key: '_type',
     fixed: 'right',
-    width: 120,
+    width: 180,
     render(row) {
       const onOffLine = () => {
         // v-slots={slots}
@@ -96,19 +106,35 @@ export const createColumns = function (
       return (
         <div class="flex gap-1">
           <span style={{ 'padding-right': '5px' }}>{onOffLine()}</span>
-          <NButton
-            size="tiny"
-            type="info"
-            quaternary
-            onClick={() => showUpdate(row)}
-          >
-            {t('common.edit')}
-          </NButton>
+          {webResources.canUpdateInstance && (
+            <NButton
+              size="tiny"
+              type="info"
+              quaternary
+              onClick={() => showUpdate(row)}
+            >
+              {t('common.edit')}
+            </NButton>
+          )}
+          {!row.ephemeral && webResources.canUpdateInstance && (
+            <NPopconfirm
+              onPositiveClick={() => removeInstance(row)}
+              v-slots={{
+                trigger: () => (
+                  <NButton size="tiny" quaternary type="error">
+                    {t('common.delete')}
+                  </NButton>
+                )
+              }}
+            >
+              <span>{t('common.confirm_delete_content')}</span>
+            </NPopconfirm>
+          )}
         </div>
       );
     }
   };
-  if (webResources.canUpdateService) {
+  if (webResources.canUpdateInstance) {
     columns.push(optColumn);
   }
   return columns;

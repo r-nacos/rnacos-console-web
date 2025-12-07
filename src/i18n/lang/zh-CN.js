@@ -48,6 +48,8 @@ const message = {
     update_success: '更新成功',
     update_failed: '更新失败',
     create: '创建',
+    confirm_delete: '确认删除',
+    confirm_delete_content: '确认要删除这个实例吗？此操作不可恢复。',
     import: '导入',
     save: '保存'
   },
@@ -115,7 +117,9 @@ const message = {
     failed_to_load_namespaces: '加载命名空间失败'
   },
   instance: {
+    name: '服务实例',
     list: '服务实例列表',
+    ipOrDomain: 'IP/域名',
     port: '端口',
     ephemeral: '是否临时实例',
     weight: '权重',

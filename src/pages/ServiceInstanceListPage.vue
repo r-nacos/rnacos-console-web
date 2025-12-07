@@ -31,11 +31,17 @@
             </div>
           </n-form>
           <div class="flex items-center">
-            <span class="ml-2.5">
+            <n-space justify="end" class="ml-2.5">
               <n-button tertiary @click="reloadData">{{
                 this.$t('common.refresh')
               }}</n-button>
-            </span>
+              <n-button
+                v-if="webResources.canUpdateInstance"
+                type="info"
+                @click="showCreate"
+                >{{ this.$t('common.add') }}</n-button
+              >
+            </n-space>
           </div>
         </div>
         <n-data-table
@@ -77,7 +83,7 @@
 </template>
 
 <script>
-import { defineComponent } from 'vue';
+import { defineComponent, ref, reactive } from 'vue';
 import { namingApi } from '@/api/naming';
 import { useI18n } from 'vue-i18n';
 //import { namespaceStore } from "@/data/namespace";
@@ -145,9 +151,23 @@ export default defineComponent({
         ip: row.ip,
         port: row.port,
         enabled: row.enabled,
+        ephemeral: row.ephemeral,
+        originalEphemeral: row.ephemeral, // 保存原始值用于权限控制
         weight: row.weight || 1,
         metadata: JSON.stringify(row.metadata || {}),
         mode: constant.FORM_MODE_UPDATE
+      };
+      useFormRef.value = true;
+    };
+    const showCreate = () => {
+      modelRef.value = {
+        ip: '',
+        port: 0,
+        enabled: true,
+        ephemeral: false, // 默认为永久实例
+        weight: 1,
+        metadata: '{}',
+        mode: constant.FORM_MODE_CREATE
       };
       useFormRef.value = true;
     };
@@ -186,6 +206,22 @@ export default defineComponent({
     };
     const offLine = (row) => {
       setRowEnabled(row, false);
+    };
+    const removeInstance = (row) => {
+      namingApi
+        .removeInstance({
+          namespaceId: paramRef.value.namespaceId,
+          groupName: paramRef.value.groupName,
+          serviceName: paramRef.value.serviceName,
+          ip: row.ip,
+          port: row.port
+        })
+        .then(handleApiResult)
+        .then(printApiSuccess)
+        .then(() => {
+          reloadData();
+        })
+        .catch(printApiError);
     };
 
     const doQueryList = () => {
@@ -241,7 +277,13 @@ export default defineComponent({
       }
     };
 
-    let columns = createColumns(showUpdate, onLine, offLine, webResources);
+    let columns = createColumns(
+      showUpdate,
+      onLine,
+      offLine,
+      removeInstance,
+      webResources
+    );
     return {
       columns,
       webResources,
@@ -258,12 +300,18 @@ export default defineComponent({
         return rowData.ip + '_' + rowData.port;
       },
       doHandlePageChange,
-      reloadData
+      reloadData,
+      showCreate
     };
   },
   computed: {
     getDetailTitle() {
-      return this.$t('instance.editTitle');
+      if (this.model.mode === constant.FORM_MODE_UPDATE) {
+        return this.$t('common.edit') + this.$t('instance.name');
+      } else if (this.model.mode === constant.FORM_MODE_CREATE) {
+        return this.$t('common.add') + this.$t('instance.name');
+      }
+      return this.$t('instance.name');
     }
   },
   data() {
@@ -302,12 +350,23 @@ export default defineComponent({
         serviceName: this.param.serviceName,
 
         ip: this.model.ip,
-        port: this.model.port,
+        port: parseInt(this.model.port),
         weight: parseFloat(this.model.weight) || 1,
         enabled: this.model.enabled,
+        ephemeral: this.model.ephemeral.toString(),
         metadata: this.model.metadata
       };
-      if (this.model.mode === constant.FORM_MODE_UPDATE) {
+      if (this.model.mode === constant.FORM_MODE_CREATE) {
+        namingApi
+          .updateInstance(instance)
+          .then(handleApiResult)
+          .then(printApiSuccess)
+          .then(() => {
+            this.useForm = false;
+            this.reloadData();
+          })
+          .catch(printApiError);
+      } else if (this.model.mode === constant.FORM_MODE_UPDATE) {
         namingApi
           .updateInstance(instance)
           .then(handleApiResult)

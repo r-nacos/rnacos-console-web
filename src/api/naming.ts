@@ -88,6 +88,15 @@ class NamingApi {
       params: key
     });
   }
+  createInstance(
+    instance: IServiceInstance
+  ): Promise<AxiosResponse<IApiResult<any>>> {
+    return axios.requestJSON({
+      method: 'post',
+      url: '/rnacos/api/console/v2/instance/create',
+      data: instance
+    });
+  }
   updateInstance(
     instance: IServiceInstance
   ): Promise<AxiosResponse<IApiResult<any>>> {
@@ -95,6 +104,13 @@ class NamingApi {
       method: 'post',
       url: '/rnacos/api/console/v2/instance/update',
       data: instance
+    });
+  }
+  removeInstance(key: IServiceKey): Promise<AxiosResponse<IApiResult<any>>> {
+    return axios.requestJSON({
+      method: 'post',
+      url: '/rnacos/api/console/v2/instance/remove',
+      data: JSON.stringify(key)
     });
   }
 }

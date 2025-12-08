@@ -50,6 +50,7 @@ declare module 'vue' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouteRuleDisplay: typeof import('./src/components/mcpserver/RouteRuleDisplay.vue')['default']
     RouterView: typeof import('vue-router')['RouterView']
+    ServiceSelector: typeof import('./src/components/naming/ServiceSelector.vue')['default']
     SubContentFullPage: typeof import('./src/components/common/SubContentFullPage.vue')['default']
     ToolConfigList: typeof import('./src/components/mcpserver/ToolConfigList.vue')['default']
     ToolDetailDisplay: typeof import('./src/components/mcpserver/ToolDetailDisplay.vue')['default']

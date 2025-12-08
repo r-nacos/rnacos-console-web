@@ -323,6 +323,50 @@
             />
           </n-form-item>
 
+          <!-- 服务选择工具 -->
+          <n-form-item
+            :label="t('mcpservertollitem.service_selector')"
+            path="serviceSelector"
+          >
+            <n-space vertical style="width: 100%">
+              <n-button
+                @click="showServiceSelector = true"
+                type="primary"
+                dashed
+              >
+                <template #icon>
+                  <n-icon><add-outline /></n-icon>
+                </template>
+                {{
+                  selectedServiceName || t('mcpservertollitem.select_service')
+                }}
+              </n-button>
+
+              <n-alert v-if="selectedService" type="info" :show-icon="false">
+                <template #header>
+                  <n-space align="center">
+                    <n-icon><information-circle-outline /></n-icon>
+                    <span>{{ t('mcpservertollitem.selected_service') }}</span>
+                  </n-space>
+                </template>
+                <div>
+                  <p>
+                    <strong>{{ t('mcpservertollitem.namespace') }}:</strong>
+                    {{ selectedService.namespaceId }}
+                  </p>
+                  <p>
+                    <strong>{{ t('mcpservertollitem.group') }}:</strong>
+                    {{ selectedService.groupName }}
+                  </p>
+                  <p>
+                    <strong>{{ t('mcpservertollitem.service_name') }}:</strong>
+                    {{ selectedService.serviceName }}
+                  </p>
+                </div>
+              </n-alert>
+            </n-space>
+          </n-form-item>
+
           <n-form-item
             :label="t('mcpservertollitem.service_group')"
             path="routeRule.serviceGroup"
@@ -376,6 +420,14 @@
       @select="handleToolSpecSelect"
       @cancel="handleToolSpecCancel"
     />
+
+    <!-- 服务选择器 -->
+    <service-selector
+      v-model:visible="showServiceSelector"
+      :namespace="selectedToolSpec?.namespace"
+      @select="handleServiceSelect"
+      @cancel="handleServiceCancel"
+    />
   </div>
 </template>
 
@@ -412,6 +464,7 @@ import {
 } from '@vicons/ionicons5';
 import { McpTool, ToolSpecInfo } from '@/types/mcpserver';
 import ToolSpecSelector from '@/components/mcpserver/ToolSpecSelector.vue';
+import ServiceSelector from '@/components/naming/ServiceSelector.vue';
 
 const { t } = useI18n();
 
@@ -433,7 +486,13 @@ const isToolSpecExpanded = ref(false);
 // 编辑抽屉相关
 const showEditDrawer = ref(false);
 const showToolSpecSelector = ref(false);
+const showServiceSelector = ref(false);
 const selectedToolSpec = ref<ToolSpecInfo | null>(null);
+const selectedService = ref<{
+  namespaceId: string;
+  groupName: string;
+  serviceName: string;
+} | null>(null);
 const formRef = ref();
 
 // 编辑表单数据
@@ -517,6 +576,11 @@ const selectedToolSpecName = computed(() => {
   return `${selectedToolSpec.value.namespace}/${selectedToolSpec.value.group}/${selectedToolSpec.value.toolName}`;
 });
 
+const selectedServiceName = computed(() => {
+  if (!selectedService.value) return '';
+  return `${selectedService.value.namespaceId}/${selectedService.value.groupName}/${selectedService.value.serviceName}`;
+});
+
 // 切换路由规则展开状态
 const toggleRouteRuleExpanded = () => {
   isRouteRuleExpanded.value = !isRouteRuleExpanded.value;
@@ -587,6 +651,7 @@ const openEditDrawer = () => {
 const closeEditDrawer = () => {
   showEditDrawer.value = false;
   selectedToolSpec.value = null;
+  selectedService.value = null;
 };
 
 // 处理工具规范选择
@@ -598,6 +663,20 @@ const handleToolSpecSelect = (toolSpec: ToolSpecInfo) => {
 // 处理工具规范选择取消
 const handleToolSpecCancel = () => {
   showToolSpecSelector.value = false;
+};
+
+// 处理服务选择
+const handleServiceSelect = (serviceInfo: any) => {
+  selectedService.value = serviceInfo;
+  // 自动填充服务组和服务名称字段
+  editForm.value.routeRule.serviceGroup = serviceInfo.groupName;
+  editForm.value.routeRule.serviceName = serviceInfo.serviceName;
+  showServiceSelector.value = false;
+};
+
+// 处理服务选择取消
+const handleServiceCancel = () => {
+  showServiceSelector.value = false;
 };
 
 // 保存工具

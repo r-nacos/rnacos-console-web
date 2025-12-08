@@ -146,7 +146,8 @@ const message = {
     addTitle: '新增服务',
     detailTitle: '服务详情',
     confirm_delete_service_action:
-      '确认要删服务名称为:<%:=name%>,服务组为:<%:=groupName%>,的配置吗？'
+      '确认要删服务名称为:<%:=name%>,服务组为:<%:=groupName%>,的配置吗？',
+    select_service: '选择服务'
   },
   passwordpanel: {
     input_old_password: '输入旧密码',
@@ -574,7 +575,10 @@ const message = {
     no_conversion: '无转换',
     json_to_form: 'JSON转表单',
     json_to_url: 'JSON转URL',
-    custom: '自定义'
+    custom: '自定义',
+    service_selector: '服务选择',
+    select_service: '选择服务',
+    selected_service: '已选择的服务'
   },
   mcpserverdetailcomponent: {
     server_info: '服务器信息',

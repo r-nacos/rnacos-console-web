@@ -151,7 +151,8 @@ const message = {
     addTitle: 'New Service',
     detailTitle: 'Service detail',
     confirm_delete_service_action:
-      'Are You Sure to Delete the Service :<%:=name%>,in Group:<%:=groupName%>？'
+      'Are You Sure to Delete the Service :<%:=name%>,in Group:<%:=groupName%>？',
+    select_service: 'Select Service'
   },
   passwordpanel: {
     input_old_password: 'Input Old Password',
@@ -587,7 +588,10 @@ const message = {
     no_conversion: 'No Conversion',
     json_to_form: 'JSON to Form',
     json_to_url: 'JSON to URL',
-    custom: 'Custom'
+    custom: 'Custom',
+    service_selector: 'Service Selector',
+    select_service: 'Select Service',
+    selected_service: 'Selected Service'
   },
   mcpserverdetailcomponent: {
     server_info: 'Server Information',

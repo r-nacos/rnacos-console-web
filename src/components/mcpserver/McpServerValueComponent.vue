@@ -30,6 +30,17 @@
             {{ t('mcpservaluecomponent.add_tool') }}
           </n-button>
           <n-button
+            v-if="showRefreshToolVersionsButton"
+            type="warning"
+            size="small"
+            @click="refreshToolVersions"
+          >
+            <template #icon>
+              <n-icon><refresh-outline /></n-icon>
+            </template>
+            {{ t('mcpservaluecomponent.refresh_tool_versions') }}
+          </n-button>
+          <n-button
             v-if="showPublishButton"
             type="success"
             size="small"
@@ -90,7 +101,8 @@ import McpServerToolItem from './McpServerToolItem.vue';
 import {
   AddOutline,
   TrashOutline,
-  CloudUploadOutline
+  CloudUploadOutline,
+  RefreshOutline
 } from '@vicons/ionicons5';
 
 const { t } = useI18n();
@@ -99,16 +111,19 @@ interface Props {
   serverValue: McpServerValue;
   mode?: 'detail' | 'update';
   showPublishButton?: boolean;
+  showRefreshToolVersionsButton?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   mode: 'detail',
-  showPublishButton: false
+  showPublishButton: false,
+  showRefreshToolVersionsButton: false
 });
 
 // 只保留必要的 emit 事件
 const emit = defineEmits<{
   (e: 'publishServer'): void;
+  (e: 'refreshToolVersions'): void;
 }>();
 
 const message = useMessage();
@@ -174,6 +189,11 @@ const deleteTool = (index: number) => {
 const handleToolSave = (index: number, params: McpSimpleToolParams) => {
   // 这里可以添加保存逻辑，比如调用API保存到后端
   //console.log('Tool saved:', index, params);
+};
+
+// 更新工具版本
+const refreshToolVersions = () => {
+  emit('refreshToolVersions');
 };
 
 // 发布服务

@@ -527,6 +527,7 @@ const message = {
     add_tool: '添加工具',
     no_tools: '暂无工具',
     tool_deleted_success: '工具已删除',
+    refresh_tool_versions: '更新工具版本',
     publish_server: '发布服务'
   },
   mcpservertollitem: {
@@ -670,10 +671,13 @@ const message = {
       '注意：请将 {nacos_api_host} 替换为实际的 Nacos API 地址，{server_unique_key} 替换为上述唯一标识，{auth_key} 替换为认证密钥中的任意一个',
     // 消息提示
     no_publishable_version: '当前没有可发布的版本',
+    no_refreshable_version: '当前没有可更新的版本',
     tools_no_change: '工具没有变化，无需发布',
     update_service_failed: '更新服务失败，无法发布',
     publish_success: '发布成功',
     publish_failed: '发布失败',
+    refresh_tool_versions_success: '更新工具版本成功',
+    refresh_tool_versions_failed: '更新工具版本失败',
     // 字段名称用于验证
     field_server_name: '服务器名称',
     field_namespace: '命名空间',

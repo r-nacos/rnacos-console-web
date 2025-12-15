@@ -540,6 +540,7 @@ const message = {
     add_tool: 'Add Tool',
     no_tools: 'No tools',
     tool_deleted_success: 'Tool deleted successfully',
+    refresh_tool_versions: 'Refresh Tool Versions',
     publish_server: 'Publish Server'
   },
   mcpservertollitem: {
@@ -691,10 +692,13 @@ const message = {
       'Note: Please replace {nacos_api_host} with the actual Nacos API address, {server_unique_key} with the unique identifier above, and {auth_key} with any one of the authentication keys',
     // Message prompts
     no_publishable_version: 'No publishable version available',
+    no_refreshable_version: 'No refreshable version available',
     tools_no_change: 'Tools have not changed, no need to publish',
     update_service_failed: 'Failed to update service, unable to publish',
     publish_success: 'Published successfully',
     publish_failed: 'Failed to publish',
+    refresh_tool_versions_success: 'Refresh tool versions successfully',
+    refresh_tool_versions_failed: 'Failed to refresh tool versions',
     // Field names for validation
     field_server_name: 'Server Name',
     field_namespace: 'Namespace',

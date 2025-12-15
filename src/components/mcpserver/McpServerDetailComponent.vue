@@ -253,7 +253,11 @@
                 :show-publish-button="
                   mode === 'update' && webResources.canUpdateMcpServer
                 "
+                :show-refresh-tool-versions-button="
+                  mode === 'update' && webResources.canUpdateMcpServer
+                "
                 @publish-server="handlePublishServer"
+                @refresh-tool-versions="refreshToolVersions"
               />
             </div>
             <div v-else class="no-current-content">
@@ -644,6 +648,52 @@ const areToolsEqual = (tools1: McpTool[], tools2: McpTool[]): boolean => {
 
     return true;
   });
+};
+
+// 更新工具版本
+const refreshToolVersions = async () => {
+  if (!props.serverData) return;
+
+  try {
+    // 检查是否有当前值
+    if (!props.serverData.currentValue) {
+      message.warning(t('mcpserverdetailcomponent.no_refreshable_version'));
+      return;
+    }
+
+    // 获取转换后的参数，并将工具的id设置为undefined
+    const params = convertToParams();
+    // 将所有工具的id设置为undefined
+    if (params.tools) {
+      params.tools = params.tools.map((tool) => ({
+        ...tool,
+        id: undefined
+      }));
+    }
+
+    // 只更新服务，不发布服务
+    const updateSuccess =
+      await mcpServerApi.updateMcpServerWithErrorHandling(params);
+
+    if (updateSuccess) {
+      message.success(
+        t('mcpserverdetailcomponent.refresh_tool_versions_success')
+      );
+
+      // 获取最新数据并直接更新 props.serverData
+      const updatedServer = await mcpServerApi.getMcpServerWithErrorHandling(
+        props.serverData.id
+      );
+      if (updatedServer) {
+        Object.assign(props.serverData, updatedServer);
+      }
+    } else {
+      message.error(t('mcpserverdetailcomponent.refresh_tool_versions_failed'));
+    }
+  } catch (error) {
+    console.error('更新工具版本失败:', error);
+    message.error(t('mcpserverdetailcomponent.refresh_tool_versions_failed'));
+  }
 };
 
 // 处理发布服务

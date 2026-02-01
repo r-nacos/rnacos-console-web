@@ -148,12 +148,7 @@ export default defineComponent({
           if (resp.status == 200) {
             let data = resp.data.data;
             if (data.length > 0) {
-              let list = [
-                {
-                  label: t('monitor.DIRECT_NODE'),
-                  value: 0
-                }
-              ];
+              let list = [];
               for (let item of data) {
                 list.push({
                   label: item.nodeId + '@' + item.addr,
@@ -161,6 +156,7 @@ export default defineComponent({
                 });
               }
               nodeList.value = list;
+              paramRef.value.nodeId = list[0].value;
             }
           } else {
             window.$message.error('request err,status code:' + resp.status);

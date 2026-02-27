@@ -138,6 +138,8 @@ const message = {
     metadata: 'Metadata'
   },
   service: {
+    service_list: 'Service list',
+    subscriber_list: 'Subscriber list',
     name: 'Service Name',
     inputName: 'input service name',
     groupName: 'Group Name',

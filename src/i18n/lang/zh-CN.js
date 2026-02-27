@@ -132,6 +132,8 @@ const message = {
     metadata: '元数据'
   },
   service: {
+    service_list: '服务列表',
+    subscriber_list: '订阅者列表',
     name: '服务名称',
     subscriber: '订阅者',
     inputName: '输入服务名称',

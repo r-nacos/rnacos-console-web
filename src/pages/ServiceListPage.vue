@@ -5,7 +5,7 @@
       :class="{ 'h-[40px]': !isMobile }"
     >
       <div class="flex-1 text-sm pl-4">
-        <span>{{ this.$t('config.config_list') }}</span>
+        <span>{{ this.$t('service.service_list') }}</span>
       </div>
       <div class="flex-none">
         <NamespacePopSelect @change="queryList" />

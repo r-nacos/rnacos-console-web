@@ -466,12 +466,7 @@ async function initNodeData() {
   }
   let data = resp.data.data;
   if (data.length > 0) {
-    let list = [
-      {
-        label: t('monitor.DIRECT_NODE'),
-        value: 0
-      }
-    ];
+    let list = [];
     for (let item of data) {
       list.push({
         label: item.nodeId + '@' + item.addr,
@@ -479,6 +474,7 @@ async function initNodeData() {
       });
     }
     nodeList.value = list;
+    param.value.nodeId = list[0].value;
   }
 }
 
